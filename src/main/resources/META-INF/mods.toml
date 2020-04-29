@@ -1,0 +1,25 @@
+modLoader="javafml"
+loaderVersion="[30,)"
+
+[[mods]]
+modId="basedefense"
+version="${file.jarVersion}"
+displayName="Base Defense"
+authors="sciwhiz12" 
+description='''
+Defending your base, defending against threats.
+'''
+
+[[dependencies.examplemod]]
+    modId="forge"
+    mandatory=true
+    versionRange="[30,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.examplemod]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.15.2]"
+    ordering="NONE"
+    side="BOTH"
