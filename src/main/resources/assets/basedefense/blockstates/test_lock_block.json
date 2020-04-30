@@ -1,0 +1,5 @@
+{
+    "variants": {
+        "": { "model": "basedefense:block/test_lock_block" }
+    }
+}

@@ -1,4 +1,7 @@
 {
-	"item.basedefense.key": "Blank Key",
-	"item.basedefense.blank_key": "Key"
+	"item.basedefense.key": "Key",
+	"item.basedefense.blank_key": "Blank Key",
+	"item.basedefense.lock": "Lock",
+	"item.basedefense.blank_lock": "Blank Lock",
+	"block.basedefense.test_lock_block": "Lock Test Block"
 }
