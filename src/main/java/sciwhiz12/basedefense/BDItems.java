@@ -1,12 +1,10 @@
-package sciwhiz12.basedefense.item;
+package sciwhiz12.basedefense;
 
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import sciwhiz12.basedefense.BaseDefense;
-import sciwhiz12.basedefense.block.BDBlocks;
 import sciwhiz12.basedefense.item.lock.BlankKeyItem;
 import sciwhiz12.basedefense.item.lock.BlankLockItem;
 import sciwhiz12.basedefense.item.lock.KeyItem;
