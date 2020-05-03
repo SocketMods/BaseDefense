@@ -3,5 +3,11 @@
 	"item.basedefense.blank_key": "Blank Key",
 	"item.basedefense.lock": "Lock",
 	"item.basedefense.blank_lock": "Blank Lock",
-	"block.basedefense.test_lock_block": "Lock Test Block"
+	"block.basedefense.test_lock_block": "Lock Test Block",
+	"block.basedefense.keysmith_table": "Keysmithing Table",
+	"block.basedefense.locksmith_table": "Locksmithing Table",
+	"container.basedefense.keysmith": "Keysmithing",
+	"container.basedefense.locksmith": "Locksmithing",
+	"tooltip.basedefense.unlockids": "Unlock IDs:",
+	"tooltip.basedefense.keyid": "Key ID: %s"
 }

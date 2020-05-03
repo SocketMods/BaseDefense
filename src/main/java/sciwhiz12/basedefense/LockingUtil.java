@@ -12,8 +12,8 @@ import sciwhiz12.basedefense.api.lock.IKey;
 import sciwhiz12.basedefense.api.lock.ILock;
 
 public class LockingUtil {
-    public static final String NBT_UUID = "unique_id";
-    public static final String NBT_KEY_COMPOUND = "ancestors";
+    public static final String NBT_UUID = "key_id";
+    public static final String NBT_LOCK_KEYIDS = "unlock_ids";
 
     public static boolean isValidUnlock(ItemStack lock, PlayerEntity player) {
         if (isValidUnlock(lock, player.getHeldItem(Hand.MAIN_HAND))) return true;
@@ -22,16 +22,14 @@ public class LockingUtil {
     }
 
     public static boolean isValidUnlock(ItemStack lock, ItemStack key) {
-        if (lock == null || lock == ItemStack.EMPTY) return false;
-        if (key == null || key == ItemStack.EMPTY) return false;
+        if (lock.isEmpty() || key.isEmpty()) return false;
         if (!(lock.getItem() instanceof ILock || key.getItem() instanceof IKey)) return false;
-        long key_id = getID(key);
-        if (getID(lock) == key_id) return true;
-        for (long id : getAncestorIDs(key)) { if (id == key_id) return true; }
+        long key_id = getKeyID(key);
+        for (long id : getUnlockIDs(lock)) { if (id == key_id) return true; }
         return false;
     }
 
-    public static long getID(ItemStack stack) {
+    public static long getKeyID(ItemStack stack) {
         CompoundNBT tag = stack.getOrCreateTag();
         long id = tag.getLong(NBT_UUID);
         if (id == 0) {
@@ -41,16 +39,16 @@ public class LockingUtil {
         return id;
     }
 
-    public static long[] getAncestorIDs(ItemStack key) {
-        CompoundNBT tag = key.getOrCreateTag();
-        return tag.getLongArray(NBT_KEY_COMPOUND);
+    public static long[] getUnlockIDs(ItemStack lock) {
+        CompoundNBT tag = lock.getOrCreateTag();
+        return tag.getLongArray(NBT_LOCK_KEYIDS);
     }
 
-    public static void addAncestorID(ItemStack key, long id) {
-        long[] arr_orig = getAncestorIDs(key);
+    public static void addUnlockID(ItemStack lock, long id) {
+        long[] arr_orig = getUnlockIDs(lock);
         long[] arr = new long[arr_orig.length + 1];
-        if (arr_orig.length != 0) System.arraycopy(arr_orig, 0, arr, 0, arr.length);
+        if (arr_orig.length != 0) System.arraycopy(arr_orig, 0, arr, 0, arr_orig.length);
         arr[arr.length - 1] = id;
-        key.setTagInfo(NBT_KEY_COMPOUND, new LongArrayNBT(arr));
+        lock.setTagInfo(NBT_LOCK_KEYIDS, new LongArrayNBT(arr));
     }
 }
