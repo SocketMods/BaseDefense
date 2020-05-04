@@ -9,5 +9,6 @@
 	"container.basedefense.keysmith": "Keysmithing",
 	"container.basedefense.locksmith": "Locksmithing",
 	"tooltip.basedefense.unlockids": "Unlock IDs:",
-	"tooltip.basedefense.keyid": "Key ID: %s"
+	"tooltip.basedefense.keyid": "Key ID: %s",
+	"itemGroup.basedefense": "Base Defense"
 }
