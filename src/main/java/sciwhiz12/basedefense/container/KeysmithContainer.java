@@ -122,34 +122,27 @@ public class KeysmithContainer extends Container {
         );
     }
 
-    // TODO: Verify this code actually works
     public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
-        ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
         if (slot != null && slot.getHasStack()) {
-            ItemStack itemstack1 = slot.getStack();
-            itemstack = itemstack1.copy();
+            ItemStack slotStack = slot.getStack();
             if (index == 2) {
-                if (!this.mergeItemStack(itemstack1, 3, 39, true)) { return ItemStack.EMPTY; }
-
-                slot.onSlotChange(itemstack1, itemstack);
+                if (!this.mergeItemStack(slotStack, 3, 39, true)) { return ItemStack.EMPTY; }
             } else if (index != 0 && index != 1) {
-                if (index >= 3 && index < 39 && !this.mergeItemStack(itemstack1, 0, 2, false)) {
+                if (index >= 3 && index < 39 && !this.mergeItemStack(slotStack, 0, 2, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(itemstack1, 3, 39, false)) { return ItemStack.EMPTY; }
+            } else if (!this.mergeItemStack(slotStack, 3, 39, false)) { return ItemStack.EMPTY; }
 
-            if (itemstack1.isEmpty()) {
+            if (slotStack.isEmpty()) {
                 slot.putStack(ItemStack.EMPTY);
             } else {
                 slot.onSlotChanged();
             }
-
-            if (itemstack1.getCount() == itemstack.getCount()) { return ItemStack.EMPTY; }
-
-            slot.onTake(playerIn, itemstack1);
+            
+            slot.onTake(playerIn, slotStack);
         }
 
-        return itemstack;
+        return ItemStack.EMPTY;
     }
 }

@@ -18,7 +18,12 @@ import sciwhiz12.basedefense.BDItems;
 import sciwhiz12.basedefense.LockingUtil;
 
 public class LocksmithContainer extends Container {
-    private final IInventory outputSlot = new CraftResultInventory();
+    private final IInventory outputSlot = new CraftResultInventory() {
+        public void markDirty() {
+            super.markDirty();
+            LocksmithContainer.this.onCraftMatrixChanged(this);
+        }
+    };
     private final IInventory inputSlots = new Inventory(7) {
         public void markDirty() {
             super.markDirty();
@@ -171,5 +176,29 @@ public class LocksmithContainer extends Container {
             this.clearContainer(playerIn, world, this.inputSlots);
             this.clearContainer(playerIn, world, this.testingSlots);
         });
+    }
+
+    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+        Slot slot = this.inventorySlots.get(index);
+        if (slot != null && slot.getHasStack()) {
+            ItemStack slotStack = slot.getStack();
+            if (index == 7) {
+                if (!this.mergeItemStack(slotStack, 10, 46, true)) { return ItemStack.EMPTY; }
+            } else if (index > 6) {
+                if (index >= 10 && index < 46 && !this.mergeItemStack(slotStack, 0, 7, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!this.mergeItemStack(slotStack, 10, 46, false)) { return ItemStack.EMPTY; }
+
+            if (slotStack.isEmpty()) {
+                slot.putStack(ItemStack.EMPTY);
+            } else {
+                slot.onSlotChanged();
+            }
+
+            slot.onTake(playerIn, slotStack);
+        }
+
+        return ItemStack.EMPTY;
     }
 }
