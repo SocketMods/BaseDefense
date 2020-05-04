@@ -3,7 +3,6 @@ package sciwhiz12.basedefense.client.color;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.IntArrayNBT;
 
 public class IdentifyingColor implements IItemColor {
     @Override
