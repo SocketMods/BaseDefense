@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" n ",
+		"n n",
+		"ggg"
+	],
+	"key": {
+		"g": {
+			"tag": "forge:ingots/gold"
+		},
+		"n": {
+			"tag": "forge:nuggets/gold"
+		}
+	},
+	"result": {
+		"item": "basedefense:blank_lock",
+		"count": 2
+	}
+}

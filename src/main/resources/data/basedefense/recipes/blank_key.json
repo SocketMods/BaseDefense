@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" g ",
+		" gn",
+		" gn"
+	],
+	"key": {
+		"g": {
+			"tag": "forge:ingots/gold"
+		},
+		"n": {
+			"tag": "forge:nuggets/gold"
+		}
+	},
+	"result": {
+		"item": "basedefense:blank_key",
+		"count": 2
+	}
+}
