@@ -13,6 +13,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import sciwhiz12.basedefense.client.color.IdentifyingColor;
 import sciwhiz12.basedefense.client.gui.KeysmithScreen;
 import sciwhiz12.basedefense.client.gui.LocksmithScreen;
+import sciwhiz12.basedefense.init.BDBlocks;
+import sciwhiz12.basedefense.init.BDItems;
 
 @Mod(BaseDefense.MODID)
 public class BaseDefense {

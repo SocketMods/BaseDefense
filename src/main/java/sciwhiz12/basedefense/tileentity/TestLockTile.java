@@ -1,7 +1,7 @@
 package sciwhiz12.basedefense.tileentity;
 
-import sciwhiz12.basedefense.BDBlocks;
 import sciwhiz12.basedefense.api.lock.LockContext;
+import sciwhiz12.basedefense.init.BDBlocks;
 
 public class TestLockTile extends LockableTile {
     public TestLockTile() {

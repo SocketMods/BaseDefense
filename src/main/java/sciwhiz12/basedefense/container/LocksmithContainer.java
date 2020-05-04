@@ -13,9 +13,9 @@ import net.minecraft.util.IntReferenceHolder;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import sciwhiz12.basedefense.BDBlocks;
-import sciwhiz12.basedefense.BDItems;
 import sciwhiz12.basedefense.LockingUtil;
+import sciwhiz12.basedefense.init.BDBlocks;
+import sciwhiz12.basedefense.init.BDItems;
 
 public class LocksmithContainer extends Container {
     private final IInventory outputSlot = new CraftResultInventory() {

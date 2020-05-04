@@ -13,9 +13,9 @@ import net.minecraft.util.IWorldPosCallable;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import sciwhiz12.basedefense.BDBlocks;
-import sciwhiz12.basedefense.BDItems;
 import sciwhiz12.basedefense.LockingUtil;
+import sciwhiz12.basedefense.init.BDBlocks;
+import sciwhiz12.basedefense.init.BDItems;
 
 public class KeysmithContainer extends Container {
     private final IInventory outputSlot = new CraftResultInventory();

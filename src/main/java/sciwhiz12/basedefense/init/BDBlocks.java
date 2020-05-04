@@ -1,4 +1,4 @@
-package sciwhiz12.basedefense;
+package sciwhiz12.basedefense.init;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderType;
@@ -8,6 +8,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import sciwhiz12.basedefense.BaseDefense;
 import sciwhiz12.basedefense.block.KeysmithBlock;
 import sciwhiz12.basedefense.block.LocksmithBlock;
 import sciwhiz12.basedefense.block.TestLockBlock;
