@@ -34,7 +34,7 @@ public class KeyItem extends Item implements IKey {
 
     @Override
     public boolean canUnlock(LockContext context) {
-        return true;
+        return LockingUtil.hasUnlockID(context.getLockItem(), context.getKeyItem());
     }
 
     @Override

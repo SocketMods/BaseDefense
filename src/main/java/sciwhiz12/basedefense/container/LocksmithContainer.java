@@ -134,8 +134,8 @@ public class LocksmithContainer extends Container {
         ItemStack key = this.testingSlots.getStackInSlot(0);
         ItemStack lock = this.testingSlots.getStackInSlot(1);
         if (!key.isEmpty() && !lock.isEmpty()) {
-            System.out.println(LockingUtil.isValidUnlock(lock, key));
-            if (LockingUtil.isValidUnlock(lock, key)) flag = 1;
+            System.out.println(LockingUtil.hasUnlockID(lock, key));
+            if (LockingUtil.hasUnlockID(lock, key)) flag = 1;
         }
         this.testingState.set(flag);
         this.detectAndSendChanges();

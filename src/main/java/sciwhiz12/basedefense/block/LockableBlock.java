@@ -11,8 +11,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import sciwhiz12.basedefense.LockingUtil;
+import sciwhiz12.basedefense.api.lock.IKey;
 import sciwhiz12.basedefense.api.lock.ILock;
+import sciwhiz12.basedefense.api.lock.LockContext;
 import sciwhiz12.basedefense.tileentity.LockableTile;
 
 public abstract class LockableBlock extends Block {
@@ -33,8 +34,16 @@ public abstract class LockableBlock extends Block {
             PlayerEntity player, Hand hand, BlockRayTraceResult rayTrace) {
         if (!world.isRemote) {
             LockableTile te = (LockableTile) world.getTileEntity(pos);
-            if (te.hasLock() && LockingUtil.isValidUnlock(te.getLock(), player.getHeldItem(hand))) {
-                return ActionResultType.SUCCESS;
+            if (te.hasLock()) {
+                ItemStack keyStack = player.getHeldItem(hand);
+                if (!keyStack.isEmpty() && keyStack.getItem() instanceof IKey) {
+                    IKey key = (IKey) keyStack.getItem();
+                    LockContext ctx = new LockContext(te.getLock(), keyStack, te, world, pos, player);
+                    if (key.canUnlock(ctx)) {
+                        key.unlock(ctx);
+                        return ActionResultType.SUCCESS;
+                    }
+                }
             }
             ItemStack stack = player.getHeldItem(hand);
             if (!te.hasLock() && stack != null && stack != ItemStack.EMPTY && stack
