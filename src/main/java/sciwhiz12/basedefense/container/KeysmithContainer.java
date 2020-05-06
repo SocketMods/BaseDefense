@@ -1,8 +1,9 @@
 package sciwhiz12.basedefense.container;
 
+import org.apache.commons.lang3.StringUtils;
+
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.CraftResultInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
@@ -10,6 +11,7 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.LongNBT;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -18,7 +20,7 @@ import sciwhiz12.basedefense.init.BDBlocks;
 import sciwhiz12.basedefense.init.BDItems;
 
 public class KeysmithContainer extends Container {
-    private final IInventory outputSlot = new CraftResultInventory();
+    private final IInventory outputSlot = new Inventory(1);
     private final IInventory inputSlots = new Inventory(2) {
         public void markDirty() {
             super.markDirty();
@@ -27,6 +29,11 @@ public class KeysmithContainer extends Container {
     };
     private final InvWrapper playerInv;
     private final IWorldPosCallable worldPos;
+    private String name = null;
+
+    public static final int BLANK_INPUT_SLOT = 0;
+    public static final int DUPLICATE_INPUT_SLOT = 1;
+    public static final int OUTPUT_SLOT = 2;
 
     public KeysmithContainer(int windowId, PlayerInventory playerInv) {
         this(windowId, playerInv, IWorldPosCallable.DUMMY);
@@ -47,33 +54,30 @@ public class KeysmithContainer extends Container {
                 return stack.getItem() == BDItems.KEY.get();
             }
         });
-        this.addSlot(new Slot(this.outputSlot, 2, 64, 24) {
+        this.addSlot(new Slot(this.outputSlot, 0, 64, 24) {
             public boolean isItemValid(ItemStack stack) {
                 return false;
             }
-
-            public boolean canTakeStack(PlayerEntity player) {
-                return this.getHasStack();
-            }
-
             public ItemStack onTake(PlayerEntity player, ItemStack stack) {
                 KeysmithContainer.this.inputSlots.decrStackSize(0, 1);
+                //KeysmithContainer.this.changeOutputName(null);
                 return stack;
             }
         });
-
         layoutPlayerInventorySlots(8, 84);
     }
 
     public void onCraftMatrixChanged(IInventory inv) {
         super.onCraftMatrixChanged(inv);
         if (inv == this.inputSlots) { this.updateOutputs(); }
+        this.detectAndSendChanges();
     }
 
     private void updateOutputs() {
         ItemStack blank = this.inputSlots.getStackInSlot(0);
         ItemStack dupl = this.inputSlots.getStackInSlot(1);
         if (blank.isEmpty()) {
+            this.name = null;
             this.outputSlot.setInventorySlotContents(0, ItemStack.EMPTY);
         } else {
             ItemStack out = new ItemStack(BDItems.KEY.get(), 1);
@@ -82,8 +86,22 @@ public class KeysmithContainer extends Container {
             }
             LockingUtil.getKeyID(out);
             this.outputSlot.setInventorySlotContents(0, out);
+            if (name == null) { this.name = out.getDisplayName().getString(); }
         }
-        this.detectAndSendChanges();
+    }
+
+    public void changeOutputName(String text) {
+        this.name = text;
+        if (this.getSlot(2).getHasStack()) {
+            ItemStack itemstack = this.getSlot(2).getStack();
+            if (StringUtils.isBlank(text)) {
+                itemstack.clearCustomName();
+            } else {
+                StringTextComponent displayName = new StringTextComponent(this.name);
+                displayName.getStyle().setItalic(false);
+                itemstack.setDisplayName(displayName);
+            }
+        }
     }
 
     @Override
@@ -127,22 +145,26 @@ public class KeysmithContainer extends Container {
         if (slot != null && slot.getHasStack()) {
             ItemStack slotStack = slot.getStack();
             if (index == 2) {
-                if (!this.mergeItemStack(slotStack, 3, 39, true)) { return ItemStack.EMPTY; }
-            } else if (index != 0 && index != 1) {
-                if (index >= 3 && index < 39 && !this.mergeItemStack(slotStack, 0, 2, false)) {
+                if (!this.mergeItemStack(slotStack, 3, 39, true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(slotStack, 3, 39, false)) { return ItemStack.EMPTY; }
+            } else if (index != 0 && index != 1) {
+                if (index >= 3 && index < 39 && !this.mergeItemStack(
+                        slotStack, 0, 1, false
+                )) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!this.mergeItemStack(slotStack, 3, 39, false)) {
+                return ItemStack.EMPTY;
+            }
 
             if (slotStack.isEmpty()) {
                 slot.putStack(ItemStack.EMPTY);
             } else {
                 slot.onSlotChanged();
             }
-            
             slot.onTake(playerIn, slotStack);
         }
-
         return ItemStack.EMPTY;
     }
 }

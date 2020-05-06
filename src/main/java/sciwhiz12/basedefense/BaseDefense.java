@@ -15,6 +15,7 @@ import sciwhiz12.basedefense.client.gui.KeysmithScreen;
 import sciwhiz12.basedefense.client.gui.LocksmithScreen;
 import sciwhiz12.basedefense.init.BDBlocks;
 import sciwhiz12.basedefense.init.BDItems;
+import sciwhiz12.basedefense.net.NetworkHandler;
 
 @Mod(BaseDefense.MODID)
 public class BaseDefense {
@@ -28,6 +29,7 @@ public class BaseDefense {
         BDBlocks.BLOCK.register(MOD_EVENT_BUS);
         BDBlocks.TE.register(MOD_EVENT_BUS);
         BDBlocks.CONTAINER.register(MOD_EVENT_BUS);
+        NetworkHandler.registerPackets();
         MOD_EVENT_BUS.addListener(this::onClientSetupEvent);
     }
 
