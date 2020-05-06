@@ -12,6 +12,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import sciwhiz12.basedefense.BaseDefense;
 import sciwhiz12.basedefense.item.lock.KeyItem;
 import sciwhiz12.basedefense.item.lock.LockItem;
+import sciwhiz12.basedefense.item.lock.SkeletonKeyItem;
 
 public class BDItems {
     public static final ItemGroup GROUP = new ItemGroup(BaseDefense.MODID) {
@@ -29,6 +30,9 @@ public class BDItems {
             "blank_key", () -> new Item(new Item.Properties().group(GROUP))
     );
     public static final RegistryObject<Item> KEY = ITEM.register("key", () -> new KeyItem());
+    public static final RegistryObject<Item> SKELETON_KEY = ITEM.register(
+            "skeleton_key", () -> new SkeletonKeyItem()
+    );
 
     public static final RegistryObject<Item> BLANK_LOCK = ITEM.register(
             "blank_lock", () -> new Item(new Item.Properties().group(GROUP))

@@ -3,6 +3,7 @@
 	"item.basedefense.blank_key": "Blank Key",
 	"item.basedefense.lock": "Lock",
 	"item.basedefense.blank_lock": "Blank Lock",
+	"item.basedefense.skeleton_key": "Skeleton Key",
 	"block.basedefense.test_lock_block": "Lock Test Block",
 	"block.basedefense.keysmith_table": "Keysmithing Table",
 	"block.basedefense.locksmith_table": "Locksmithing Table",
@@ -10,5 +11,6 @@
 	"container.basedefense.locksmith": "Locksmithing",
 	"tooltip.basedefense.unlockids": "Unlock IDs:",
 	"tooltip.basedefense.keyid": "Key ID: %s",
+	"tooltip.basedefense.skeleton_key": "for Server Operators!",
 	"itemGroup.basedefense": "Base Defense"
 }
