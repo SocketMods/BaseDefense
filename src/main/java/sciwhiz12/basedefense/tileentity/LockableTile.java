@@ -65,12 +65,11 @@ public abstract class LockableTile extends TileEntity implements ILockable {
 
     @Override
     public boolean hasLock() {
-        return lock != ItemStack.EMPTY;
+        return !lock.isEmpty();
     }
 
     @Override
     public void setLock(ItemStack stack) {
-        if (stack == null) stack = ItemStack.EMPTY;
-        this.lock = stack;
+        this.lock = stack.copy();
     }
 }

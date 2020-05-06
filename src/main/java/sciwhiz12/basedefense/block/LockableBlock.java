@@ -38,9 +38,13 @@ public abstract class LockableBlock extends Block {
                 ItemStack keyStack = player.getHeldItem(hand);
                 if (!keyStack.isEmpty() && keyStack.getItem() instanceof IKey) {
                     IKey key = (IKey) keyStack.getItem();
-                    LockContext ctx = new LockContext(te.getLock(), keyStack, te, world, pos, player);
+                    LockContext ctx = new LockContext(
+                            te.getLock(), keyStack, te, world, pos, player
+                    );
                     if (key.canUnlock(ctx)) {
+                        ((ILock) te.getLock().getItem()).onUnlock(ctx);
                         key.unlock(ctx);
+                        te.onUnlock(ctx);
                         return ActionResultType.SUCCESS;
                     }
                 }
@@ -49,6 +53,7 @@ public abstract class LockableBlock extends Block {
             if (!te.hasLock() && stack != null && stack != ItemStack.EMPTY && stack
                     .getItem() instanceof ILock) {
                 te.setLock(stack);
+                stack.setCount(stack.getCount() - 1);
                 return ActionResultType.CONSUME;
             }
         }
