@@ -17,8 +17,8 @@ import sciwhiz12.basedefense.api.lock.LockContext;
 import sciwhiz12.basedefense.tileentity.LockableTile;
 
 public abstract class LockableBlock extends Block {
-    public LockableBlock(Properties properties) {
-        super(properties);
+    public LockableBlock(Block.Properties builder) {
+        super(builder);
     }
 
     @Override
@@ -32,7 +32,7 @@ public abstract class LockableBlock extends Block {
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos,
             PlayerEntity player, Hand hand, BlockRayTraceResult rayTrace) {
-        if (!world.isRemote) {
+        if (!world.isRemote && world.getTileEntity(pos) != null) {
             LockableTile te = (LockableTile) world.getTileEntity(pos);
             if (te.hasLock()) {
                 ItemStack keyStack = player.getHeldItem(hand);
@@ -42,10 +42,11 @@ public abstract class LockableBlock extends Block {
                             te.getLock(), keyStack, te, world, pos, player
                     );
                     if (key.canUnlock(ctx)) {
-                        ((ILock) te.getLock().getItem()).onUnlock(ctx);
-                        key.unlock(ctx);
-                        te.onUnlock(ctx);
-                        return ActionResultType.SUCCESS;
+                        if (te.onUnlock(ctx) && (key.unlock(ctx)) && ((ILock) te.getLock()
+                                .getItem()).onUnlock(ctx)) {
+                            return ActionResultType.SUCCESS;
+                        }
+                        return ActionResultType.PASS;
                     }
                 }
             }

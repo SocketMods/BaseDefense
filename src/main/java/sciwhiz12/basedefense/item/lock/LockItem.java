@@ -47,10 +47,10 @@ public class LockItem extends Item implements ILock {
             }
         }
     }
-    
+
     @Override
-    public void onUnlock(LockContext ctx) {
-        if (!ctx.getWorld().isRemote && ctx.getPlayer().isShiftKeyDown()) {
+    public boolean onUnlock(LockContext ctx) {
+        if (ctx.getPlayer().isShiftKeyDown()) {
             ItemStack lock = ctx.getLockItem();
             ServerPlayerEntity player = (ServerPlayerEntity) ctx.getPlayer();
             boolean flag = player.inventory.addItemStackToInventory(lock);
@@ -74,6 +74,8 @@ public class LockItem extends Item implements ILock {
                 }
             }
             ctx.getLockable().setLock(ItemStack.EMPTY);
+            return false;
         }
+        return true;
     }
 }

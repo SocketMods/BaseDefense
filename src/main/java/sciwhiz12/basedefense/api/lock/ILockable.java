@@ -9,5 +9,5 @@ public interface ILockable {
 
     public void setLock(ItemStack stack);
 
-    public void onUnlock(LockContext context);
+    public boolean onUnlock(LockContext context);
 }

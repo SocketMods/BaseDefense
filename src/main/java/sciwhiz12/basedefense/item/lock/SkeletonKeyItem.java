@@ -57,8 +57,8 @@ public class SkeletonKeyItem extends Item implements IKey {
     }
 
     @Override
-    public void unlock(LockContext ctx) {
-        if (!ctx.getWorld().isRemote && ctx.getPlayer().isShiftKeyDown() && ctx.getLockable().hasLock()) {
+    public boolean unlock(LockContext ctx) {
+        if (ctx.getPlayer().isShiftKeyDown() && ctx.getLockable().hasLock()) {
             ItemStack lock = ctx.getLockItem();
             ServerPlayerEntity player = (ServerPlayerEntity) ctx.getPlayer();
             boolean flag = player.inventory.addItemStackToInventory(lock);
@@ -66,7 +66,6 @@ public class SkeletonKeyItem extends Item implements IKey {
                 lock.setCount(1);
                 ItemEntity itementity1 = player.dropItem(lock, false);
                 if (itementity1 != null) { itementity1.makeFakeItem(); }
-
                 ctx.getWorld().playSound(
                         (PlayerEntity) null, player.getPosX(), player.getPosY(), player.getPosZ(),
                         SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((player
@@ -82,6 +81,8 @@ public class SkeletonKeyItem extends Item implements IKey {
                 }
             }
             ctx.getLockable().setLock(ItemStack.EMPTY);
+            return false;
         }
+        return true;
     }
 }

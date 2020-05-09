@@ -50,5 +50,7 @@ public class KeyItem extends Item implements IKey {
     }
 
     @Override
-    public void unlock(LockContext context) {}
+    public boolean unlock(LockContext context) {
+        return true;
+    }
 }

@@ -9,6 +9,7 @@ public class TestLockTile extends LockableTile {
     }
 
     @Override
-    public void onUnlock(LockContext context) {
+    public boolean onUnlock(LockContext context) {
+        return true;
     }
 }

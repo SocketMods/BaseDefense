@@ -49,8 +49,9 @@ public class BDBlocks {
             .register("locksmith_table", () -> new ContainerType<>(LocksmithContainer::new));
 
     public static void setupRenderLayer() {
-        RenderTypeLookup.setRenderLayer(BDBlocks.TEST_LOCK_BLOCK.get(), RenderType.getSolid());
-        RenderTypeLookup.setRenderLayer(BDBlocks.KEYSMITH_BLOCK.get(), RenderType.getSolid());
-        RenderTypeLookup.setRenderLayer(BDBlocks.LOCKSMITH_BLOCK.get(), RenderType.getSolid());
+        RenderType solid = RenderType.getSolid();
+        RenderTypeLookup.setRenderLayer(BDBlocks.TEST_LOCK_BLOCK.get(), solid);
+        RenderTypeLookup.setRenderLayer(BDBlocks.KEYSMITH_BLOCK.get(), solid);
+        RenderTypeLookup.setRenderLayer(BDBlocks.LOCKSMITH_BLOCK.get(), solid);
     }
 }
