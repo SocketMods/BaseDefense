@@ -7,6 +7,7 @@
 	"block.basedefense.test_lock_block": "Lock Test Block",
 	"block.basedefense.keysmith_table": "Keysmithing Table",
 	"block.basedefense.locksmith_table": "Locksmithing Table",
+	"block.basedefense.lockable_door": "Lockable Iron Door",
 	"container.basedefense.keysmith": "Keysmithing",
 	"container.basedefense.locksmith": "Locksmithing",
 	"tooltip.basedefense.unlockids": "Unlock IDs:",

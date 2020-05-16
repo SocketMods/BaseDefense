@@ -1,0 +1,7 @@
+{
+    "parent": "basedefense:block/door/base/door_bottom_rh",
+    "textures": {
+        "bottom": "basedefense:block/lockable_door_bottom",
+        "top": "basedefense:block/lockable_door_top"
+    }
+}

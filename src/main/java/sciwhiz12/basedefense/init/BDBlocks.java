@@ -10,10 +10,12 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import sciwhiz12.basedefense.BaseDefense;
 import sciwhiz12.basedefense.block.KeysmithBlock;
+import sciwhiz12.basedefense.block.LockableDoorBlock;
 import sciwhiz12.basedefense.block.LocksmithBlock;
 import sciwhiz12.basedefense.block.TestLockBlock;
 import sciwhiz12.basedefense.container.KeysmithContainer;
 import sciwhiz12.basedefense.container.LocksmithContainer;
+import sciwhiz12.basedefense.tileentity.LockableDoorTile;
 import sciwhiz12.basedefense.tileentity.TestLockTile;
 
 public class BDBlocks {
@@ -30,6 +32,9 @@ public class BDBlocks {
     public static final RegistryObject<Block> TEST_LOCK_BLOCK = BLOCK.register(
             "test_lock_block", () -> new TestLockBlock()
     );
+    public static final RegistryObject<Block> LOCK_DOOR_BLOCK = BLOCK.register(
+            "lockable_door", () -> new LockableDoorBlock()
+    );
     public static final RegistryObject<Block> KEYSMITH_BLOCK = BLOCK.register(
             "keysmith_table", () -> new KeysmithBlock()
     );
@@ -42,6 +47,12 @@ public class BDBlocks {
                     TestLockTile::new, TEST_LOCK_BLOCK.get()
             ).build(null)
     );
+    public static final RegistryObject<TileEntityType<LockableDoorTile>> LOCK_DOOR_TILE = TE
+            .register(
+                    "lockable_door_tile", () -> TileEntityType.Builder.create(
+                            LockableDoorTile::new, TEST_LOCK_BLOCK.get()
+                    ).build(null)
+            );
 
     public static final RegistryObject<ContainerType<KeysmithContainer>> KEYSMITH_CONTAINER = CONTAINER
             .register("keysmith_table", () -> new ContainerType<>(KeysmithContainer::new));
@@ -53,5 +64,6 @@ public class BDBlocks {
         RenderTypeLookup.setRenderLayer(BDBlocks.TEST_LOCK_BLOCK.get(), solid);
         RenderTypeLookup.setRenderLayer(BDBlocks.KEYSMITH_BLOCK.get(), solid);
         RenderTypeLookup.setRenderLayer(BDBlocks.LOCKSMITH_BLOCK.get(), solid);
+        RenderTypeLookup.setRenderLayer(BDBlocks.LOCK_DOOR_BLOCK.get(), RenderType.getCutoutMipped());
     }
 }

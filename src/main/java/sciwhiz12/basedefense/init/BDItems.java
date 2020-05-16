@@ -6,6 +6,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.TallBlockItem;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -42,6 +43,11 @@ public class BDItems {
     public static final RegistryObject<Item> TEST_LOCK_BLOCK_ITEM = ITEM.register(
             "test_lock_block", () -> new BlockItem(
                     BDBlocks.TEST_LOCK_BLOCK.get(), new Item.Properties().group(GROUP)
+            )
+    );
+    public static final RegistryObject<Item> LOCKABLE_DOOR_ITEM = ITEM.register(
+            "lockable_door", () -> new TallBlockItem(
+                    BDBlocks.LOCK_DOOR_BLOCK.get(), (new Item.Properties()).group(GROUP)
             )
     );
 
