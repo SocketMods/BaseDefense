@@ -14,8 +14,9 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import sciwhiz12.basedefense.LockingUtil;
-import sciwhiz12.basedefense.init.BDBlocks;
-import sciwhiz12.basedefense.init.BDItems;
+import sciwhiz12.basedefense.init.ModBlocks;
+import sciwhiz12.basedefense.init.ModContainers;
+import sciwhiz12.basedefense.init.ModItems;
 
 public class LocksmithContainer extends Container {
     private final IInventory outputSlot = new CraftResultInventory() {
@@ -45,7 +46,7 @@ public class LocksmithContainer extends Container {
     }
 
     public LocksmithContainer(int windowId, PlayerInventory playerInv, IWorldPosCallable worldPos) {
-        super(BDBlocks.LOCKSMITH_CONTAINER.get(), windowId);
+        super(ModContainers.LOCKSMITH_CONTAINER.get(), windowId);
         this.playerInv = new InvWrapper(playerInv);
         this.worldPos = worldPos;
         this.trackInt(this.testingState);
@@ -53,21 +54,21 @@ public class LocksmithContainer extends Container {
 
         this.addSlot(new Slot(this.inputSlots, 0, 80, 50) {
             public boolean isItemValid(ItemStack stack) {
-                return stack.getItem() == BDItems.BLANK_LOCK.get();
+                return stack.getItem() == ModItems.BLANK_LOCK.get();
             }
         });
 
         for (int i = 1; i < 4; i++) {
             this.addSlot(new Slot(this.inputSlots, i, 13 + ((i - 1) * 18), 21) {
                 public boolean isItemValid(ItemStack stack) {
-                    return stack.getItem() == BDItems.KEY.get();
+                    return stack.getItem() == ModItems.KEY.get();
                 }
             });
         }
         for (int i = 4; i < 7; i++) {
             this.addSlot(new Slot(this.inputSlots, i, 13 + ((i - 4) * 18), 50) {
                 public boolean isItemValid(ItemStack stack) {
-                    return stack.getItem() == BDItems.KEY.get();
+                    return stack.getItem() == ModItems.KEY.get();
                 }
             });
         }
@@ -89,13 +90,13 @@ public class LocksmithContainer extends Container {
 
         this.addSlot(new Slot(this.testingSlots, 0, 135, 19) {
             public boolean isItemValid(ItemStack stack) {
-                return stack.getItem() == BDItems.KEY.get();
+                return stack.getItem() == ModItems.KEY.get();
             }
         });
 
         this.addSlot(new Slot(this.testingSlots, 1, 135, 40) {
             public boolean isItemValid(ItemStack stack) {
-                return stack.getItem() == BDItems.LOCK.get();
+                return stack.getItem() == ModItems.LOCK.get();
             }
         });
 
@@ -113,7 +114,7 @@ public class LocksmithContainer extends Container {
         if (blank.isEmpty()) {
             this.outputSlot.setInventorySlotContents(0, ItemStack.EMPTY);
         } else {
-            ItemStack out = new ItemStack(BDItems.LOCK.get(), 1);
+            ItemStack out = new ItemStack(ModItems.LOCK.get(), 1);
             int keys = 0;
             for (int i = 1; i < 7; i++) {
                 ItemStack key = this.inputSlots.getStackInSlot(i);
@@ -143,7 +144,7 @@ public class LocksmithContainer extends Container {
 
     @Override
     public boolean canInteractWith(PlayerEntity player) {
-        return isWithinUsableDistance(worldPos, player, BDBlocks.LOCKSMITH_BLOCK.get());
+        return isWithinUsableDistance(worldPos, player, ModBlocks.LOCKSMITH_BLOCK.get());
     }
 
     private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {

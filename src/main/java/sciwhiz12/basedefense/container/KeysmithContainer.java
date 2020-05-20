@@ -16,8 +16,9 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import sciwhiz12.basedefense.LockingUtil;
-import sciwhiz12.basedefense.init.BDBlocks;
-import sciwhiz12.basedefense.init.BDItems;
+import sciwhiz12.basedefense.init.ModBlocks;
+import sciwhiz12.basedefense.init.ModContainers;
+import sciwhiz12.basedefense.init.ModItems;
 
 public class KeysmithContainer extends Container {
     private final IInventory outputSlot = new Inventory(1);
@@ -40,18 +41,18 @@ public class KeysmithContainer extends Container {
     }
 
     public KeysmithContainer(int windowId, PlayerInventory playerInv, IWorldPosCallable worldPos) {
-        super(BDBlocks.KEYSMITH_CONTAINER.get(), windowId);
+        super(ModContainers.KEYSMITH_CONTAINER.get(), windowId);
         this.playerInv = new InvWrapper(playerInv);
         this.worldPos = worldPos;
 
         this.addSlot(new Slot(this.inputSlots, 0, 14, 24) {
             public boolean isItemValid(ItemStack stack) {
-                return stack.getItem() == BDItems.BLANK_KEY.get();
+                return stack.getItem() == ModItems.BLANK_KEY.get();
             }
         });
         this.addSlot(new Slot(this.inputSlots, 1, 31, 46) {
             public boolean isItemValid(ItemStack stack) {
-                return stack.getItem() == BDItems.KEY.get();
+                return stack.getItem() == ModItems.KEY.get();
             }
         });
         this.addSlot(new Slot(this.outputSlot, 0, 64, 24) {
@@ -80,7 +81,7 @@ public class KeysmithContainer extends Container {
             this.name = null;
             this.outputSlot.setInventorySlotContents(0, ItemStack.EMPTY);
         } else {
-            ItemStack out = new ItemStack(BDItems.KEY.get(), 1);
+            ItemStack out = new ItemStack(ModItems.KEY.get(), 1);
             if (!dupl.isEmpty()) {
                 out.setTagInfo(LockingUtil.NBT_UUID, LongNBT.valueOf(LockingUtil.getKeyID(dupl)));
             }
@@ -106,7 +107,7 @@ public class KeysmithContainer extends Container {
 
     @Override
     public boolean canInteractWith(PlayerEntity player) {
-        return isWithinUsableDistance(worldPos, player, BDBlocks.KEYSMITH_BLOCK.get());
+        return isWithinUsableDistance(worldPos, player, ModBlocks.KEYSMITH_BLOCK.get());
     }
 
     private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {

@@ -50,7 +50,7 @@ public class LockItem extends Item implements ILock {
 
     @Override
     public boolean onUnlock(LockContext ctx) {
-        if (ctx.getPlayer().isShiftKeyDown()) {
+        if (ctx.getPlayer().isSneaking()) {
             ItemStack lock = ctx.getLockItem();
             ServerPlayerEntity player = (ServerPlayerEntity) ctx.getPlayer();
             boolean flag = player.inventory.addItemStackToInventory(lock);

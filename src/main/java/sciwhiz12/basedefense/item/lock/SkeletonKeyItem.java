@@ -10,6 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Rarity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
@@ -22,20 +23,20 @@ import net.minecraft.world.World;
 import sciwhiz12.basedefense.api.lock.IKey;
 import sciwhiz12.basedefense.api.lock.ILockable;
 import sciwhiz12.basedefense.api.lock.LockContext;
-import sciwhiz12.basedefense.init.BDItems;
+import sciwhiz12.basedefense.init.ModItems;
 
 public class SkeletonKeyItem extends Item implements IKey {
     public SkeletonKeyItem() {
-        super(new Item.Properties().maxDamage(0).group(BDItems.GROUP));
+        super(new Item.Properties().maxDamage(0).rarity(Rarity.EPIC).group(ModItems.GROUP));
     }
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn,
             List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         tooltip.add(
-                new TranslationTextComponent("tooltip.basedefense.skeleton_key").applyTextStyle(
-                        TextFormatting.RED
-                )
+            new TranslationTextComponent("tooltip.basedefense.skeleton_key").applyTextStyle(
+                TextFormatting.RED
+            )
         );
     }
 
@@ -58,7 +59,7 @@ public class SkeletonKeyItem extends Item implements IKey {
 
     @Override
     public boolean unlock(LockContext ctx) {
-        if (ctx.getPlayer().isShiftKeyDown() && ctx.getLockable().hasLock()) {
+        if (ctx.getPlayer().isSneaking() && ctx.getLockable().hasLock()) {
             ItemStack lock = ctx.getLockItem();
             ServerPlayerEntity player = (ServerPlayerEntity) ctx.getPlayer();
             boolean flag = player.inventory.addItemStackToInventory(lock);
@@ -67,10 +68,9 @@ public class SkeletonKeyItem extends Item implements IKey {
                 ItemEntity itementity1 = player.dropItem(lock, false);
                 if (itementity1 != null) { itementity1.makeFakeItem(); }
                 ctx.getWorld().playSound(
-                        (PlayerEntity) null, player.getPosX(), player.getPosY(), player.getPosZ(),
-                        SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((player
-                                .getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.7F + 1.0F)
-                                * 2.0F
+                    (PlayerEntity) null, player.getPosX(), player.getPosY(), player.getPosZ(),
+                    SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((player.getRNG()
+                        .nextFloat() - player.getRNG().nextFloat()) * 0.7F + 1.0F) * 2.0F
                 );
                 player.container.detectAndSendChanges();
             } else {

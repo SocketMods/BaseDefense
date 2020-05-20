@@ -17,7 +17,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import sciwhiz12.basedefense.BaseDefense;
 import sciwhiz12.basedefense.container.KeysmithContainer;
-import sciwhiz12.basedefense.init.BDItems;
+import sciwhiz12.basedefense.init.ModItems;
 import sciwhiz12.basedefense.net.NetworkHandler;
 import sciwhiz12.basedefense.net.TextFieldChangePacket;
 
@@ -130,7 +130,7 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
         if (slotInd == 0) {
             this.nameField.setEnabled(!stack.isEmpty());
             if (StringUtils.isEmpty(this.nameField.getText())) {
-                this.nameField.setText(BDItems.KEY.get().getName().getString());
+                this.nameField.setText(ModItems.KEY.get().getName().getString());
             }
         } else if (slotInd == 1) {
             this.nameField.setText(stack.isEmpty() ? "" : stack.getDisplayName().getString());

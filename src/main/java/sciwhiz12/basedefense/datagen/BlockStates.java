@@ -16,7 +16,7 @@ import net.minecraftforge.client.model.generators.VariantBlockStateBuilder;
 import net.minecraftforge.client.model.generators.VariantBlockStateBuilder.PartialBlockstate;
 import sciwhiz12.basedefense.BaseDefense;
 import sciwhiz12.basedefense.block.LockableDoorBlock;
-import sciwhiz12.basedefense.init.BDBlocks;
+import sciwhiz12.basedefense.init.ModBlocks;
 
 public class BlockStates extends BlockStateProvider {
     public BlockStates(DataGenerator gen, ExistingFileHelper exFileHelper) {
@@ -49,7 +49,7 @@ public class BlockStates extends BlockStateProvider {
                 modLoc("block/door/lockable_door_top_rh")
         );
 
-        VariantBlockStateBuilder bld = getVariantBuilder(BDBlocks.LOCK_DOOR_BLOCK.get());
+        VariantBlockStateBuilder bld = getVariantBuilder(ModBlocks.LOCK_DOOR_BLOCK.get());
 
         registerParts(bld, DoubleBlockHalf.UPPER, createTriFunc(door_top_rh, door_top));
         registerParts(bld, DoubleBlockHalf.LOWER, createTriFunc(door_bottom_rh, door_bottom));
