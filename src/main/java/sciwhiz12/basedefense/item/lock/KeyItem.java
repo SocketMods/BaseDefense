@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -36,11 +35,11 @@ public class KeyItem extends Item implements IKey {
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn,
             List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        if (!Minecraft.getInstance().gameSettings.advancedItemTooltips) return;
+        if (!flagIn.isAdvanced()) return;
         long id = LockingUtil.getKeyID(stack);
         tooltip.add(
-                new TranslationTextComponent("tooltip.basedefense.keyid", Long.toHexString(id))
-                        .applyTextStyle(TextFormatting.GRAY)
+            new TranslationTextComponent("tooltip.basedefense.keyid", Long.toHexString(id))
+                .applyTextStyle(TextFormatting.GRAY)
         );
     }
 

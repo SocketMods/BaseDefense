@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -30,7 +29,7 @@ public class LockItem extends Item implements ILock {
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn,
             List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        if (!Minecraft.getInstance().gameSettings.advancedItemTooltips) return;
+        if (!flagIn.isAdvanced()) return;
         long[] ids = LockingUtil.getUnlockIDs(stack);
         if (ids.length != 0) {
             tooltip.add(
