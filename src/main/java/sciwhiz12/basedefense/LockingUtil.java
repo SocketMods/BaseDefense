@@ -1,6 +1,6 @@
 package sciwhiz12.basedefense;
 
-import java.util.UUID;
+import java.util.Random;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -10,6 +10,7 @@ import sciwhiz12.basedefense.api.lock.IKey;
 import sciwhiz12.basedefense.api.lock.ILock;
 
 public class LockingUtil {
+    private static final Random KEYID_RNG = new Random();
     public static final String NBT_UUID = "key_id";
     public static final String NBT_LOCK_KEYIDS = "unlock_ids";
 
@@ -25,7 +26,7 @@ public class LockingUtil {
         CompoundNBT tag = stack.getOrCreateTag();
         long id = tag.getLong(NBT_UUID);
         if (id == 0) {
-            id = UUID.randomUUID().getMostSignificantBits();
+            id = KEYID_RNG.nextLong();
             stack.setTagInfo(NBT_UUID, LongNBT.valueOf(id));
         }
         return id;
