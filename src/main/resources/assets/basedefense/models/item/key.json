@@ -1,8 +1,13 @@
 {
-	"parent": "minecraft:item/generated",
+	"parent": "basedefense:item/key_display",
 	"textures": {
-		"layer0": "basedefense:item/key",
-		"layer1": "basedefense:item/key_overlay_top",
-		"layer2": "basedefense:item/key_overlay_bottom"
-	}
+		"layer0": "basedefense:item/key_body",
+		"layer1": "basedefense:item/key_head"
+	},
+	"overrides": [
+		{ "predicate": { "colors": 0 }, "model": "basedefense:item/key" },
+		{ "predicate": { "colors": 1 }, "model": "basedefense:item/key_color_1" },
+		{ "predicate": { "colors": 2 }, "model": "basedefense:item/key_color_2" },
+		{ "predicate": { "colors": 3 }, "model": "basedefense:item/key_color_3" }
+	]
 }
