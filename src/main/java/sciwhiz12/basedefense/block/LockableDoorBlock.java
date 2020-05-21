@@ -35,9 +35,11 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
+import sciwhiz12.basedefense.item.lock.LockCoreItem;
 import sciwhiz12.basedefense.tileentity.LockableDoorTile;
 
-public class LockableDoorBlock extends LockableBlock {
+public class LockableDoorBlock extends LockableBaseBlock {
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
     public static final EnumProperty<DoorHingeSide> HINGE = BlockStateProperties.DOOR_HINGE;
@@ -89,6 +91,11 @@ public class LockableDoorBlock extends LockableBlock {
             this.playSound(null, worldIn, pos, state.get(OPEN));
         }
         return result;
+    }
+
+    @Override
+    public boolean isValidLock(ItemStack stack) {
+        return stack.getItem() instanceof LockCoreItem;
     }
 
     @Override
@@ -243,18 +250,6 @@ public class LockableDoorBlock extends LockableBlock {
         }
     }
 
-    /*
-     * public void neighborChanged(BlockState state, World worldIn, BlockPos pos,
-     * Block blockIn, BlockPos fromPos, boolean isMoving) { boolean flag =
-     * worldIn.isBlockPowered(pos) || worldIn.isBlockPowered(
-     * pos.offset(state.get(HALF) == DoubleBlockHalf.LOWER ? Direction.UP :
-     * Direction.DOWN) ); if (blockIn != this && flag != state.get(POWERED)) { if
-     * (flag != state.get(OPEN)) { this.playSound(null, worldIn, pos, flag); }
-     * 
-     * worldIn.setBlockState( pos, state.with(POWERED, Boolean.valueOf(flag)).with(
-     * OPEN, Boolean.valueOf(flag) ), 2 ); } }
-     */
-
     public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
         BlockPos blockpos = pos.down();
         BlockState blockstate = worldIn.getBlockState(blockpos);
@@ -266,7 +261,10 @@ public class LockableDoorBlock extends LockableBlock {
     }
 
     private void playSound(PlayerEntity player, World worldIn, BlockPos pos, boolean isOpening) {
-        worldIn.playEvent(player, isOpening ? 1005 : 1011, pos, 0);
+        worldIn.playEvent(
+            player, isOpening ? Constants.WorldEvents.IRON_DOOR_OPEN_SOUND
+                    : Constants.WorldEvents.IRON_DOOR_CLOSE_SOUND, pos, 0
+        );
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {

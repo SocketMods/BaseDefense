@@ -10,6 +10,7 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.IntReferenceHolder;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -54,7 +55,7 @@ public class LocksmithContainer extends Container {
 
         this.addSlot(new Slot(this.inputSlots, 0, 80, 50) {
             public boolean isItemValid(ItemStack stack) {
-                return stack.getItem() == ModItems.BLANK_LOCK.get();
+                return Tags.Items.INGOTS_IRON.contains(stack.getItem());
             }
         });
 
@@ -96,7 +97,7 @@ public class LocksmithContainer extends Container {
 
         this.addSlot(new Slot(this.testingSlots, 1, 135, 40) {
             public boolean isItemValid(ItemStack stack) {
-                return stack.getItem() == ModItems.LOCK.get();
+                return stack.getItem() == ModItems.LOCK_CORE.get();
             }
         });
 
@@ -114,7 +115,7 @@ public class LocksmithContainer extends Container {
         if (blank.isEmpty()) {
             this.outputSlot.setInventorySlotContents(0, ItemStack.EMPTY);
         } else {
-            ItemStack out = new ItemStack(ModItems.LOCK.get(), 1);
+            ItemStack out = new ItemStack(ModItems.LOCK_CORE.get(), 1);
             int keys = 0;
             for (int i = 1; i < 7; i++) {
                 ItemStack key = this.inputSlots.getStackInSlot(i);

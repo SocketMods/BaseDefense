@@ -44,4 +44,8 @@ public class LockingUtil {
         arr[arr.length - 1] = id;
         lock.setTagInfo(NBT_LOCK_KEYIDS, new LongArrayNBT(arr));
     }
+
+    public static void copyUnlockIDs(ItemStack from, ItemStack to) {
+        to.setTagInfo(NBT_LOCK_KEYIDS, from.getOrCreateTag().get(NBT_LOCK_KEYIDS));
+    }
 }

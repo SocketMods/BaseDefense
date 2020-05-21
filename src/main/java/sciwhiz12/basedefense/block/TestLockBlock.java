@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -12,9 +13,10 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import sciwhiz12.basedefense.item.lock.PadlockItem;
 import sciwhiz12.basedefense.tileentity.TestLockTile;
 
-public class TestLockBlock extends LockableBlock {
+public class TestLockBlock extends LockableBaseBlock {
     public TestLockBlock() {
         super(Block.Properties.create(Material.IRON));
     }
@@ -37,5 +39,10 @@ public class TestLockBlock extends LockableBlock {
             player.sendMessage(new StringTextComponent("Correct key!"));
         }
         return result;
+    }
+
+    @Override
+    public boolean isValidLock(ItemStack stack) {
+        return stack.getItem() instanceof PadlockItem;
     }
 }

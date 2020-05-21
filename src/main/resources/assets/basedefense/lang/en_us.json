@@ -1,8 +1,8 @@
 {
 	"item.basedefense.key": "Key",
 	"item.basedefense.blank_key": "Blank Key",
-	"item.basedefense.lock": "Lock",
-	"item.basedefense.blank_lock": "Blank Lock",
+	"item.basedefense.padlock": "Padlock",
+	"item.basedefense.lock_core": "Lock Core",
 	"item.basedefense.skeleton_key": "Skeleton Key",
 	"block.basedefense.test_lock_block": "Lock Test Block",
 	"block.basedefense.keysmith_table": "Keysmithing Table",

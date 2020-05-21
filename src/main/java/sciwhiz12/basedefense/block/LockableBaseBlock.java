@@ -16,8 +16,8 @@ import sciwhiz12.basedefense.api.lock.ILock;
 import sciwhiz12.basedefense.api.lock.LockContext;
 import sciwhiz12.basedefense.tileentity.LockableTile;
 
-public abstract class LockableBlock extends Block {
-    public LockableBlock(Block.Properties builder) {
+public abstract class LockableBaseBlock extends Block {
+    public LockableBaseBlock(Block.Properties builder) {
         super(builder);
     }
 
@@ -28,6 +28,8 @@ public abstract class LockableBlock extends Block {
 
     @Override
     public abstract TileEntity createTileEntity(BlockState state, IBlockReader world);
+
+    public abstract boolean isValidLock(ItemStack stack);
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos,
@@ -42,8 +44,8 @@ public abstract class LockableBlock extends Block {
                         te.getLock(), keyStack, te, world, pos, player
                     );
                     if (key.canUnlock(ctx)) {
-                        if (te.onUnlock(ctx) && (key.unlock(ctx)) && ((ILock) te.getLock()
-                            .getItem()).onUnlock(ctx)) {
+                        if (te.onUnlock(ctx) && key.unlock(ctx) && ((ILock) te.getLock().getItem())
+                            .onUnlock(ctx)) {
                             return ActionResultType.SUCCESS;
                         }
                         return ActionResultType.PASS;
@@ -51,8 +53,7 @@ public abstract class LockableBlock extends Block {
                 }
             }
             ItemStack stack = player.getHeldItem(hand);
-            if (!te.hasLock() && stack != null && stack != ItemStack.EMPTY && stack
-                .getItem() instanceof ILock) {
+            if (!te.hasLock() && !stack.isEmpty() && this.isValidLock(stack)) {
                 te.setLock(stack);
                 stack.setCount(stack.getCount() - 1);
                 return ActionResultType.CONSUME;

@@ -2,12 +2,15 @@
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
 		" g ",
-		" gn",
-		" gn"
+		" in",
+		" in"
 	],
 	"key": {
 		"g": {
 			"tag": "forge:ingots/gold"
+		},
+		"i": {
+			"tag": "forge:ingots/iron"
 		},
 		"n": {
 			"tag": "forge:nuggets/gold"

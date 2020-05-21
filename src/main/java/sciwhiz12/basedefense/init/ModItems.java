@@ -12,7 +12,8 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import sciwhiz12.basedefense.BaseDefense;
 import sciwhiz12.basedefense.item.lock.KeyItem;
-import sciwhiz12.basedefense.item.lock.LockItem;
+import sciwhiz12.basedefense.item.lock.LockCoreItem;
+import sciwhiz12.basedefense.item.lock.PadlockItem;
 import sciwhiz12.basedefense.item.lock.SkeletonKeyItem;
 
 public class ModItems {
@@ -20,7 +21,7 @@ public class ModItems {
         @Override
         @Nonnull
         public ItemStack createIcon() {
-            return new ItemStack(ModItems.LOCK.get());
+            return new ItemStack(ModItems.LOCK_CORE.get());
         }
     };
 
@@ -37,10 +38,12 @@ public class ModItems {
         "skeleton_key", () -> new SkeletonKeyItem()
     );
 
-    public static final RegistryObject<Item> BLANK_LOCK = REGISTER.register(
-        "blank_lock", () -> new Item(new Item.Properties().group(GROUP))
+    public static final RegistryObject<Item> LOCK_CORE = REGISTER.register(
+        "lock_core", () -> new LockCoreItem()
     );
-    public static final RegistryObject<Item> LOCK = REGISTER.register("lock", () -> new LockItem());
+    public static final RegistryObject<Item> PADLOCK = REGISTER.register(
+        "padlock", () -> new PadlockItem()
+    );
 
     // BlockItems
     public static final RegistryObject<Item> TEST_LOCK_BLOCK_ITEM = REGISTER.register(
