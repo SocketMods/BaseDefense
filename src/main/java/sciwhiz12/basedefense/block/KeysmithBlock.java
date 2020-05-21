@@ -21,7 +21,7 @@ import sciwhiz12.basedefense.container.KeysmithContainer;
 
 public class KeysmithBlock extends Block {
     private static final TranslationTextComponent nameTranslationKey = new TranslationTextComponent(
-            "container.basedefense.keysmith"
+        "container.basedefense.keysmith"
     );
 
     public KeysmithBlock() {
@@ -60,11 +60,11 @@ public class KeysmithBlock extends Block {
     @Override
     public INamedContainerProvider getContainer(BlockState state, World world, BlockPos pos) {
         return new SimpleNamedContainerProvider(
-                (windowId, playerInventory, playerEntity) -> {
-                    return new KeysmithContainer(
-                            windowId, playerInventory, IWorldPosCallable.of(world, pos)
-                    );
-                }, nameTranslationKey
+            (windowId, playerInventory, playerEntity) -> {
+                return new KeysmithContainer(
+                    windowId, playerInventory, IWorldPosCallable.of(world, pos)
+                );
+            }, nameTranslationKey
         );
     }
 

@@ -59,9 +59,10 @@ public class KeysmithContainer extends Container {
             public boolean isItemValid(ItemStack stack) {
                 return false;
             }
+
             public ItemStack onTake(PlayerEntity player, ItemStack stack) {
                 KeysmithContainer.this.inputSlots.decrStackSize(0, 1);
-                //KeysmithContainer.this.changeOutputName(null);
+                // KeysmithContainer.this.changeOutputName(null);
                 return stack;
             }
         });
@@ -136,7 +137,7 @@ public class KeysmithContainer extends Container {
     public void onContainerClosed(PlayerEntity playerIn) {
         super.onContainerClosed(playerIn);
         this.worldPos.consume(
-                (world, pos) -> { this.clearContainer(playerIn, world, this.inputSlots); }
+            (world, pos) -> { this.clearContainer(playerIn, world, this.inputSlots); }
         );
     }
 
@@ -145,18 +146,12 @@ public class KeysmithContainer extends Container {
         if (slot != null && slot.getHasStack()) {
             ItemStack slotStack = slot.getStack();
             if (index == 2) {
-                if (!this.mergeItemStack(slotStack, 3, 39, true)) {
-                    return ItemStack.EMPTY;
-                }
+                if (!this.mergeItemStack(slotStack, 3, 39, true)) { return ItemStack.EMPTY; }
             } else if (index != 0 && index != 1) {
-                if (index >= 3 && index < 39 && !this.mergeItemStack(
-                        slotStack, 0, 1, false
-                )) {
+                if (index >= 3 && index < 39 && !this.mergeItemStack(slotStack, 0, 1, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(slotStack, 3, 39, false)) {
-                return ItemStack.EMPTY;
-            }
+            } else if (!this.mergeItemStack(slotStack, 3, 39, false)) { return ItemStack.EMPTY; }
 
             if (slotStack.isEmpty()) {
                 slot.putStack(ItemStack.EMPTY);

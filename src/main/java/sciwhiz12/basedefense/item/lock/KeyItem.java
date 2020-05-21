@@ -58,8 +58,9 @@ public class KeyItem extends Item implements IKey {
             int[] colors = tag.getIntArray("colors");
             for (int i = 0; i < colors.length; i++) {
                 tooltip.add(
-                    (new TranslationTextComponent("tooltip.basedefense.keycolor", i+1, String.format("#%06X", colors[i])))
-                        .applyTextStyle(TextFormatting.GRAY)
+                    (new TranslationTextComponent(
+                        "tooltip.basedefense.keycolor", i + 1, String.format("#%06X", colors[i])
+                    )).applyTextStyle(TextFormatting.GRAY)
                 );
             }
         }

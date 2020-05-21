@@ -23,7 +23,7 @@ public class ModItems {
             return new ItemStack(ModItems.LOCK.get());
         }
     };
-    
+
     public static final DeferredRegister<Item> REGISTER = new DeferredRegister<>(
         ForgeRegistries.ITEMS, BaseDefense.MODID
     );

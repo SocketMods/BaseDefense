@@ -38,7 +38,7 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
         this.nameField = new TextFieldWidget(
-                this.font, i + 91, j + 28, 82, 12, I18n.format("container.repair")
+            this.font, i + 91, j + 28, 82, 12, I18n.format("container.repair")
         );
         this.nameField.setCanLoseFocus(false);
         this.nameField.changeFocus(true);
@@ -53,7 +53,7 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
     }
 
     private final ResourceLocation KEYSMITH_GUI = new ResourceLocation(
-            BaseDefense.MODID, "textures/gui/keysmith_gui.png"
+        BaseDefense.MODID, "textures/gui/keysmith_gui.png"
     );
 
     @Override
@@ -92,7 +92,7 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         this.font.drawString(this.title.getFormattedText(), 8, 6, 4210752);
         this.font.drawString(
-                this.playerInventory.getDisplayName().getFormattedText(), 8, 73, 4210752
+            this.playerInventory.getDisplayName().getFormattedText(), 8, 73, 4210752
         );
     }
 

@@ -43,28 +43,28 @@ public class LockableDoorBlock extends LockableBlock {
     public static final EnumProperty<DoorHingeSide> HINGE = BlockStateProperties.DOOR_HINGE;
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
     protected static final VoxelShape SOUTH_AABB = Block.makeCuboidShape(
-            0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 3.0D
+        0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 3.0D
     );
     protected static final VoxelShape NORTH_AABB = Block.makeCuboidShape(
-            0.0D, 0.0D, 13.0D, 16.0D, 16.0D, 16.0D
+        0.0D, 0.0D, 13.0D, 16.0D, 16.0D, 16.0D
     );
     protected static final VoxelShape WEST_AABB = Block.makeCuboidShape(
-            13.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D
+        13.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D
     );
     protected static final VoxelShape EAST_AABB = Block.makeCuboidShape(
-            0.0D, 0.0D, 0.0D, 3.0D, 16.0D, 16.0D
+        0.0D, 0.0D, 0.0D, 3.0D, 16.0D, 16.0D
     );
 
     public LockableDoorBlock() {
         super(
-                Block.Properties.create(Material.IRON).hardnessAndResistance(5.0F).sound(
-                        SoundType.METAL
-                ).notSolid()
+            Block.Properties.create(Material.IRON).hardnessAndResistance(5.0F).sound(
+                SoundType.METAL
+            ).notSolid()
         );
         this.setDefaultState(
-                this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(
-                        OPEN, Boolean.valueOf(false)
-                ).with(HINGE, DoorHingeSide.LEFT).with(HALF, DoubleBlockHalf.LOWER)
+            this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(
+                OPEN, Boolean.valueOf(false)
+            ).with(HINGE, DoorHingeSide.LEFT).with(HALF, DoubleBlockHalf.LOWER)
         );
     }
 
@@ -81,7 +81,7 @@ public class LockableDoorBlock extends LockableBlock {
             state = worldIn.getBlockState(pos);
         }
         ActionResultType result = super.onBlockActivated(
-                state, worldIn, pos, player, handIn, rayTrace
+            state, worldIn, pos, player, handIn, rayTrace
         );
         if (result.isSuccess()) {
             state = state.cycle(OPEN);
@@ -119,15 +119,14 @@ public class LockableDoorBlock extends LockableBlock {
                 && doubleblockhalf == DoubleBlockHalf.LOWER == (facing == Direction.UP)) {
             return facingState.getBlock() == this && facingState.get(HALF) != doubleblockhalf
                     ? stateIn.with(FACING, facingState.get(FACING)).with(
-                            OPEN, facingState.get(OPEN)
-                    ).with(HINGE, facingState.get(HINGE))
-                    : Blocks.AIR.getDefaultState();
+                        OPEN, facingState.get(OPEN)
+                    ).with(HINGE, facingState.get(HINGE)) : Blocks.AIR.getDefaultState();
         } else {
             return doubleblockhalf == DoubleBlockHalf.LOWER && facing == Direction.DOWN && !stateIn
-                    .isValidPosition(worldIn, currentPos) ? Blocks.AIR.getDefaultState()
-                            : super.updatePostPlacement(
-                                    stateIn, facing, facingState, worldIn, currentPos, facingPos
-                            );
+                .isValidPosition(worldIn, currentPos) ? Blocks.AIR.getDefaultState()
+                        : super.updatePostPlacement(
+                            stateIn, facing, facingState, worldIn, currentPos, facingPos
+                        );
         }
     }
 
@@ -150,7 +149,7 @@ public class LockableDoorBlock extends LockableBlock {
             if (!worldIn.isRemote && !player.isCreative() && player.canHarvestBlock(blockstate)) {
                 Block.spawnDrops(state, worldIn, pos, (TileEntity) null, player, itemstack);
                 Block.spawnDrops(
-                        blockstate, worldIn, blockpos, (TileEntity) null, player, itemstack
+                    blockstate, worldIn, blockpos, (TileEntity) null, player, itemstack
                 );
             }
         }
@@ -178,9 +177,9 @@ public class LockableDoorBlock extends LockableBlock {
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         BlockPos blockpos = context.getPos();
         if (blockpos.getY() < (context.getWorld().getHeight() - 1) && context.getWorld()
-                .getBlockState(blockpos.up()).isReplaceable(context)) {
+            .getBlockState(blockpos.up()).isReplaceable(context)) {
             return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing()).with(
-                    HINGE, this.getHingeSide(context)
+                HINGE, this.getHingeSide(context)
             ).with(OPEN, Boolean.FALSE).with(HALF, DoubleBlockHalf.LOWER);
         } else {
             return null;
@@ -209,14 +208,14 @@ public class LockableDoorBlock extends LockableBlock {
         BlockPos blockpos5 = blockpos1.offset(direction2);
         BlockState blockstate3 = iblockreader.getBlockState(blockpos5);
         int i = (blockstate.isCollisionShapeOpaque(iblockreader, blockpos2) ? -1 : 0) + (blockstate1
-                .isCollisionShapeOpaque(iblockreader, blockpos3) ? -1 : 0) + (blockstate2
-                        .isCollisionShapeOpaque(iblockreader, blockpos4) ? 1 : 0) + (blockstate3
-                                .isCollisionShapeOpaque(iblockreader, blockpos5) ? 1 : 0);
+            .isCollisionShapeOpaque(iblockreader, blockpos3) ? -1 : 0) + (blockstate2
+                .isCollisionShapeOpaque(iblockreader, blockpos4) ? 1 : 0) + (blockstate3
+                    .isCollisionShapeOpaque(iblockreader, blockpos5) ? 1 : 0);
         boolean flag = blockstate.getBlock() == this && blockstate.get(
-                HALF
+            HALF
         ) == DoubleBlockHalf.LOWER;
         boolean flag1 = blockstate2.getBlock() == this && blockstate2.get(
-                HALF
+            HALF
         ) == DoubleBlockHalf.LOWER;
         if ((!flag || flag1) && i <= 0) {
             if ((!flag1 || flag) && i >= 0) {

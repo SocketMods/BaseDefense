@@ -33,15 +33,15 @@ public class LockItem extends Item implements ILock {
         long[] ids = LockingUtil.getUnlockIDs(stack);
         if (ids.length != 0) {
             tooltip.add(
-                    new TranslationTextComponent("tooltip.basedefense.unlockids").applyTextStyle(
-                            TextFormatting.GRAY
-                    )
+                new TranslationTextComponent("tooltip.basedefense.unlockids").applyTextStyle(
+                    TextFormatting.GRAY
+                )
             );
             for (long id : ids) {
                 tooltip.add(
-                        new StringTextComponent("  " + Long.toHexString(id)).applyTextStyle(
-                                TextFormatting.DARK_GRAY
-                        )
+                    new StringTextComponent("  " + Long.toHexString(id)).applyTextStyle(
+                        TextFormatting.DARK_GRAY
+                    )
                 );
             }
         }
@@ -59,10 +59,9 @@ public class LockItem extends Item implements ILock {
                 if (itementity1 != null) { itementity1.makeFakeItem(); }
 
                 ctx.getWorld().playSound(
-                        (PlayerEntity) null, player.getPosX(), player.getPosY(), player.getPosZ(),
-                        SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((player
-                                .getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.7F + 1.0F)
-                                * 2.0F
+                    (PlayerEntity) null, player.getPosX(), player.getPosY(), player.getPosZ(),
+                    SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((player.getRNG()
+                        .nextFloat() - player.getRNG().nextFloat()) * 0.7F + 1.0F) * 2.0F
                 );
                 player.container.detectAndSendChanges();
             } else {

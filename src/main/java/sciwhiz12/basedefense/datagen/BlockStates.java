@@ -37,16 +37,16 @@ public class BlockStates extends BlockStateProvider {
         // models().getBuilder("block/door/door_top_rh");
         // setupDoor(door_top_rh, "#top", Direction.UP, true);
         ModelFile door_bottom = new ModelFile.UncheckedModelFile(
-                modLoc("block/door/lockable_door_bottom")
+            modLoc("block/door/lockable_door_bottom")
         );
         ModelFile door_bottom_rh = new ModelFile.UncheckedModelFile(
-                modLoc("block/door/lockable_door_bottom_rh")
+            modLoc("block/door/lockable_door_bottom_rh")
         );
         ModelFile door_top = new ModelFile.UncheckedModelFile(
-                modLoc("block/door/lockable_door_top")
+            modLoc("block/door/lockable_door_top")
         );
         ModelFile door_top_rh = new ModelFile.UncheckedModelFile(
-                modLoc("block/door/lockable_door_top_rh")
+            modLoc("block/door/lockable_door_top_rh")
         );
 
         VariantBlockStateBuilder bld = getVariantBuilder(ModBlocks.LOCK_DOOR_BLOCK.get());
@@ -78,10 +78,10 @@ public class BlockStates extends BlockStateProvider {
     private void registerPart(VariantBlockStateBuilder bld, ModelFile modelFile,
             DoubleBlockHalf half, DoorHingeSide hinge, Direction dir, boolean open) {
         PartialBlockstate state = bld.partialState().with(LockableDoorBlock.FACING, dir).with(
-                LockableDoorBlock.HALF, half
+            LockableDoorBlock.HALF, half
         ).with(LockableDoorBlock.HINGE, hinge).with(LockableDoorBlock.OPEN, open);
         ConfiguredModel model = ConfiguredModel.builder().modelFile(modelFile).rotationY(
-                getRotationY(dir, open, hinge)
+            getRotationY(dir, open, hinge)
         ).buildLast();
         bld.setModels(state, model);
     }

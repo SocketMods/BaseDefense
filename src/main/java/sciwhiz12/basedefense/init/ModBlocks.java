@@ -16,7 +16,7 @@ public class ModBlocks {
     public static final DeferredRegister<Block> REGISTER = new DeferredRegister<>(
         ForgeRegistries.BLOCKS, BaseDefense.MODID
     );
-    
+
     public static final RegistryObject<Block> TEST_LOCK_BLOCK = REGISTER.register(
         "test_lock_block", () -> new TestLockBlock()
     );

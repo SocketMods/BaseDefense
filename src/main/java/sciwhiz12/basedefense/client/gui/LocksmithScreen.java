@@ -18,7 +18,7 @@ public class LocksmithScreen extends ContainerScreen<LocksmithContainer> {
     }
 
     private final ResourceLocation LOCKSMITH_GUI = new ResourceLocation(
-            BaseDefense.MODID, "textures/gui/locksmith_gui.png"
+        BaseDefense.MODID, "textures/gui/locksmith_gui.png"
     );
 
     @Override
@@ -32,7 +32,7 @@ public class LocksmithScreen extends ContainerScreen<LocksmithContainer> {
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         this.font.drawString(this.title.getFormattedText(), 8, 6, 4210752);
         this.font.drawString(
-                this.playerInventory.getDisplayName().getFormattedText(), 8, 73, 4210752
+            this.playerInventory.getDisplayName().getFormattedText(), 8, 73, 4210752
         );
     }
 
