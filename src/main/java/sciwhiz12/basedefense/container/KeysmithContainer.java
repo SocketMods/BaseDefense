@@ -99,7 +99,6 @@ public class KeysmithContainer extends Container {
                 itemstack.clearCustomName();
             } else {
                 StringTextComponent displayName = new StringTextComponent(this.name);
-                displayName.getStyle().setItalic(false);
                 itemstack.setDisplayName(displayName);
             }
         }
