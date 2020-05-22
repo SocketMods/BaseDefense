@@ -2,5 +2,11 @@
 	"parent": "minecraft:item/generated",
 	"textures": {
 		"layer0": "basedefense:item/lock_core"
-	}
+	},
+	"overrides": [
+		{ "predicate": { "colors": 0 }, "model": "basedefense:item/lock_core" },
+		{ "predicate": { "colors": 1 }, "model": "basedefense:item/lock_core_color_1" },
+		{ "predicate": { "colors": 2 }, "model": "basedefense:item/lock_core_color_2" },
+		{ "predicate": { "colors": 3 }, "model": "basedefense:item/lock_core_color_3" }
+	]
 }

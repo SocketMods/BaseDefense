@@ -12,11 +12,6 @@ public class IdentifyingColor implements IItemColor {
             if (tag != null && tag.contains("colors")) {
                 int[] colors = tag.getIntArray("colors");
                 if (colors.length - tintIndex + 2 > 0) { return colors[tintIndex - 2]; }
-                /*
-                 * if (colors.length > 0 && tintIndex == 2) { return colors[0]; } else if
-                 * (colors.length > 1 && tintIndex == 3) { return colors[1]; } else if
-                 * (colors.length > 2 && tintIndex == 4) { return colors[2]; }
-                 */
             }
         }
         return -1;

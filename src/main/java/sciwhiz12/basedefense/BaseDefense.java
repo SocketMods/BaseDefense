@@ -52,6 +52,6 @@ public class BaseDefense {
 
     @SubscribeEvent
     void registerColors(ColorHandlerEvent.Item event) {
-        event.getItemColors().register(new IdentifyingColor(), ModItems.KEY.get());
+        event.getItemColors().register(new IdentifyingColor(), ModItems.KEY.get(), ModItems.LOCK_CORE.get(), ModItems.PADLOCK.get());
     }
 }

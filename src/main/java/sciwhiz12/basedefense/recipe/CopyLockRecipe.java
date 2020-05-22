@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipe;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
@@ -39,6 +40,10 @@ public class CopyLockRecipe extends ShapedRecipe {
                 ItemStack stack = inv.getStackInSlot(row + col * inv.getWidth());
                 if (!stack.isEmpty() && stack.getItem() instanceof ILock) {
                     LockingUtil.copyUnlockIDs(stack, output);
+                    CompoundNBT display = null;
+                    if ((display = stack.getChildTag("display")) != null) {
+                        output.setTagInfo("display", display.copy());
+                    }
                     break;
                 }
             }

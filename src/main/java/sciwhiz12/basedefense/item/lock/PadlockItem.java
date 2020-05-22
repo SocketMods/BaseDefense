@@ -3,15 +3,27 @@ package sciwhiz12.basedefense.item.lock;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import sciwhiz12.basedefense.api.lock.LockContext;
 
 public class PadlockItem extends LockBaseItem {
+    private static final IItemPropertyGetter COLOR_GETTER = (stack, world, livingEntity) -> {
+        CompoundNBT tag = stack.getChildTag("display");
+        if (tag != null && tag.contains("colors")) {
+            return (float) tag.getIntArray("colors").length;
+        }
+        return 0.0F;
+    };
+
     public PadlockItem() {
         super(new Item.Properties().maxDamage(0));
+        this.addPropertyOverride(new ResourceLocation("colors"), COLOR_GETTER);
     }
 
     @Override

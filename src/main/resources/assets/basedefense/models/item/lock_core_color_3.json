@@ -1,0 +1,10 @@
+{
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "basedefense:item/lock_core",
+		"layer1": "basedefense:item/lock_core",
+		"layer2": "basedefense:item/lock_core_overlay_top",
+		"layer3": "basedefense:item/lock_core_overlay_middle",
+		"layer4": "basedefense:item/lock_core_overlay_bottom"
+	}
+}
