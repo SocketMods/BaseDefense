@@ -118,7 +118,6 @@ public class LockableDoorBlock extends LockableBaseBlock {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public BlockState updatePostPlacement(BlockState stateIn, Direction facing,
             BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
         DoubleBlockHalf doubleblockhalf = stateIn.get(HALF);
