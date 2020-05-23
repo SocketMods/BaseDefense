@@ -36,8 +36,9 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
-import sciwhiz12.basedefense.item.lock.LockCoreItem;
-import sciwhiz12.basedefense.tileentity.LockableDoorTile;
+import sciwhiz12.basedefense.api.lock.Decision;
+import sciwhiz12.basedefense.api.lock.ILockable;
+import sciwhiz12.basedefense.item.lock.PadlockItem;
 
 public class LockableDoorBlock extends LockableBaseBlock {
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
@@ -71,32 +72,37 @@ public class LockableDoorBlock extends LockableBaseBlock {
     }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new LockableDoorTile();
-    }
-
-    @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos,
             PlayerEntity player, Hand handIn, BlockRayTraceResult rayTrace) {
-        if (!worldIn.isRemote && state.get(HALF) == DoubleBlockHalf.UPPER) {
+        if (state.get(HALF) == DoubleBlockHalf.UPPER) {
             pos = pos.offset(Direction.DOWN);
             state = worldIn.getBlockState(pos);
         }
-        ActionResultType result = super.onBlockActivated(
-            state, worldIn, pos, player, handIn, rayTrace
-        );
-        if (result.isSuccess()) {
-            state = state.cycle(OPEN);
-            worldIn.setBlockState(pos, state, 10);
-            this.playSound(null, worldIn, pos, state.get(OPEN));
-        }
-        return result;
+        return super.onBlockActivated(state, worldIn, pos, player, handIn, rayTrace);
     }
 
     @Override
     public boolean isValidLock(ItemStack stack) {
-        return stack.getItem() instanceof LockCoreItem;
+        return stack.getItem() instanceof PadlockItem;
     }
+
+    @Override
+    public boolean isUnlockAllowed(ItemStack lockStack, ItemStack keyStack, World worldIn,
+            BlockPos pos, ILockable block, PlayerEntity player) {
+        return true;
+    }
+
+    @Override
+    public Decision onUnlock(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos,
+            ILockable block, @Nullable PlayerEntity player) {
+        BlockState state = worldIn.getBlockState(pos);
+        state = state.cycle(OPEN);
+        worldIn.setBlockState(pos, state, 10);
+        this.playSound(null, worldIn, pos, state.get(OPEN));
+        return Decision.SUPPRESS;
+    }
+
+    // BELOW are standard door methods
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos,

@@ -11,10 +11,10 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import sciwhiz12.basedefense.BaseDefense;
-import sciwhiz12.basedefense.item.lock.KeyItem;
+import sciwhiz12.basedefense.item.key.KeyItem;
+import sciwhiz12.basedefense.item.key.SkeletonKeyItem;
 import sciwhiz12.basedefense.item.lock.LockCoreItem;
 import sciwhiz12.basedefense.item.lock.PadlockItem;
-import sciwhiz12.basedefense.item.lock.SkeletonKeyItem;
 
 public class ModItems {
     public static final ItemGroup GROUP = new ItemGroup(BaseDefense.MODID) {

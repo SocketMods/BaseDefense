@@ -1,4 +1,4 @@
-package sciwhiz12.basedefense.item.lock;
+package sciwhiz12.basedefense.item.key;
 
 import java.util.List;
 
@@ -10,7 +10,6 @@ import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -21,7 +20,6 @@ import net.minecraft.world.World;
 import sciwhiz12.basedefense.LockingUtil;
 import sciwhiz12.basedefense.api.lock.IKey;
 import sciwhiz12.basedefense.api.lock.ILockable;
-import sciwhiz12.basedefense.api.lock.LockContext;
 
 public class KeyItem extends Item implements IKey {
     private static final IItemPropertyGetter COLOR_GETTER = (stack, world, livingEntity) -> {
@@ -40,8 +38,8 @@ public class KeyItem extends Item implements IKey {
     @Override
     public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos,
             PlayerEntity player) {
-        TileEntity te = world.getTileEntity(pos);
-        return te != null && te instanceof ILockable;
+        return world.isBlockLoaded(pos) && world.getBlockState(pos)
+            .getBlock() instanceof ILockable;
     }
 
     @Override
@@ -68,12 +66,14 @@ public class KeyItem extends Item implements IKey {
     }
 
     @Override
-    public boolean canUnlock(LockContext context) {
-        return LockingUtil.hasUnlockID(context.getLockItem(), context.getKeyItem());
+    public boolean canUnlock(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos,
+            ILockable block, @Nullable PlayerEntity player) {
+        return LockingUtil.hasUnlockID(lockStack, keyStack);
     }
 
     @Override
-    public boolean unlock(LockContext context) {
-        return true;
+    public void onUnlock(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos,
+            ILockable block, @Nullable PlayerEntity player) {
+        return;
     }
 }

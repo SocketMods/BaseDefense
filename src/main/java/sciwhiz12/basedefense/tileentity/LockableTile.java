@@ -7,14 +7,13 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import sciwhiz12.basedefense.api.lock.ILockable;
+import sciwhiz12.basedefense.init.ModTileEntities;
 
-public abstract class LockableTile extends TileEntity implements ILockable {
+public class LockableTile extends TileEntity {
     protected ItemStack lock = ItemStack.EMPTY;
 
-    public LockableTile(TileEntityType<?> tileEntityType) {
-        super(tileEntityType);
+    public LockableTile() {
+        super(ModTileEntities.LOCKABLE_TILE.get());
     }
 
     @Override
@@ -47,28 +46,25 @@ public abstract class LockableTile extends TileEntity implements ILockable {
         super.write(parentTag);
         CompoundNBT itemStackNBT = new CompoundNBT();
         this.lock.write(itemStackNBT);
-        parentTag.put("lock", itemStackNBT);
+        parentTag.put("LockItem", itemStackNBT);
         return parentTag;
     }
 
     @Override
     public void read(CompoundNBT parentTag) {
         super.read(parentTag);
-        CompoundNBT itemStackNBT = parentTag.getCompound("lock");
+        CompoundNBT itemStackNBT = parentTag.getCompound("LockItem");
         this.lock = ItemStack.read(itemStackNBT);
     }
 
-    @Override
     public ItemStack getLock() {
-        return lock;
+        return lock.copy();
     }
 
-    @Override
     public boolean hasLock() {
         return !lock.isEmpty();
     }
 
-    @Override
     public void setLock(ItemStack stack) {
         this.lock = stack.copy();
     }

@@ -15,7 +15,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import sciwhiz12.basedefense.LockingUtil;
 import sciwhiz12.basedefense.api.lock.ILock;
-import sciwhiz12.basedefense.api.lock.LockContext;
 
 public abstract class LockBaseItem extends Item implements ILock {
     public LockBaseItem(Item.Properties props) {
@@ -53,7 +52,4 @@ public abstract class LockBaseItem extends Item implements ILock {
             }
         }
     }
-
-    @Override
-    public abstract boolean onUnlock(LockContext ctx);
 }
