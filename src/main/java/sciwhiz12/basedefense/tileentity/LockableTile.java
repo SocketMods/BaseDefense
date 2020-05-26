@@ -7,6 +7,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import sciwhiz12.basedefense.init.ModTileEntities;
 
 public class LockableTile extends TileEntity {
@@ -14,6 +15,10 @@ public class LockableTile extends TileEntity {
 
     public LockableTile() {
         super(ModTileEntities.LOCKABLE_TILE.get());
+    }
+    
+    public LockableTile(TileEntityType<?> type) {
+        super(type);
     }
 
     @Override

@@ -40,6 +40,7 @@ import sciwhiz12.basedefense.api.lock.IKey;
 import sciwhiz12.basedefense.api.lock.ILock;
 import sciwhiz12.basedefense.api.lock.ILockable;
 import sciwhiz12.basedefense.item.lock.PadlockItem;
+import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
 
 public class PadlockedDoorBlock extends LockableBaseBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -58,6 +59,11 @@ public class PadlockedDoorBlock extends LockableBaseBlock {
                 HINGE, DoorHingeSide.LEFT
             ).with(HALF, DoubleBlockHalf.LOWER)
         );
+    }
+
+    @Override
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+        return new PadlockedDoorTile();
     }
 
     @Override

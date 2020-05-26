@@ -55,7 +55,7 @@ public class DoorLockerHandler {
             stack.setCount(stack.getCount() - 1);
             te.setLock(copy);
 
-            int flags = Constants.BlockFlags.BLOCK_UPDATE | Constants.BlockFlags.UPDATE_NEIGHBORS
+            int flags = Constants.BlockFlags.BLOCK_UPDATE | Constants.BlockFlags.RERENDER_MAIN_THREAD | Constants.BlockFlags.UPDATE_NEIGHBORS
                     | Constants.BlockFlags.NO_NEIGHBOR_DROPS;
             world.setBlockState(pos, newState, flags);
             world.setBlockState(offPos, newOffState, flags);

@@ -7,12 +7,14 @@ import net.minecraft.client.gui.ScreenManager;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import sciwhiz12.basedefense.client.color.IdentifyingColor;
 import sciwhiz12.basedefense.client.gui.KeysmithScreen;
 import sciwhiz12.basedefense.client.gui.LocksmithScreen;
+import sciwhiz12.basedefense.client.render.PadlockedDoorRenderer;
 import sciwhiz12.basedefense.init.ModBlocks;
 import sciwhiz12.basedefense.init.ModContainers;
 import sciwhiz12.basedefense.init.ModItems;
@@ -46,6 +48,7 @@ public class BaseDefense {
         ModBlocks.setupRenderLayer();
         ScreenManager.registerFactory(ModContainers.KEYSMITH_CONTAINER.get(), KeysmithScreen::new);
         ScreenManager.registerFactory(ModContainers.LOCKSMITH_CONTAINER.get(), LocksmithScreen::new);
+        ClientRegistry.bindTileEntityRenderer(ModTileEntities.PADLOCKED_DOOR.get(), PadlockedDoorRenderer::new);
     }
 
     @SubscribeEvent
