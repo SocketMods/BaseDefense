@@ -18,8 +18,10 @@ public class ModTileEntities {
     );
 
     public static final RegistryObject<TileEntityType<PadlockedDoorTile>> PADLOCKED_DOOR = ModTileEntities.REGISTER.register(
-        "padlocked_door", () -> TileEntityType.Builder.create(PadlockedDoorTile::new, ModBlocks.PADLOCKED_DOOR.get()).build(
-            null
-        )
+        "padlocked_door", () -> TileEntityType.Builder.create(
+            PadlockedDoorTile::new, ModBlocks.PADLOCKED_IRON_DOOR.get(), ModBlocks.PADLOCKED_OAK_DOOR.get(),
+            ModBlocks.PADLOCKED_BIRCH_DOOR.get(), ModBlocks.PADLOCKED_SPRUCE_DOOR.get(), ModBlocks.PADLOCKED_JUNGLE_DOOR
+                .get(), ModBlocks.PADLOCKED_ACACIA_DOOR.get(), ModBlocks.PADLOCKED_DARK_OAK_DOOR.get()
+        ).build(null)
     );
 }

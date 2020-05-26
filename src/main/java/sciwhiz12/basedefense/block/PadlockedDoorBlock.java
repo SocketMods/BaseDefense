@@ -1,12 +1,14 @@
 package sciwhiz12.basedefense.block;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.DoorBlock;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -35,6 +37,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.registries.IRegistryDelegate;
 import sciwhiz12.basedefense.api.lock.Decision;
 import sciwhiz12.basedefense.api.lock.IKey;
 import sciwhiz12.basedefense.api.lock.ILock;
@@ -43,6 +46,12 @@ import sciwhiz12.basedefense.item.lock.PadlockItem;
 import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
 
 public class PadlockedDoorBlock extends LockableBaseBlock {
+    private static final Map<IRegistryDelegate<Block>, IRegistryDelegate<Block>> replacement_block_map = new HashMap<>();
+
+    public static PadlockedDoorBlock getReplacement(Block blockIn) {
+        return (PadlockedDoorBlock) replacement_block_map.get(blockIn.delegate).get();
+    }
+
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final EnumProperty<DoorSide> SIDE = EnumProperty.create("padlock", DoorSide.class);
     public static final EnumProperty<DoorHingeSide> HINGE = BlockStateProperties.DOOR_HINGE;
@@ -52,8 +61,16 @@ public class PadlockedDoorBlock extends LockableBaseBlock {
     protected static final VoxelShape WEST_AABB = Block.makeCuboidShape(13.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
     protected static final VoxelShape EAST_AABB = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 3.0D, 16.0D, 16.0D);
 
+    private final Block block;
+
     public PadlockedDoorBlock() {
-        super(Block.Properties.create(Material.IRON).hardnessAndResistance(5.0F).sound(SoundType.METAL).notSolid());
+        this(Blocks.IRON_DOOR);
+    }
+
+    public PadlockedDoorBlock(Block blockIn) {
+        super(Block.Properties.from(blockIn));
+        this.block = blockIn;
+        replacement_block_map.put(blockIn.delegate, this.delegate);
         this.setDefaultState(
             this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(SIDE, DoorSide.OUTSIDE).with(
                 HINGE, DoorHingeSide.LEFT
@@ -74,7 +91,7 @@ public class PadlockedDoorBlock extends LockableBaseBlock {
             state = worldIn.getBlockState(pos);
         }
         ItemStack keyStack = player.getHeldItem(handIn);
-        if (!worldIn.isRemote && worldIn.isBlockLoaded(pos) && allowOpen(
+        if (!worldIn.isRemote && worldIn.isBlockLoaded(pos) && state.getBlock() == this && allowOpen(
             state.get(SIDE), state.get(FACING), rayTrace.getFace()
         )) {
             if (this.hasLock(worldIn, pos) && !keyStack.isEmpty() && keyStack.getItem() instanceof IKey) {
@@ -90,9 +107,8 @@ public class PadlockedDoorBlock extends LockableBaseBlock {
                         if (this.hasLock(worldIn, pos)) { dropLock(player, worldIn, pos, lockStack); }
                         replaceDoor(worldIn, pos);
                     }
-                    return ActionResultType.SUCCESS;
                 }
-                return ActionResultType.FAIL;
+                return ActionResultType.SUCCESS;
             }
         }
         return ActionResultType.PASS;
@@ -107,12 +123,13 @@ public class PadlockedDoorBlock extends LockableBaseBlock {
         final BlockPos offPos = state.get(PadlockedDoorBlock.HALF) == DoubleBlockHalf.LOWER ? pos.up() : pos.down();
         final BlockState offState = worldIn.getBlockState(offPos);
 
-        final Direction facing = state.get(DoorBlock.FACING);
-        final DoorHingeSide hinge = state.get(DoorBlock.HINGE);
-        final BlockState defState = Blocks.IRON_DOOR.getDefaultState().with(HINGE, hinge).with(FACING, facing);
+        final Direction facing = state.get(FACING);
+        final DoorHingeSide hinge = state.get(HINGE);
+        final BlockState defState = this.block.getDefaultState().with(DoorBlock.HINGE, hinge).with(DoorBlock.FACING, facing)
+            .with(DoorBlock.OPEN, this.block.getMaterial(this.block.getDefaultState()) == Material.IRON ? false : true);
 
-        final BlockState newState = defState.with(HALF, state.get(DoorBlock.HALF));
-        final BlockState newOffState = defState.with(HALF, offState.get(DoorBlock.HALF));
+        final BlockState newState = defState.with(DoorBlock.HALF, state.get(HALF));
+        final BlockState newOffState = defState.with(DoorBlock.HALF, offState.get(HALF));
 
         int flags = Constants.BlockFlags.DEFAULT_AND_RERENDER | Constants.BlockFlags.NO_NEIGHBOR_DROPS;
         worldIn.setBlockState(offPos, newOffState, flags);
