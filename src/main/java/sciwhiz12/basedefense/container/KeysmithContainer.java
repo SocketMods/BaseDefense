@@ -1,5 +1,7 @@
 package sciwhiz12.basedefense.container;
 
+import static sciwhiz12.basedefense.init.ModTextures.ATLAS_BLOCKS_TEXTURE;
+
 import org.apache.commons.lang3.StringUtils;
 
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,6 +22,7 @@ import sciwhiz12.basedefense.LockingUtil;
 import sciwhiz12.basedefense.init.ModBlocks;
 import sciwhiz12.basedefense.init.ModContainers;
 import sciwhiz12.basedefense.init.ModItems;
+import sciwhiz12.basedefense.init.ModTextures;
 
 public class KeysmithContainer extends Container {
     private final ItemStackHandler outputSlot = new ItemStackHandler(1) {};
@@ -47,13 +50,13 @@ public class KeysmithContainer extends Container {
             public boolean isItemValid(ItemStack stack) {
                 return stack.getItem() == ModItems.BLANK_KEY.get();
             }
-        });
+        }.setBackground(ATLAS_BLOCKS_TEXTURE, ModTextures.SLOT_BLANK_KEY));
         this.addSlot(new SlotItemHandler(this.inputSlots, 1, 31, 46) {
             @Override
             public boolean isItemValid(ItemStack stack) {
                 return stack.getItem() == ModItems.KEY.get();
             }
-        });
+        }.setBackground(ATLAS_BLOCKS_TEXTURE, ModTextures.SLOT_KEY));
         this.addSlot(new SlotItemHandler(this.outputSlot, 0, 64, 24) {
             @Override
             public boolean isItemValid(ItemStack stack) {
@@ -66,7 +69,7 @@ public class KeysmithContainer extends Container {
                 KeysmithContainer.this.setOutputName(null);
                 return stack;
             }
-        });
+        }.setBackground(ATLAS_BLOCKS_TEXTURE, ModTextures.SLOT_KEY));
         layoutPlayerInventorySlots(8, 84);
     }
 

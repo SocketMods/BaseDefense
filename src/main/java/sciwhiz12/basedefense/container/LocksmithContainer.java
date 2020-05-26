@@ -1,5 +1,7 @@
 package sciwhiz12.basedefense.container;
 
+import static sciwhiz12.basedefense.init.ModTextures.ATLAS_BLOCKS_TEXTURE;
+
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftResultInventory;
@@ -18,6 +20,7 @@ import sciwhiz12.basedefense.LockingUtil;
 import sciwhiz12.basedefense.init.ModBlocks;
 import sciwhiz12.basedefense.init.ModContainers;
 import sciwhiz12.basedefense.init.ModItems;
+import sciwhiz12.basedefense.init.ModTextures;
 
 public class LocksmithContainer extends Container {
     private final IInventory outputSlot = new CraftResultInventory() {
@@ -57,21 +60,21 @@ public class LocksmithContainer extends Container {
             public boolean isItemValid(ItemStack stack) {
                 return Tags.Items.INGOTS_IRON.contains(stack.getItem());
             }
-        });
+        }.setBackground(ATLAS_BLOCKS_TEXTURE, ModTextures.SLOT_INGOT_OUTLINE));
 
         for (int i = 1; i < 4; i++) {
             this.addSlot(new Slot(this.inputSlots, i, 13 + ((i - 1) * 18), 21) {
                 public boolean isItemValid(ItemStack stack) {
                     return stack.getItem() == ModItems.KEY.get();
                 }
-            });
+            }.setBackground(ATLAS_BLOCKS_TEXTURE, ModTextures.SLOT_KEY));
         }
         for (int i = 4; i < 7; i++) {
             this.addSlot(new Slot(this.inputSlots, i, 13 + ((i - 4) * 18), 50) {
                 public boolean isItemValid(ItemStack stack) {
                     return stack.getItem() == ModItems.KEY.get();
                 }
-            });
+            }.setBackground(ATLAS_BLOCKS_TEXTURE, ModTextures.SLOT_KEY));
         }
 
         this.addSlot(new Slot(this.outputSlot, 0, 80, 13) {
@@ -87,13 +90,13 @@ public class LocksmithContainer extends Container {
                 LocksmithContainer.this.inputSlots.decrStackSize(0, 1);
                 return stack;
             }
-        });
+        }.setBackground(ATLAS_BLOCKS_TEXTURE, ModTextures.SLOT_LOCK_CORE));
 
         this.addSlot(new Slot(this.testingSlots, 0, 135, 19) {
             public boolean isItemValid(ItemStack stack) {
                 return stack.getItem() == ModItems.KEY.get();
             }
-        });
+        }.setBackground(ATLAS_BLOCKS_TEXTURE, ModTextures.SLOT_KEY));
 
         this.addSlot(new Slot(this.testingSlots, 1, 135, 40) {
             public boolean isItemValid(ItemStack stack) {
