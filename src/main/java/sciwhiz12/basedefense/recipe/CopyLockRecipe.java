@@ -24,8 +24,8 @@ import sciwhiz12.basedefense.api.lock.ILock;
 import sciwhiz12.basedefense.init.ModRecipes;
 
 public class CopyLockRecipe extends ShapedRecipe {
-    public CopyLockRecipe(ResourceLocation idIn, String groupIn, int recipeWidthIn,
-            int recipeHeightIn, NonNullList<Ingredient> recipeItemsIn, ItemStack recipeOutputIn) {
+    public CopyLockRecipe(ResourceLocation idIn, String groupIn, int recipeWidthIn, int recipeHeightIn,
+            NonNullList<Ingredient> recipeItemsIn, ItemStack recipeOutputIn) {
         super(idIn, groupIn, recipeWidthIn, recipeHeightIn, recipeItemsIn, recipeOutputIn);
     }
 
@@ -41,9 +41,7 @@ public class CopyLockRecipe extends ShapedRecipe {
                 if (!stack.isEmpty() && stack.getItem() instanceof ILock) {
                     LockingUtil.copyUnlockIDs(stack, output);
                     CompoundNBT display = null;
-                    if ((display = stack.getChildTag("display")) != null) {
-                        output.setTagInfo("display", display.copy());
-                    }
+                    if ((display = stack.getChildTag("display")) != null) { output.setTagInfo("display", display.copy()); }
                     break;
                 }
             }
@@ -62,10 +60,9 @@ public class CopyLockRecipe extends ShapedRecipe {
         private static final Method PATTERN_FROM_JSON = ObfuscationReflectionHelper.findMethod(
             ShapedRecipe.class, "func_192407_a", JsonArray.class
         );
-        private static final Method DESERIALIZE_INGREDIENTS = ObfuscationReflectionHelper
-            .findMethod(
-                ShapedRecipe.class, "func_192402_a", String[].class, Map.class, int.class, int.class
-            );
+        private static final Method DESERIALIZE_INGREDIENTS = ObfuscationReflectionHelper.findMethod(
+            ShapedRecipe.class, "func_192402_a", String[].class, Map.class, int.class, int.class
+        );
 
         @SuppressWarnings("unchecked")
         public CopyLockRecipe read(ResourceLocation recipeId, JsonObject json) {
@@ -79,15 +76,13 @@ public class CopyLockRecipe extends ShapedRecipe {
                 );
                 int i = astring[0].length();
                 int j = astring.length;
-                NonNullList<Ingredient> nonnulllist = (NonNullList<Ingredient>) DESERIALIZE_INGREDIENTS
-                    .invoke(null, astring, map, i, j);
-                ItemStack itemstack = ShapedRecipe.deserializeItem(
-                    JSONUtils.getJsonObject(json, "result")
+                NonNullList<Ingredient> nonnulllist = (NonNullList<Ingredient>) DESERIALIZE_INGREDIENTS.invoke(
+                    null, astring, map, i, j
                 );
+                ItemStack itemstack = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
                 return new CopyLockRecipe(recipeId, s, i, j, nonnulllist, itemstack);
             }
-            catch (InvocationTargetException | IllegalAccessException
-                    | IllegalArgumentException e) {
+            catch (InvocationTargetException | IllegalAccessException | IllegalArgumentException e) {
                 throw new RuntimeException("Error during deserialization!", e);
             }
         }
@@ -98,9 +93,7 @@ public class CopyLockRecipe extends ShapedRecipe {
             String s = buffer.readString(32767);
             NonNullList<Ingredient> nonnulllist = NonNullList.withSize(i * j, Ingredient.EMPTY);
 
-            for (int k = 0; k < nonnulllist.size(); ++k) {
-                nonnulllist.set(k, Ingredient.read(buffer));
-            }
+            for (int k = 0; k < nonnulllist.size(); ++k) { nonnulllist.set(k, Ingredient.read(buffer)); }
 
             ItemStack itemstack = buffer.readItemStack();
             return new CopyLockRecipe(recipeId, s, i, j, nonnulllist, itemstack);

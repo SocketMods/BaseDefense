@@ -45,13 +45,13 @@ public class BaseDefense {
     void onClientSetup(FMLClientSetupEvent event) {
         ModBlocks.setupRenderLayer();
         ScreenManager.registerFactory(ModContainers.KEYSMITH_CONTAINER.get(), KeysmithScreen::new);
-        ScreenManager.registerFactory(
-            ModContainers.LOCKSMITH_CONTAINER.get(), LocksmithScreen::new
-        );
+        ScreenManager.registerFactory(ModContainers.LOCKSMITH_CONTAINER.get(), LocksmithScreen::new);
     }
 
     @SubscribeEvent
     void registerColors(ColorHandlerEvent.Item event) {
-        event.getItemColors().register(new IdentifyingColor(), ModItems.KEY.get(), ModItems.LOCK_CORE.get(), ModItems.PADLOCK.get());
+        event.getItemColors().register(
+            new IdentifyingColor(), ModItems.KEY.get(), ModItems.LOCK_CORE.get(), ModItems.PADLOCK.get()
+        );
     }
 }

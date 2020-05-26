@@ -19,9 +19,7 @@ import sciwhiz12.basedefense.api.lock.ILockable;
 public class PadlockItem extends LockBaseItem {
     private static final IItemPropertyGetter COLOR_GETTER = (stack, world, livingEntity) -> {
         CompoundNBT tag = stack.getChildTag("display");
-        if (tag != null && tag.contains("colors")) {
-            return (float) tag.getIntArray("colors").length;
-        }
+        if (tag != null && tag.contains("colors")) { return (float) tag.getIntArray("colors").length; }
         return 0.0F;
     };
 
@@ -31,8 +29,8 @@ public class PadlockItem extends LockBaseItem {
     }
 
     @Override
-    public Decision onUnlock(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos,
-            ILockable block, @Nullable PlayerEntity player) {
+    public Decision onUnlock(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos, ILockable block,
+            @Nullable PlayerEntity player) {
         if (player.isSneaking()) {
             boolean flag = player.inventory.addItemStackToInventory(lockStack);
             if (flag && lockStack.isEmpty()) {
@@ -41,9 +39,9 @@ public class PadlockItem extends LockBaseItem {
                 if (itementity1 != null) { itementity1.makeFakeItem(); }
 
                 worldIn.playSound(
-                    null, player.getPosX(), player.getPosY(), player.getPosZ(),
-                    SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((player.getRNG()
-                        .nextFloat() - player.getRNG().nextFloat()) * 0.7F + 1.0F) * 2.0F
+                    null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ENTITY_ITEM_PICKUP,
+                    SoundCategory.PLAYERS, 0.2F, ((player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.7F + 1.0F)
+                            * 2.0F
                 );
                 player.container.detectAndSendChanges();
             } else {
@@ -60,8 +58,8 @@ public class PadlockItem extends LockBaseItem {
     }
 
     @Override
-    public boolean isUnlockAllowed(ItemStack lockStack, ItemStack keyStack, World worldIn,
-            BlockPos pos, ILockable block, PlayerEntity player) {
+    public boolean isUnlockAllowed(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos, ILockable block,
+            PlayerEntity player) {
         return true;
     }
 }

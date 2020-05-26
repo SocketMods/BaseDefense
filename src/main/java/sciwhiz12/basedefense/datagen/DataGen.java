@@ -11,8 +11,6 @@ public class DataGen {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
-        if (event.includeClient()) {
-            generator.addProvider(new BlockStates(generator, event.getExistingFileHelper()));
-        }
+        if (event.includeClient()) { generator.addProvider(new BlockStates(generator, event.getExistingFileHelper())); }
     }
 }

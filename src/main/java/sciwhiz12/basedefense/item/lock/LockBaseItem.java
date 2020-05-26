@@ -22,21 +22,14 @@ public abstract class LockBaseItem extends Item implements ILock {
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn,
-            List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         if (!flagIn.isAdvanced()) return;
         long[] ids = LockingUtil.getUnlockIDs(stack);
         if (ids.length != 0) {
-            tooltip.add(
-                new TranslationTextComponent("tooltip.basedefense.unlockids").applyTextStyle(
-                    TextFormatting.GRAY
-                )
-            );
+            tooltip.add(new TranslationTextComponent("tooltip.basedefense.unlockids").applyTextStyle(TextFormatting.GRAY));
             for (long id : ids) {
                 tooltip.add(
-                    new StringTextComponent("  " + String.format("%016X", id)).applyTextStyle(
-                        TextFormatting.DARK_GRAY
-                    )
+                    new StringTextComponent("  " + String.format("%016X", id)).applyTextStyle(TextFormatting.DARK_GRAY)
                 );
             }
         }
@@ -45,9 +38,8 @@ public abstract class LockBaseItem extends Item implements ILock {
             int[] colors = tag.getIntArray("colors");
             for (int i = 0; i < colors.length; i++) {
                 tooltip.add(
-                    (new TranslationTextComponent(
-                        "tooltip.basedefense.keycolor", i + 1, String.format("#%06X", colors[i])
-                    )).applyTextStyle(TextFormatting.GRAY)
+                    (new TranslationTextComponent("tooltip.basedefense.keycolor", i + 1, String.format("#%06X", colors[i])))
+                        .applyTextStyle(TextFormatting.GRAY)
                 );
             }
         }

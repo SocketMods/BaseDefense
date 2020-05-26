@@ -28,8 +28,8 @@ public interface IKey {
      *                      if no player involved
      * @return If the unlock is successful
      */
-    public boolean canUnlock(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos,
-            ILockable block, @Nullable PlayerEntity player);
+    public boolean canUnlock(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos, ILockable block,
+            @Nullable PlayerEntity player);
 
     /**
      * Callback when the lockable is unlocked. <br/>
@@ -44,6 +44,6 @@ public interface IKey {
      * @param player    The {@link PlayerEntity} which performed the action, or null
      *                      if no player involved
      */
-    public void onUnlock(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos,
-            ILockable block, @Nullable PlayerEntity player);
+    public void onUnlock(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos, ILockable block,
+            @Nullable PlayerEntity player);
 }

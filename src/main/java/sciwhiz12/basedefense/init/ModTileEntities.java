@@ -12,10 +12,9 @@ public class ModTileEntities {
         ForgeRegistries.TILE_ENTITIES, BaseDefense.MODID
     );
 
-    public static final RegistryObject<TileEntityType<LockableTile>> LOCKABLE_TILE = ModTileEntities.REGISTER
-        .register(
-            "lockable_tile", () -> TileEntityType.Builder.create(
-                LockableTile::new, ModBlocks.PADLOCKED_DOOR.get(), ModBlocks.TEST_LOCK_BLOCK.get()
-            ).build(null)
-        );
+    public static final RegistryObject<TileEntityType<LockableTile>> LOCKABLE_TILE = ModTileEntities.REGISTER.register(
+        "lockable_tile", () -> TileEntityType.Builder.create(
+            LockableTile::new, ModBlocks.PADLOCKED_DOOR.get(), ModBlocks.TEST_LOCK_BLOCK.get()
+        ).build(null)
+    );
 }

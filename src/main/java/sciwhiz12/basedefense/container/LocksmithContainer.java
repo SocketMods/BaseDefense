@@ -160,8 +160,7 @@ public class LocksmithContainer extends Container {
         return index;
     }
 
-    private int addSlotBox(IItemHandler handler, int index, int x, int y, int horAmount, int dx,
-            int verAmount, int dy) {
+    private int addSlotBox(IItemHandler handler, int index, int x, int y, int horAmount, int dx, int verAmount, int dy) {
         for (int j = 0; j < verAmount; j++) {
             index = addSlotRange(handler, index, x, y, horAmount, dx);
             y += dy;
@@ -190,9 +189,7 @@ public class LocksmithContainer extends Container {
             if (index == 7) {
                 if (!this.mergeItemStack(slotStack, 10, 46, true)) { return ItemStack.EMPTY; }
             } else if (index > 6) {
-                if (index >= 10 && index < 46 && !this.mergeItemStack(slotStack, 0, 7, false)) {
-                    return ItemStack.EMPTY;
-                }
+                if (index >= 10 && index < 46 && !this.mergeItemStack(slotStack, 0, 7, false)) { return ItemStack.EMPTY; }
             } else if (!this.mergeItemStack(slotStack, 10, 46, false)) { return ItemStack.EMPTY; }
 
             if (slotStack.isEmpty()) {

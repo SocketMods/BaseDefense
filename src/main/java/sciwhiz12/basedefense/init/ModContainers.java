@@ -13,9 +13,11 @@ public class ModContainers {
         ForgeRegistries.CONTAINERS, BaseDefense.MODID
     );
 
-    public static final RegistryObject<ContainerType<KeysmithContainer>> KEYSMITH_CONTAINER = REGISTER
-        .register("keysmith_table", () -> new ContainerType<>(KeysmithContainer::new));
+    public static final RegistryObject<ContainerType<KeysmithContainer>> KEYSMITH_CONTAINER = REGISTER.register(
+        "keysmith_table", () -> new ContainerType<>(KeysmithContainer::new)
+    );
 
-    public static final RegistryObject<ContainerType<LocksmithContainer>> LOCKSMITH_CONTAINER = REGISTER
-        .register("locksmith_table", () -> new ContainerType<>(LocksmithContainer::new));
+    public static final RegistryObject<ContainerType<LocksmithContainer>> LOCKSMITH_CONTAINER = REGISTER.register(
+        "locksmith_table", () -> new ContainerType<>(LocksmithContainer::new)
+    );
 }

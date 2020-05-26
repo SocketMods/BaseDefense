@@ -26,8 +26,8 @@ public interface ILock {
      *                      if no player involved
      * @return {@code true} if the unlock is allowed, {@code false} otherwise
      */
-    public boolean isUnlockAllowed(ItemStack lockStack, ItemStack keyStack, World worldIn,
-            BlockPos pos, ILockable block, @Nullable PlayerEntity player);
+    public boolean isUnlockAllowed(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos, ILockable block,
+            @Nullable PlayerEntity player);
 
     /**
      * Callback when the lockable is unlocked. <br/>
@@ -43,6 +43,6 @@ public interface ILock {
      *                      if no player involved
      * @return The decision of allowing or denying subsequent callback
      */
-    public Decision onUnlock(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos,
-            ILockable block, @Nullable PlayerEntity player);
+    public Decision onUnlock(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos, ILockable block,
+            @Nullable PlayerEntity player);
 }

@@ -37,8 +37,8 @@ public abstract class LockableBaseBlock extends Block implements ILockable {
     public abstract boolean isValidLock(ItemStack stack);
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos,
-            PlayerEntity player, Hand hand, BlockRayTraceResult rayTrace) {
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand,
+            BlockRayTraceResult rayTrace) {
         if (!worldIn.isRemote && worldIn.isBlockLoaded(pos)) {
 
             Block origBlock = worldIn.getBlockState(pos).getBlock();
@@ -51,22 +51,12 @@ public abstract class LockableBaseBlock extends Block implements ILockable {
                     IKey key = (IKey) keyStack.getItem();
                     ItemStack lockStack = block.getLock(worldIn, pos);
                     ILock lock = (ILock) lockStack.getItem();
-                    boolean success = key.canUnlock(
-                        lockStack, keyStack, worldIn, pos, block, player
-                    );
-                    success = success && lock.isUnlockAllowed(
-                        lockStack, keyStack, worldIn, pos, block, player
-                    );
-                    success = success && block.isUnlockAllowed(
-                        lockStack, keyStack, worldIn, pos, block, player
-                    );
+                    boolean success = key.canUnlock(lockStack, keyStack, worldIn, pos, block, player);
+                    success = success && lock.isUnlockAllowed(lockStack, keyStack, worldIn, pos, block, player);
+                    success = success && block.isUnlockAllowed(lockStack, keyStack, worldIn, pos, block, player);
                     if (success) {
-                        if (lock.onUnlock(
-                            lockStack, keyStack, worldIn, pos, block, player
-                        ) == Decision.CONTINUE) {
-                            if (block.onUnlock(
-                                lockStack, keyStack, worldIn, pos, block, player
-                            ) == Decision.CONTINUE) {
+                        if (lock.onUnlock(lockStack, keyStack, worldIn, pos, block, player) == Decision.CONTINUE) {
+                            if (block.onUnlock(lockStack, keyStack, worldIn, pos, block, player) == Decision.CONTINUE) {
                                 key.onUnlock(lockStack, keyStack, worldIn, pos, block, player);
                             }
                         }
@@ -89,9 +79,7 @@ public abstract class LockableBaseBlock extends Block implements ILockable {
     public ItemStack getLock(World world, BlockPos pos) {
         if (world.isBlockLoaded(pos) && world.getTileEntity(pos) != null) {
             TileEntity tile = world.getTileEntity(pos);
-            if (tile != null && tile instanceof LockableTile) {
-                return ((LockableTile) world.getTileEntity(pos)).getLock();
-            }
+            if (tile != null && tile instanceof LockableTile) { return ((LockableTile) world.getTileEntity(pos)).getLock(); }
         }
         return ItemStack.EMPTY;
     }
@@ -100,9 +88,7 @@ public abstract class LockableBaseBlock extends Block implements ILockable {
     public boolean hasLock(World world, BlockPos pos) {
         if (world.isBlockLoaded(pos) && world.getTileEntity(pos) != null) {
             TileEntity tile = world.getTileEntity(pos);
-            if (tile != null && tile instanceof LockableTile) {
-                return ((LockableTile) world.getTileEntity(pos)).hasLock();
-            }
+            if (tile != null && tile instanceof LockableTile) { return ((LockableTile) world.getTileEntity(pos)).hasLock(); }
         }
         return false;
     }
@@ -111,15 +97,13 @@ public abstract class LockableBaseBlock extends Block implements ILockable {
     public void setLock(World world, BlockPos pos, ItemStack stack) {
         if (world.isBlockLoaded(pos) && world.getTileEntity(pos) != null) {
             TileEntity tile = world.getTileEntity(pos);
-            if (tile != null && tile instanceof LockableTile) {
-                ((LockableTile) world.getTileEntity(pos)).setLock(stack);
-            }
+            if (tile != null && tile instanceof LockableTile) { ((LockableTile) world.getTileEntity(pos)).setLock(stack); }
         }
     }
 
     @Override
-    public Decision onUnlock(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos,
-            ILockable block, @Nullable PlayerEntity player) {
+    public Decision onUnlock(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos, ILockable block,
+            @Nullable PlayerEntity player) {
         return Decision.CONTINUE;
     }
 }

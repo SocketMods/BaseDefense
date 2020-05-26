@@ -13,9 +13,7 @@ import sciwhiz12.basedefense.block.LocksmithBlock;
 import sciwhiz12.basedefense.block.TestLockBlock;
 
 public class ModBlocks {
-    public static final DeferredRegister<Block> REGISTER = new DeferredRegister<>(
-        ForgeRegistries.BLOCKS, BaseDefense.MODID
-    );
+    public static final DeferredRegister<Block> REGISTER = new DeferredRegister<>(ForgeRegistries.BLOCKS, BaseDefense.MODID);
 
     public static final RegistryObject<Block> TEST_LOCK_BLOCK = REGISTER.register(
         "test_lock_block", () -> new TestLockBlock()
@@ -35,8 +33,6 @@ public class ModBlocks {
         RenderTypeLookup.setRenderLayer(ModBlocks.TEST_LOCK_BLOCK.get(), solid);
         RenderTypeLookup.setRenderLayer(ModBlocks.KEYSMITH_BLOCK.get(), solid);
         RenderTypeLookup.setRenderLayer(ModBlocks.LOCKSMITH_BLOCK.get(), solid);
-        RenderTypeLookup.setRenderLayer(
-            ModBlocks.PADLOCKED_DOOR.get(), RenderType.getCutoutMipped()
-        );
+        RenderTypeLookup.setRenderLayer(ModBlocks.PADLOCKED_DOOR.get(), RenderType.getCutoutMipped());
     }
 }

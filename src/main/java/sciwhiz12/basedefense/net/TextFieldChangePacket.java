@@ -28,9 +28,7 @@ public class TextFieldChangePacket {
             ctx.get().getDirection();
             ServerPlayerEntity sender = ctx.get().getSender();
             Container cont = sender.openContainer;
-            if (cont instanceof KeysmithContainer) {
-                ((KeysmithContainer) cont).setOutputName(pkt.text);
-            }
+            if (cont instanceof KeysmithContainer) { ((KeysmithContainer) cont).setOutputName(pkt.text); }
         });
         ctx.get().setPacketHandled(true);
     }

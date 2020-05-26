@@ -28,8 +28,8 @@ public class LocksmithBlock extends Block {
         super(Block.Properties.create(Material.WOOD));
     }
 
-    public ActionResultType onBlocskActivated(BlockState state, World worldIn, BlockPos pos,
-            PlayerEntity player, Hand handIn, BlockRayTraceResult rayTrace) {
+    public ActionResultType onBlocskActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player,
+            Hand handIn, BlockRayTraceResult rayTrace) {
         if (worldIn.isRemote) {
             return ActionResultType.SUCCESS;
         } else {
@@ -50,8 +50,8 @@ public class LocksmithBlock extends Block {
      */
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos,
-            PlayerEntity playerEntity, Hand hand, BlockRayTraceResult result) {
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity playerEntity,
+            Hand hand, BlockRayTraceResult result) {
         playerEntity.openContainer(state.getContainer(world, pos));
         return ActionResultType.SUCCESS;
     }
@@ -61,15 +61,12 @@ public class LocksmithBlock extends Block {
     public INamedContainerProvider getContainer(BlockState state, World world, BlockPos pos) {
         return new SimpleNamedContainerProvider(
             (windowId, playerInventory, playerEntity) -> {
-                return new LocksmithContainer(
-                    windowId, playerInventory, IWorldPosCallable.of(world, pos)
-                );
+                return new LocksmithContainer(windowId, playerInventory, IWorldPosCallable.of(world, pos));
             }, nameTranslationKey
         );
     }
 
-    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos,
-            PathType type) {
+    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
         return false;
     }
 }

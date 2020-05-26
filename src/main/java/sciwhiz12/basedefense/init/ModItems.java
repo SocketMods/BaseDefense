@@ -24,40 +24,26 @@ public class ModItems {
         }
     };
 
-    public static final DeferredRegister<Item> REGISTER = new DeferredRegister<>(
-        ForgeRegistries.ITEMS, BaseDefense.MODID
-    );
+    public static final DeferredRegister<Item> REGISTER = new DeferredRegister<>(ForgeRegistries.ITEMS, BaseDefense.MODID);
 
     // Regular Items
     public static final RegistryObject<Item> BLANK_KEY = REGISTER.register(
         "blank_key", () -> new Item(new Item.Properties().group(GROUP))
     );
     public static final RegistryObject<Item> KEY = REGISTER.register("key", () -> new KeyItem());
-    public static final RegistryObject<Item> SKELETON_KEY = REGISTER.register(
-        "skeleton_key", () -> new SkeletonKeyItem()
-    );
+    public static final RegistryObject<Item> SKELETON_KEY = REGISTER.register("skeleton_key", () -> new SkeletonKeyItem());
 
-    public static final RegistryObject<Item> LOCK_CORE = REGISTER.register(
-        "lock_core", () -> new LockCoreItem()
-    );
-    public static final RegistryObject<Item> PADLOCK = REGISTER.register(
-        "padlock", () -> new PadlockItem()
-    );
+    public static final RegistryObject<Item> LOCK_CORE = REGISTER.register("lock_core", () -> new LockCoreItem());
+    public static final RegistryObject<Item> PADLOCK = REGISTER.register("padlock", () -> new PadlockItem());
 
     // BlockItems
     public static final RegistryObject<Item> TEST_LOCK_BLOCK_ITEM = REGISTER.register(
-        "test_lock_block", () -> new BlockItem(
-            ModBlocks.TEST_LOCK_BLOCK.get(), new Item.Properties().group(GROUP)
-        )
+        "test_lock_block", () -> new BlockItem(ModBlocks.TEST_LOCK_BLOCK.get(), new Item.Properties().group(GROUP))
     );
     public static final RegistryObject<Item> KEYSMITH_BLOCK_ITEM = REGISTER.register(
-        "keysmith_table", () -> new BlockItem(
-            ModBlocks.KEYSMITH_BLOCK.get(), new Item.Properties().group(GROUP)
-        )
+        "keysmith_table", () -> new BlockItem(ModBlocks.KEYSMITH_BLOCK.get(), new Item.Properties().group(GROUP))
     );
     public static final RegistryObject<Item> LOCKSMITH_BLOCK_ITEM = REGISTER.register(
-        "locksmith_table", () -> new BlockItem(
-            ModBlocks.LOCKSMITH_BLOCK.get(), new Item.Properties().group(GROUP)
-        )
+        "locksmith_table", () -> new BlockItem(ModBlocks.LOCKSMITH_BLOCK.get(), new Item.Properties().group(GROUP))
     );
 }

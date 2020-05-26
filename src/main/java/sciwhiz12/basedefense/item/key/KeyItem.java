@@ -24,9 +24,7 @@ import sciwhiz12.basedefense.api.lock.ILockable;
 public class KeyItem extends Item implements IKey {
     private static final IItemPropertyGetter COLOR_GETTER = (stack, world, livingEntity) -> {
         CompoundNBT tag = stack.getChildTag("display");
-        if (tag != null && tag.contains("colors")) {
-            return (float) tag.getIntArray("colors").length;
-        }
+        if (tag != null && tag.contains("colors")) { return (float) tag.getIntArray("colors").length; }
         return 0.0F;
     };
 
@@ -36,29 +34,26 @@ public class KeyItem extends Item implements IKey {
     }
 
     @Override
-    public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos,
-            PlayerEntity player) {
-        return world.isBlockLoaded(pos) && world.getBlockState(pos)
-            .getBlock() instanceof ILockable;
+    public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, PlayerEntity player) {
+        return world.isBlockLoaded(pos) && world.getBlockState(pos).getBlock() instanceof ILockable;
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn,
-            List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         if (!flagIn.isAdvanced()) return;
         long id = LockingUtil.getKeyID(stack);
         tooltip.add(
-            new TranslationTextComponent("tooltip.basedefense.keyid", Long.toHexString(id))
-                .applyTextStyle(TextFormatting.GRAY)
+            new TranslationTextComponent("tooltip.basedefense.keyid", Long.toHexString(id)).applyTextStyle(
+                TextFormatting.GRAY
+            )
         );
         CompoundNBT tag = stack.getChildTag("display");
         if (tag != null && tag.contains("colors")) {
             int[] colors = tag.getIntArray("colors");
             for (int i = 0; i < colors.length; i++) {
                 tooltip.add(
-                    (new TranslationTextComponent(
-                        "tooltip.basedefense.keycolor", i + 1, String.format("#%06X", colors[i])
-                    )).applyTextStyle(TextFormatting.GRAY)
+                    (new TranslationTextComponent("tooltip.basedefense.keycolor", i + 1, String.format("#%06X", colors[i])))
+                        .applyTextStyle(TextFormatting.GRAY)
                 );
             }
         }
@@ -66,14 +61,14 @@ public class KeyItem extends Item implements IKey {
     }
 
     @Override
-    public boolean canUnlock(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos,
-            ILockable block, @Nullable PlayerEntity player) {
+    public boolean canUnlock(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos, ILockable block,
+            @Nullable PlayerEntity player) {
         return LockingUtil.hasUnlockID(lockStack, keyStack);
     }
 
     @Override
-    public void onUnlock(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos,
-            ILockable block, @Nullable PlayerEntity player) {
+    public void onUnlock(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos, ILockable block,
+            @Nullable PlayerEntity player) {
         return;
     }
 }

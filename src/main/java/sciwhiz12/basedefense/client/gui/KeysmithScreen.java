@@ -19,8 +19,7 @@ import sciwhiz12.basedefense.init.ModItems;
 import sciwhiz12.basedefense.net.NetworkHandler;
 import sciwhiz12.basedefense.net.TextFieldChangePacket;
 
-public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implements
-        IContainerListener {
+public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implements IContainerListener {
     private TextFieldWidget nameField;
     private boolean isEnabledText = false;
 
@@ -49,9 +48,7 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
         this.setFocusedDefault(this.nameField);
     }
 
-    private final ResourceLocation KEYSMITH_GUI = new ResourceLocation(
-        BaseDefense.MODID, "textures/gui/keysmith_gui.png"
-    );
+    private final ResourceLocation KEYSMITH_GUI = new ResourceLocation(BaseDefense.MODID, "textures/gui/keysmith_gui.png");
 
     @Override
     public void resize(Minecraft mc, int width, int height) {
@@ -71,9 +68,9 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
     public boolean keyPressed(int key, int scanCode, int modifiers) {
         if (key == 256) { this.minecraft.player.closeScreen(); }
 
-        return !this.nameField.keyPressed(key, scanCode, modifiers) && !this.nameField.canWrite()
-                ? super.keyPressed(key, scanCode, modifiers)
-                : true;
+        return !this.nameField.keyPressed(key, scanCode, modifiers) && !this.nameField.canWrite() ? super.keyPressed(
+            key, scanCode, modifiers
+        ) : true;
     }
 
     @Override
@@ -87,9 +84,7 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         this.font.drawString(this.title.getFormattedText(), 8, 6, 4210752);
-        this.font.drawString(
-            this.playerInventory.getDisplayName().getFormattedText(), 8, 73, 4210752
-        );
+        this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8, 73, 4210752);
     }
 
     @Override
@@ -132,9 +127,7 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
             }
             this.minecraft.deferTask(() -> { this.nameField.setEnabled(isEnabledText); });
         } else if (slotInd == 1) {
-            if (!stack.isEmpty() && isEnabledText) {
-                nameField.setText(stack.getDisplayName().getString());
-            }
+            if (!stack.isEmpty() && isEnabledText) { nameField.setText(stack.getDisplayName().getString()); }
         }
     }
 

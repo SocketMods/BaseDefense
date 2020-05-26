@@ -28,13 +28,8 @@ public class SkeletonKeyItem extends Item implements IKey {
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn,
-            List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(
-            new TranslationTextComponent("tooltip.basedefense.skeleton_key").applyTextStyle(
-                TextFormatting.RED
-            )
-        );
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        tooltip.add(new TranslationTextComponent("tooltip.basedefense.skeleton_key").applyTextStyle(TextFormatting.RED));
     }
 
     @Override
@@ -43,20 +38,19 @@ public class SkeletonKeyItem extends Item implements IKey {
     }
 
     @Override
-    public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos,
-            PlayerEntity player) {
+    public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, PlayerEntity player) {
         return world.isBlockLoaded(pos) && world.getBlockState(pos).getBlock() instanceof ILockable;
     }
 
     @Override
-    public boolean canUnlock(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos,
-            ILockable block, @Nullable PlayerEntity player) {
+    public boolean canUnlock(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos, ILockable block,
+            @Nullable PlayerEntity player) {
         return true;
     }
 
     @Override
-    public void onUnlock(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos,
-            ILockable block, @Nullable PlayerEntity player) {
+    public void onUnlock(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos, ILockable block,
+            @Nullable PlayerEntity player) {
         if (player != null && player.isSneaking() && block.hasLock(worldIn, pos)) {
             boolean flag = player.inventory.addItemStackToInventory(lockStack);
             if (flag && lockStack.isEmpty()) {
@@ -65,8 +59,8 @@ public class SkeletonKeyItem extends Item implements IKey {
                 if (itementity1 != null) { itementity1.makeFakeItem(); }
                 worldIn.playSound(
                     (PlayerEntity) null, player.getPosX(), player.getPosY(), player.getPosZ(),
-                    SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((player.getRNG()
-                        .nextFloat() - player.getRNG().nextFloat()) * 0.7F + 1.0F) * 2.0F
+                    SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((player.getRNG().nextFloat() - player
+                        .getRNG().nextFloat()) * 0.7F + 1.0F) * 2.0F
                 );
                 player.container.detectAndSendChanges();
             } else {

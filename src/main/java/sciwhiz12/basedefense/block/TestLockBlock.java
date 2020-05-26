@@ -20,8 +20,8 @@ public class TestLockBlock extends LockableBaseBlock {
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos,
-            PlayerEntity player, Hand hand, BlockRayTraceResult rayTrace) {
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+            BlockRayTraceResult rayTrace) {
         ActionResultType result = super.onBlockActivated(state, world, pos, player, hand, rayTrace);
         if (!world.isRemote && result == ActionResultType.SUCCESS) {
             player.sendMessage(new StringTextComponent("Correct key!"));
@@ -35,8 +35,8 @@ public class TestLockBlock extends LockableBaseBlock {
     }
 
     @Override
-    public boolean isUnlockAllowed(ItemStack lockStack, ItemStack keyStack, World worldIn,
-            BlockPos pos, ILockable block, PlayerEntity player) {
+    public boolean isUnlockAllowed(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos, ILockable block,
+            PlayerEntity player) {
         return true;
     }
 }

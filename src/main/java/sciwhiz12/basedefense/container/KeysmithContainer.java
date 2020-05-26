@@ -118,8 +118,7 @@ public class KeysmithContainer extends Container {
         return index;
     }
 
-    private int addSlotBox(IItemHandler handler, int index, int x, int y, int horAmount, int dx,
-            int verAmount, int dy) {
+    private int addSlotBox(IItemHandler handler, int index, int x, int y, int horAmount, int dx, int verAmount, int dy) {
         for (int j = 0; j < verAmount; j++) {
             index = addSlotRange(handler, index, x, y, horAmount, dx);
             y += dy;
@@ -135,9 +134,7 @@ public class KeysmithContainer extends Container {
 
     public void onContainerClosed(PlayerEntity playerIn) {
         super.onContainerClosed(playerIn);
-        this.worldPos.consume(
-            (world, pos) -> { this.clearContainer(playerIn, world, this.inputSlots); }
-        );
+        this.worldPos.consume((world, pos) -> { this.clearContainer(playerIn, world, this.inputSlots); });
     }
 
     public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
@@ -147,9 +144,7 @@ public class KeysmithContainer extends Container {
             if (index == 2) {
                 if (!this.mergeItemStack(slotStack, 3, 39, true)) { return ItemStack.EMPTY; }
             } else if (index != 0 && index != 1) {
-                if (index >= 3 && index < 39 && !this.mergeItemStack(slotStack, 0, 1, false)) {
-                    return ItemStack.EMPTY;
-                }
+                if (index >= 3 && index < 39 && !this.mergeItemStack(slotStack, 0, 1, false)) { return ItemStack.EMPTY; }
             } else if (!this.mergeItemStack(slotStack, 3, 39, false)) { return ItemStack.EMPTY; }
 
             if (slotStack.isEmpty()) {
@@ -163,17 +158,14 @@ public class KeysmithContainer extends Container {
     }
 
     private void clearContainer(PlayerEntity player, World worldIn, ItemStackHandler inv) {
-        if (!player.isAlive() || player instanceof ServerPlayerEntity
-                && ((ServerPlayerEntity) player).hasDisconnected()) {
+        if (!player.isAlive() || player instanceof ServerPlayerEntity && ((ServerPlayerEntity) player).hasDisconnected()) {
             for (int j = 0; j < inv.getSlots(); ++j) {
                 player.dropItem(inv.extractItem(j, inv.getSlotLimit(j), false), false);
             }
 
         } else {
             for (int i = 0; i < inv.getSlots(); ++i) {
-                player.inventory.placeItemBackInInventory(
-                    worldIn, inv.extractItem(i, inv.getSlotLimit(i), false)
-                );
+                player.inventory.placeItemBackInInventory(worldIn, inv.extractItem(i, inv.getSlotLimit(i), false));
             }
         }
     }

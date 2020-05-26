@@ -10,16 +10,13 @@ import sciwhiz12.basedefense.BaseDefense;
 import sciwhiz12.basedefense.container.LocksmithContainer;
 
 public class LocksmithScreen extends ContainerScreen<LocksmithContainer> {
-    public LocksmithScreen(LocksmithContainer container, PlayerInventory inv,
-            ITextComponent title) {
+    public LocksmithScreen(LocksmithContainer container, PlayerInventory inv, ITextComponent title) {
         super(container, inv, title);
         this.xSize = 176;
         this.ySize = 166;
     }
 
-    private final ResourceLocation LOCKSMITH_GUI = new ResourceLocation(
-        BaseDefense.MODID, "textures/gui/locksmith_gui.png"
-    );
+    private final ResourceLocation LOCKSMITH_GUI = new ResourceLocation(BaseDefense.MODID, "textures/gui/locksmith_gui.png");
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
@@ -31,9 +28,7 @@ public class LocksmithScreen extends ContainerScreen<LocksmithContainer> {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         this.font.drawString(this.title.getFormattedText(), 8, 6, 4210752);
-        this.font.drawString(
-            this.playerInventory.getDisplayName().getFormattedText(), 8, 73, 4210752
-        );
+        this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8, 73, 4210752);
     }
 
     @Override
