@@ -15,7 +15,7 @@ public class ModTileEntities {
     public static final RegistryObject<TileEntityType<LockableTile>> LOCKABLE_TILE = ModTileEntities.REGISTER
         .register(
             "lockable_tile", () -> TileEntityType.Builder.create(
-                LockableTile::new, ModBlocks.LOCK_DOOR_BLOCK.get(), ModBlocks.TEST_LOCK_BLOCK.get()
+                LockableTile::new, ModBlocks.PADLOCKED_DOOR.get(), ModBlocks.TEST_LOCK_BLOCK.get()
             ).build(null)
         );
 }

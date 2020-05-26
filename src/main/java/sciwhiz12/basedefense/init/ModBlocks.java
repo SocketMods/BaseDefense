@@ -8,7 +8,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import sciwhiz12.basedefense.BaseDefense;
 import sciwhiz12.basedefense.block.KeysmithBlock;
-import sciwhiz12.basedefense.block.LockableDoorBlock;
+import sciwhiz12.basedefense.block.PadlockedDoorBlock;
 import sciwhiz12.basedefense.block.LocksmithBlock;
 import sciwhiz12.basedefense.block.TestLockBlock;
 
@@ -20,8 +20,8 @@ public class ModBlocks {
     public static final RegistryObject<Block> TEST_LOCK_BLOCK = REGISTER.register(
         "test_lock_block", () -> new TestLockBlock()
     );
-    public static final RegistryObject<Block> LOCK_DOOR_BLOCK = REGISTER.register(
-        "lockable_door", () -> new LockableDoorBlock()
+    public static final RegistryObject<Block> PADLOCKED_DOOR = REGISTER.register(
+        "padlocked_door", () -> new PadlockedDoorBlock()
     );
     public static final RegistryObject<Block> KEYSMITH_BLOCK = REGISTER.register(
         "keysmith_table", () -> new KeysmithBlock()
@@ -36,7 +36,7 @@ public class ModBlocks {
         RenderTypeLookup.setRenderLayer(ModBlocks.KEYSMITH_BLOCK.get(), solid);
         RenderTypeLookup.setRenderLayer(ModBlocks.LOCKSMITH_BLOCK.get(), solid);
         RenderTypeLookup.setRenderLayer(
-            ModBlocks.LOCK_DOOR_BLOCK.get(), RenderType.getCutoutMipped()
+            ModBlocks.PADLOCKED_DOOR.get(), RenderType.getCutoutMipped()
         );
     }
 }

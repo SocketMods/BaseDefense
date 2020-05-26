@@ -1,0 +1,24 @@
+{
+  "variants": 
+  {
+  "facing=north,half=upper,hinge=left": {  "model": "basedefense:block/door/padlocked_door_top",  "y": 270 },
+  "facing=south,half=upper,hinge=left": {  "model": "basedefense:block/door/padlocked_door_top",  "y": 90 },
+  "facing=west,half=upper,hinge=left": {  "model": "basedefense:block/door/padlocked_door_top",  "y": 180 },
+  "facing=east,half=upper,hinge=left": {  "model": "basedefense:block/door/padlocked_door_top"  },
+  
+  "facing=north,half=lower,hinge=left": {  "model": "basedefense:block/door/padlocked_door_bottom",  "y": 270 },
+  "facing=south,half=lower,hinge=left": {  "model": "basedefense:block/door/padlocked_door_bottom",  "y": 90 },
+  "facing=west,half=lower,hinge=left": {  "model": "basedefense:block/door/padlocked_door_bottom",  "y": 180 },
+  "facing=east,half=lower,hinge=left": {  "model": "basedefense:block/door/padlocked_door_bottom" },
+  
+  "facing=north,half=upper,hinge=right": {  "model": "basedefense:block/door/padlocked_door_top_rh",  "y": 270 },
+  "facing=south,half=upper,hinge=right": {  "model": "basedefense:block/door/padlocked_door_top_rh",  "y": 90 },
+  "facing=west,half=upper,hinge=right": {  "model": "basedefense:block/door/padlocked_door_top_rh",  "y": 180 },
+  "facing=east,half=upper,hinge=right": {  "model": "basedefense:block/door/padlocked_door_top_rh" },
+  
+  "facing=north,half=lower,hinge=right": {  "model": "basedefense:block/door/padlocked_door_bottom_rh",  "y": 270 },
+  "facing=south,half=lower,hinge=right": {  "model": "basedefense:block/door/padlocked_door_bottom_rh",  "y": 90 },
+  "facing=west,half=lower,hinge=right": {  "model": "basedefense:block/door/padlocked_door_bottom_rh",  "y": 180 },
+  "facing=east,half=lower,hinge=right": {  "model": "basedefense:block/door/padlocked_door_bottom_rh" }
+  }
+}
