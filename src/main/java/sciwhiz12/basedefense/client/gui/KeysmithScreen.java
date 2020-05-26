@@ -2,8 +2,6 @@ package sciwhiz12.basedefense.client.gui;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -24,6 +22,7 @@ import sciwhiz12.basedefense.net.TextFieldChangePacket;
 public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implements
         IContainerListener {
     private TextFieldWidget nameField;
+    private boolean isEnabledText = false;
 
     public KeysmithScreen(KeysmithContainer container, PlayerInventory inv, ITextComponent title) {
         super(container, inv, title);
@@ -37,9 +36,7 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
         this.minecraft.keyboardListener.enableRepeatEvents(true);
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
-        this.nameField = new TextFieldWidget(
-            this.font, i + 91, j + 28, 82, 12, I18n.format("container.repair")
-        );
+        this.nameField = new TextFieldWidget(this.font, i + 91, j + 28, 82, 12, "");
         this.nameField.setCanLoseFocus(false);
         this.nameField.changeFocus(true);
         this.nameField.setTextColor(-1);
@@ -83,7 +80,6 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
     public void render(int mouseX, int mouseY, float partialTicks) {
         this.renderBackground();
         super.render(mouseX, mouseY, partialTicks);
-        RenderSystem.disableBlend();
         this.nameField.render(mouseX, mouseY, partialTicks);
         this.renderHoveredToolTip(mouseX, mouseY);
     }
@@ -98,7 +94,6 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.minecraft.getTextureManager().bindTexture(KEYSMITH_GUI);
         int relX = (this.width - this.xSize) / 2;
         int relY = (this.height - this.ySize) / 2;
@@ -111,11 +106,11 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
     }
 
     private void onTextChange(String newText) {
-        String s = newText;
-        if (StringUtils.isEmpty(newText)) { s = ""; }
-        if (!this.container.getSlot(2).getHasStack()) return;
-        this.container.changeOutputName(s);
-        NetworkHandler.CHANNEL.sendToServer(new TextFieldChangePacket(s));
+        boolean flag1 = newText.equals(I18n.format(ModItems.KEY.get().getTranslationKey()));
+        boolean flag2 = StringUtils.isBlank(newText);
+        if (flag1 || flag2) { newText = ""; }
+        container.setOutputName(newText);
+        NetworkHandler.CHANNEL.sendToServer(new TextFieldChangePacket(newText));
     }
 
     @Override
@@ -128,13 +123,19 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
     @Override
     public void sendSlotContents(Container containerToSend, int slotInd, ItemStack stack) {
         if (slotInd == 0) {
-            this.nameField.setEnabled(!stack.isEmpty());
-            if (StringUtils.isEmpty(this.nameField.getText())) {
-                this.nameField.setText(ModItems.KEY.get().getName().getString());
+            if (stack.isEmpty() && isEnabledText) {
+                isEnabledText = false;
+                nameField.setText("");
+            } else if (!stack.isEmpty() && !isEnabledText) {
+                isEnabledText = true;
+                nameField.setText(I18n.format(ModItems.KEY.get().getTranslationKey()));
             }
+            this.minecraft.deferTask(() -> { this.nameField.setEnabled(isEnabledText); });
         } else if (slotInd == 1) {
-            this.nameField.setText(stack.isEmpty() ? "" : stack.getDisplayName().getString());
-        } else if (slotInd == 2) { if (stack.isEmpty()) { this.nameField.setText(""); } }
+            if (!stack.isEmpty() && isEnabledText) {
+                nameField.setText(stack.getDisplayName().getString());
+            }
+        }
     }
 
     @Override

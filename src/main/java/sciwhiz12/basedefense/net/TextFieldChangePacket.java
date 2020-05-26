@@ -25,10 +25,11 @@ public class TextFieldChangePacket {
 
     public static void process(TextFieldChangePacket pkt, Supplier<Context> ctx) {
         ctx.get().enqueueWork(() -> {
+            ctx.get().getDirection();
             ServerPlayerEntity sender = ctx.get().getSender();
             Container cont = sender.openContainer;
             if (cont instanceof KeysmithContainer) {
-                ((KeysmithContainer) cont).changeOutputName(pkt.text);
+                ((KeysmithContainer) cont).setOutputName(pkt.text);
             }
         });
         ctx.get().setPacketHandled(true);
