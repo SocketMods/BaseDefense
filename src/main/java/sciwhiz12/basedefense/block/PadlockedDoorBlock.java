@@ -192,22 +192,18 @@ public class PadlockedDoorBlock extends LockableBaseBlock {
 
     @Override
     public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        // DoubleBlockHalf doubleblockhalf = state.get(HALF);
-        // BlockPos blockpos = doubleblockhalf == DoubleBlockHalf.LOWER ? pos.up() :
-        // pos.down();
-        // BlockState blockstate = worldIn.getBlockState(blockpos);
-        // if (blockstate.getBlock() == this && blockstate.get(HALF) != doubleblockhalf)
-        // {
-        // worldIn.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 35);
-        // worldIn.playEvent(player, 2001, blockpos, Block.getStateId(blockstate));
-        // ItemStack itemstack = player.getHeldItemMainhand();
-        // if (!worldIn.isRemote && !player.isCreative() &&
-        // player.canHarvestBlock(blockstate)) {
-        // Block.spawnDrops(Blocks.IRON_DOOR.getDefaultState(), worldIn, pos,
-        // (TileEntity) null, player, itemstack);
-        // }
-        // }
-
+        DoubleBlockHalf doubleblockhalf = state.get(HALF);
+        BlockPos otherPos = doubleblockhalf == DoubleBlockHalf.LOWER ? pos.up() : pos.down();
+        BlockState otherState = worldIn.getBlockState(otherPos);
+        if (otherState.get(HALF) != doubleblockhalf) {
+            worldIn.setBlockState(otherPos, Blocks.AIR.getDefaultState(), 35);
+            worldIn.playEvent(player, Constants.WorldEvents.BREAK_BLOCK_EFFECTS, otherPos, Block.getStateId(otherState));
+            ItemStack itemstack = player.getHeldItemMainhand();
+            if (!worldIn.isRemote && !player.isCreative() && player.canHarvestBlock(otherState)) {
+                Block.spawnDrops(state, worldIn, pos, worldIn.getTileEntity(pos), player, itemstack);
+                Block.spawnDrops(otherState, worldIn, otherPos, worldIn.getTileEntity(otherPos), player, itemstack);
+            }
+        }
         super.onBlockHarvested(worldIn, pos, state, player);
     }
 

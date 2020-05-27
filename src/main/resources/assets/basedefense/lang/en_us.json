@@ -2,6 +2,7 @@
 	"item.basedefense.key": "Key",
 	"item.basedefense.blank_key": "Blank Key",
 	"item.basedefense.padlock": "Padlock",
+	"item.basedefense.broken_padlock": "Broken Padlock",
 	"item.basedefense.lock_core": "Lock Core",
 	"item.basedefense.skeleton_key": "Skeleton Key",
 	"block.basedefense.test_lock_block": "Lock Test Block",

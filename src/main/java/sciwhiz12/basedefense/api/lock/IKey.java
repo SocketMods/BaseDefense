@@ -21,15 +21,18 @@ public interface IKey {
      * 
      * @param lockStack The {@link ItemStack} of the {@link ILock}
      * @param keyStack  The {@code ItemStack} of the {@link IKey}
-     * @param worldIn   The {@link World} where the action occurred
-     * @param pos       The {@link BlockPos} where the action occurred
-     * @param block     The {@link ILockable} block
+     * @param worldIn   The {@link World} where the action occurred, or null if not
+     *                      caused by block interaction
+     * @param pos       The {@link BlockPos} where the action occurred, or null if
+     *                      not caused by block interaction
+     * @param block     The {@link ILockable} block, or null if not caused by block
+     *                      interaction
      * @param player    The {@link PlayerEntity} which performed the action, or null
      *                      if no player involved
      * @return If the unlock is successful
      */
-    public boolean canUnlock(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos, ILockable block,
-            @Nullable PlayerEntity player);
+    public boolean canUnlock(ItemStack lockStack, ItemStack keyStack, @Nullable World worldIn, @Nullable BlockPos pos,
+            @Nullable ILockable block, @Nullable PlayerEntity player);
 
     /**
      * Callback when the lockable is unlocked. <br/>

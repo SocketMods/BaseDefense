@@ -6,8 +6,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.LongArrayNBT;
 import net.minecraft.nbt.LongNBT;
-import sciwhiz12.basedefense.api.lock.IKey;
-import sciwhiz12.basedefense.api.lock.ILock;
 
 public class LockingUtil {
     private static final Random KEYID_RNG = new Random();
@@ -16,7 +14,6 @@ public class LockingUtil {
 
     public static boolean hasUnlockID(ItemStack lock, ItemStack key) {
         if (lock.isEmpty() || key.isEmpty()) return false;
-        if (!(lock.getItem() instanceof ILock || key.getItem() instanceof IKey)) return false;
         long key_id = getKeyID(key);
         for (long id : getUnlockIDs(lock)) { if (id == key_id) return true; }
         return false;

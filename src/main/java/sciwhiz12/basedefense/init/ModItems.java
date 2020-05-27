@@ -12,6 +12,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import sciwhiz12.basedefense.BaseDefense;
 import sciwhiz12.basedefense.item.key.KeyItem;
 import sciwhiz12.basedefense.item.key.SkeletonKeyItem;
+import sciwhiz12.basedefense.item.lock.BrokenPadlockItem;
 import sciwhiz12.basedefense.item.lock.LockCoreItem;
 import sciwhiz12.basedefense.item.lock.PadlockItem;
 
@@ -35,6 +36,9 @@ public class ModItems {
 
     public static final RegistryObject<Item> LOCK_CORE = REGISTER.register("lock_core", () -> new LockCoreItem());
     public static final RegistryObject<Item> PADLOCK = REGISTER.register("padlock", () -> new PadlockItem());
+    public static final RegistryObject<Item> BROKEN_PADLOCK = REGISTER.register(
+        "broken_padlock", () -> new BrokenPadlockItem()
+    );
 
     // BlockItems
     public static final RegistryObject<Item> TEST_LOCK_BLOCK_ITEM = REGISTER.register(
