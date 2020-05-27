@@ -21,5 +21,7 @@
 	"tooltip.basedefense.keyid": "Key ID: %s",
 	"tooltip.basedefense.skeleton_key": "for Server Operators!",
 	"tooltip.basedefense.keycolor": "Color #%s: %s",
+	"status.basedefense.padlocked_door.locked": "This %s is locked.",
+	"status.basedefense.padlocked_door.info": "\"%s\"",
 	"itemGroup.basedefense": "Base Defense"
 }

@@ -33,6 +33,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
@@ -96,24 +99,45 @@ public class PadlockedDoorBlock extends LockableBaseBlock {
             state = worldIn.getBlockState(pos);
         }
         ItemStack keyStack = player.getHeldItem(handIn);
-        if (!worldIn.isRemote && worldIn.isBlockLoaded(pos) && state.getBlock() == this && allowOpen(
-            state.get(SIDE), state.get(FACING), rayTrace.getFace()
-        )) {
+        if (!worldIn.isRemote && worldIn.isBlockLoaded(pos) && state.getBlock() == this) {
             if (this.hasLock(worldIn, pos) && !keyStack.isEmpty() && keyStack.getItem() instanceof IKey) {
-                IKey key = (IKey) keyStack.getItem();
-                ItemStack lockStack = this.getLock(worldIn, pos);
-                ILock lock = (ILock) lockStack.getItem();
-                boolean success = key.canUnlock(lockStack, keyStack, worldIn, pos, this, player);
-                success = success && lock.isUnlockAllowed(lockStack, keyStack, worldIn, pos, this, player);
-                // we skip checking #isUnlockAllowed for block because we (the block) allow it
-                if (success) {
-                    if (lock.onUnlock(lockStack, keyStack, worldIn, pos, this, player) == Decision.CONTINUE) {
-                        key.onUnlock(lockStack, keyStack, worldIn, pos, this, player);
-                        if (this.hasLock(worldIn, pos)) { dropLock(player, worldIn, pos, lockStack); }
-                        replaceDoor(worldIn, pos);
+                if (allowOpen(state.get(SIDE), state.get(FACING), rayTrace.getFace())) {
+                    IKey key = (IKey) keyStack.getItem();
+                    ItemStack lockStack = this.getLock(worldIn, pos);
+                    ILock lock = (ILock) lockStack.getItem();
+                    boolean success = key.canUnlock(lockStack, keyStack, worldIn, pos, this, player);
+                    success = success && lock.isUnlockAllowed(lockStack, keyStack, worldIn, pos, this, player);
+                    // we skip checking #isUnlockAllowed for block because we (the block) allow it
+                    if (success) {
+                        if (lock.onUnlock(lockStack, keyStack, worldIn, pos, this, player) == Decision.CONTINUE) {
+                            key.onUnlock(lockStack, keyStack, worldIn, pos, this, player);
+                            if (this.hasLock(worldIn, pos)) { dropLock(player, worldIn, pos, lockStack); }
+                            replaceDoor(worldIn, pos);
+                        }
                     }
+                    return ActionResultType.SUCCESS;
                 }
-                return ActionResultType.SUCCESS;
+            } else {
+                if (player.isSneaking() && allowOpen(state.get(SIDE), state.get(FACING), rayTrace.getFace())) {
+                    if (this.hasLock(worldIn, pos)) {
+                        if (this.getLock(worldIn, pos).hasDisplayName()) {
+                            player.sendStatusMessage(
+                                new TranslationTextComponent(
+                                    "status.basedefense.padlocked_door.info", this.getLock(worldIn, pos).getDisplayName()
+                                        .applyTextStyle(TextFormatting.WHITE)
+                                ).applyTextStyles(TextFormatting.YELLOW, TextFormatting.ITALIC), true
+                            );
+                        }
+                    }
+                } else {
+                    player.sendStatusMessage(
+                        new TranslationTextComponent(
+                            "status.basedefense.padlocked_door.locked", new TranslationTextComponent(
+                                this.block.getTranslationKey()
+                            ).applyTextStyle(TextFormatting.WHITE)
+                        ).applyTextStyles(TextFormatting.GRAY, TextFormatting.ITALIC), true
+                    );
+                }
             }
         }
         return ActionResultType.PASS;
@@ -187,6 +211,21 @@ public class PadlockedDoorBlock extends LockableBaseBlock {
             case SOUTH:
                 return SOUTH_AABB;
         }
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return this.blocksMovement ? state.getShape(worldIn, pos) : VoxelShapes.empty();
+    }
+
+    @Override
+    public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
+        return state.getShape(worldIn, pos);
+    }
+
+    @Override
+    public VoxelShape getRaytraceShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
+        return VoxelShapes.empty();
     }
 
     @Override
