@@ -79,6 +79,11 @@ public class PadlockedDoorBlock extends LockableBaseBlock {
     }
 
     @Override
+    public boolean hasTileEntity(BlockState state) {
+        return state.getBlock() == this && state.get(HALF) == DoubleBlockHalf.LOWER;
+    }
+
+    @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new PadlockedDoorTile();
     }
@@ -196,13 +201,14 @@ public class PadlockedDoorBlock extends LockableBaseBlock {
         BlockPos otherPos = doubleblockhalf == DoubleBlockHalf.LOWER ? pos.up() : pos.down();
         BlockState otherState = worldIn.getBlockState(otherPos);
         if (otherState.get(HALF) != doubleblockhalf) {
-            worldIn.setBlockState(otherPos, Blocks.AIR.getDefaultState(), 35);
-            worldIn.playEvent(player, Constants.WorldEvents.BREAK_BLOCK_EFFECTS, otherPos, Block.getStateId(otherState));
             ItemStack itemstack = player.getHeldItemMainhand();
             if (!worldIn.isRemote && !player.isCreative() && player.canHarvestBlock(otherState)) {
-                Block.spawnDrops(state, worldIn, pos, worldIn.getTileEntity(pos), player, itemstack);
-                Block.spawnDrops(otherState, worldIn, otherPos, worldIn.getTileEntity(otherPos), player, itemstack);
+                BlockPos tePos = doubleblockhalf == DoubleBlockHalf.LOWER ? pos : otherPos;
+                Block.spawnDrops(state, worldIn, pos, worldIn.getTileEntity(tePos), player, itemstack);
+                Block.spawnDrops(otherState, worldIn, otherPos, worldIn.getTileEntity(tePos), player, itemstack);
             }
+            worldIn.setBlockState(otherPos, Blocks.AIR.getDefaultState(), 35);
+            worldIn.playEvent(player, Constants.WorldEvents.BREAK_BLOCK_EFFECTS, otherPos, Block.getStateId(otherState));
         }
         super.onBlockHarvested(worldIn, pos, state, player);
     }

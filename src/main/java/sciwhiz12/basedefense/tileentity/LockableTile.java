@@ -72,5 +72,6 @@ public class LockableTile extends TileEntity {
 
     public void setLock(ItemStack stack) {
         this.lock = stack.copy();
+        this.markDirty();
     }
 }
