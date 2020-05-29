@@ -20,6 +20,7 @@ import sciwhiz12.basedefense.init.ModBlocks;
 import sciwhiz12.basedefense.init.ModContainers;
 import sciwhiz12.basedefense.init.ModItems;
 import sciwhiz12.basedefense.init.ModRecipes;
+import sciwhiz12.basedefense.init.ModSounds;
 import sciwhiz12.basedefense.init.ModTileEntities;
 import sciwhiz12.basedefense.net.NetworkHandler;
 
@@ -39,6 +40,7 @@ public class BaseDefense {
         ModTileEntities.REGISTER.register(MOD_EVENT_BUS);
         ModContainers.REGISTER.register(MOD_EVENT_BUS);
         ModRecipes.REGISTER.register(MOD_EVENT_BUS);
+        ModSounds.REGISTER.register(MOD_EVENT_BUS);
 
         MOD_EVENT_BUS.addListener(this::onClientSetup);
         MOD_EVENT_BUS.addListener(this::registerItemColors);

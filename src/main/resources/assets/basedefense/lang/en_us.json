@@ -30,5 +30,8 @@
 	"tooltip.basedefense.keycolor": "Color #%s: %s",
 	"status.basedefense.padlocked_door.locked": "This %s is locked.",
 	"status.basedefense.padlocked_door.info": "\"%s\"",
-	"itemGroup.basedefense": "Base Defense"
+	"itemGroup.basedefense": "Base Defense",
+	"subtitle.basedefense.locked_door.attempt": "Door locked",
+	"subtitle.basedefense.locked_door.relock": "Door relocks",
+	"subtitle.basedefense.locked_door.unlock": "Door unlocks"
 }

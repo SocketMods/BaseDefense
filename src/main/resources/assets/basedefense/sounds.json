@@ -1,0 +1,20 @@
+{
+	"locked_door.attempt": {
+		"subtitle": "subtitle.basedefense.locked_door.attempt",
+		"sounds": [
+			"basedefense:locked_door_attempt"
+		]
+	},
+	"locked_door.relock": {
+		"subtitle": "subtitle.basedefense.locked_door.relock",
+		"sounds": [
+			"basedefense:locked_door_relock"
+		]
+	},
+	"locked_door.unlock": {
+		"subtitle": "subtitle.basedefense.locked_door.unlock",
+		"sounds": [
+			"basedefense:locked_door_unlock"
+		]
+	}
+}
