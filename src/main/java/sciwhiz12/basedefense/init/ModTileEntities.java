@@ -5,8 +5,9 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import sciwhiz12.basedefense.BaseDefense;
-import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
+import sciwhiz12.basedefense.tileentity.LockedDoorTile;
 import sciwhiz12.basedefense.tileentity.LockableTile;
+import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
 
 public class ModTileEntities {
     public static final DeferredRegister<TileEntityType<?>> REGISTER = new DeferredRegister<>(
@@ -22,6 +23,14 @@ public class ModTileEntities {
             PadlockedDoorTile::new, ModBlocks.PADLOCKED_IRON_DOOR.get(), ModBlocks.PADLOCKED_OAK_DOOR.get(),
             ModBlocks.PADLOCKED_BIRCH_DOOR.get(), ModBlocks.PADLOCKED_SPRUCE_DOOR.get(), ModBlocks.PADLOCKED_JUNGLE_DOOR
                 .get(), ModBlocks.PADLOCKED_ACACIA_DOOR.get(), ModBlocks.PADLOCKED_DARK_OAK_DOOR.get()
+        ).build(null)
+    );
+
+    public static final RegistryObject<TileEntityType<LockedDoorTile>> LOCKED_DOOR = ModTileEntities.REGISTER.register(
+        "locked_door", () -> TileEntityType.Builder.create(
+            LockedDoorTile::new, ModBlocks.LOCKED_IRON_DOOR.get(), ModBlocks.LOCKED_OAK_DOOR.get(),
+            ModBlocks.LOCKED_BIRCH_DOOR.get(), ModBlocks.LOCKED_SPRUCE_DOOR.get(), ModBlocks.LOCKED_JUNGLE_DOOR.get(),
+            ModBlocks.LOCKED_ACACIA_DOOR.get(), ModBlocks.LOCKED_DARK_OAK_DOOR.get()
         ).build(null)
     );
 }

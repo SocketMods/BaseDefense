@@ -50,4 +50,26 @@ public class ModItems {
     public static final RegistryObject<Item> LOCKSMITH_BLOCK_ITEM = REGISTER.register(
         "locksmith_table", () -> new BlockItem(ModBlocks.LOCKSMITH_BLOCK.get(), new Item.Properties().group(GROUP))
     );
+    private static final Item.Properties door_lock_props = new Item.Properties().group(GROUP).maxDamage(0);
+    public static final RegistryObject<Item> LOCKED_IRON_DOOR_ITEM = REGISTER.register(
+        "locked_iron_door", () -> new BlockItem(ModBlocks.LOCKED_IRON_DOOR.get(), door_lock_props)
+    );
+    public static final RegistryObject<Item> LOCKED_OAK_DOOR_ITEM = REGISTER.register(
+        "locked_oak_door", () -> new BlockItem(ModBlocks.LOCKED_OAK_DOOR.get(), door_lock_props)
+    );
+    public static final RegistryObject<Item> LOCKED_BIRCH_DOOR_ITEM = REGISTER.register(
+        "locked_birch_door", () -> new BlockItem(ModBlocks.LOCKED_BIRCH_DOOR.get(), door_lock_props)
+    );
+    public static final RegistryObject<Item> LOCKED_SPRUCE_DOOR_ITEM = REGISTER.register(
+        "locked_spruce_door", () -> new BlockItem(ModBlocks.LOCKED_SPRUCE_DOOR.get(), door_lock_props)
+    );
+    public static final RegistryObject<Item> LOCKED_JUNGLE_DOOR_ITEM = REGISTER.register(
+        "locked_jungle_door", () -> new BlockItem(ModBlocks.LOCKED_JUNGLE_DOOR.get(), door_lock_props)
+    );
+    public static final RegistryObject<Item> LOCKED_ACACIA_DOOR_ITEM = REGISTER.register(
+        "locked_acacia_door", () -> new BlockItem(ModBlocks.LOCKED_ACACIA_DOOR.get(), door_lock_props)
+    );
+    public static final RegistryObject<Item> LOCKED_DARK_OAK_DOOR_ITEM = REGISTER.register(
+        "locked_dark_oak_door", () -> new BlockItem(ModBlocks.LOCKED_DARK_OAK_DOOR.get(), door_lock_props)
+    );
 }

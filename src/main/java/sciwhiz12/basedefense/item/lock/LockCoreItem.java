@@ -9,9 +9,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import sciwhiz12.basedefense.api.lock.Decision;
 import sciwhiz12.basedefense.api.lock.ILockable;
+import sciwhiz12.basedefense.block.LockedDoorBlock;
 
 public class LockCoreItem extends LockBaseItem {
     private static final IItemPropertyGetter COLOR_GETTER = (stack, world, livingEntity) -> {
@@ -23,6 +25,11 @@ public class LockCoreItem extends LockBaseItem {
     public LockCoreItem() {
         super(new Item.Properties().maxDamage(0));
         this.addPropertyOverride(new ResourceLocation("colors"), COLOR_GETTER);
+    }
+
+    @Override
+    public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, PlayerEntity player) {
+        return world.getBlockState(pos).getBlock() instanceof LockedDoorBlock;
     }
 
     @Override

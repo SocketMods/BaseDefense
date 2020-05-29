@@ -11,6 +11,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import sciwhiz12.basedefense.block.LockedDoorBlock;
 import sciwhiz12.basedefense.client.color.IdentifyingColor;
 import sciwhiz12.basedefense.client.gui.KeysmithScreen;
 import sciwhiz12.basedefense.client.gui.LocksmithScreen;
@@ -40,7 +41,8 @@ public class BaseDefense {
         ModRecipes.REGISTER.register(MOD_EVENT_BUS);
 
         MOD_EVENT_BUS.addListener(this::onClientSetup);
-        MOD_EVENT_BUS.addListener(this::registerColors);
+        MOD_EVENT_BUS.addListener(this::registerItemColors);
+        MOD_EVENT_BUS.addListener(this::registerBlockColors);
     }
 
     @SubscribeEvent
@@ -52,9 +54,18 @@ public class BaseDefense {
     }
 
     @SubscribeEvent
-    void registerColors(ColorHandlerEvent.Item event) {
+    void registerItemColors(ColorHandlerEvent.Item event) {
         event.getItemColors().register(
             new IdentifyingColor(), ModItems.KEY.get(), ModItems.LOCK_CORE.get(), ModItems.PADLOCK.get()
+        );
+    }
+
+    @SubscribeEvent
+    void registerBlockColors(ColorHandlerEvent.Block event) {
+        event.getBlockColors().register(
+            LockedDoorBlock.COLOR, ModBlocks.LOCKED_IRON_DOOR.get(), ModBlocks.LOCKED_OAK_DOOR.get(),
+            ModBlocks.LOCKED_BIRCH_DOOR.get(), ModBlocks.LOCKED_SPRUCE_DOOR.get(), ModBlocks.LOCKED_JUNGLE_DOOR.get(),
+            ModBlocks.LOCKED_ACACIA_DOOR.get(), ModBlocks.LOCKED_DARK_OAK_DOOR.get()
         );
     }
 }

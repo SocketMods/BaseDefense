@@ -1,0 +1,22 @@
+{
+	"type": "basedefense:locked_door",
+	"group": "locked_door",
+	"pattern": [
+		"IdC"
+	],
+	"key": {
+		"I": {
+			"tag": "forge:ingots/iron"
+		},
+		"d": {
+			"item": "minecraft:birch_door"
+		},
+		"C": {
+			"item": "basedefense:lock_core"
+		}
+	},
+	"result": {
+		"item": "basedefense:locked_birch_door",
+		"count": 1
+	}
+}

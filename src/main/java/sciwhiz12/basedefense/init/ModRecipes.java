@@ -7,6 +7,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import sciwhiz12.basedefense.BaseDefense;
 import sciwhiz12.basedefense.recipe.CopyLockRecipe;
+import sciwhiz12.basedefense.recipe.LockedDoorRecipe;
 import sciwhiz12.basedefense.recipe.PadlockRepairRecipe;
 
 public class ModRecipes {
@@ -19,5 +20,8 @@ public class ModRecipes {
     );
     public static final RegistryObject<IRecipeSerializer<?>> PADLOCK_REPAIR = REGISTER.register(
         "padlock_repair", () -> new SpecialRecipeSerializer<>(PadlockRepairRecipe::new)
+    );
+    public static final RegistryObject<IRecipeSerializer<?>> LOCKED_DOOR = REGISTER.register(
+        "locked_door", () -> new LockedDoorRecipe.Serializer()
     );
 }
