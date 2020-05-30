@@ -21,6 +21,7 @@ import sciwhiz12.basedefense.init.ModBlocks;
 import sciwhiz12.basedefense.init.ModContainers;
 import sciwhiz12.basedefense.init.ModItems;
 import sciwhiz12.basedefense.init.ModTextures;
+import sciwhiz12.basedefense.item.IColorable;
 
 public class LocksmithContainer extends Container {
     private final IInventory outputSlot = new CraftResultInventory() {
@@ -120,14 +121,18 @@ public class LocksmithContainer extends Container {
         } else {
             ItemStack out = new ItemStack(ModItems.LOCK_CORE.get(), 1);
             int keys = 0;
+            ItemStack lastKey = ItemStack.EMPTY;
             for (int i = 1; i < 7; i++) {
                 ItemStack key = this.inputSlots.getStackInSlot(i);
                 if (!key.isEmpty()) {
                     LockingUtil.addUnlockID(out, LockingUtil.getKeyID(key));
                     keys++;
+                    lastKey = key;
                 }
             }
             if (keys == 0) { out = ItemStack.EMPTY; }
+            IColorable.copyColors(lastKey, out);
+            if (lastKey.hasDisplayName()) { out.setDisplayName(lastKey.getDisplayName()); }
             this.outputSlot.setInventorySlotContents(0, out);
         }
 

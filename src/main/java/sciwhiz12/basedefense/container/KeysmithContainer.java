@@ -23,6 +23,7 @@ import sciwhiz12.basedefense.init.ModBlocks;
 import sciwhiz12.basedefense.init.ModContainers;
 import sciwhiz12.basedefense.init.ModItems;
 import sciwhiz12.basedefense.init.ModTextures;
+import sciwhiz12.basedefense.item.IColorable;
 
 public class KeysmithContainer extends Container {
     private final ItemStackHandler outputSlot = new ItemStackHandler(1) {};
@@ -81,9 +82,9 @@ public class KeysmithContainer extends Container {
             this.customName = null;
         } else {
             out = new ItemStack(ModItems.KEY.get(), 1);
-            boolean duplEmpty = dupl.isEmpty();
-            if (!duplEmpty) {
+            if (!dupl.isEmpty()) {
                 out.setTagInfo(LockingUtil.NBT_UUID, LongNBT.valueOf(LockingUtil.getKeyID(dupl)));
+                IColorable.copyColors(dupl, out);
             } else {
                 LockingUtil.getKeyID(out);
             }

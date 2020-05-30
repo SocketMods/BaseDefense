@@ -14,8 +14,9 @@ import net.minecraft.world.World;
 import sciwhiz12.basedefense.api.lock.Decision;
 import sciwhiz12.basedefense.api.lock.ILockable;
 import sciwhiz12.basedefense.block.LockedDoorBlock;
+import sciwhiz12.basedefense.item.IColorable;
 
-public class LockCoreItem extends LockBaseItem {
+public class LockCoreItem extends LockBaseItem implements IColorable {
     private static final IItemPropertyGetter COLOR_GETTER = (stack, world, livingEntity) -> {
         CompoundNBT tag = stack.getChildTag("display");
         if (tag != null && tag.contains("colors")) { return (float) tag.getIntArray("colors").length; }

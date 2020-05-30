@@ -6,6 +6,7 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import sciwhiz12.basedefense.BaseDefense;
+import sciwhiz12.basedefense.recipe.ColoringRecipe;
 import sciwhiz12.basedefense.recipe.CopyLockRecipe;
 import sciwhiz12.basedefense.recipe.LockedDoorRecipe;
 import sciwhiz12.basedefense.recipe.PadlockRepairRecipe;
@@ -23,5 +24,8 @@ public class ModRecipes {
     );
     public static final RegistryObject<IRecipeSerializer<?>> LOCKED_DOOR = REGISTER.register(
         "locked_door", () -> new LockedDoorRecipe.Serializer()
+    );
+    public static final RegistryObject<IRecipeSerializer<?>> COLORING = REGISTER.register(
+        "coloring", () -> new SpecialRecipeSerializer<>(ColoringRecipe::new)
     );
 }

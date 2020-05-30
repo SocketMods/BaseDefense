@@ -20,8 +20,9 @@ import net.minecraft.world.World;
 import sciwhiz12.basedefense.LockingUtil;
 import sciwhiz12.basedefense.api.lock.IKey;
 import sciwhiz12.basedefense.api.lock.ILockable;
+import sciwhiz12.basedefense.item.IColorable;
 
-public class KeyItem extends Item implements IKey {
+public class KeyItem extends Item implements IKey, IColorable {
     private static final IItemPropertyGetter COLOR_GETTER = (stack, world, livingEntity) -> {
         CompoundNBT tag = stack.getChildTag("display");
         if (tag != null && tag.contains("colors")) { return (float) tag.getIntArray("colors").length; }

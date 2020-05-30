@@ -12,7 +12,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import sciwhiz12.basedefense.block.LockedDoorBlock;
-import sciwhiz12.basedefense.client.color.IdentifyingColor;
 import sciwhiz12.basedefense.client.gui.KeysmithScreen;
 import sciwhiz12.basedefense.client.gui.LocksmithScreen;
 import sciwhiz12.basedefense.client.render.PadlockedDoorRenderer;
@@ -22,6 +21,7 @@ import sciwhiz12.basedefense.init.ModItems;
 import sciwhiz12.basedefense.init.ModRecipes;
 import sciwhiz12.basedefense.init.ModSounds;
 import sciwhiz12.basedefense.init.ModTileEntities;
+import sciwhiz12.basedefense.item.IColorable;
 import sciwhiz12.basedefense.net.NetworkHandler;
 
 @Mod(BaseDefense.MODID)
@@ -58,7 +58,7 @@ public class BaseDefense {
     @SubscribeEvent
     void registerItemColors(ColorHandlerEvent.Item event) {
         event.getItemColors().register(
-            new IdentifyingColor(), ModItems.KEY.get(), ModItems.LOCK_CORE.get(), ModItems.PADLOCK.get()
+            IColorable.ITEM_COLOR, ModItems.KEY.get(), ModItems.LOCK_CORE.get(), ModItems.PADLOCK.get()
         );
     }
 

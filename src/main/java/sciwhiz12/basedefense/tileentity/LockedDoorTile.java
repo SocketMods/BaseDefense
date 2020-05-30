@@ -1,12 +1,11 @@
 package sciwhiz12.basedefense.tileentity;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
-import net.minecraftforge.common.util.Constants;
 import sciwhiz12.basedefense.init.ModTileEntities;
+import sciwhiz12.basedefense.item.IColorable;
 
 public class LockedDoorTile extends LockableTile {
     public static final ModelProperty<Integer> COLOR_PROPERTY = new ModelProperty<>();
@@ -16,13 +15,12 @@ public class LockedDoorTile extends LockableTile {
     }
 
     public boolean hasColors() {
-        CompoundNBT tag = this.lock.getTag();
-        return this.hasLock() && this.lock.hasTag() && tag.contains("display", Constants.NBT.TAG_COMPOUND) && tag
-            .getCompound("display").contains("colors");
+        return lock.getItem() instanceof IColorable && ((IColorable) lock.getItem()).hasColors(lock);
     }
 
     public int[] getColors() {
-        return this.hasColors() ? this.lock.getTag().getCompound("display").getIntArray("colors") : new int[0];
+        if (lock.getItem() instanceof IColorable) { return ((IColorable) lock.getItem()).getColors(lock); }
+        return new int[0];
     }
 
     @Override

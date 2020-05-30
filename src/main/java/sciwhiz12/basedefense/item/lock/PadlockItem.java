@@ -15,8 +15,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import sciwhiz12.basedefense.api.lock.Decision;
 import sciwhiz12.basedefense.api.lock.ILockable;
+import sciwhiz12.basedefense.item.IColorable;
 
-public class PadlockItem extends LockBaseItem {
+public class PadlockItem extends LockBaseItem implements IColorable {
     private static final IItemPropertyGetter COLOR_GETTER = (stack, world, livingEntity) -> {
         CompoundNBT tag = stack.getChildTag("display");
         if (tag != null && tag.contains("colors")) { return (float) tag.getIntArray("colors").length; }
