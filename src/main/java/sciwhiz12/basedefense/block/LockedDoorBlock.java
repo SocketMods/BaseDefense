@@ -97,7 +97,7 @@ public class LockedDoorBlock extends LockableBaseBlock {
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
             BlockRayTraceResult rayTrace) {
-        if (!worldIn.isRemote && worldIn.isBlockPresent(pos) && state.getBlock() == this) { // verify that block is loaded
+        if (worldIn.isBlockPresent(pos) && state.getBlock() == this) { // verify that block is loaded
             if (state.get(LOCKED)) { // LOCKED
                 if (checkUnlock(player.getHeldItem(handIn), worldIn, getLowerHalf(state, pos), player)) { // LOCKED, KEY
                     if (player.isSneaking()) { // LOCKED, KEY, SNEAKING => toggle locked state
@@ -110,12 +110,12 @@ public class LockedDoorBlock extends LockableBaseBlock {
                         } else {
                             sound = ModSounds.LOCKED_DOOR_UNLOCK.get();
                         }
-                        playSound(worldIn, pos, sound);
+                        playSound(player, worldIn, pos, sound);
                         return ActionResultType.SUCCESS; // END ACTION;
                     } else { // LOCKED, KEY, NOT SNEAKING => toggle open state
                         final boolean newOpen = !state.get(OPEN);
                         worldIn.setBlockState(pos, state.with(OPEN, newOpen), DEFAULT_AND_RERENDER);
-                        this.playSound(worldIn, pos, newOpen);
+                        this.playDoorSound(player, worldIn, pos, newOpen);
                         worldIn.neighborChanged(getOtherHalf(state, pos), this, pos);
                         return ActionResultType.SUCCESS; // END ACTION;
                     }
@@ -131,7 +131,7 @@ public class LockedDoorBlock extends LockableBaseBlock {
                                 ).applyTextStyle(TextFormatting.YELLOW), true
                             );
                         }
-                        playSound(worldIn, pos, ModSounds.LOCKED_DOOR_ATTEMPT.get());
+                        playSound(player, worldIn, pos, ModSounds.LOCKED_DOOR_ATTEMPT.get());
                         return ActionResultType.PASS; // END ACTION;
                     } else { // LOCKED, NO KEY, NOT SNEAKING => inform player that door is locked
                         player.sendStatusMessage(
@@ -141,7 +141,7 @@ public class LockedDoorBlock extends LockableBaseBlock {
                                 )
                             ).applyTextStyle(TextFormatting.GRAY), true
                         );
-                        playSound(worldIn, pos, ModSounds.LOCKED_DOOR_ATTEMPT.get());
+                        playSound(player, worldIn, pos, ModSounds.LOCKED_DOOR_ATTEMPT.get());
                         return ActionResultType.PASS; // END ACTION;
                     }
 
@@ -152,7 +152,7 @@ public class LockedDoorBlock extends LockableBaseBlock {
                         // UNLOCKED, SNEAKING, HAS LOCK => set to locked and unopened state
                         worldIn.setBlockState(pos, state.with(LOCKED, true).with(OPEN, false), DEFAULT_AND_RERENDER);
                         worldIn.neighborChanged(getOtherHalf(state, pos), this, pos);
-                        playSound(worldIn, pos, ModSounds.LOCKED_DOOR_RELOCK.get());
+                        playSound(player, worldIn, pos, ModSounds.LOCKED_DOOR_RELOCK.get());
                         return ActionResultType.SUCCESS; // END ACTION;
                     } else { // UNLOCKED, SNEAKING, NO LOCK
                         ItemStack heldStack = player.getHeldItem(handIn);
@@ -163,7 +163,7 @@ public class LockedDoorBlock extends LockableBaseBlock {
                             player.inventory.decrStackSize(player.inventory.getSlotFor(heldStack), 1);
                             worldIn.setBlockState(pos, state.with(LOCKED, true), DEFAULT_AND_RERENDER);
                             worldIn.neighborChanged(getOtherHalf(state, pos), this, pos);
-                            playSound(worldIn, pos, ModSounds.LOCKED_DOOR_RELOCK.get());
+                            playSound(player, worldIn, pos, ModSounds.LOCKED_DOOR_RELOCK.get());
                             return ActionResultType.SUCCESS; // END ACTION;
                         } // UNLOCKED, SNEAKING, NO LOCK, NOT HOLDING LOCK => nothing;
 
@@ -172,7 +172,7 @@ public class LockedDoorBlock extends LockableBaseBlock {
                 } else { // UNLOCKED, NOT SNEAKING => toggle open state
                     final boolean newOpen = !state.get(OPEN);
                     worldIn.setBlockState(pos, state.with(OPEN, newOpen), DEFAULT_AND_RERENDER);
-                    this.playSound(worldIn, pos, newOpen);
+                    this.playDoorSound(player, worldIn, pos, newOpen);
                     worldIn.neighborChanged(getOtherHalf(state, pos), this, pos);
                     return ActionResultType.SUCCESS; // END ACTION;
                 }
@@ -182,8 +182,8 @@ public class LockedDoorBlock extends LockableBaseBlock {
         return ActionResultType.SUCCESS;
     }
 
-    private void playSound(World world, BlockPos pos, SoundEvent event) {
-        world.playSound(null, pos, event, SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
+    private void playSound(PlayerEntity player, World world, BlockPos pos, SoundEvent event) {
+        world.playSound(player, pos, event, SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
     }
 
     public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block fromBlockIn, BlockPos fromPos,
@@ -223,8 +223,8 @@ public class LockedDoorBlock extends LockableBaseBlock {
         return false;
     }
 
-    private void playSound(World worldIn, BlockPos pos, boolean isOpening) {
-        worldIn.playEvent((PlayerEntity) null, isOpening ? this.getOpenSound() : this.getCloseSound(), pos, 0);
+    private void playDoorSound(PlayerEntity player, World worldIn, BlockPos pos, boolean isOpening) {
+        worldIn.playEvent(player, isOpening ? this.getOpenSound() : this.getCloseSound(), pos, 0);
     }
 
     private int getCloseSound() {

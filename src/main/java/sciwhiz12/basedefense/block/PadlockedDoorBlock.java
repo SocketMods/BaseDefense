@@ -99,7 +99,7 @@ public class PadlockedDoorBlock extends LockableBaseBlock {
             state = worldIn.getBlockState(pos);
         }
         ItemStack keyStack = player.getHeldItem(handIn);
-        if (!worldIn.isRemote && worldIn.isBlockLoaded(pos) && state.getBlock() == this) {
+        if (worldIn.isBlockLoaded(pos) && state.getBlock() == this) {
             if (this.hasLock(worldIn, pos) && !keyStack.isEmpty() && keyStack.getItem() instanceof IKey) {
                 if (allowOpen(state.get(SIDE), state.get(FACING), rayTrace.getFace())) {
                     IKey key = (IKey) keyStack.getItem();
@@ -108,7 +108,7 @@ public class PadlockedDoorBlock extends LockableBaseBlock {
                     boolean success = key.canUnlock(lockStack, keyStack, worldIn, pos, this, player);
                     success = success && lock.isUnlockAllowed(lockStack, keyStack, worldIn, pos, this, player);
                     // we skip checking #isUnlockAllowed for block because we (the block) allow it
-                    if (success) {
+                    if (success && !worldIn.isRemote) {
                         if (lock.onUnlock(lockStack, keyStack, worldIn, pos, this, player) == Decision.CONTINUE) {
                             key.onUnlock(lockStack, keyStack, worldIn, pos, this, player);
                             if (this.hasLock(worldIn, pos)) { dropLock(player, worldIn, pos, lockStack); }
