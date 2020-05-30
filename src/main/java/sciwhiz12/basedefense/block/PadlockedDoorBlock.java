@@ -10,7 +10,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathType;
@@ -27,8 +26,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -40,6 +37,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.IRegistryDelegate;
 import sciwhiz12.basedefense.api.lock.Decision;
 import sciwhiz12.basedefense.api.lock.IKey;
@@ -111,7 +109,10 @@ public class PadlockedDoorBlock extends LockableBaseBlock {
                     if (success && !worldIn.isRemote) {
                         if (lock.onUnlock(lockStack, keyStack, worldIn, pos, this, player) == Decision.CONTINUE) {
                             key.onUnlock(lockStack, keyStack, worldIn, pos, this, player);
-                            if (this.hasLock(worldIn, pos)) { dropLock(player, worldIn, pos, lockStack); }
+                            if (this.hasLock(worldIn, pos)) {
+                                ItemHandlerHelper.giveItemToPlayer(player, lockStack);
+                                this.setLock(worldIn, pos, ItemStack.EMPTY);
+                            }
                             replaceDoor(worldIn, pos);
                         }
                     }
@@ -163,28 +164,6 @@ public class PadlockedDoorBlock extends LockableBaseBlock {
         int flags = Constants.BlockFlags.DEFAULT_AND_RERENDER | Constants.BlockFlags.NO_NEIGHBOR_DROPS;
         worldIn.setBlockState(offPos, newOffState, flags);
         worldIn.setBlockState(pos, newState, flags);
-    }
-
-    private void dropLock(PlayerEntity player, World worldIn, BlockPos pos, ItemStack lockStack) {
-        boolean flag = player.inventory.addItemStackToInventory(lockStack);
-        if (flag && lockStack.isEmpty()) {
-            lockStack.setCount(1);
-            ItemEntity itementity1 = player.dropItem(lockStack, false);
-            if (itementity1 != null) { itementity1.makeFakeItem(); }
-            worldIn.playSound(
-                (PlayerEntity) null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ENTITY_ITEM_PICKUP,
-                SoundCategory.PLAYERS, 0.2F, ((player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.7F + 1.0F)
-                        * 2.0F
-            );
-            player.container.detectAndSendChanges();
-        } else {
-            ItemEntity itementity = player.dropItem(lockStack, false);
-            if (itementity != null) {
-                itementity.setNoPickupDelay();
-                itementity.setOwnerId(player.getUniqueID());
-            }
-        }
-        this.setLock(worldIn, pos, ItemStack.EMPTY);
     }
 
     @Override
