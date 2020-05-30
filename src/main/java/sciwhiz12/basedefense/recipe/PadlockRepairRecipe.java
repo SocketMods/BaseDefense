@@ -75,7 +75,7 @@ public class PadlockRepairRecipe extends SpecialRecipe {
         Optional<Triple<Integer, Integer, Integer>> opSlots = getSlots(inv);
         if (opSlots.isPresent()) {
             ItemStack padlock = inv.getStackInSlot(opSlots.get().getLeft());
-            ItemStack output = new ItemStack(ModItems.PADLOCK.get(), 1);
+            ItemStack output = new ItemStack(ModItems.PADLOCK, 1);
             output.setTag(padlock.getTag());
             return output;
         }
@@ -102,7 +102,7 @@ public class PadlockRepairRecipe extends SpecialRecipe {
 
     @Override
     public IRecipeSerializer<?> getSerializer() {
-        return ModRecipes.PADLOCK_REPAIR.get();
+        return ModRecipes.PADLOCK_REPAIR;
     }
 
 }

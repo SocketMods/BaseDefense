@@ -30,7 +30,7 @@ public class CopyLockRecipe extends ShapedRecipe {
     }
 
     public IRecipeSerializer<?> getSerializer() {
-        return ModRecipes.COPY_LOCK.get();
+        return ModRecipes.COPY_LOCK;
     }
 
     public ItemStack getCraftingResult(CraftingInventory inv) {

@@ -4,92 +4,79 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.ObjectHolder;
 import sciwhiz12.basedefense.BaseDefense;
-import sciwhiz12.basedefense.block.LockedDoorBlock;
 import sciwhiz12.basedefense.block.KeysmithBlock;
+import sciwhiz12.basedefense.block.LockedDoorBlock;
 import sciwhiz12.basedefense.block.LocksmithBlock;
 import sciwhiz12.basedefense.block.PadlockedDoorBlock;
 import sciwhiz12.basedefense.block.TestLockBlock;
 
+@ObjectHolder(BaseDefense.MODID)
+@EventBusSubscriber(bus = Bus.MOD, modid = BaseDefense.MODID)
 public class ModBlocks {
-    public static final DeferredRegister<Block> REGISTER = new DeferredRegister<>(ForgeRegistries.BLOCKS, BaseDefense.MODID);
+    
+    public static final Block TEST_LOCK_BLOCK = null;
+    public static final Block KEYSMITH_TABLE = null;
+    public static final Block LOCKSMITH_TABLE = null;
 
-    public static final RegistryObject<Block> TEST_LOCK_BLOCK = REGISTER.register(
-        "test_lock_block", () -> new TestLockBlock()
-    );
-    public static final RegistryObject<Block> KEYSMITH_BLOCK = REGISTER.register(
-        "keysmith_table", () -> new KeysmithBlock()
-    );
-    public static final RegistryObject<Block> LOCKSMITH_BLOCK = REGISTER.register(
-        "locksmith_table", () -> new LocksmithBlock()
-    );
+    public static final Block PADLOCKED_IRON_DOOR = null;
+    public static final Block PADLOCKED_OAK_DOOR = null;
+    public static final Block PADLOCKED_BIRCH_DOOR = null;
+    public static final Block PADLOCKED_SPRUCE_DOOR = null;
+    public static final Block PADLOCKED_JUNGLE_DOOR = null;
+    public static final Block PADLOCKED_ACACIA_DOOR = null;
+    public static final Block PADLOCKED_DARK_OAK_DOOR = null;
 
-    public static final RegistryObject<Block> PADLOCKED_IRON_DOOR = REGISTER.register(
-        "padlocked_iron_door", () -> new PadlockedDoorBlock(Blocks.IRON_DOOR)
-    );
-    public static final RegistryObject<Block> PADLOCKED_OAK_DOOR = REGISTER.register(
-        "padlocked_oak_door", () -> new PadlockedDoorBlock(Blocks.OAK_DOOR)
-    );
-    public static final RegistryObject<Block> PADLOCKED_BIRCH_DOOR = REGISTER.register(
-        "padlocked_birch_door", () -> new PadlockedDoorBlock(Blocks.BIRCH_DOOR)
-    );
-    public static final RegistryObject<Block> PADLOCKED_SPRUCE_DOOR = REGISTER.register(
-        "padlocked_spruce_door", () -> new PadlockedDoorBlock(Blocks.SPRUCE_DOOR)
-    );
-    public static final RegistryObject<Block> PADLOCKED_JUNGLE_DOOR = REGISTER.register(
-        "padlocked_jungle_door", () -> new PadlockedDoorBlock(Blocks.JUNGLE_DOOR)
-    );
-    public static final RegistryObject<Block> PADLOCKED_ACACIA_DOOR = REGISTER.register(
-        "padlocked_acacia_door", () -> new PadlockedDoorBlock(Blocks.ACACIA_DOOR)
-    );
-    public static final RegistryObject<Block> PADLOCKED_DARK_OAK_DOOR = REGISTER.register(
-        "padlocked_dark_oak_door", () -> new PadlockedDoorBlock(Blocks.DARK_OAK_DOOR)
-    );
+    public static final Block LOCKED_IRON_DOOR = null;
+    public static final Block LOCKED_OAK_DOOR = null;
+    public static final Block LOCKED_BIRCH_DOOR = null;
+    public static final Block LOCKED_SPRUCE_DOOR = null;
+    public static final Block LOCKED_JUNGLE_DOOR = null;
+    public static final Block LOCKED_ACACIA_DOOR = null;
+    public static final Block LOCKED_DARK_OAK_DOOR = null;
 
-    public static final RegistryObject<Block> LOCKED_IRON_DOOR = REGISTER.register(
-        "locked_iron_door", () -> new LockedDoorBlock(Blocks.IRON_DOOR)
-    );
-    public static final RegistryObject<Block> LOCKED_OAK_DOOR = REGISTER.register(
-        "locked_oak_door", () -> new LockedDoorBlock(Blocks.OAK_DOOR)
-    );
-    public static final RegistryObject<Block> LOCKED_BIRCH_DOOR = REGISTER.register(
-        "locked_birch_door", () -> new LockedDoorBlock(Blocks.BIRCH_DOOR)
-    );
-    public static final RegistryObject<Block> LOCKED_SPRUCE_DOOR = REGISTER.register(
-        "locked_spruce_door", () -> new LockedDoorBlock(Blocks.SPRUCE_DOOR)
-    );
-    public static final RegistryObject<Block> LOCKED_JUNGLE_DOOR = REGISTER.register(
-        "locked_jungle_door", () -> new LockedDoorBlock(Blocks.JUNGLE_DOOR)
-    );
-    public static final RegistryObject<Block> LOCKED_ACACIA_DOOR = REGISTER.register(
-        "locked_acacia_door", () -> new LockedDoorBlock(Blocks.ACACIA_DOOR)
-    );
-    public static final RegistryObject<Block> LOCKED_DARK_OAK_DOOR = REGISTER.register(
-        "locked_dark_oak_door", () -> new LockedDoorBlock(Blocks.DARK_OAK_DOOR)
-    );
+    @SubscribeEvent
+    public static void onRegister(RegistryEvent.Register<Block> event) {
+        BaseDefense.LOG.debug("Registering blocks");
+        final IForgeRegistry<Block> reg = event.getRegistry();
+
+        reg.register(new TestLockBlock().setRegistryName("test_lock_block"));
+        reg.register(new KeysmithBlock().setRegistryName("keysmith_table"));
+        reg.register(new LocksmithBlock().setRegistryName("locksmith_table"));
+
+        Block[] doorBlocks = { Blocks.IRON_DOOR, Blocks.OAK_DOOR, Blocks.BIRCH_DOOR, Blocks.SPRUCE_DOOR, Blocks.JUNGLE_DOOR,
+                Blocks.ACACIA_DOOR, Blocks.DARK_OAK_DOOR };
+        for (Block b : doorBlocks) {
+            reg.register(new PadlockedDoorBlock(b).setRegistryName("padlocked_" + b.getRegistryName().getPath()));
+            reg.register(new LockedDoorBlock(b).setRegistryName("locked_" + b.getRegistryName().getPath()));
+        }
+    }
 
     public static void setupRenderLayer() {
         final RenderType solid = RenderType.getSolid();
-        RenderTypeLookup.setRenderLayer(ModBlocks.TEST_LOCK_BLOCK.get(), solid);
-        RenderTypeLookup.setRenderLayer(ModBlocks.KEYSMITH_BLOCK.get(), solid);
-        RenderTypeLookup.setRenderLayer(ModBlocks.LOCKSMITH_BLOCK.get(), solid);
+        RenderTypeLookup.setRenderLayer(ModBlocks.TEST_LOCK_BLOCK, solid);
+        RenderTypeLookup.setRenderLayer(ModBlocks.KEYSMITH_TABLE, solid);
+        RenderTypeLookup.setRenderLayer(ModBlocks.LOCKSMITH_TABLE, solid);
         final RenderType cutoutMipped = RenderType.getCutoutMipped();
-        RenderTypeLookup.setRenderLayer(ModBlocks.PADLOCKED_IRON_DOOR.get(), cutoutMipped);
-        RenderTypeLookup.setRenderLayer(ModBlocks.PADLOCKED_OAK_DOOR.get(), cutoutMipped);
-        RenderTypeLookup.setRenderLayer(ModBlocks.PADLOCKED_BIRCH_DOOR.get(), cutoutMipped);
-        RenderTypeLookup.setRenderLayer(ModBlocks.PADLOCKED_SPRUCE_DOOR.get(), cutoutMipped);
-        RenderTypeLookup.setRenderLayer(ModBlocks.PADLOCKED_JUNGLE_DOOR.get(), cutoutMipped);
-        RenderTypeLookup.setRenderLayer(ModBlocks.PADLOCKED_ACACIA_DOOR.get(), cutoutMipped);
-        RenderTypeLookup.setRenderLayer(ModBlocks.PADLOCKED_DARK_OAK_DOOR.get(), cutoutMipped);
-        RenderTypeLookup.setRenderLayer(ModBlocks.LOCKED_IRON_DOOR.get(), cutoutMipped);
-        RenderTypeLookup.setRenderLayer(ModBlocks.LOCKED_OAK_DOOR.get(), cutoutMipped);
-        RenderTypeLookup.setRenderLayer(ModBlocks.LOCKED_BIRCH_DOOR.get(), cutoutMipped);
-        RenderTypeLookup.setRenderLayer(ModBlocks.LOCKED_SPRUCE_DOOR.get(), cutoutMipped);
-        RenderTypeLookup.setRenderLayer(ModBlocks.LOCKED_JUNGLE_DOOR.get(), cutoutMipped);
-        RenderTypeLookup.setRenderLayer(ModBlocks.LOCKED_ACACIA_DOOR.get(), cutoutMipped);
-        RenderTypeLookup.setRenderLayer(ModBlocks.LOCKED_DARK_OAK_DOOR.get(), cutoutMipped);
+        RenderTypeLookup.setRenderLayer(ModBlocks.PADLOCKED_IRON_DOOR, cutoutMipped);
+        RenderTypeLookup.setRenderLayer(ModBlocks.PADLOCKED_OAK_DOOR, cutoutMipped);
+        RenderTypeLookup.setRenderLayer(ModBlocks.PADLOCKED_BIRCH_DOOR, cutoutMipped);
+        RenderTypeLookup.setRenderLayer(ModBlocks.PADLOCKED_SPRUCE_DOOR, cutoutMipped);
+        RenderTypeLookup.setRenderLayer(ModBlocks.PADLOCKED_JUNGLE_DOOR, cutoutMipped);
+        RenderTypeLookup.setRenderLayer(ModBlocks.PADLOCKED_ACACIA_DOOR, cutoutMipped);
+        RenderTypeLookup.setRenderLayer(ModBlocks.PADLOCKED_DARK_OAK_DOOR, cutoutMipped);
+        RenderTypeLookup.setRenderLayer(ModBlocks.LOCKED_IRON_DOOR, cutoutMipped);
+        RenderTypeLookup.setRenderLayer(ModBlocks.LOCKED_OAK_DOOR, cutoutMipped);
+        RenderTypeLookup.setRenderLayer(ModBlocks.LOCKED_BIRCH_DOOR, cutoutMipped);
+        RenderTypeLookup.setRenderLayer(ModBlocks.LOCKED_SPRUCE_DOOR, cutoutMipped);
+        RenderTypeLookup.setRenderLayer(ModBlocks.LOCKED_JUNGLE_DOOR, cutoutMipped);
+        RenderTypeLookup.setRenderLayer(ModBlocks.LOCKED_ACACIA_DOOR, cutoutMipped);
+        RenderTypeLookup.setRenderLayer(ModBlocks.LOCKED_DARK_OAK_DOOR, cutoutMipped);
     }
 }

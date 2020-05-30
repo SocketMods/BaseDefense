@@ -106,9 +106,9 @@ public class LockedDoorBlock extends LockableBaseBlock {
                         worldIn.neighborChanged(getOtherHalf(state, pos), this, pos);
                         final SoundEvent sound;
                         if (newLocked) {
-                            sound = ModSounds.LOCKED_DOOR_RELOCK.get();
+                            sound = ModSounds.LOCKED_DOOR_RELOCK;
                         } else {
-                            sound = ModSounds.LOCKED_DOOR_UNLOCK.get();
+                            sound = ModSounds.LOCKED_DOOR_UNLOCK;
                         }
                         playSound(player, worldIn, pos, sound);
                         return ActionResultType.SUCCESS; // END ACTION;
@@ -131,7 +131,7 @@ public class LockedDoorBlock extends LockableBaseBlock {
                                 ).applyTextStyle(TextFormatting.YELLOW), true
                             );
                         }
-                        playSound(player, worldIn, pos, ModSounds.LOCKED_DOOR_ATTEMPT.get());
+                        playSound(player, worldIn, pos, ModSounds.LOCKED_DOOR_ATTEMPT);
                         return ActionResultType.PASS; // END ACTION;
                     } else { // LOCKED, NO KEY, NOT SNEAKING => inform player that door is locked
                         player.sendStatusMessage(
@@ -141,7 +141,7 @@ public class LockedDoorBlock extends LockableBaseBlock {
                                 )
                             ).applyTextStyle(TextFormatting.GRAY), true
                         );
-                        playSound(player, worldIn, pos, ModSounds.LOCKED_DOOR_ATTEMPT.get());
+                        playSound(player, worldIn, pos, ModSounds.LOCKED_DOOR_ATTEMPT);
                         return ActionResultType.PASS; // END ACTION;
                     }
 
@@ -152,7 +152,7 @@ public class LockedDoorBlock extends LockableBaseBlock {
                         // UNLOCKED, SNEAKING, HAS LOCK => set to locked and unopened state
                         worldIn.setBlockState(pos, state.with(LOCKED, true).with(OPEN, false), DEFAULT_AND_RERENDER);
                         worldIn.neighborChanged(getOtherHalf(state, pos), this, pos);
-                        playSound(player, worldIn, pos, ModSounds.LOCKED_DOOR_RELOCK.get());
+                        playSound(player, worldIn, pos, ModSounds.LOCKED_DOOR_RELOCK);
                         return ActionResultType.SUCCESS; // END ACTION;
                     } else { // UNLOCKED, SNEAKING, NO LOCK
                         ItemStack heldStack = player.getHeldItem(handIn);
@@ -163,7 +163,7 @@ public class LockedDoorBlock extends LockableBaseBlock {
                             player.inventory.decrStackSize(player.inventory.getSlotFor(heldStack), 1);
                             worldIn.setBlockState(pos, state.with(LOCKED, true), DEFAULT_AND_RERENDER);
                             worldIn.neighborChanged(getOtherHalf(state, pos), this, pos);
-                            playSound(player, worldIn, pos, ModSounds.LOCKED_DOOR_RELOCK.get());
+                            playSound(player, worldIn, pos, ModSounds.LOCKED_DOOR_RELOCK);
                             return ActionResultType.SUCCESS; // END ACTION;
                         } // UNLOCKED, SNEAKING, NO LOCK, NOT HOLDING LOCK => nothing;
 

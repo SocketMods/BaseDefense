@@ -51,7 +51,7 @@ public class LocksmithContainer extends Container {
     }
 
     public LocksmithContainer(int windowId, PlayerInventory playerInv, IWorldPosCallable worldPos) {
-        super(ModContainers.LOCKSMITH_CONTAINER.get(), windowId);
+        super(ModContainers.LOCKSMITH_TABLE, windowId);
         this.playerInv = new InvWrapper(playerInv);
         this.worldPos = worldPos;
         this.trackInt(this.testingState);
@@ -66,14 +66,14 @@ public class LocksmithContainer extends Container {
         for (int i = 1; i < 4; i++) {
             this.addSlot(new Slot(this.inputSlots, i, 13 + ((i - 1) * 18), 21) {
                 public boolean isItemValid(ItemStack stack) {
-                    return stack.getItem() == ModItems.KEY.get();
+                    return stack.getItem() == ModItems.KEY;
                 }
             }.setBackground(ATLAS_BLOCKS_TEXTURE, ModTextures.SLOT_KEY));
         }
         for (int i = 4; i < 7; i++) {
             this.addSlot(new Slot(this.inputSlots, i, 13 + ((i - 4) * 18), 50) {
                 public boolean isItemValid(ItemStack stack) {
-                    return stack.getItem() == ModItems.KEY.get();
+                    return stack.getItem() == ModItems.KEY;
                 }
             }.setBackground(ATLAS_BLOCKS_TEXTURE, ModTextures.SLOT_KEY));
         }
@@ -95,13 +95,13 @@ public class LocksmithContainer extends Container {
 
         this.addSlot(new Slot(this.testingSlots, 0, 135, 19) {
             public boolean isItemValid(ItemStack stack) {
-                return stack.getItem() == ModItems.KEY.get();
+                return stack.getItem() == ModItems.KEY;
             }
         }.setBackground(ATLAS_BLOCKS_TEXTURE, ModTextures.SLOT_KEY));
 
         this.addSlot(new Slot(this.testingSlots, 1, 135, 40) {
             public boolean isItemValid(ItemStack stack) {
-                return stack.getItem() == ModItems.LOCK_CORE.get();
+                return stack.getItem() == ModItems.LOCK_CORE;
             }
         });
 
@@ -119,7 +119,7 @@ public class LocksmithContainer extends Container {
         if (blank.isEmpty()) {
             this.outputSlot.setInventorySlotContents(0, ItemStack.EMPTY);
         } else {
-            ItemStack out = new ItemStack(ModItems.LOCK_CORE.get(), 1);
+            ItemStack out = new ItemStack(ModItems.LOCK_CORE, 1);
             int keys = 0;
             ItemStack lastKey = ItemStack.EMPTY;
             for (int i = 1; i < 7; i++) {
@@ -153,7 +153,7 @@ public class LocksmithContainer extends Container {
 
     @Override
     public boolean canInteractWith(PlayerEntity player) {
-        return isWithinUsableDistance(worldPos, player, ModBlocks.LOCKSMITH_BLOCK.get());
+        return isWithinUsableDistance(worldPos, player, ModBlocks.LOCKSMITH_TABLE);
     }
 
     private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {

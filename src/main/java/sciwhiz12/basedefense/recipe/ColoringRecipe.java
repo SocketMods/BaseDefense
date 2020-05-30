@@ -84,6 +84,6 @@ public class ColoringRecipe extends SpecialRecipe {
 
     @Override
     public IRecipeSerializer<?> getSerializer() {
-        return ModRecipes.COLORING.get();
+        return ModRecipes.COLORING;
     }
 }

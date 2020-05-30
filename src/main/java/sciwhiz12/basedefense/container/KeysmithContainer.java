@@ -42,20 +42,20 @@ public class KeysmithContainer extends Container {
     }
 
     public KeysmithContainer(int windowId, PlayerInventory playerInv, IWorldPosCallable worldPos) {
-        super(ModContainers.KEYSMITH_CONTAINER.get(), windowId);
+        super(ModContainers.KEYSMITH_TABLE, windowId);
         this.playerInv = new InvWrapper(playerInv);
         this.worldPos = worldPos;
 
         this.addSlot(new SlotItemHandler(this.inputSlots, 0, 14, 24) {
             @Override
             public boolean isItemValid(ItemStack stack) {
-                return stack.getItem() == ModItems.BLANK_KEY.get();
+                return stack.getItem() == ModItems.BLANK_KEY;
             }
         }.setBackground(ATLAS_BLOCKS_TEXTURE, ModTextures.SLOT_BLANK_KEY));
         this.addSlot(new SlotItemHandler(this.inputSlots, 1, 31, 46) {
             @Override
             public boolean isItemValid(ItemStack stack) {
-                return stack.getItem() == ModItems.KEY.get();
+                return stack.getItem() == ModItems.KEY;
             }
         }.setBackground(ATLAS_BLOCKS_TEXTURE, ModTextures.SLOT_KEY));
         this.addSlot(new SlotItemHandler(this.outputSlot, 0, 64, 24) {
@@ -81,7 +81,7 @@ public class KeysmithContainer extends Container {
         if (blank.isEmpty()) {
             this.customName = null;
         } else {
-            out = new ItemStack(ModItems.KEY.get(), 1);
+            out = new ItemStack(ModItems.KEY, 1);
             if (!dupl.isEmpty()) {
                 out.setTagInfo(LockingUtil.NBT_UUID, LongNBT.valueOf(LockingUtil.getKeyID(dupl)));
                 IColorable.copyColors(dupl, out);
@@ -107,7 +107,7 @@ public class KeysmithContainer extends Container {
 
     @Override
     public boolean canInteractWith(PlayerEntity player) {
-        return isWithinUsableDistance(worldPos, player, ModBlocks.KEYSMITH_BLOCK.get());
+        return isWithinUsableDistance(worldPos, player, ModBlocks.KEYSMITH_TABLE);
     }
 
     private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {

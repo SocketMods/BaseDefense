@@ -101,7 +101,7 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
     }
 
     private void onTextChange(String newText) {
-        boolean flag1 = newText.equals(I18n.format(ModItems.KEY.get().getTranslationKey()));
+        boolean flag1 = newText.equals(I18n.format(ModItems.KEY.getTranslationKey()));
         boolean flag2 = StringUtils.isBlank(newText);
         if (flag1 || flag2) { newText = ""; }
         container.setOutputName(newText);
@@ -123,7 +123,7 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
                 nameField.setText("");
             } else if (!stack.isEmpty() && !isEnabledText) {
                 isEnabledText = true;
-                nameField.setText(I18n.format(ModItems.KEY.get().getTranslationKey()));
+                nameField.setText(I18n.format(ModItems.KEY.getTranslationKey()));
             }
             this.minecraft.deferTask(() -> { this.nameField.setEnabled(isEnabledText); });
         } else if (slotInd == 1) {

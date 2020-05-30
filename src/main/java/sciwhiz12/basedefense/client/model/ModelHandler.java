@@ -19,13 +19,13 @@ import sciwhiz12.basedefense.init.ModBlocks;
 public class ModelHandler {
     @SubscribeEvent
     public static void onModelBake(ModelBakeEvent event) {
-        overrideModel(event, ModBlocks.LOCKED_IRON_DOOR.get(), LockedDoorModel::new);
-        overrideModel(event, ModBlocks.LOCKED_OAK_DOOR.get(), LockedDoorModel::new);
-        overrideModel(event, ModBlocks.LOCKED_BIRCH_DOOR.get(), LockedDoorModel::new);
-        overrideModel(event, ModBlocks.LOCKED_SPRUCE_DOOR.get(), LockedDoorModel::new);
-        overrideModel(event, ModBlocks.LOCKED_JUNGLE_DOOR.get(), LockedDoorModel::new);
-        overrideModel(event, ModBlocks.LOCKED_ACACIA_DOOR.get(), LockedDoorModel::new);
-        overrideModel(event, ModBlocks.LOCKED_DARK_OAK_DOOR.get(), LockedDoorModel::new);
+        overrideModel(event, ModBlocks.LOCKED_IRON_DOOR, LockedDoorModel::new);
+        overrideModel(event, ModBlocks.LOCKED_OAK_DOOR, LockedDoorModel::new);
+        overrideModel(event, ModBlocks.LOCKED_BIRCH_DOOR, LockedDoorModel::new);
+        overrideModel(event, ModBlocks.LOCKED_SPRUCE_DOOR, LockedDoorModel::new);
+        overrideModel(event, ModBlocks.LOCKED_JUNGLE_DOOR, LockedDoorModel::new);
+        overrideModel(event, ModBlocks.LOCKED_ACACIA_DOOR, LockedDoorModel::new);
+        overrideModel(event, ModBlocks.LOCKED_DARK_OAK_DOOR, LockedDoorModel::new);
     }
 
     private static void overrideModel(ModelBakeEvent event, Block b, Function<IBakedModel, IBakedModel> transform) {

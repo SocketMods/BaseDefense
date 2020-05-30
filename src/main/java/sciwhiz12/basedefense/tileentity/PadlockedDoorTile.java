@@ -4,7 +4,7 @@ import sciwhiz12.basedefense.init.ModTileEntities;
 
 public class PadlockedDoorTile extends LockableTile {
     public PadlockedDoorTile() {
-        super(ModTileEntities.PADLOCKED_DOOR.get());
+        super(ModTileEntities.PADLOCKED_DOOR);
     }
 
     @Override

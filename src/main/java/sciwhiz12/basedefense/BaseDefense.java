@@ -18,8 +18,6 @@ import sciwhiz12.basedefense.client.render.PadlockedDoorRenderer;
 import sciwhiz12.basedefense.init.ModBlocks;
 import sciwhiz12.basedefense.init.ModContainers;
 import sciwhiz12.basedefense.init.ModItems;
-import sciwhiz12.basedefense.init.ModRecipes;
-import sciwhiz12.basedefense.init.ModSounds;
 import sciwhiz12.basedefense.init.ModTileEntities;
 import sciwhiz12.basedefense.item.IColorable;
 import sciwhiz12.basedefense.net.NetworkHandler;
@@ -35,13 +33,6 @@ public class BaseDefense {
 
         NetworkHandler.registerPackets();
 
-        ModItems.REGISTER.register(MOD_EVENT_BUS);
-        ModBlocks.REGISTER.register(MOD_EVENT_BUS);
-        ModTileEntities.REGISTER.register(MOD_EVENT_BUS);
-        ModContainers.REGISTER.register(MOD_EVENT_BUS);
-        ModRecipes.REGISTER.register(MOD_EVENT_BUS);
-        ModSounds.REGISTER.register(MOD_EVENT_BUS);
-
         MOD_EVENT_BUS.addListener(this::onClientSetup);
         MOD_EVENT_BUS.addListener(this::registerItemColors);
         MOD_EVENT_BUS.addListener(this::registerBlockColors);
@@ -50,24 +41,22 @@ public class BaseDefense {
     @SubscribeEvent
     void onClientSetup(FMLClientSetupEvent event) {
         ModBlocks.setupRenderLayer();
-        ScreenManager.registerFactory(ModContainers.KEYSMITH_CONTAINER.get(), KeysmithScreen::new);
-        ScreenManager.registerFactory(ModContainers.LOCKSMITH_CONTAINER.get(), LocksmithScreen::new);
-        ClientRegistry.bindTileEntityRenderer(ModTileEntities.PADLOCKED_DOOR.get(), PadlockedDoorRenderer::new);
+        ScreenManager.registerFactory(ModContainers.KEYSMITH_TABLE, KeysmithScreen::new);
+        ScreenManager.registerFactory(ModContainers.LOCKSMITH_TABLE, LocksmithScreen::new);
+        ClientRegistry.bindTileEntityRenderer(ModTileEntities.PADLOCKED_DOOR, PadlockedDoorRenderer::new);
     }
 
     @SubscribeEvent
     void registerItemColors(ColorHandlerEvent.Item event) {
-        event.getItemColors().register(
-            IColorable.ITEM_COLOR, ModItems.KEY.get(), ModItems.LOCK_CORE.get(), ModItems.PADLOCK.get()
-        );
+        event.getItemColors().register(IColorable.ITEM_COLOR, ModItems.KEY, ModItems.LOCK_CORE, ModItems.PADLOCK);
     }
 
     @SubscribeEvent
     void registerBlockColors(ColorHandlerEvent.Block event) {
         event.getBlockColors().register(
-            LockedDoorBlock.COLOR, ModBlocks.LOCKED_IRON_DOOR.get(), ModBlocks.LOCKED_OAK_DOOR.get(),
-            ModBlocks.LOCKED_BIRCH_DOOR.get(), ModBlocks.LOCKED_SPRUCE_DOOR.get(), ModBlocks.LOCKED_JUNGLE_DOOR.get(),
-            ModBlocks.LOCKED_ACACIA_DOOR.get(), ModBlocks.LOCKED_DARK_OAK_DOOR.get()
+            LockedDoorBlock.COLOR, ModBlocks.LOCKED_IRON_DOOR, ModBlocks.LOCKED_OAK_DOOR, ModBlocks.LOCKED_BIRCH_DOOR,
+            ModBlocks.LOCKED_SPRUCE_DOOR, ModBlocks.LOCKED_JUNGLE_DOOR, ModBlocks.LOCKED_ACACIA_DOOR,
+            ModBlocks.LOCKED_DARK_OAK_DOOR
         );
     }
 }

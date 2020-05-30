@@ -14,7 +14,7 @@ public class LockableTile extends TileEntity {
     protected ItemStack lock = ItemStack.EMPTY;
 
     public LockableTile() {
-        super(ModTileEntities.LOCKABLE_TILE.get());
+        super(ModTileEntities.LOCKABLE_TILE);
     }
     
     public LockableTile(TileEntityType<?> type) {

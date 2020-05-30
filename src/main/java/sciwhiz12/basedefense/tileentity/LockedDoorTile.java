@@ -11,7 +11,7 @@ public class LockedDoorTile extends LockableTile {
     public static final ModelProperty<Integer> COLOR_PROPERTY = new ModelProperty<>();
 
     public LockedDoorTile() {
-        super(ModTileEntities.LOCKED_DOOR.get());
+        super(ModTileEntities.LOCKED_DOOR);
     }
 
     public boolean hasColors() {

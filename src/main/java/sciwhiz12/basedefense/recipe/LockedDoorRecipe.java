@@ -29,7 +29,7 @@ public class LockedDoorRecipe extends ShapedRecipe {
     }
 
     public IRecipeSerializer<?> getSerializer() {
-        return ModRecipes.LOCKED_DOOR.get();
+        return ModRecipes.LOCKED_DOOR;
     }
 
     public ItemStack getCraftingResult(CraftingInventory inv) {
