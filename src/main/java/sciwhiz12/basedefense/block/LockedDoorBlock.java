@@ -183,10 +183,7 @@ public class LockedDoorBlock extends LockableBaseBlock {
     }
 
     private void playSound(World world, BlockPos pos, SoundEvent event) {
-        world.playSound(
-            (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, event, SoundCategory.BLOCKS,
-            1.0F, world.rand.nextFloat() * 0.1F + 0.9F, false
-        );
+        world.playSound(null, pos, event, SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
     }
 
     public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block fromBlockIn, BlockPos fromPos,
