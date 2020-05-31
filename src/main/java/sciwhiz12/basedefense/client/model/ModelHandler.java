@@ -19,24 +19,25 @@ import sciwhiz12.basedefense.init.ModBlocks;
 public class ModelHandler {
     @SubscribeEvent
     public static void onModelBake(ModelBakeEvent event) {
-        overrideModel(event, ModBlocks.LOCKED_IRON_DOOR, LockedDoorModel::new);
-        overrideModel(event, ModBlocks.LOCKED_OAK_DOOR, LockedDoorModel::new);
-        overrideModel(event, ModBlocks.LOCKED_BIRCH_DOOR, LockedDoorModel::new);
-        overrideModel(event, ModBlocks.LOCKED_SPRUCE_DOOR, LockedDoorModel::new);
-        overrideModel(event, ModBlocks.LOCKED_JUNGLE_DOOR, LockedDoorModel::new);
-        overrideModel(event, ModBlocks.LOCKED_ACACIA_DOOR, LockedDoorModel::new);
-        overrideModel(event, ModBlocks.LOCKED_DARK_OAK_DOOR, LockedDoorModel::new);
+        Block[] doorBlocks = { ModBlocks.LOCKED_IRON_DOOR, ModBlocks.LOCKED_OAK_DOOR, ModBlocks.LOCKED_BIRCH_DOOR,
+                ModBlocks.LOCKED_SPRUCE_DOOR, ModBlocks.LOCKED_JUNGLE_DOOR, ModBlocks.LOCKED_ACACIA_DOOR,
+                ModBlocks.LOCKED_DARK_OAK_DOOR };
+        for (Block b : doorBlocks) { overrideBlockModel(event, b, LockedDoorModel::new); }
     }
 
-    private static void overrideModel(ModelBakeEvent event, Block b, Function<IBakedModel, IBakedModel> transform) {
+    private static void overrideBlockModel(ModelBakeEvent event, Block b, Function<IBakedModel, IBakedModel> transform) {
         for (BlockState blockState : b.getStateContainer().getValidStates()) {
             ModelResourceLocation variantMRL = BlockModelShapes.getModelLocation(blockState);
-            IBakedModel existingModel = event.getModelRegistry().get(variantMRL);
-            if (existingModel != null) {
-                IBakedModel customModel = transform.apply(existingModel);
-                event.getModelRegistry().put(variantMRL, customModel);
-            }
+            overrideModel(event, variantMRL, transform);
         }
+    }
 
+    private static void overrideModel(ModelBakeEvent event, ModelResourceLocation mrl,
+            Function<IBakedModel, IBakedModel> transform) {
+        IBakedModel existingModel = event.getModelRegistry().get(mrl);
+        if (existingModel != null) {
+            IBakedModel transformedModel = transform.apply(existingModel);
+            event.getModelRegistry().put(mrl, transformedModel);
+        }
     }
 }
