@@ -44,7 +44,7 @@ public class KeyItem extends Item implements IKey, IColorable {
         if (!flagIn.isAdvanced()) return;
         long id = LockingUtil.getKeyID(stack);
         tooltip.add(
-            new TranslationTextComponent("tooltip.basedefense.keyid", Long.toHexString(id)).applyTextStyle(
+            new TranslationTextComponent("tooltip.basedefense.keyid", String.format("%016X", id)).applyTextStyle(
                 TextFormatting.GRAY
             )
         );
