@@ -19,5 +19,9 @@ public class NetworkHandler {
             ID++, TextFieldChangePacket.class, TextFieldChangePacket::encode, TextFieldChangePacket::decode,
             TextFieldChangePacket::process
         );
+        CHANNEL.registerMessage(
+            ID++, UpdatePlayerInvSlotPacket.class, UpdatePlayerInvSlotPacket::encode, UpdatePlayerInvSlotPacket::decode,
+            UpdatePlayerInvSlotPacket::process
+        );
     }
 }

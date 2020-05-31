@@ -15,6 +15,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 import sciwhiz12.basedefense.BaseDefense;
 import sciwhiz12.basedefense.item.key.KeyItem;
+import sciwhiz12.basedefense.item.key.KeyringItem;
 import sciwhiz12.basedefense.item.key.SkeletonKeyItem;
 import sciwhiz12.basedefense.item.lock.BrokenPadlockItem;
 import sciwhiz12.basedefense.item.lock.LockCoreItem;
@@ -37,6 +38,7 @@ public class ModItems {
     public static final Item LOCK_CORE = null;
     public static final Item PADLOCK = null;
     public static final Item BROKEN_PADLOCK = null;
+    public static final Item KEYRING = null;
 
     public static final Item TEST_LOCK_BLOCK = null;
     public static final Item KEYSMITH_TABLE = null;
@@ -62,6 +64,7 @@ public class ModItems {
         reg.register(new LockCoreItem().setRegistryName("lock_core"));
         reg.register(new PadlockItem().setRegistryName("padlock"));
         reg.register(new BrokenPadlockItem().setRegistryName("broken_padlock"));
+        reg.register(new KeyringItem().setRegistryName("keyring"));
 
         final Block[] blocks = { ModBlocks.TEST_LOCK_BLOCK, ModBlocks.KEYSMITH_TABLE, ModBlocks.LOCKSMITH_TABLE };
         for (Block b : blocks) { reg.register(new BlockItem(b, default_props).setRegistryName(b.getRegistryName())); }

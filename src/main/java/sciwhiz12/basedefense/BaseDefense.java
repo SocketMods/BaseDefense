@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import sciwhiz12.basedefense.block.LockedDoorBlock;
+import sciwhiz12.basedefense.client.gui.KeyringScreen;
 import sciwhiz12.basedefense.client.gui.KeysmithScreen;
 import sciwhiz12.basedefense.client.gui.LocksmithScreen;
 import sciwhiz12.basedefense.client.render.PadlockedDoorRenderer;
@@ -43,6 +44,7 @@ public class BaseDefense {
         ModBlocks.setupRenderLayer();
         ScreenManager.registerFactory(ModContainers.KEYSMITH_TABLE, KeysmithScreen::new);
         ScreenManager.registerFactory(ModContainers.LOCKSMITH_TABLE, LocksmithScreen::new);
+        ScreenManager.registerFactory(ModContainers.KEYRING, KeyringScreen::new);
         ClientRegistry.bindTileEntityRenderer(ModTileEntities.PADLOCKED_DOOR, PadlockedDoorRenderer::new);
     }
 
