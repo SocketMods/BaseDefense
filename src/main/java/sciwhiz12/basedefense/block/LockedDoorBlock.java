@@ -124,25 +124,31 @@ public class LockedDoorBlock extends LockableBaseBlock {
                     ItemStack lock = this.getLock(worldIn, getLowerHalf(state, pos));
                     if (player.isSneaking() && lock.hasDisplayName()) { // LOCKED, NO KEY, SNEAKING => inform player of lock
                                                                         // name
-                        if (lock.hasDisplayName()) {
-                            player.sendStatusMessage(
-                                new TranslationTextComponent(
-                                    "\"%s\"", lock.getDisplayName().applyTextStyle(TextFormatting.WHITE)
-                                ).applyTextStyle(TextFormatting.YELLOW), true
-                            );
+                        if (handIn == Hand.OFF_HAND) {
+                            if (lock.hasDisplayName()) {
+                                player.sendStatusMessage(
+                                    new TranslationTextComponent(
+                                        "\"%s\"", lock.getDisplayName().applyTextStyle(TextFormatting.WHITE)
+                                    ).applyTextStyle(TextFormatting.YELLOW), true
+                                );
+                            }
+                            playSound(player, worldIn, pos, ModSounds.LOCKED_DOOR_ATTEMPT);
+                            return ActionResultType.SUCCESS;
                         }
-                        playSound(player, worldIn, pos, ModSounds.LOCKED_DOOR_ATTEMPT);
                         return ActionResultType.PASS; // END ACTION;
                     } else { // LOCKED, NO KEY, NOT SNEAKING => inform player that door is locked
-                        player.sendStatusMessage(
-                            new TranslationTextComponent(
-                                "Door is locked!", new TranslationTextComponent(this.getTranslationKey()).applyTextStyle(
-                                    TextFormatting.WHITE
-                                )
-                            ).applyTextStyle(TextFormatting.GRAY), true
-                        );
-                        playSound(player, worldIn, pos, ModSounds.LOCKED_DOOR_ATTEMPT);
-                        return ActionResultType.PASS; // END ACTION;
+                        if (handIn == Hand.OFF_HAND) {
+                            player.sendStatusMessage(
+                                new TranslationTextComponent(
+                                    "Door is locked!", new TranslationTextComponent(this.getTranslationKey()).applyTextStyle(
+                                        TextFormatting.WHITE
+                                    )
+                                ).applyTextStyle(TextFormatting.GRAY), true
+                            );
+                            playSound(player, worldIn, pos, ModSounds.LOCKED_DOOR_ATTEMPT);
+                            return ActionResultType.SUCCESS;
+                        }
+                        return ActionResultType.PASS;// END ACTION;
                     }
 
                 }
