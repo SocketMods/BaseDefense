@@ -7,6 +7,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
+import net.minecraft.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -14,6 +15,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import sciwhiz12.basedefense.BaseDefense;
 import sciwhiz12.basedefense.init.ModBlocks;
+import sciwhiz12.basedefense.init.ModItems;
 
 @EventBusSubscriber(value = Dist.CLIENT, bus = Bus.MOD, modid = BaseDefense.MODID)
 public class ModelHandler {
@@ -23,6 +25,8 @@ public class ModelHandler {
                 ModBlocks.LOCKED_SPRUCE_DOOR, ModBlocks.LOCKED_JUNGLE_DOOR, ModBlocks.LOCKED_ACACIA_DOOR,
                 ModBlocks.LOCKED_DARK_OAK_DOOR };
         for (Block b : doorBlocks) { overrideBlockModel(event, b, LockedDoorModel::new); }
+
+        overrideItemModel(event, ModItems.KEYRING, ISTERWrapper::new);
     }
 
     private static void overrideBlockModel(ModelBakeEvent event, Block b, Function<IBakedModel, IBakedModel> transform) {
@@ -30,6 +34,10 @@ public class ModelHandler {
             ModelResourceLocation variantMRL = BlockModelShapes.getModelLocation(blockState);
             overrideModel(event, variantMRL, transform);
         }
+    }
+
+    private static void overrideItemModel(ModelBakeEvent event, Item i, Function<IBakedModel, IBakedModel> transform) {
+        overrideModel(event, new ModelResourceLocation(i.getRegistryName(), "inventory"), transform);
     }
 
     private static void overrideModel(ModelBakeEvent event, ModelResourceLocation mrl,

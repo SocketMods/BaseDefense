@@ -32,12 +32,13 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import sciwhiz12.basedefense.api.lock.IKey;
 import sciwhiz12.basedefense.api.lock.ILockable;
+import sciwhiz12.basedefense.client.render.KeyringRenderer;
 import sciwhiz12.basedefense.container.KeyringContainer.Provider;
 import sciwhiz12.basedefense.init.ModItems;
 
 public class KeyringItem extends Item implements IKey {
     public KeyringItem() {
-        super(new Item.Properties().group(ModItems.GROUP).maxDamage(0));
+        super(new Item.Properties().group(ModItems.GROUP).maxDamage(0).setISTER(() -> KeyringRenderer::new));
     }
 
     @Override
