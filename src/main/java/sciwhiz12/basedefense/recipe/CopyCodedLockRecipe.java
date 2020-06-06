@@ -23,8 +23,8 @@ import sciwhiz12.basedefense.capabilities.CodedLock;
 import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.init.ModRecipes;
 
-public class CopyLockCodeRecipe extends ShapedRecipe {
-    public CopyLockCodeRecipe(ResourceLocation idIn, String groupIn, int recipeWidthIn, int recipeHeightIn,
+public class CopyCodedLockRecipe extends ShapedRecipe {
+    public CopyCodedLockRecipe(ResourceLocation idIn, String groupIn, int recipeWidthIn, int recipeHeightIn,
             NonNullList<Ingredient> recipeItemsIn, ItemStack recipeOutputIn) {
         super(idIn, groupIn, recipeWidthIn, recipeHeightIn, recipeItemsIn, recipeOutputIn);
     }
@@ -60,7 +60,7 @@ public class CopyLockCodeRecipe extends ShapedRecipe {
     }
 
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements
-            IRecipeSerializer<CopyLockCodeRecipe> {
+            IRecipeSerializer<CopyCodedLockRecipe> {
         private static final Method DESERIALIZE_KEY = ObfuscationReflectionHelper.findMethod(ShapedRecipe.class,
             "func_192408_a", JsonObject.class);
         private static final Method SHRINK = ObfuscationReflectionHelper.findMethod(ShapedRecipe.class, "func_194134_a",
@@ -71,7 +71,8 @@ public class CopyLockCodeRecipe extends ShapedRecipe {
             "func_192402_a", String[].class, Map.class, int.class, int.class);
 
         @SuppressWarnings("unchecked")
-        public CopyLockCodeRecipe read(ResourceLocation recipeId, JsonObject json) {
+        @Override
+        public CopyCodedLockRecipe read(ResourceLocation recipeId, JsonObject json) {
             try {
                 String s = JSONUtils.getString(json, "group", "");
                 Map<String, Ingredient> map = (Map<String, Ingredient>) DESERIALIZE_KEY.invoke(null, JSONUtils.getJsonObject(
@@ -83,14 +84,15 @@ public class CopyLockCodeRecipe extends ShapedRecipe {
                 NonNullList<Ingredient> nonnulllist = (NonNullList<Ingredient>) DESERIALIZE_INGREDIENTS.invoke(null, astring,
                     map, i, j);
                 ItemStack itemstack = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
-                return new CopyLockCodeRecipe(recipeId, s, i, j, nonnulllist, itemstack);
+                return new CopyCodedLockRecipe(recipeId, s, i, j, nonnulllist, itemstack);
             }
             catch (InvocationTargetException | IllegalAccessException | IllegalArgumentException e) {
                 throw new RuntimeException("Error during deserialization!", e);
             }
         }
 
-        public CopyLockCodeRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+        @Override
+        public CopyCodedLockRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
             int i = buffer.readVarInt();
             int j = buffer.readVarInt();
             String s = buffer.readString(32767);
@@ -99,10 +101,11 @@ public class CopyLockCodeRecipe extends ShapedRecipe {
             for (int k = 0; k < nonnulllist.size(); ++k) { nonnulllist.set(k, Ingredient.read(buffer)); }
 
             ItemStack itemstack = buffer.readItemStack();
-            return new CopyLockCodeRecipe(recipeId, s, i, j, nonnulllist, itemstack);
+            return new CopyCodedLockRecipe(recipeId, s, i, j, nonnulllist, itemstack);
         }
 
-        public void write(PacketBuffer buffer, CopyLockCodeRecipe recipe) {
+        @Override
+        public void write(PacketBuffer buffer, CopyCodedLockRecipe recipe) {
             buffer.writeVarInt(recipe.getRecipeWidth());
             buffer.writeVarInt(recipe.getRecipeHeight());
             buffer.writeString(recipe.getGroup());

@@ -8,7 +8,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.IWorldPosCallable;
-import sciwhiz12.basedefense.Util;
 import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.init.ModCapabilities;
 
@@ -25,16 +24,14 @@ public class CodedItemStackLock extends CodedLock {
 
     @Override
     public boolean canRemove(IKey key, IWorldPosCallable worldPos, PlayerEntity player) {
-        return Util.applyOrDefault(lockStack.getCapability(ModCapabilities.LOCK), false, (lock) -> {
-            return lock.canRemove(key, worldPos, player);
-        });
+        return lockStack.getCapability(ModCapabilities.LOCK).map((lock) -> lock.canRemove(key, worldPos, player)).orElse(
+            false);
     }
 
     @Override
     public boolean canUnlock(IKey key, IWorldPosCallable worldPos, PlayerEntity player) {
-        return Util.applyOrDefault(lockStack.getCapability(ModCapabilities.LOCK), false, (lock) -> {
-            return lock.canUnlock(key, worldPos, player);
-        });
+        return lockStack.getCapability(ModCapabilities.LOCK).map((lock) -> lock.canUnlock(key, worldPos, player)).orElse(
+            false);
     }
 
     @Override
@@ -48,27 +45,24 @@ public class CodedItemStackLock extends CodedLock {
     }
 
     public List<Long> getCodes() {
-        return Util.applyOrDefault(lockStack.getCapability(ModCapabilities.LOCK), Collections.emptyList(), (
-                lock) -> lock instanceof CodedLock ? ((CodedLock) lock).getCodes() : Collections.emptyList());
+        return lockStack.getCapability(ModCapabilities.LOCK).filter((lock) -> lock instanceof CodedLock).map((
+                lock) -> ((CodedLock) lock).getCodes()).orElse(Collections.emptyList());
     }
 
     public boolean containsCode(long code) {
-        return Util.applyOrDefault(lockStack.getCapability(ModCapabilities.LOCK), false, (lock) -> lock instanceof CodedLock
-                ? ((CodedLock) lock).containsCode(code)
-                : false);
+        return lockStack.getCapability(ModCapabilities.LOCK).filter((lock) -> lock instanceof CodedLock).map((
+                lock) -> ((CodedLock) lock).containsCode(code)).orElse(false);
     }
 
     public void addCode(long code) {
-        lockStack.getCapability(ModCapabilities.LOCK).ifPresent((lock) -> {
-            if (lock instanceof CodedLock) { ((CodedLock) lock).addCode(code); }
-        });
+        lockStack.getCapability(ModCapabilities.LOCK).filter((lock) -> lock instanceof CodedLock).ifPresent((
+                lock) -> ((CodedLock) lock).addCode(code));
     }
 
     @Override
     public void removeCode(long code) {
-        lockStack.getCapability(ModCapabilities.LOCK).ifPresent((lock) -> {
-            if (lock instanceof CodedLock) { ((CodedLock) lock).removeCode(code); }
-        });
+        lockStack.getCapability(ModCapabilities.LOCK).filter((lock) -> lock instanceof CodedLock).ifPresent((
+                lock) -> ((CodedLock) lock).removeCode(code));
     }
 
     @Override

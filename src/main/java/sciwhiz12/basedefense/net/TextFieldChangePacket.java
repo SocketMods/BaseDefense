@@ -12,7 +12,7 @@ public class TextFieldChangePacket {
     public String text;
 
     public TextFieldChangePacket(String text) {
-        this.text = text;
+        this.text = text != null ? text : "";
     }
 
     public static void encode(TextFieldChangePacket pkt, PacketBuffer buf) {
@@ -27,8 +27,10 @@ public class TextFieldChangePacket {
         ctx.get().enqueueWork(() -> {
             ctx.get().getDirection();
             ServerPlayerEntity sender = ctx.get().getSender();
-            Container cont = sender.openContainer;
-            if (cont instanceof KeysmithContainer) { ((KeysmithContainer) cont).setOutputName(pkt.text); }
+            if (sender != null) {
+                Container cont = sender.openContainer;
+                if (cont instanceof KeysmithContainer) { ((KeysmithContainer) cont).setOutputName(pkt.text); }
+            }
         });
         ctx.get().setPacketHandled(true);
     }

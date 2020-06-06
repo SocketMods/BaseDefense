@@ -1,7 +1,5 @@
 package sciwhiz12.basedefense.init;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -24,14 +22,6 @@ import sciwhiz12.basedefense.item.lock.PadlockItem;
 @ObjectHolder(BaseDefense.MODID)
 @EventBusSubscriber(bus = Bus.MOD, modid = BaseDefense.MODID)
 public class ModItems {
-    public static ItemGroup GROUP = new ItemGroup(BaseDefense.MODID) {
-        @Override
-        @Nonnull
-        public ItemStack createIcon() {
-            return new ItemStack(ModItems.LOCK_CORE);
-        }
-    };
-
     public static final Item BLANK_KEY = null;
     public static final Item KEY = null;
     public static final Item SKELETON_KEY = null;
@@ -52,8 +42,15 @@ public class ModItems {
     public static final Item LOCKED_ACACIA_DOOR = null;
     public static final Item LOCKED_DARK_OAK_DOOR = null;
 
+    public static ItemGroup GROUP = new ItemGroup(BaseDefense.MODID) {
+        @Override
+        public ItemStack createIcon() {
+            return new ItemStack(ModItems.LOCK_CORE);
+        }
+    };
+
     @SubscribeEvent
-    public static void onRegister(RegistryEvent.Register<Item> event) {
+    static void onRegister(RegistryEvent.Register<Item> event) {
         BaseDefense.LOG.debug("Registering items");
         final IForgeRegistry<Item> reg = event.getRegistry();
 

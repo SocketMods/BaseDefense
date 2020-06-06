@@ -28,10 +28,7 @@ public class LockedDoorRecipe extends ShapedRecipe {
         super(idIn, groupIn, recipeWidthIn, recipeHeightIn, recipeItemsIn, recipeOutputIn);
     }
 
-    public IRecipeSerializer<?> getSerializer() {
-        return ModRecipes.LOCKED_DOOR;
-    }
-
+    @Override
     public ItemStack getCraftingResult(CraftingInventory inv) {
         ItemStack output = this.getRecipeOutput().copy();
         for (int row = 0; row < inv.getHeight(); row++) {
@@ -47,36 +44,35 @@ public class LockedDoorRecipe extends ShapedRecipe {
         return output;
     }
 
+    @Override
+    public IRecipeSerializer<?> getSerializer() {
+        return ModRecipes.LOCKED_DOOR;
+    }
+
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements
             IRecipeSerializer<LockedDoorRecipe> {
-        private static final Method DESERIALIZE_KEY = ObfuscationReflectionHelper.findMethod(
-            ShapedRecipe.class, "func_192408_a", JsonObject.class
-        );
-        private static final Method SHRINK = ObfuscationReflectionHelper.findMethod(
-            ShapedRecipe.class, "func_194134_a", String[].class
-        );
-        private static final Method PATTERN_FROM_JSON = ObfuscationReflectionHelper.findMethod(
-            ShapedRecipe.class, "func_192407_a", JsonArray.class
-        );
-        private static final Method DESERIALIZE_INGREDIENTS = ObfuscationReflectionHelper.findMethod(
-            ShapedRecipe.class, "func_192402_a", String[].class, Map.class, int.class, int.class
-        );
+        private static final Method DESERIALIZE_KEY = ObfuscationReflectionHelper.findMethod(ShapedRecipe.class,
+            "func_192408_a", JsonObject.class);
+        private static final Method SHRINK = ObfuscationReflectionHelper.findMethod(ShapedRecipe.class, "func_194134_a",
+            String[].class);
+        private static final Method PATTERN_FROM_JSON = ObfuscationReflectionHelper.findMethod(ShapedRecipe.class,
+            "func_192407_a", JsonArray.class);
+        private static final Method DESERIALIZE_INGREDIENTS = ObfuscationReflectionHelper.findMethod(ShapedRecipe.class,
+            "func_192402_a", String[].class, Map.class, int.class, int.class);
 
         @SuppressWarnings("unchecked")
+        @Override
         public LockedDoorRecipe read(ResourceLocation recipeId, JsonObject json) {
             try {
                 String s = JSONUtils.getString(json, "group", "");
-                Map<String, Ingredient> map = (Map<String, Ingredient>) DESERIALIZE_KEY.invoke(
-                    null, JSONUtils.getJsonObject(json, "key")
-                );
-                String[] astring = (String[]) SHRINK.invoke(
-                    null, PATTERN_FROM_JSON.invoke(null, JSONUtils.getJsonArray(json, "pattern"))
-                );
+                Map<String, Ingredient> map = (Map<String, Ingredient>) DESERIALIZE_KEY.invoke(null, JSONUtils.getJsonObject(
+                    json, "key"));
+                String[] astring = (String[]) SHRINK.invoke(null, PATTERN_FROM_JSON.invoke(null, JSONUtils.getJsonArray(json,
+                    "pattern")));
                 int i = astring[0].length();
                 int j = astring.length;
-                NonNullList<Ingredient> nonnulllist = (NonNullList<Ingredient>) DESERIALIZE_INGREDIENTS.invoke(
-                    null, astring, map, i, j
-                );
+                NonNullList<Ingredient> nonnulllist = (NonNullList<Ingredient>) DESERIALIZE_INGREDIENTS.invoke(null, astring,
+                    map, i, j);
                 ItemStack itemstack = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
                 return new LockedDoorRecipe(recipeId, s, i, j, nonnulllist, itemstack);
             }
@@ -85,6 +81,7 @@ public class LockedDoorRecipe extends ShapedRecipe {
             }
         }
 
+        @Override
         public LockedDoorRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
             int i = buffer.readVarInt();
             int j = buffer.readVarInt();
@@ -97,6 +94,7 @@ public class LockedDoorRecipe extends ShapedRecipe {
             return new LockedDoorRecipe(recipeId, s, i, j, nonnulllist, itemstack);
         }
 
+        @Override
         public void write(PacketBuffer buffer, LockedDoorRecipe recipe) {
             buffer.writeVarInt(recipe.getRecipeWidth());
             buffer.writeVarInt(recipe.getRecipeHeight());

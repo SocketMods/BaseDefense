@@ -5,8 +5,11 @@ import static sciwhiz12.basedefense.block.PadlockedDoorBlock.HALF;
 import static sciwhiz12.basedefense.block.PadlockedDoorBlock.HINGE;
 import static sciwhiz12.basedefense.block.PadlockedDoorBlock.SIDE;
 
+import java.util.List;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoorBlock;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.Item;
@@ -21,6 +24,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.Constants;
@@ -34,8 +38,9 @@ import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.item.IColorable;
 import sciwhiz12.basedefense.tileentity.LockableTile;
 import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
+import sciwhiz12.basedefense.util.Util;
 
-public class PadlockItem extends LockBaseItem implements IColorable {
+public class PadlockItem extends Item implements IColorable {
     private static final IItemPropertyGetter COLOR_GETTER = (stack, world, livingEntity) -> {
         CompoundNBT tag = stack.getChildTag("display");
         if (tag != null && tag.contains("colors")) { return (float) tag.getIntArray("colors").length; }
@@ -45,6 +50,13 @@ public class PadlockItem extends LockBaseItem implements IColorable {
     public PadlockItem() {
         super(new Item.Properties().maxDamage(0));
         this.addPropertyOverride(new ResourceLocation("colors"), COLOR_GETTER);
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        if (!flagIn.isAdvanced()) { return; }
+        Util.addLockInformation(stack, tooltip);
+        Util.addColorInformation(stack, tooltip);
     }
 
     @Override

@@ -3,8 +3,6 @@ package sciwhiz12.basedefense.block;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -38,13 +36,13 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.registries.IRegistryDelegate;
-import sciwhiz12.basedefense.UnlockHelper;
-import sciwhiz12.basedefense.Util;
 import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.item.lock.PadlockItem;
 import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
+import sciwhiz12.basedefense.util.UnlockHelper;
+import sciwhiz12.basedefense.util.Util;
 
-public class PadlockedDoorBlock extends LockableBaseBlock {
+public class PadlockedDoorBlock extends Block {
     private static final Map<IRegistryDelegate<Block>, IRegistryDelegate<Block>> replacement_block_map = new HashMap<>();
 
     public static PadlockedDoorBlock getReplacement(Block blockIn) {
@@ -184,20 +182,20 @@ public class PadlockedDoorBlock extends LockableBaseBlock {
     }
 
     @Override
-    public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te,
+    public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, TileEntity te,
             ItemStack stack) {
         super.harvestBlock(worldIn, player, pos, Blocks.AIR.getDefaultState(), te, stack);
     }
 
     @Override
     public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        DoubleBlockHalf doubleblockhalf = state.get(HALF);
-        BlockPos otherPos = doubleblockhalf == DoubleBlockHalf.LOWER ? pos.up() : pos.down();
+        DoubleBlockHalf half = state.get(HALF);
+        BlockPos otherPos = (half == DoubleBlockHalf.LOWER) ? pos.up() : pos.down();
         BlockState otherState = worldIn.getBlockState(otherPos);
-        if (otherState.get(HALF) != doubleblockhalf) {
+        if (otherState.get(HALF) != half) {
             ItemStack itemstack = player.getHeldItemMainhand();
             if (!worldIn.isRemote && !player.isCreative() && player.canHarvestBlock(otherState)) {
-                BlockPos tePos = doubleblockhalf == DoubleBlockHalf.LOWER ? pos : otherPos;
+                BlockPos tePos = (half == DoubleBlockHalf.LOWER) ? pos : otherPos;
                 Block.spawnDrops(state, worldIn, pos, worldIn.getTileEntity(tePos), player, itemstack);
                 Block.spawnDrops(otherState, worldIn, otherPos, worldIn.getTileEntity(tePos), player, itemstack);
             }
@@ -212,6 +210,7 @@ public class PadlockedDoorBlock extends LockableBaseBlock {
         return false;
     }
 
+    @Override
     public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
         BlockPos blockpos = pos.down();
         BlockState blockstate = worldIn.getBlockState(blockpos);
@@ -222,14 +221,17 @@ public class PadlockedDoorBlock extends LockableBaseBlock {
         }
     }
 
+    @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.with(FACING, rot.rotate(state.get(FACING)));
     }
 
+    @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return mirrorIn == Mirror.NONE ? state : state.rotate(mirrorIn.toRotation(state.get(FACING))).cycle(HINGE);
     }
 
+    @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(HALF, FACING, SIDE, HINGE);
     }

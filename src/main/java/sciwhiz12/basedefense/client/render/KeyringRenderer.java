@@ -5,7 +5,6 @@ import java.util.Random;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -14,7 +13,6 @@ import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 public class KeyringRenderer extends ItemStackTileEntityRenderer {
@@ -47,13 +45,10 @@ public class KeyringRenderer extends ItemStackTileEntityRenderer {
         matrix.push();
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         IBakedModel model = itemRenderer.getItemModelWithOverrides(stack, null, null);
-        IVertexBuilder builder = ItemRenderer.getBuffer(
-            buffer, RenderTypeLookup.getRenderType(stack), true, stack.hasEffect()
-        );;
-        itemRenderer.renderQuads(
-            matrix, builder, model.getQuads((BlockState) null, (Direction) null, new Random(42L)), stack, combinedLight,
-            combinedOverlay
-        );
+        IVertexBuilder builder = ItemRenderer.getBuffer(buffer, RenderTypeLookup.getRenderType(stack), true, stack
+            .hasEffect());;
+        itemRenderer.renderQuads(matrix, builder, model.getQuads(null, null, new Random(42L)), stack, combinedLight,
+            combinedOverlay);
         matrix.pop();
     }
 }

@@ -27,11 +27,11 @@ public class UpdatePlayerInvSlotPacket {
         return new UpdatePlayerInvSlotPacket(buf.readInt(), buf.readItemStack());
     }
 
-    @SuppressWarnings("resource")
     public static void process(UpdatePlayerInvSlotPacket pkt, Supplier<Context> ctx) {
         ctx.get().enqueueWork(() -> {
             if (ctx.get().getDirection() == NetworkDirection.PLAY_TO_CLIENT) {
-                Minecraft.getInstance().player.inventory.setInventorySlotContents(pkt.slot, pkt.stack);
+                Minecraft mc = Minecraft.getInstance();
+                mc.player.inventory.setInventorySlotContents(pkt.slot, pkt.stack);
             } else if (ctx.get().getDirection() == NetworkDirection.PLAY_TO_SERVER) {
                 ServerPlayerEntity sender = ctx.get().getSender();
                 sender.inventory.setInventorySlotContents(pkt.slot, pkt.stack);

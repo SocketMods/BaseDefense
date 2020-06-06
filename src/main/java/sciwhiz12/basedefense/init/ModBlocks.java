@@ -20,7 +20,7 @@ import sciwhiz12.basedefense.block.TestLockBlock;
 @ObjectHolder(BaseDefense.MODID)
 @EventBusSubscriber(bus = Bus.MOD, modid = BaseDefense.MODID)
 public class ModBlocks {
-    
+
     public static final Block TEST_LOCK_BLOCK = null;
     public static final Block KEYSMITH_TABLE = null;
     public static final Block LOCKSMITH_TABLE = null;
@@ -42,7 +42,7 @@ public class ModBlocks {
     public static final Block LOCKED_DARK_OAK_DOOR = null;
 
     @SubscribeEvent
-    public static void onRegister(RegistryEvent.Register<Block> event) {
+    static void onRegister(RegistryEvent.Register<Block> event) {
         BaseDefense.LOG.debug("Registering blocks");
         final IForgeRegistry<Block> reg = event.getRegistry();
 

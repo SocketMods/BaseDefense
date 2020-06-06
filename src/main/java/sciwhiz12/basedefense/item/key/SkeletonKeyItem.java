@@ -2,8 +2,6 @@ package sciwhiz12.basedefense.item.key;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -11,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -31,7 +30,7 @@ public class SkeletonKeyItem extends Item {
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         tooltip.add(new TranslationTextComponent("tooltip.basedefense.skeleton_key").applyTextStyle(TextFormatting.RED));
     }
 
@@ -42,7 +41,11 @@ public class SkeletonKeyItem extends Item {
 
     @Override
     public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, PlayerEntity player) {
-        return world.isBlockLoaded(pos) && world.getTileEntity(pos).getCapability(ModCapabilities.LOCK).isPresent();
+        if (world.isBlockLoaded(pos)) {
+            TileEntity te = world.getTileEntity(pos);
+            return te != null && te.getCapability(ModCapabilities.LOCK).isPresent();
+        }
+        return false;
     }
 
     @Override

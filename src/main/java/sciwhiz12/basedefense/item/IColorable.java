@@ -2,6 +2,8 @@ package sciwhiz12.basedefense.item;
 
 import java.util.Arrays;
 
+import com.google.common.base.Preconditions;
+
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
@@ -16,16 +18,15 @@ public interface IColorable {
     };
 
     default boolean hasColors(ItemStack stack) {
-        if (stack == null) { throw new IllegalArgumentException("stack cannot be null"); }
-        CompoundNBT display = stack.getChildTag("display");
-        return !stack.isEmpty() && stack.getItem() instanceof IColorable && display != null && display.getIntArray(
-            "colors").length > 0;
+        Preconditions.checkNotNull(stack);
+        return !stack.isEmpty() && stack.getItem() instanceof IColorable && stack.getChildTag("display") != null && stack
+            .getChildTag("display").getIntArray("colors").length > 0;
     }
 
     default void setColor(ItemStack stack, int index, DyeColor color) {
-        if (stack == null) { throw new IllegalArgumentException("stack cannot be null"); }
-        if (index < 0) { throw new IllegalArgumentException("index cannot be negative: " + index); }
-        if (color == null) { throw new IllegalArgumentException("color cannot be null"); }
+        Preconditions.checkNotNull(stack);
+        Preconditions.checkNotNull(color);
+        if (index < 0) { throw new IllegalArgumentException(String.valueOf(index)); }
         if (!stack.isEmpty() && stack.getItem() instanceof IColorable) {
             CompoundNBT display = stack.getOrCreateChildTag("display");
             int[] colors = display.getIntArray("colors");
@@ -36,8 +37,8 @@ public interface IColorable {
     }
 
     default void setColors(ItemStack stack, int[] colors) {
-        if (stack == null) { throw new IllegalArgumentException("stack cannot be null"); }
-        if (colors == null) { throw new IllegalArgumentException("colors cannot be null"); }
+        Preconditions.checkNotNull(stack);
+        Preconditions.checkNotNull(colors);
         if (!stack.isEmpty() && stack.getItem() instanceof IColorable) {
             CompoundNBT display = stack.getOrCreateChildTag("display");
             if (display != null) { display.putIntArray("colors", colors); }
@@ -45,7 +46,7 @@ public interface IColorable {
     }
 
     default int[] getColors(ItemStack stack) {
-        if (stack == null) { throw new IllegalArgumentException("stack cannot be null"); }
+        Preconditions.checkNotNull(stack);
         if (!stack.isEmpty() && stack.getItem() instanceof IColorable && stack.hasTag()) {
             CompoundNBT display = stack.getChildTag("display");
             if (display != null) { return display.getIntArray("colors"); }
@@ -54,8 +55,8 @@ public interface IColorable {
     }
 
     default DyeColor getColor(ItemStack stack, int index) {
-        if (stack == null) { throw new IllegalArgumentException("stack cannot be null"); }
-        if (index < 0) { throw new IllegalArgumentException("index cannot be negative: " + index); }
+        Preconditions.checkNotNull(stack);
+        if (index < 0) { throw new IllegalArgumentException(String.valueOf(index)); }
         if (!stack.isEmpty() && stack.getItem() instanceof IColorable && stack.hasTag()) {
             CompoundNBT display = stack.getChildTag("display");
             if (display != null) {
@@ -72,8 +73,8 @@ public interface IColorable {
     }
 
     public static void copyColors(ItemStack from, ItemStack to) {
-        if (from == null) { throw new IllegalArgumentException("from cannot be null"); }
-        if (to == null) { throw new IllegalArgumentException("to cannot be null"); }
+        Preconditions.checkNotNull(from);
+        Preconditions.checkNotNull(to);
         if (from.isEmpty() || to.isEmpty()) { return; }
         if (from.getItem() instanceof IColorable && to.getItem() instanceof IColorable) {
             IColorable fromItem = (IColorable) from.getItem();

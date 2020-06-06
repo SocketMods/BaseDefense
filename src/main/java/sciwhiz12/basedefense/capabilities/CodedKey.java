@@ -20,9 +20,7 @@ public class CodedKey implements IKey {
 
     @Override
     public boolean canUnlock(ILock lock, IWorldPosCallable worldPos, PlayerEntity player) {
-        System.out.println("checking");
         if (lock instanceof CodedLock) {
-            System.out.println("CODED LOCK");
             CodedLock codeLock = (CodedLock) lock;
             return codeLock.containsCode(this.code);
         }
@@ -48,5 +46,9 @@ public class CodedKey implements IKey {
     @Override
     public void deserializeNBT(INBT nbt) {
         if (nbt instanceof LongNBT) { this.code = ((LongNBT) nbt).getLong(); }
+    }
+
+    public static final boolean isInstance(IKey key) {
+        return key instanceof CodedKey;
     }
 }

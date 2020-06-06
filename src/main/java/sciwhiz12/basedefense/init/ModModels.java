@@ -1,4 +1,4 @@
-package sciwhiz12.basedefense.client.model;
+package sciwhiz12.basedefense.init;
 
 import java.util.function.Function;
 
@@ -14,13 +14,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import sciwhiz12.basedefense.BaseDefense;
-import sciwhiz12.basedefense.init.ModBlocks;
-import sciwhiz12.basedefense.init.ModItems;
+import sciwhiz12.basedefense.client.model.ISTERWrapper;
+import sciwhiz12.basedefense.client.model.LockedDoorModel;
 
 @EventBusSubscriber(value = Dist.CLIENT, bus = Bus.MOD, modid = BaseDefense.MODID)
-public class ModelHandler {
+public class ModModels {
+    
     @SubscribeEvent
-    public static void onModelBake(ModelBakeEvent event) {
+    static void onModelBake(ModelBakeEvent event) {
         Block[] doorBlocks = { ModBlocks.LOCKED_IRON_DOOR, ModBlocks.LOCKED_OAK_DOOR, ModBlocks.LOCKED_BIRCH_DOOR,
                 ModBlocks.LOCKED_SPRUCE_DOOR, ModBlocks.LOCKED_JUNGLE_DOOR, ModBlocks.LOCKED_ACACIA_DOOR,
                 ModBlocks.LOCKED_DARK_OAK_DOOR };

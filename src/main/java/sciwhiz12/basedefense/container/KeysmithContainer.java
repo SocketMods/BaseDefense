@@ -3,7 +3,6 @@ package sciwhiz12.basedefense.container;
 import static sciwhiz12.basedefense.init.ModTextures.ATLAS_BLOCKS_TEXTURE;
 
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -77,12 +76,6 @@ public class KeysmithContainer extends Container {
 
             @Override
             public ItemStack onTake(PlayerEntity player, ItemStack stack) {
-                stack.getCapability(ModCapabilities.KEY).ifPresent((key) -> {
-                    if (key instanceof CodedKey) {
-                        System.out.println(!player.world.isRemote);
-                        System.out.println(((CodedKey) key).getCode());
-                    }
-                });
                 KeysmithContainer.this.inputSlots.decrStackSize(0, 1);
                 KeysmithContainer.this.setOutputName(null);
                 return stack;
@@ -99,15 +92,11 @@ public class KeysmithContainer extends Container {
             this.customName = null;
         } else {
             out = new ItemStack(ModItems.KEY, 1);
-            AtomicLong code = new AtomicLong(RANDOM.nextLong());
-            if (!dupl.isEmpty()) {
-                dupl.getCapability(ModCapabilities.KEY).ifPresent((duplKey) -> {
-                    if (duplKey instanceof CodedKey) { code.set(((CodedKey) duplKey).getCode()); }
-                });
-                IColorable.copyColors(dupl, out);
-            }
-            out.getCapability(ModCapabilities.KEY).ifPresent((key) -> {
-                if (key instanceof CodedKey) { ((CodedKey) key).setCode(code.get()); }
+            long code = dupl.getCapability(ModCapabilities.KEY).filter((duplKey) -> duplKey instanceof CodedKey).map((
+                    duplKey) -> ((CodedKey) duplKey).getCode()).orElseGet(RANDOM::nextLong);
+            IColorable.copyColors(dupl, out);
+            out.getCapability(ModCapabilities.KEY).filter((key) -> key instanceof CodedKey).ifPresent((key) -> {
+                ((CodedKey) key).setCode(code);
             });
             if (!StringUtils.isBlank(this.customName)) {
                 out.setDisplayName(new StringTextComponent(this.customName));

@@ -7,7 +7,6 @@ import net.minecraft.nbt.INBT;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
-import sciwhiz12.basedefense.Util;
 import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.api.capablities.ILock;
 import sciwhiz12.basedefense.init.ModCapabilities;
@@ -21,16 +20,16 @@ public class ItemHandlerKey implements IKey {
 
     @Override
     public boolean canUnlock(ILock lock, IWorldPosCallable worldPos, PlayerEntity player) {
-        return Util.applyOrDefault(itemHander, false, (item) -> {
+        return itemHander.map((item) -> {
             for (int i = 0; i < item.getSlots(); i++) {
                 ItemStack stack = item.getStackInSlot(i);
-                LazyOptional<IKey> keyCap = stack.getCapability(ModCapabilities.KEY);
-                if (keyCap.isPresent()) {
-                    if (lock.canUnlock(keyCap.orElseThrow(NullPointerException::new), worldPos, player)) { return true; }
+                if (stack.getCapability(ModCapabilities.KEY).map((key) -> lock.canUnlock(key, worldPos, player)).orElse(
+                    false)) {
+                    return true;
                 }
             }
             return false;
-        });
+        }).orElse(false);
     }
 
     @Override
@@ -38,11 +37,11 @@ public class ItemHandlerKey implements IKey {
         itemHander.ifPresent((item) -> {
             for (int i = 0; i < item.getSlots(); i++) {
                 ItemStack stack = item.getStackInSlot(i);
-                LazyOptional<IKey> keyCap = stack.getCapability(ModCapabilities.KEY);
-                if (keyCap.isPresent()) {
-                    IKey key = keyCap.orElseThrow(NullPointerException::new);
-                    if (lock.canUnlock(key, worldPos, player)) { key.onUnlock(lock, worldPos, player); }
-                }
+                if (stack.getCapability(ModCapabilities.KEY).filter((key) -> lock.canUnlock(key, worldPos, player)).map((
+                        key) -> {
+                    key.onUnlock(lock, worldPos, player);
+                    return true;
+                }).orElse(false)) { return; }
             }
         });
     }

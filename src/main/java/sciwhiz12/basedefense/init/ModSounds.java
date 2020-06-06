@@ -19,7 +19,7 @@ public class ModSounds {
     public static final SoundEvent LOCKED_DOOR_UNLOCK = null;
 
     @SubscribeEvent
-    public static void onRegister(RegistryEvent.Register<SoundEvent> event) {
+    static void onRegister(RegistryEvent.Register<SoundEvent> event) {
         BaseDefense.LOG.debug("Registering sounds");
         final IForgeRegistry<SoundEvent> reg = event.getRegistry();
 

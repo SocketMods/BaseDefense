@@ -1,7 +1,5 @@
 package sciwhiz12.basedefense.tileentity;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -36,7 +34,6 @@ public class LockableTile extends TileEntity {
         return super.getCapability(cap, side);
     }
 
-    @Nullable
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
         CompoundNBT tag = new CompoundNBT();

@@ -14,11 +14,11 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Tags;
-import sciwhiz12.basedefense.UnlockHelper;
 import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.init.ModItems;
 import sciwhiz12.basedefense.init.ModRecipes;
 import sciwhiz12.basedefense.item.lock.BrokenPadlockItem;
+import sciwhiz12.basedefense.util.UnlockHelper;
 
 public class PadlockRepairRecipe extends SpecialRecipe {
     public PadlockRepairRecipe(ResourceLocation idIn) {
@@ -60,7 +60,7 @@ public class PadlockRepairRecipe extends SpecialRecipe {
         if (!hasInvalid && padlockSlot >= 0 && keySlot >= 0 && repairSlot >= 0) {
             ItemStack lock = inv.getStackInSlot(padlockSlot);
             ItemStack key = inv.getStackInSlot(keySlot);
-            if (UnlockHelper.checkUnlock(key, lock, IWorldPosCallable.DUMMY, null).isSuccess()) {
+            if (UnlockHelper.checkUnlock(key, lock, IWorldPosCallable.DUMMY, null)) {
                 return Optional.of(Triple.of(padlockSlot, keySlot, repairSlot));
             }
         }

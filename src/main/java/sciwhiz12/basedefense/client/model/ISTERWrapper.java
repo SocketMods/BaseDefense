@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraftforge.client.model.BakedModelWrapper;
 
 public class ISTERWrapper extends BakedModelWrapper<IBakedModel> {
-    protected TransformType currentPerspective;
+    protected final TransformType currentPerspective;
 
     public ISTERWrapper(IBakedModel parent) {
         this(parent, TransformType.NONE);
@@ -26,7 +26,6 @@ public class ISTERWrapper extends BakedModelWrapper<IBakedModel> {
 
     @Override
     public IBakedModel handlePerspective(ItemCameraTransforms.TransformType cameraTransformType, MatrixStack mat) {
-        currentPerspective = cameraTransformType;
         return new ISTERWrapper(originalModel.handlePerspective(cameraTransformType, mat), currentPerspective);
     }
 

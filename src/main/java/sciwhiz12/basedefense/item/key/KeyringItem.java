@@ -2,13 +2,12 @@ package sciwhiz12.basedefense.item.key;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
@@ -37,7 +36,7 @@ public class KeyringItem extends Item {
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((handler) -> {
             int keys = 0;
             for (int i = 0; i < handler.getSlots(); i++) {
@@ -53,8 +52,11 @@ public class KeyringItem extends Item {
 
     @Override
     public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, PlayerEntity player) {
-        return world.isBlockLoaded(pos) && world.getTileEntity(pos) != null && world.getTileEntity(pos).getCapability(
-            ModCapabilities.LOCK).isPresent();
+        if (world.isBlockLoaded(pos)) {
+            TileEntity te = world.getTileEntity(pos);
+            return te != null && te.getCapability(ModCapabilities.LOCK).isPresent();
+        }
+        return false;
     }
 
     @Override
@@ -68,32 +70,28 @@ public class KeyringItem extends Item {
     }
 
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
+    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT nbt) {
         return new KeyringProvider();
     }
 
+    @Override
     public CompoundNBT getShareTag(ItemStack stack) {
         CompoundNBT nbt = new CompoundNBT();
         if (stack.hasTag()) { nbt.put("Tag", stack.getTag()); }
         stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((handler) -> {
             nbt.put("ItemHandlerCap", CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.writeNBT(handler, null));
         });
-        stack.getCapability(ModCapabilities.KEY).ifPresent((key) -> {
-            nbt.put("KeyCap", ModCapabilities.KEY.writeNBT(key, null));
-        });
         return nbt;
     }
 
+    @Override
+
     public void readShareTag(ItemStack stack, CompoundNBT nbt) {
+        if (nbt == null) return;
         if (nbt.contains("Tag")) { stack.setTag(nbt.getCompound("Tag")); }
         if (nbt.contains("ItemHandlerCap")) {
             stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((handler) -> {
                 CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(handler, null, nbt.get("ItemHandlerCap"));
-            });
-        }
-        if (nbt.contains("KeyCap")) {
-            stack.getCapability(ModCapabilities.KEY).ifPresent((key) -> {
-                ModCapabilities.KEY.readNBT(key, null, nbt.get("KeyCap"));
             });
         }
     }
@@ -124,7 +122,6 @@ public class KeyringItem extends Item {
             item.ifPresent((handler) -> {
                 nbt.put("Items", CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.writeNBT(handler, null));
             });
-            key.ifPresent((key) -> { nbt.put("Key", ModCapabilities.KEY.writeNBT(key, null)); });
             return nbt;
         }
 
@@ -132,7 +129,6 @@ public class KeyringItem extends Item {
         public void deserializeNBT(CompoundNBT nbt) {
             item.ifPresent((handler) -> CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(handler, null, nbt.get(
                 "Items")));
-            key.ifPresent((key) -> ModCapabilities.KEY.readNBT(key, null, nbt.get("Key")));
         }
     }
 }

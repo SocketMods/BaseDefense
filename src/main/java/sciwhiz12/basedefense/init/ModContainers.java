@@ -21,7 +21,7 @@ public class ModContainers {
     public static final ContainerType<KeyringContainer> KEYRING = null;
 
     @SubscribeEvent
-    public static void onRegister(RegistryEvent.Register<ContainerType<?>> event) {
+    static void onRegister(RegistryEvent.Register<ContainerType<?>> event) {
         BaseDefense.LOG.debug("Registering containers");
         final IForgeRegistry<ContainerType<?>> reg = event.getRegistry();
 

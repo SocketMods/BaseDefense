@@ -1,6 +1,7 @@
 package sciwhiz12.basedefense.client.gui;
 
 import org.apache.commons.lang3.StringUtils;
+import org.lwjgl.glfw.GLFW;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -66,11 +67,10 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
 
     @Override
     public boolean keyPressed(int key, int scanCode, int modifiers) {
-        if (key == 256) { this.minecraft.player.closeScreen(); }
+        if (key == GLFW.GLFW_KEY_ESCAPE) { this.minecraft.player.closeScreen(); }
 
-        return !this.nameField.keyPressed(key, scanCode, modifiers) && !this.nameField.canWrite() ? super.keyPressed(
-            key, scanCode, modifiers
-        ) : true;
+        return !this.nameField.keyPressed(key, scanCode, modifiers) && !this.nameField.canWrite() ? super.keyPressed(key,
+            scanCode, modifiers) : true;
     }
 
     @Override
@@ -109,10 +109,10 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
     }
 
     @Override
-    public void sendAllContents(Container containerToSend, NonNullList<ItemStack> itemsList) {
-        this.sendSlotContents(containerToSend, 0, containerToSend.getSlot(0).getStack());
-        this.sendSlotContents(containerToSend, 1, containerToSend.getSlot(1).getStack());
-        this.sendSlotContents(containerToSend, 2, containerToSend.getSlot(2).getStack());
+    public void sendAllContents(Container container, NonNullList<ItemStack> itemsList) {
+        this.sendSlotContents(container, 0, container.getSlot(0).getStack());
+        this.sendSlotContents(container, 1, container.getSlot(1).getStack());
+        this.sendSlotContents(container, 2, container.getSlot(2).getStack());
     }
 
     @Override

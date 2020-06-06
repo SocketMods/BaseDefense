@@ -19,7 +19,6 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import sciwhiz12.basedefense.UnlockHelper;
 import sciwhiz12.basedefense.capabilities.CodedKey;
 import sciwhiz12.basedefense.capabilities.CodedLock;
 import sciwhiz12.basedefense.init.ModBlocks;
@@ -28,6 +27,7 @@ import sciwhiz12.basedefense.init.ModContainers;
 import sciwhiz12.basedefense.init.ModItems;
 import sciwhiz12.basedefense.init.ModTextures;
 import sciwhiz12.basedefense.item.IColorable;
+import sciwhiz12.basedefense.util.UnlockHelper;
 
 public class LocksmithContainer extends Container {
     private final IInventory outputSlot = new CraftResultInventory() {
@@ -127,19 +127,17 @@ public class LocksmithContainer extends Container {
             AtomicReference<ItemStack> lastKeyRef = new AtomicReference<>(ItemStack.EMPTY);
             for (int i = 1; i < 7; i++) {
                 ItemStack keyStack = this.inputSlots.getStackInSlot(i);
-                keyStack.getCapability(ModCapabilities.KEY).ifPresent((key) -> {
-                    if (key instanceof CodedKey) {
-                        keyCodes.add(((CodedKey) key).getCode());
-                        lastKeyRef.set(keyStack);
-                    }
+                keyStack.getCapability(ModCapabilities.KEY).filter((key) -> key instanceof CodedKey).ifPresent((key) -> {
+                    keyCodes.add(((CodedKey) key).getCode());
+                    lastKeyRef.set(keyStack);
                 });
             }
 
             if (!keyCodes.isEmpty()) {
                 out = new ItemStack(ModItems.LOCK_CORE, 1);
                 ItemStack lastKey = lastKeyRef.get();
-                out.getCapability(ModCapabilities.LOCK).ifPresent((lock) -> {
-                    if (lock instanceof CodedLock) { for (long code : keyCodes) { ((CodedLock) lock).addCode(code); } }
+                out.getCapability(ModCapabilities.LOCK).filter((lock) -> lock instanceof CodedLock).ifPresent((lock) -> {
+                    for (long code : keyCodes) { ((CodedLock) lock).addCode(code); }
                 });
                 IColorable.copyColors(lastKey, out);
                 if (lastKey.hasDisplayName()) { out.setDisplayName(lastKey.getDisplayName()); }
@@ -155,7 +153,7 @@ public class LocksmithContainer extends Container {
         ItemStack keyStack = this.testingSlots.getStackInSlot(0);
         ItemStack lockStack = this.testingSlots.getStackInSlot(1);
         if (!keyStack.isEmpty() && !lockStack.isEmpty()) {
-            if (UnlockHelper.checkUnlock(keyStack, lockStack, IWorldPosCallable.DUMMY, null).isSuccess()) { flag = 1; }
+            if (UnlockHelper.checkUnlock(keyStack, lockStack, IWorldPosCallable.DUMMY, null)) { flag = 1; }
         }
         this.testingState.set(flag);
         this.detectAndSendChanges();

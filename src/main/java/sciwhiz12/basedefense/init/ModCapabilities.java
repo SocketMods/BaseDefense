@@ -18,19 +18,20 @@ import sciwhiz12.basedefense.capabilities.CodedLock;
 
 @EventBusSubscriber(bus = Bus.MOD, modid = BaseDefense.MODID)
 public class ModCapabilities {
+
     @CapabilityInject(ILock.class)
     public static Capability<ILock> LOCK;
-
     @CapabilityInject(IKey.class)
     public static Capability<IKey> KEY;
 
     @SubscribeEvent
     static void onCommonSetup(FMLCommonSetupEvent event) {
+        BaseDefense.LOG.debug("Registering capabilities");
         CapabilityManager.INSTANCE.register(ILock.class, new Storage<>(), CodedLock::new);
         CapabilityManager.INSTANCE.register(IKey.class, new Storage<>(), CodedKey::new);
     }
 
-    public static class Storage<T extends INBTSerializable<INBT>> implements Capability.IStorage<T> {
+    static class Storage<T extends INBTSerializable<INBT>> implements Capability.IStorage<T> {
         @Override
         public INBT writeNBT(Capability<T> capability, T instance, Direction side) {
             return instance.serializeNBT();
