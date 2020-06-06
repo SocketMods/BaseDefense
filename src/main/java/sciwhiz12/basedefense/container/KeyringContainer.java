@@ -22,6 +22,7 @@ import sciwhiz12.basedefense.net.UpdatePlayerInvSlotPacket;
 
 public class KeyringContainer extends Container {
     private final InvWrapper playerInv;
+    private final PlayerEntity player;
     private final IItemHandlerModifiable itemHandler;
     private final ItemStack stack;
 
@@ -32,12 +33,29 @@ public class KeyringContainer extends Container {
     public KeyringContainer(int id, PlayerInventory inv, ItemStack stack) {
         super(ModContainers.KEYRING, id);
         this.playerInv = new InvWrapper(inv);
+        this.player = inv.player;
         itemHandler = (IItemHandlerModifiable) stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(
-            new ItemStackHandler(9)
-        );
+            new ItemStackHandler(9));
         this.stack = stack;
 
-        addSlotRange(itemHandler, 0, 8, 18, 9, 18);
+        for (int i = 0; i < 9; i++) {
+            addSlot(new SlotItemHandler(itemHandler, i, 8 + i * 18, 18) {
+                @Override
+                public void onSlotChanged() {
+                    if (KeyringContainer.this.player instanceof ServerPlayerEntity) {
+                        for (int i = 0; i < playerInv.getSlots(); i++) {
+                            if (playerInv.getStackInSlot(i) == stack) {
+                                NetworkHandler.CHANNEL.send(PacketDistributor.PLAYER.with(
+                                    () -> (ServerPlayerEntity) KeyringContainer.this.player), new UpdatePlayerInvSlotPacket(
+                                        i, stack));
+                                break;
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
         layoutPlayerInventorySlots(8, 48);
     }
 
