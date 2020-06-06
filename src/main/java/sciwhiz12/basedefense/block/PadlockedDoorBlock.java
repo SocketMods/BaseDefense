@@ -9,7 +9,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.DoorBlock;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathType;
@@ -106,6 +105,7 @@ public class PadlockedDoorBlock extends LockableBaseBlock {
                             });
                             replaceDoor(worldIn, pos);
                         }
+                        player.swingArm(handIn);
                         return ActionResultType.SUCCESS;
                     }
                 } else {
@@ -139,7 +139,7 @@ public class PadlockedDoorBlock extends LockableBaseBlock {
         final Direction facing = state.get(FACING);
         final DoorHingeSide hinge = state.get(HINGE);
         final BlockState defState = this.block.getDefaultState().with(DoorBlock.HINGE, hinge).with(DoorBlock.FACING, facing)
-            .with(DoorBlock.OPEN, this.block.getMaterial(this.block.getDefaultState()) == Material.IRON ? false : true);
+            .with(DoorBlock.OPEN, false);
 
         final BlockState newState = defState.with(DoorBlock.HALF, state.get(HALF));
         final BlockState newOffState = defState.with(DoorBlock.HALF, offState.get(HALF));
