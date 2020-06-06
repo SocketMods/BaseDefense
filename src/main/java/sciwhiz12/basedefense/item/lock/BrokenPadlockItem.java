@@ -10,9 +10,10 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import sciwhiz12.basedefense.item.IColorable;
 import sciwhiz12.basedefense.util.Util;
 
-public class BrokenPadlockItem extends Item {
+public class BrokenPadlockItem extends Item implements IColorable {
     private static final IItemPropertyGetter COLOR_GETTER = (stack, world, livingEntity) -> {
         CompoundNBT tag = stack.getChildTag("display");
         if (tag != null && tag.contains("colors")) { return (float) tag.getIntArray("colors").length; }

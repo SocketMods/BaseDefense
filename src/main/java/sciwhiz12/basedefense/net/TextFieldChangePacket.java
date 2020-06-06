@@ -20,7 +20,7 @@ public class TextFieldChangePacket {
     }
 
     public static TextFieldChangePacket decode(PacketBuffer buf) {
-        return new TextFieldChangePacket(buf.readString());
+        return new TextFieldChangePacket(buf.readString(64));
     }
 
     public static void process(TextFieldChangePacket pkt, Supplier<Context> ctx) {

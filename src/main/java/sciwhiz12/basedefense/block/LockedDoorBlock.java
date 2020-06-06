@@ -6,7 +6,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -45,17 +44,6 @@ import sciwhiz12.basedefense.tileentity.LockedDoorTile;
 import sciwhiz12.basedefense.util.UnlockHelper;
 
 public class LockedDoorBlock extends Block {
-    public static final IBlockColor COLOR = (state, world, pos, tintIndex) -> {
-        if (state.getBlock() instanceof LockedDoorBlock) {
-            LockedDoorTile tile = (LockedDoorTile) world.getTileEntity(pos);
-            if (tile != null && tile.hasColors()) {
-                int[] colors = tile.getColors();
-                // 0 : NONE, 1 : ind. 0 ; 2 : inds. 1, 2 ;
-                if (colors.length - 1 >= tintIndex) { return colors[tintIndex]; }
-            }
-        }
-        return -1;
-    };
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final EnumProperty<DoorHingeSide> HINGE = BlockStateProperties.DOOR_HINGE;
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
@@ -140,7 +128,7 @@ public class LockedDoorBlock extends Block {
                             // UNLOCKED, SNEAKING, NO LOCK, HOLDING LOCK => set held lock to current lock,
                             // remove from inv, set to locked state
                             te.setLockStack(heldStack.copy());
-                            player.inventory.decrStackSize(player.inventory.getSlotFor(heldStack), 1);
+                            heldStack.setCount(heldStack.getCount() - 1);
                             setAndNotify(state.with(LOCKED, true), pos, worldIn);
                             playSound(player, worldIn, pos, ModSounds.LOCKED_DOOR_RELOCK);
                             te.requestModelDataUpdate();

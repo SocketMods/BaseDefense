@@ -4,19 +4,11 @@ import java.util.Arrays;
 
 import com.google.common.base.Preconditions;
 
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 
 public interface IColorable {
-    public static final IItemColor ITEM_COLOR = (stack, tintIndex) -> {
-        if (stack.getItem() instanceof IColorable && tintIndex >= 2) {
-            return ((IColorable) stack.getItem()).getColor(stack, tintIndex - 2).getColorValue();
-        }
-        return -1;
-    };
-
     default boolean hasColors(ItemStack stack) {
         Preconditions.checkNotNull(stack);
         return !stack.isEmpty() && stack.getItem() instanceof IColorable && stack.getChildTag("display") != null && stack
