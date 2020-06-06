@@ -8,70 +8,78 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.LazyOptional;
+import sciwhiz12.basedefense.capabilities.CodedItemStackLock;
+import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.init.ModTileEntities;
 
 public class LockableTile extends TileEntity {
-    protected ItemStack lock = ItemStack.EMPTY;
+    public static final String TAG_LOCK = "Lock";
+
+    private LazyOptional<CodedItemStackLock> lockCap = LazyOptional.of(() -> this.lock);
+    private CodedItemStackLock lock = new CodedItemStackLock();
 
     public LockableTile() {
         super(ModTileEntities.LOCKABLE_TILE);
     }
-    
+
     public LockableTile(TileEntityType<?> type) {
         super(type);
     }
 
     @Override
+    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+        if (cap == ModCapabilities.LOCK) { return lockCap.cast(); }
+        return super.getCapability(cap, side);
+    }
+
     @Nullable
+    @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
         CompoundNBT tag = new CompoundNBT();
-        write(tag);
-        return new SUpdateTileEntityPacket(this.pos, 0, tag);
+        tag.put(TAG_LOCK, lock.getStack().write(new CompoundNBT()));
+        return new SUpdateTileEntityPacket(pos, 0, getUpdateTag());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        read(pkt.getNbtCompound());
+        this.lock.setStack(ItemStack.read(pkt.getNbtCompound().getCompound(TAG_LOCK)));
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        CompoundNBT tag = new CompoundNBT();
-        write(tag);
-        return tag;
+        return this.write(new CompoundNBT());
     }
 
     @Override
-    public void handleUpdateTag(CompoundNBT tag) {
-        this.read(tag);
+    public void read(CompoundNBT compound) {
+        super.read(compound);
+        lock.setStack(ItemStack.read(compound.getCompound(TAG_LOCK)));
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT parentTag) {
-        super.write(parentTag);
-        CompoundNBT itemStackNBT = new CompoundNBT();
-        this.lock.write(itemStackNBT);
-        parentTag.put("LockItem", itemStackNBT);
-        return parentTag;
+    public CompoundNBT write(CompoundNBT compound) {
+        super.write(compound);
+        compound.put(TAG_LOCK, lock.getStack().write(new CompoundNBT()));
+        return compound;
     }
 
     @Override
-    public void read(CompoundNBT parentTag) {
-        super.read(parentTag);
-        CompoundNBT itemStackNBT = parentTag.getCompound("LockItem");
-        this.lock = ItemStack.read(itemStackNBT);
+    public void remove() {
+        super.remove();
+        lockCap.invalidate();
     }
 
-    public ItemStack getLock() {
-        return lock.copy();
-    }
-
-    public boolean hasLock() {
-        return !lock.isEmpty();
-    }
-
-    public void setLock(ItemStack stack) {
-        this.lock = stack.copy();
+    public void setLockStack(ItemStack stack) {
+        lock.setStack(stack);
+        this.world.notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.DEFAULT);
         this.markDirty();
+    }
+
+    public ItemStack getLockStack() {
+        return lock.getStack();
     }
 }

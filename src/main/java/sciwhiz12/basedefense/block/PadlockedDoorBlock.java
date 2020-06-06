@@ -24,6 +24,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -37,12 +38,10 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.IRegistryDelegate;
-import sciwhiz12.basedefense.api.lock.Decision;
-import sciwhiz12.basedefense.api.lock.IKey;
-import sciwhiz12.basedefense.api.lock.ILock;
-import sciwhiz12.basedefense.api.lock.ILockable;
+import sciwhiz12.basedefense.UnlockHelper;
+import sciwhiz12.basedefense.Util;
+import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.item.lock.PadlockItem;
 import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
 
@@ -72,11 +71,8 @@ public class PadlockedDoorBlock extends LockableBaseBlock {
         super(Block.Properties.from(blockIn));
         this.block = blockIn;
         replacement_block_map.put(blockIn.delegate, this.delegate);
-        this.setDefaultState(
-            this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(SIDE, DoorSide.OUTSIDE).with(
-                HINGE, DoorHingeSide.LEFT
-            ).with(HALF, DoubleBlockHalf.LOWER)
-        );
+        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(SIDE, DoorSide.OUTSIDE)
+            .with(HINGE, DoorHingeSide.LEFT).with(HALF, DoubleBlockHalf.LOWER));
     }
 
     @Override
@@ -96,48 +92,35 @@ public class PadlockedDoorBlock extends LockableBaseBlock {
             pos = pos.offset(Direction.DOWN);
             state = worldIn.getBlockState(pos);
         }
-        ItemStack keyStack = player.getHeldItem(handIn);
         if (worldIn.isBlockLoaded(pos) && state.getBlock() == this) {
-            if (this.hasLock(worldIn, pos) && !keyStack.isEmpty() && keyStack.getItem() instanceof IKey) {
-                if (allowOpen(state.get(SIDE), state.get(FACING), rayTrace.getFace())) {
-                    IKey key = (IKey) keyStack.getItem();
-                    ItemStack lockStack = this.getLock(worldIn, pos);
-                    ILock lock = (ILock) lockStack.getItem();
-                    boolean success = key.canUnlock(lockStack, keyStack, worldIn, pos, this, player);
-                    success = success && lock.isUnlockAllowed(lockStack, keyStack, worldIn, pos, this, player);
-                    // we skip checking #isUnlockAllowed for block because we (the block) allow it
-                    if (success && !worldIn.isRemote) {
-                        if (lock.onUnlock(lockStack, keyStack, worldIn, pos, this, player) == Decision.CONTINUE) {
-                            key.onUnlock(lockStack, keyStack, worldIn, pos, this, player);
-                            if (this.hasLock(worldIn, pos)) {
-                                ItemHandlerHelper.giveItemToPlayer(player, lockStack);
-                                this.setLock(worldIn, pos, ItemStack.EMPTY);
-                            }
+            ItemStack keyStack = player.getHeldItem(handIn);
+            TileEntity te = worldIn.getTileEntity(pos);
+            if (te != null && te instanceof PadlockedDoorTile) {
+                PadlockedDoorTile doorTile = (PadlockedDoorTile) te;
+                if (keyStack.getCapability(ModCapabilities.KEY).isPresent()) {
+                    if (allowOpen(state.get(SIDE), state.get(FACING), rayTrace.getFace())) {
+                        IWorldPosCallable worldPos = Util.getOrDummy(worldIn, pos);
+                        if (UnlockHelper.checkRemove(keyStack, doorTile, worldPos, player)) {
+                            UnlockHelper.consumeIfPresent(keyStack, doorTile, (key, lock) -> {
+                                lock.onRemove(key, worldPos, player);
+                            });
                             replaceDoor(worldIn, pos);
                         }
-                    }
-                    return ActionResultType.SUCCESS;
-                }
-            } else {
-                if (player.isSneaking() && allowOpen(state.get(SIDE), state.get(FACING), rayTrace.getFace())) {
-                    if (this.hasLock(worldIn, pos)) {
-                        if (this.getLock(worldIn, pos).hasDisplayName()) {
-                            player.sendStatusMessage(
-                                new TranslationTextComponent(
-                                    "status.basedefense.padlocked_door.info", this.getLock(worldIn, pos).getDisplayName()
-                                        .applyTextStyle(TextFormatting.WHITE)
-                                ).applyTextStyles(TextFormatting.YELLOW, TextFormatting.ITALIC), true
-                            );
-                        }
+                        return ActionResultType.SUCCESS;
                     }
                 } else {
-                    player.sendStatusMessage(
-                        new TranslationTextComponent(
-                            "status.basedefense.padlocked_door.locked", new TranslationTextComponent(
-                                this.block.getTranslationKey()
-                            ).applyTextStyle(TextFormatting.WHITE)
-                        ).applyTextStyles(TextFormatting.GRAY, TextFormatting.ITALIC), true
-                    );
+                    if (player.isSneaking() && allowOpen(state.get(SIDE), state.get(FACING), rayTrace.getFace())) {
+                        ItemStack lockStack = doorTile.getLockStack();
+                        if (!lockStack.isEmpty() && lockStack.hasDisplayName()) {
+                            player.sendStatusMessage(new TranslationTextComponent("status.basedefense.padlocked_door.info",
+                                lockStack.getDisplayName().applyTextStyle(TextFormatting.WHITE)).applyTextStyles(
+                                    TextFormatting.YELLOW, TextFormatting.ITALIC), true);
+                        }
+                    } else {
+                        player.sendStatusMessage(new TranslationTextComponent("status.basedefense.padlocked_door.locked",
+                            new TranslationTextComponent(this.block.getTranslationKey()).applyTextStyle(
+                                TextFormatting.WHITE)).applyTextStyles(TextFormatting.GRAY, TextFormatting.ITALIC), true);
+                    }
                 }
             }
         }
@@ -166,15 +149,8 @@ public class PadlockedDoorBlock extends LockableBaseBlock {
         worldIn.setBlockState(pos, newState, flags);
     }
 
-    @Override
     public boolean isValidLock(ItemStack stack) {
         return stack.getItem() instanceof PadlockItem;
-    }
-
-    @Override
-    public boolean isUnlockAllowed(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos, ILockable block,
-            PlayerEntity player) {
-        return true;
     }
 
     @Override

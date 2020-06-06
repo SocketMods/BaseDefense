@@ -1,19 +1,21 @@
 package sciwhiz12.basedefense.item.lock;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.ItemHandlerHelper;
-import sciwhiz12.basedefense.api.lock.Decision;
-import sciwhiz12.basedefense.api.lock.ILockable;
+import sciwhiz12.basedefense.api.capablities.IKey;
+import sciwhiz12.basedefense.capabilities.CodedLock;
+import sciwhiz12.basedefense.capabilities.GenericCapabilityProvider;
+import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.item.IColorable;
+import sciwhiz12.basedefense.tileentity.LockableTile;
 
 public class PadlockItem extends LockBaseItem implements IColorable {
     private static final IItemPropertyGetter COLOR_GETTER = (stack, world, livingEntity) -> {
@@ -28,19 +30,19 @@ public class PadlockItem extends LockBaseItem implements IColorable {
     }
 
     @Override
-    public Decision onUnlock(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos, ILockable block,
-            @Nullable PlayerEntity player) {
-        if (player.isSneaking()) {
-            ItemHandlerHelper.giveItemToPlayer(player, lockStack);
-            block.setLock(worldIn, pos, ItemStack.EMPTY);
-            return Decision.SUPPRESS;
-        }
-        return Decision.CONTINUE;
-    }
-
-    @Override
-    public boolean isUnlockAllowed(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos, ILockable block,
-            PlayerEntity player) {
-        return true;
+    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT nbt) {
+        return new GenericCapabilityProvider<>(ModCapabilities.LOCK, () -> new CodedLock() {
+            @Override
+            public void onRemove(IKey key, IWorldPosCallable worldPos, PlayerEntity player) {
+                worldPos.consume((world, pos) -> {
+                    TileEntity te = world.getTileEntity(pos);
+                    if (te != null && te instanceof LockableTile) {
+                        LockableTile lockTile = (LockableTile) te;
+                        ItemHandlerHelper.giveItemToPlayer(player, lockTile.getLockStack());
+                        lockTile.setLockStack(ItemStack.EMPTY);
+                    }
+                });
+            }
+        });
     }
 }

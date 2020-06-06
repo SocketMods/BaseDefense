@@ -15,18 +15,14 @@ public class LockedDoorTile extends LockableTile {
     }
 
     public boolean hasColors() {
+        ItemStack lock = this.getLockStack();
         return lock.getItem() instanceof IColorable && ((IColorable) lock.getItem()).hasColors(lock);
     }
 
     public int[] getColors() {
+        ItemStack lock = this.getLockStack();
         if (lock.getItem() instanceof IColorable) { return ((IColorable) lock.getItem()).getColors(lock); }
         return new int[0];
-    }
-
-    @Override
-    public void setLock(ItemStack stack) {
-        super.setLock(stack);
-        this.requestModelDataUpdate();
     }
 
     @Override

@@ -2,34 +2,45 @@ package sciwhiz12.basedefense.container;
 
 import static sciwhiz12.basedefense.init.ModTextures.ATLAS_BLOCKS_TEXTURE;
 
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+
 import org.apache.commons.lang3.StringUtils;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.CraftResultInventory;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.LongNBT;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import sciwhiz12.basedefense.LockingUtil;
+import sciwhiz12.basedefense.capabilities.CodedKey;
 import sciwhiz12.basedefense.init.ModBlocks;
+import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.init.ModContainers;
 import sciwhiz12.basedefense.init.ModItems;
 import sciwhiz12.basedefense.init.ModTextures;
 import sciwhiz12.basedefense.item.IColorable;
 
 public class KeysmithContainer extends Container {
-    private final ItemStackHandler outputSlot = new ItemStackHandler(1) {};
-    private final ItemStackHandler inputSlots = new ItemStackHandler(2) {
+    private static final Random RANDOM = new Random();
+    private final IInventory outputSlot = new CraftResultInventory() {
         @Override
-        public void onContentsChanged(int slot) {
+        public void markDirty() {
+            super.markDirty();
+            KeysmithContainer.this.onContentsChange();
+        }
+    };
+    private final IInventory inputSlots = new Inventory(7) {
+        @Override
+        public void markDirty() {
+            super.markDirty();
             KeysmithContainer.this.onContentsChange();
         }
     };
@@ -46,19 +57,19 @@ public class KeysmithContainer extends Container {
         this.playerInv = new InvWrapper(playerInv);
         this.worldPos = worldPos;
 
-        this.addSlot(new SlotItemHandler(this.inputSlots, 0, 14, 24) {
+        this.addSlot(new Slot(this.inputSlots, 0, 14, 24) {
             @Override
             public boolean isItemValid(ItemStack stack) {
                 return stack.getItem() == ModItems.BLANK_KEY;
             }
         }.setBackground(ATLAS_BLOCKS_TEXTURE, ModTextures.SLOT_BLANK_KEY));
-        this.addSlot(new SlotItemHandler(this.inputSlots, 1, 31, 46) {
+        this.addSlot(new Slot(this.inputSlots, 1, 31, 46) {
             @Override
             public boolean isItemValid(ItemStack stack) {
                 return stack.getItem() == ModItems.KEY;
             }
         }.setBackground(ATLAS_BLOCKS_TEXTURE, ModTextures.SLOT_KEY));
-        this.addSlot(new SlotItemHandler(this.outputSlot, 0, 64, 24) {
+        this.addSlot(new Slot(this.outputSlot, 0, 64, 24) {
             @Override
             public boolean isItemValid(ItemStack stack) {
                 return false;
@@ -66,7 +77,13 @@ public class KeysmithContainer extends Container {
 
             @Override
             public ItemStack onTake(PlayerEntity player, ItemStack stack) {
-                KeysmithContainer.this.inputSlots.extractItem(0, 1, false);
+                stack.getCapability(ModCapabilities.KEY).ifPresent((key) -> {
+                    if (key instanceof CodedKey) {
+                        System.out.println(!player.world.isRemote);
+                        System.out.println(((CodedKey) key).getCode());
+                    }
+                });
+                KeysmithContainer.this.inputSlots.decrStackSize(0, 1);
                 KeysmithContainer.this.setOutputName(null);
                 return stack;
             }
@@ -82,17 +99,21 @@ public class KeysmithContainer extends Container {
             this.customName = null;
         } else {
             out = new ItemStack(ModItems.KEY, 1);
+            AtomicLong code = new AtomicLong(RANDOM.nextLong());
             if (!dupl.isEmpty()) {
-                out.setTagInfo(LockingUtil.NBT_UUID, LongNBT.valueOf(LockingUtil.getKeyID(dupl)));
+                dupl.getCapability(ModCapabilities.KEY).ifPresent((duplKey) -> {
+                    if (duplKey instanceof CodedKey) { code.set(((CodedKey) duplKey).getCode()); }
+                });
                 IColorable.copyColors(dupl, out);
-            } else {
-                LockingUtil.getKeyID(out);
             }
+            out.getCapability(ModCapabilities.KEY).ifPresent((key) -> {
+                if (key instanceof CodedKey) { ((CodedKey) key).setCode(code.get()); }
+            });
             if (!StringUtils.isBlank(this.customName)) {
                 out.setDisplayName(new StringTextComponent(this.customName));
             } else if (out.hasDisplayName()) { out.clearCustomName(); }
         }
-        this.outputSlot.setStackInSlot(0, out);
+        this.outputSlot.setInventorySlotContents(0, out);
         this.detectAndSendChanges();
     }
 
@@ -156,18 +177,5 @@ public class KeysmithContainer extends Container {
             slot.onTake(playerIn, slotStack);
         }
         return ItemStack.EMPTY;
-    }
-
-    private void clearContainer(PlayerEntity player, World worldIn, ItemStackHandler inv) {
-        if (!player.isAlive() || player instanceof ServerPlayerEntity && ((ServerPlayerEntity) player).hasDisconnected()) {
-            for (int j = 0; j < inv.getSlots(); ++j) {
-                player.dropItem(inv.extractItem(j, inv.getSlotLimit(j), false), false);
-            }
-
-        } else {
-            for (int i = 0; i < inv.getSlots(); ++i) {
-                player.inventory.placeItemBackInInventory(worldIn, inv.extractItem(i, inv.getSlotLimit(i), false));
-            }
-        }
     }
 }

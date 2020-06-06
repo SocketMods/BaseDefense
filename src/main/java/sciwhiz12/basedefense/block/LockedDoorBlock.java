@@ -41,12 +41,10 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
-import sciwhiz12.basedefense.api.lock.Decision;
-import sciwhiz12.basedefense.api.lock.IKey;
-import sciwhiz12.basedefense.api.lock.ILock;
-import sciwhiz12.basedefense.api.lock.ILockable;
+import sciwhiz12.basedefense.UnlockHelper;
+import sciwhiz12.basedefense.Util;
+import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.init.ModSounds;
-import sciwhiz12.basedefense.item.lock.LockCoreItem;
 import sciwhiz12.basedefense.tileentity.LockedDoorTile;
 
 public class LockedDoorBlock extends LockableBaseBlock {
@@ -77,11 +75,8 @@ public class LockedDoorBlock extends LockableBaseBlock {
 
     public LockedDoorBlock(Block blockIn) {
         super(Block.Properties.from(blockIn));
-        this.setDefaultState(
-            this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(HINGE, DoorHingeSide.LEFT).with(
-                HALF, DoubleBlockHalf.LOWER
-            ).with(OPEN, false).with(LOCKED, false)
-        );
+        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(HINGE, DoorHingeSide.LEFT)
+            .with(HALF, DoubleBlockHalf.LOWER).with(OPEN, false).with(LOCKED, false));
     }
 
     @Override
@@ -98,8 +93,15 @@ public class LockedDoorBlock extends LockableBaseBlock {
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
             BlockRayTraceResult rayTrace) {
         if (worldIn.isBlockPresent(pos) && state.getBlock() == this) { // verify that block is loaded
+
+            LockedDoorTile te = (LockedDoorTile) worldIn.getTileEntity(state.get(HALF) == DoubleBlockHalf.LOWER ? pos
+                    : pos.down());
+
+            ItemStack heldStack = player.getHeldItem(handIn);
             if (state.get(LOCKED)) { // LOCKED
-                if (checkUnlock(player.getHeldItem(handIn), worldIn, getLowerHalf(state, pos), player)) { // LOCKED, KEY
+                System.out.println(UnlockHelper.checkUnlock(heldStack, te, Util.getOrDummy(worldIn, pos), player));
+                if (UnlockHelper.checkUnlock(heldStack, te, Util.getOrDummy(worldIn, pos), player).isSuccess()) {
+                    // LOCKED, KEY
                     if (player.isSneaking()) { // LOCKED, KEY, SNEAKING => toggle locked state
                         final boolean newLocked = !state.get(LOCKED);
                         worldIn.setBlockState(pos, state.with(LOCKED, newLocked), DEFAULT_AND_RERENDER);
@@ -121,16 +123,13 @@ public class LockedDoorBlock extends LockableBaseBlock {
                     }
 
                 } else { // LOCKED, NO KEY
-                    ItemStack lock = this.getLock(worldIn, getLowerHalf(state, pos));
+                    ItemStack lock = te.getLockStack();
                     if (player.isSneaking() && lock.hasDisplayName()) { // LOCKED, NO KEY, SNEAKING => inform player of lock
                                                                         // name
                         if (handIn == Hand.OFF_HAND) {
                             if (lock.hasDisplayName()) {
-                                player.sendStatusMessage(
-                                    new TranslationTextComponent(
-                                        "\"%s\"", lock.getDisplayName().applyTextStyle(TextFormatting.WHITE)
-                                    ).applyTextStyle(TextFormatting.YELLOW), true
-                                );
+                                player.sendStatusMessage(new TranslationTextComponent("\"%s\"", lock.getDisplayName()
+                                    .applyTextStyle(TextFormatting.WHITE)).applyTextStyle(TextFormatting.YELLOW), true);
                             }
                             playSound(player, worldIn, pos, ModSounds.LOCKED_DOOR_ATTEMPT);
                             return ActionResultType.SUCCESS;
@@ -138,13 +137,9 @@ public class LockedDoorBlock extends LockableBaseBlock {
                         return ActionResultType.PASS; // END ACTION;
                     } else { // LOCKED, NO KEY, NOT SNEAKING => inform player that door is locked
                         if (handIn == Hand.OFF_HAND) {
-                            player.sendStatusMessage(
-                                new TranslationTextComponent(
-                                    "Door is locked!", new TranslationTextComponent(this.getTranslationKey()).applyTextStyle(
-                                        TextFormatting.WHITE
-                                    )
-                                ).applyTextStyle(TextFormatting.GRAY), true
-                            );
+                            player.sendStatusMessage(new TranslationTextComponent("Door is locked!",
+                                new TranslationTextComponent(this.getTranslationKey()).applyTextStyle(TextFormatting.WHITE))
+                                    .applyTextStyle(TextFormatting.GRAY), true);
                             playSound(player, worldIn, pos, ModSounds.LOCKED_DOOR_ATTEMPT);
                             return ActionResultType.SUCCESS;
                         }
@@ -154,18 +149,17 @@ public class LockedDoorBlock extends LockableBaseBlock {
                 }
             } else { // UNLOCKED
                 if (player.isSneaking()) { // UNLOCKED, SNEAKING
-                    if (this.hasLock(worldIn, getLowerHalf(state, pos))) {
+                    if (!te.getLockStack().isEmpty()) {
                         // UNLOCKED, SNEAKING, HAS LOCK => set to locked and unopened state
                         worldIn.setBlockState(pos, state.with(LOCKED, true).with(OPEN, false), DEFAULT_AND_RERENDER);
                         worldIn.neighborChanged(getOtherHalf(state, pos), this, pos);
                         playSound(player, worldIn, pos, ModSounds.LOCKED_DOOR_RELOCK);
                         return ActionResultType.SUCCESS; // END ACTION;
                     } else { // UNLOCKED, SNEAKING, NO LOCK
-                        ItemStack heldStack = player.getHeldItem(handIn);
-                        if (!heldStack.isEmpty() && this.isValidLock(heldStack)) {
+                        if (!heldStack.isEmpty() && heldStack.getCapability(ModCapabilities.LOCK).isPresent()) {
                             // UNLOCKED, SNEAKING, NO LOCK, HOLDING LOCK => set held lock to current lock,
                             // remove from inv, set to locked state
-                            this.setLock(worldIn, getLowerHalf(state, pos), heldStack);
+                            te.setLockStack(heldStack.copy());
                             player.inventory.decrStackSize(player.inventory.getSlotFor(heldStack), 1);
                             worldIn.setBlockState(pos, state.with(LOCKED, true), DEFAULT_AND_RERENDER);
                             worldIn.neighborChanged(getOtherHalf(state, pos), this, pos);
@@ -205,30 +199,6 @@ public class LockedDoorBlock extends LockableBaseBlock {
         return selfState.get(HALF) == DoubleBlockHalf.LOWER ? selfPos.up() : selfPos.down();
     }
 
-    private BlockPos getLowerHalf(BlockState selfState, BlockPos selfPos) {
-        return selfState.get(HALF) == DoubleBlockHalf.LOWER ? selfPos : selfPos.down();
-    }
-
-    private boolean checkUnlock(ItemStack keyStack, World world, BlockPos pos, PlayerEntity player) {
-        if (this.hasLock(world, pos) && !keyStack.isEmpty() && keyStack.getItem() instanceof IKey) {
-            IKey key = (IKey) keyStack.getItem();
-            ItemStack lockStack = this.getLock(world, pos);
-            if (lockStack.getItem() instanceof ILock) {
-                ILock lock = (ILock) lockStack.getItem();
-                boolean success = key.canUnlock(lockStack, keyStack, world, pos, this, player);
-                success = success && lock.isUnlockAllowed(lockStack, keyStack, world, pos, this, player);
-                success = success && this.isUnlockAllowed(lockStack, keyStack, world, pos, this, player);
-                if (success) {
-                    if (lock.onUnlock(lockStack, keyStack, world, pos, this, player) == Decision.CONTINUE) {
-                        key.onUnlock(lockStack, keyStack, world, pos, this, player);
-                    }
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     private void playDoorSound(PlayerEntity player, World worldIn, BlockPos pos, boolean isOpening) {
         worldIn.playEvent(player, isOpening ? this.getOpenSound() : this.getCloseSound(), pos, 0);
     }
@@ -243,16 +213,17 @@ public class LockedDoorBlock extends LockableBaseBlock {
                 : Constants.WorldEvents.WOODEN_DOOR_OPEN_SOUND;
     }
 
-    @Override
-    public boolean isValidLock(ItemStack stack) {
-        return stack.getItem() instanceof LockCoreItem;
-    }
-
-    @Override
-    public boolean isUnlockAllowed(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos, ILockable block,
-            PlayerEntity player) {
-        return true;
-    }
+    // @Override
+    // public boolean isValidLock(ItemStack stack) {
+    // return stack.getItem() instanceof LockCoreItem;
+    // }
+    //
+    // @Override
+    // public boolean isUnlockAllowed(ItemStack lockStack, ItemStack keyStack, World
+    // worldIn, BlockPos pos, ILockable block,
+    // PlayerEntity player) {
+    // return true;
+    // }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
@@ -282,9 +253,12 @@ public class LockedDoorBlock extends LockableBaseBlock {
     public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         boolean locked = false;
         if (stack.hasTag() && stack.getChildTag("LockItem") != null) {
-            this.setLock(worldIn, pos, ItemStack.read(stack.getChildTag("LockItem")));
-            locked = true;
-            worldIn.setBlockState(pos, state.with(LOCKED, locked), DEFAULT_AND_RERENDER);
+            TileEntity te = worldIn.getTileEntity(pos);
+            if (te != null && te instanceof LockedDoorTile) {
+                ((LockedDoorTile) te).setLockStack(ItemStack.read(stack.getChildTag("LockItem")));
+                locked = true;
+                worldIn.setBlockState(pos, state.with(LOCKED, locked), DEFAULT_AND_RERENDER);
+            }
         }
         worldIn.setBlockState(pos.up(), state.with(HALF, DoubleBlockHalf.UPPER).with(LOCKED, locked), DEFAULT_AND_RERENDER);
     }
@@ -295,16 +269,14 @@ public class LockedDoorBlock extends LockableBaseBlock {
         DoubleBlockHalf doubleblockhalf = stateIn.get(HALF);
         if (facing.getAxis() == Direction.Axis.Y && doubleblockhalf == DoubleBlockHalf.LOWER == (facing == Direction.UP)) {
             if (facingState.getBlock() == this && facingState.get(HALF) != doubleblockhalf) {
-                return stateIn.with(FACING, facingState.get(FACING)).with(OPEN, facingState.get(OPEN)).with(
-                    HINGE, facingState.get(HINGE)
-                ).with(LOCKED, facingState.get(LOCKED));
+                return stateIn.with(FACING, facingState.get(FACING)).with(OPEN, facingState.get(OPEN)).with(HINGE,
+                    facingState.get(HINGE)).with(LOCKED, facingState.get(LOCKED));
             } else {
                 return Blocks.AIR.getDefaultState();
             }
         } else {
-            if (doubleblockhalf == DoubleBlockHalf.LOWER && facing == Direction.DOWN && !stateIn.isValidPosition(
-                worldIn, currentPos
-            )) {
+            if (doubleblockhalf == DoubleBlockHalf.LOWER && facing == Direction.DOWN && !stateIn.isValidPosition(worldIn,
+                currentPos)) {
                 return Blocks.AIR.getDefaultState();
             } else {
                 return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
@@ -316,9 +288,8 @@ public class LockedDoorBlock extends LockableBaseBlock {
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         BlockPos blockpos = context.getPos();
         if (blockpos.getY() < 255 && context.getWorld().getBlockState(blockpos.up()).isReplaceable(context)) {
-            return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing()).with(
-                HINGE, this.getHingeSide(context)
-            ).with(HALF, DoubleBlockHalf.LOWER);
+            return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing()).with(HINGE, this.getHingeSide(
+                context)).with(HALF, DoubleBlockHalf.LOWER);
         } else {
             return null;
         }
@@ -340,9 +311,8 @@ public class LockedDoorBlock extends LockableBaseBlock {
         BlockPos blockpos5 = blockpos1.offset(direction2);
         BlockState blockstate3 = iblockreader.getBlockState(blockpos5);
         int i = (blockstate.isCollisionShapeOpaque(iblockreader, blockpos2) ? -1 : 0) + (blockstate1.isCollisionShapeOpaque(
-            iblockreader, blockpos3
-        ) ? -1 : 0) + (blockstate2.isCollisionShapeOpaque(iblockreader, blockpos4) ? 1 : 0) + (blockstate3
-            .isCollisionShapeOpaque(iblockreader, blockpos5) ? 1 : 0);
+            iblockreader, blockpos3) ? -1 : 0) + (blockstate2.isCollisionShapeOpaque(iblockreader, blockpos4) ? 1 : 0)
+                + (blockstate3.isCollisionShapeOpaque(iblockreader, blockpos5) ? 1 : 0);
         boolean flag = blockstate.getBlock() == this && blockstate.get(HALF) == DoubleBlockHalf.LOWER;
         boolean flag1 = blockstate2.getBlock() == this && blockstate2.get(HALF) == DoubleBlockHalf.LOWER;
         if ((!flag || flag1) && i <= 0) {

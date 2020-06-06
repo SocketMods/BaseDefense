@@ -2,6 +2,9 @@ package sciwhiz12.basedefense.container;
 
 import static sciwhiz12.basedefense.init.ModTextures.ATLAS_BLOCKS_TEXTURE;
 
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReference;
+
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftResultInventory;
@@ -16,8 +19,11 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import sciwhiz12.basedefense.LockingUtil;
+import sciwhiz12.basedefense.UnlockHelper;
+import sciwhiz12.basedefense.capabilities.CodedKey;
+import sciwhiz12.basedefense.capabilities.CodedLock;
 import sciwhiz12.basedefense.init.ModBlocks;
+import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.init.ModContainers;
 import sciwhiz12.basedefense.init.ModItems;
 import sciwhiz12.basedefense.init.ModTextures;
@@ -83,10 +89,6 @@ public class LocksmithContainer extends Container {
                 return false;
             }
 
-            public boolean canTakeStack(PlayerEntity player) {
-                return this.getHasStack();
-            }
-
             public ItemStack onTake(PlayerEntity player, ItemStack stack) {
                 LocksmithContainer.this.inputSlots.decrStackSize(0, 1);
                 return stack;
@@ -110,7 +112,7 @@ public class LocksmithContainer extends Container {
 
     public void onCraftMatrixChanged(IInventory inv) {
         super.onCraftMatrixChanged(inv);
-        if (inv == this.inputSlots) { this.updateOutputs(); }
+        if (inv == this.inputSlots || inv == this.outputSlot) { this.updateOutputs(); }
         if (inv == this.testingSlots) { this.updateTestingState(); }
     }
 
@@ -119,20 +121,29 @@ public class LocksmithContainer extends Container {
         if (blank.isEmpty()) {
             this.outputSlot.setInventorySlotContents(0, ItemStack.EMPTY);
         } else {
-            ItemStack out = new ItemStack(ModItems.LOCK_CORE, 1);
-            int keys = 0;
-            ItemStack lastKey = ItemStack.EMPTY;
+            ItemStack out = ItemStack.EMPTY;
+
+            final ArrayList<Long> keyCodes = new ArrayList<>();
+            AtomicReference<ItemStack> lastKeyRef = new AtomicReference<>(ItemStack.EMPTY);
             for (int i = 1; i < 7; i++) {
-                ItemStack key = this.inputSlots.getStackInSlot(i);
-                if (!key.isEmpty()) {
-                    LockingUtil.addUnlockID(out, LockingUtil.getKeyID(key));
-                    keys++;
-                    lastKey = key;
-                }
+                ItemStack keyStack = this.inputSlots.getStackInSlot(i);
+                keyStack.getCapability(ModCapabilities.KEY).ifPresent((key) -> {
+                    if (key instanceof CodedKey) {
+                        keyCodes.add(((CodedKey) key).getCode());
+                        lastKeyRef.set(keyStack);
+                    }
+                });
             }
-            if (keys == 0) { out = ItemStack.EMPTY; }
-            IColorable.copyColors(lastKey, out);
-            if (lastKey.hasDisplayName()) { out.setDisplayName(lastKey.getDisplayName()); }
+
+            if (!keyCodes.isEmpty()) {
+                out = new ItemStack(ModItems.LOCK_CORE, 1);
+                ItemStack lastKey = lastKeyRef.get();
+                out.getCapability(ModCapabilities.LOCK).ifPresent((lock) -> {
+                    if (lock instanceof CodedLock) { for (long code : keyCodes) { ((CodedLock) lock).addCode(code); } }
+                });
+                IColorable.copyColors(lastKey, out);
+                if (lastKey.hasDisplayName()) { out.setDisplayName(lastKey.getDisplayName()); }
+            }
             this.outputSlot.setInventorySlotContents(0, out);
         }
 
@@ -141,11 +152,10 @@ public class LocksmithContainer extends Container {
 
     private void updateTestingState() {
         int flag = 0;
-        ItemStack key = this.testingSlots.getStackInSlot(0);
-        ItemStack lock = this.testingSlots.getStackInSlot(1);
-        if (!key.isEmpty() && !lock.isEmpty()) {
-            System.out.println(LockingUtil.hasUnlockID(lock, key));
-            if (LockingUtil.hasUnlockID(lock, key)) flag = 1;
+        ItemStack keyStack = this.testingSlots.getStackInSlot(0);
+        ItemStack lockStack = this.testingSlots.getStackInSlot(1);
+        if (!keyStack.isEmpty() && !lockStack.isEmpty()) {
+            if (UnlockHelper.checkUnlock(keyStack, lockStack, IWorldPosCallable.DUMMY, null).isSuccess()) { flag = 1; }
         }
         this.testingState.set(flag);
         this.detectAndSendChanges();

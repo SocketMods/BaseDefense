@@ -45,11 +45,8 @@ public class KeyringContainer extends Container {
         if (playerIn instanceof ServerPlayerEntity) {
             for (int i = 0; i < playerInv.getSlots(); i++) {
                 if (playerInv.getStackInSlot(i) == stack) {
-                    NetworkHandler.CHANNEL.send(
-                        PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerIn), new UpdatePlayerInvSlotPacket(
-                            i, stack
-                        )
-                    );
+                    NetworkHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerIn),
+                        new UpdatePlayerInvSlotPacket(i, stack));
                     break;
                 }
             }

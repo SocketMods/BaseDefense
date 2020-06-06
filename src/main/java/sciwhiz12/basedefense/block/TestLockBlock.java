@@ -4,15 +4,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-import sciwhiz12.basedefense.api.lock.ILockable;
-import sciwhiz12.basedefense.item.lock.PadlockItem;
 
 public class TestLockBlock extends LockableBaseBlock {
     public TestLockBlock() {
@@ -28,15 +25,11 @@ public class TestLockBlock extends LockableBaseBlock {
         }
         return result;
     }
-
-    @Override
-    public boolean isValidLock(ItemStack stack) {
-        return stack.getItem() instanceof PadlockItem;
-    }
-
-    @Override
-    public boolean isUnlockAllowed(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos, ILockable block,
-            PlayerEntity player) {
-        return true;
-    }
+    
+    // @Override
+    // public boolean isUnlockAllowed(ItemStack lockStack, ItemStack keyStack, World
+    // worldIn, BlockPos pos, ILockable block,
+    // PlayerEntity player) {
+    // return true;
+    // }
 }

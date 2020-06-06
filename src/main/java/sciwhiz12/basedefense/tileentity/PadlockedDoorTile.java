@@ -6,9 +6,4 @@ public class PadlockedDoorTile extends LockableTile {
     public PadlockedDoorTile() {
         super(ModTileEntities.PADLOCKED_DOOR);
     }
-
-    @Override
-    public boolean hasFastRenderer() {
-        return true;
-    }
 }

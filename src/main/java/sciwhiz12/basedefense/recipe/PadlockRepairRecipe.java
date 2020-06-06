@@ -9,11 +9,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.SpecialRecipe;
+import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Tags;
-import sciwhiz12.basedefense.api.lock.IKey;
+import sciwhiz12.basedefense.UnlockHelper;
+import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.init.ModItems;
 import sciwhiz12.basedefense.init.ModRecipes;
 import sciwhiz12.basedefense.item.lock.BrokenPadlockItem;
@@ -39,15 +41,15 @@ public class PadlockRepairRecipe extends SpecialRecipe {
                     } else {
                         hasInvalid = true;
                     }
-                } else if (item instanceof IKey) {
-                    if (keySlot < 0) {
-                        keySlot = slot;
-                    } else {
-                        hasInvalid = true;
-                    }
                 } else if (Tags.Items.INGOTS_IRON.contains(item)) {
                     if (repairSlot < 0) {
                         repairSlot = slot;
+                    } else {
+                        hasInvalid = true;
+                    }
+                } else if (stack.getCapability(ModCapabilities.KEY).isPresent()) {
+                    if (keySlot < 0) {
+                        keySlot = slot;
                     } else {
                         hasInvalid = true;
                     }
@@ -58,7 +60,7 @@ public class PadlockRepairRecipe extends SpecialRecipe {
         if (!hasInvalid && padlockSlot >= 0 && keySlot >= 0 && repairSlot >= 0) {
             ItemStack lock = inv.getStackInSlot(padlockSlot);
             ItemStack key = inv.getStackInSlot(keySlot);
-            if (((IKey) key.getItem()).canUnlock(lock, key, null, null, null, null)) {
+            if (UnlockHelper.checkUnlock(key, lock, IWorldPosCallable.DUMMY, null).isSuccess()) {
                 return Optional.of(Triple.of(padlockSlot, keySlot, repairSlot));
             }
         }

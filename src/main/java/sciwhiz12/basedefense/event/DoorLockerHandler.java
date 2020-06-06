@@ -10,6 +10,7 @@ import net.minecraft.block.DoorBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.properties.DoorHingeSide;
 import net.minecraft.state.properties.DoubleBlockHalf;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -23,7 +24,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import sciwhiz12.basedefense.BaseDefense;
 import sciwhiz12.basedefense.block.PadlockedDoorBlock;
 import sciwhiz12.basedefense.block.PadlockedDoorBlock.DoorSide;
-import sciwhiz12.basedefense.tileentity.LockableTile;
+import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
 
 @EventBusSubscriber(bus = Bus.FORGE, modid = BaseDefense.MODID)
 public class DoorLockerHandler {
@@ -50,17 +51,16 @@ public class DoorLockerHandler {
                 final BlockState newState = defState.with(HALF, state.get(DoorBlock.HALF)).with(SIDE, side);
                 final BlockState newOffState = defState.with(HALF, offState.get(DoorBlock.HALF)).with(SIDE, side);
 
-                final LockableTile te = (LockableTile) block.createTileEntity(state, world);
                 final ItemStack copy = stack.copy();
                 copy.setCount(1);
                 stack.setCount(stack.getCount() - 1);
-                te.setLock(copy);
 
                 int flags = Constants.BlockFlags.BLOCK_UPDATE | Constants.BlockFlags.RERENDER_MAIN_THREAD
                         | Constants.BlockFlags.UPDATE_NEIGHBORS | Constants.BlockFlags.NO_NEIGHBOR_DROPS;
                 world.setBlockState(pos, newState, flags);
                 world.setBlockState(offPos, newOffState, flags);
-                world.setTileEntity(isLower ? pos : offPos, te);
+                TileEntity te = world.getTileEntity(isLower ? pos : offPos);
+                if (te != null && te instanceof PadlockedDoorTile) { ((PadlockedDoorTile) te).setLockStack(copy); }
             }
             event.setCanceled(true);
             event.setCancellationResult(ActionResultType.FAIL);

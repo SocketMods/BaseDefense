@@ -30,7 +30,7 @@ public class PadlockedDoorRenderer extends TileEntityRenderer<PadlockedDoorTile>
             int combinedLightIn, int combinedOverlayIn) {
         matrixStack.push();
         BlockState state = tileEntity.getBlockState();
-        ItemStack itemstack = tileEntity.getLock();
+        ItemStack itemstack = tileEntity.getLockStack();
         Direction dir = state.get(PadlockedDoorBlock.FACING);
         DoorHingeSide hinge = state.get(PadlockedDoorBlock.HINGE);
         double mult = (hinge == DoorHingeSide.RIGHT ? 1D : -1D) * (dir.getAxis() == Direction.Axis.Z ? 1D : -1D);
@@ -39,10 +39,8 @@ public class PadlockedDoorRenderer extends TileEntityRenderer<PadlockedDoorTile>
         matrixStack.translate(mult * 0.275D, 0D, 0D);
         if (state.get(PadlockedDoorBlock.SIDE) == DoorSide.INSIDE) { matrixStack.translate(0D, 0D, 0.205D); }
         matrixStack.scale(0.5F, 0.5F, 0.5F);
-        this.itemRenderer.renderItem(
-            null, itemstack, ItemCameraTransforms.TransformType.FIXED, false, matrixStack, buffer, tileEntity.getWorld(),
-            combinedLightIn, combinedOverlayIn
-        );
+        this.itemRenderer.renderItem(null, itemstack, ItemCameraTransforms.TransformType.FIXED, false, matrixStack, buffer,
+            tileEntity.getWorld(), combinedLightIn, combinedOverlayIn);
         matrixStack.pop();
     }
 }

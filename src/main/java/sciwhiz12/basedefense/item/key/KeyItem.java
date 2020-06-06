@@ -17,12 +17,14 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import sciwhiz12.basedefense.LockingUtil;
-import sciwhiz12.basedefense.api.lock.IKey;
-import sciwhiz12.basedefense.api.lock.ILockable;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import sciwhiz12.basedefense.Util;
+import sciwhiz12.basedefense.capabilities.CodedKey;
+import sciwhiz12.basedefense.capabilities.GenericCapabilityProvider;
+import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.item.IColorable;
 
-public class KeyItem extends Item implements IKey, IColorable {
+public class KeyItem extends Item implements IColorable {
     private static final IItemPropertyGetter COLOR_GETTER = (stack, world, livingEntity) -> {
         CompoundNBT tag = stack.getChildTag("display");
         if (tag != null && tag.contains("colors")) { return (float) tag.getIntArray("colors").length; }
@@ -36,40 +38,34 @@ public class KeyItem extends Item implements IKey, IColorable {
 
     @Override
     public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, PlayerEntity player) {
-        return world.isBlockLoaded(pos) && world.getBlockState(pos).getBlock() instanceof ILockable;
+        return world.isBlockLoaded(pos) && world.getTileEntity(pos) != null && world.getTileEntity(pos).getCapability(
+            ModCapabilities.LOCK).isPresent();
     }
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         if (!flagIn.isAdvanced()) return;
-        long id = LockingUtil.getKeyID(stack);
-        tooltip.add(
-            new TranslationTextComponent("tooltip.basedefense.keyid", String.format("%016X", id)).applyTextStyle(
-                TextFormatting.GRAY
-            )
-        );
+        long id = (long) Util.applyOrDefault(stack.getCapability(ModCapabilities.KEY), -1, (key) -> {
+            if (key instanceof CodedKey) { return ((CodedKey) key).getCode(); }
+            return -1;
+        });
+        if (id != -1) {
+            tooltip.add(new TranslationTextComponent("tooltip.basedefense.keyid", String.format("%016X", id)).applyTextStyle(
+                TextFormatting.GRAY));
+        }
         CompoundNBT tag = stack.getChildTag("display");
         if (tag != null && tag.contains("colors")) {
             int[] colors = tag.getIntArray("colors");
             for (int i = 0; i < colors.length; i++) {
-                tooltip.add(
-                    (new TranslationTextComponent("tooltip.basedefense.keycolor", i + 1, String.format("#%06X", colors[i])))
-                        .applyTextStyle(TextFormatting.GRAY)
-                );
+                tooltip.add((new TranslationTextComponent("tooltip.basedefense.keycolor", i + 1, String.format("#%06X",
+                    colors[i]))).applyTextStyle(TextFormatting.GRAY));
             }
         }
 
     }
 
     @Override
-    public boolean canUnlock(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos, ILockable block,
-            @Nullable PlayerEntity player) {
-        return LockingUtil.hasUnlockID(lockStack, keyStack);
-    }
-
-    @Override
-    public void onUnlock(ItemStack lockStack, ItemStack keyStack, World worldIn, BlockPos pos, ILockable block,
-            @Nullable PlayerEntity player) {
-        return;
+    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT nbt) {
+        return new GenericCapabilityProvider<>(ModCapabilities.KEY, CodedKey::new);
     }
 }

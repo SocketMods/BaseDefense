@@ -19,8 +19,7 @@ public interface IColorable {
         if (stack == null) { throw new IllegalArgumentException("stack cannot be null"); }
         CompoundNBT display = stack.getChildTag("display");
         return !stack.isEmpty() && stack.getItem() instanceof IColorable && display != null && display.getIntArray(
-            "colors"
-        ).length > 0;
+            "colors").length > 0;
     }
 
     default void setColor(ItemStack stack, int index, DyeColor color) {
@@ -64,12 +63,12 @@ public interface IColorable {
                 if (colors.length - index > 0) { return fromColorValue(colors[index]); }
             }
         }
-        return null;
+        return DyeColor.WHITE;
     }
 
     public static DyeColor fromColorValue(int value) {
         for (DyeColor color : DyeColor.values()) { if (color.getColorValue() == value) { return color; } }
-        return null;
+        return DyeColor.WHITE;
     }
 
     public static void copyColors(ItemStack from, ItemStack to) {
