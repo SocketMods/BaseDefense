@@ -28,7 +28,7 @@ public class CodedLock implements ILock {
 
     @Override
     public boolean canRemove(IKey key, IWorldPosCallable worldPos, PlayerEntity player) {
-        return this.canUnlock(key, worldPos, player);
+        return key.canUnlock(this, worldPos, player) && this.canUnlock(key, worldPos, player);
     }
 
     @Override

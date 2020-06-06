@@ -31,15 +31,14 @@ public class UnlockHelper {
         if (keyProv == null) { return UnlockResult.KEY_IS_NULL; }
         if (!lockProv.getCapability(ModCapabilities.LOCK).isPresent()) { return UnlockResult.LOCK_NO_CAP; }
         if (!keyProv.getCapability(ModCapabilities.KEY).isPresent()) { return UnlockResult.KEY_NO_CAP; }
-        final AtomicReference<UnlockResult> result = new AtomicReference<>(UnlockResult.SUCCESS);
+        final AtomicReference<UnlockResult> result = new AtomicReference<>(UnlockResult.FAIL_GENERAL);
         consumeIfPresent(keyProv, lockProv, (key, lock) -> {
             if (!key.canUnlock(lock, worldPos, player)) {
                 result.set(UnlockResult.FAIL_KEY);
-                return;
-            }
-            if (!lock.canUnlock(key, worldPos, player)) {
+            } else if (!lock.canUnlock(key, worldPos, player)) {
                 result.set(UnlockResult.FAIL_LOCK);
-                return;
+            } else {
+                result.set(UnlockResult.SUCCESS);
             }
         });
         return result.get();
@@ -52,10 +51,10 @@ public class UnlockHelper {
         if (keyProv == null) { return false; }
         if (!lockProv.getCapability(ModCapabilities.LOCK).isPresent()) { return false; }
         if (!keyProv.getCapability(ModCapabilities.KEY).isPresent()) { return false; }
-        final AtomicBoolean result = new AtomicBoolean(true);
+        final AtomicBoolean result = new AtomicBoolean(false);
         consumeIfPresent(keyProv, lockProv, (key, lock) -> {
-            if (!lock.canRemove(key, worldPos, player)) {
-                result.set(false);
+            if (lock.canRemove(key, worldPos, player)) {
+                result.set(true);
                 return;
             }
         });
@@ -63,7 +62,7 @@ public class UnlockHelper {
     }
 
     public static enum UnlockResult {
-        LOCK_IS_NULL, KEY_IS_NULL, LOCK_NO_CAP, KEY_NO_CAP, FAIL_KEY, FAIL_LOCK, SUCCESS;
+        LOCK_IS_NULL, KEY_IS_NULL, LOCK_NO_CAP, KEY_NO_CAP, FAIL_KEY, FAIL_LOCK, FAIL_GENERAL, SUCCESS;
 
         public boolean isSuccess() {
             return this == SUCCESS;
