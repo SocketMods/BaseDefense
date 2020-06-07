@@ -3,9 +3,7 @@ package sciwhiz12.basedefense.api.capablities;
 import javax.annotation.Nullable;
 
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.INBT;
 import net.minecraft.util.IWorldPosCallable;
-import net.minecraftforge.common.util.INBTSerializable;
 
 /**
  * Represents a key, which can unlock {@link ILock}s.
@@ -13,7 +11,7 @@ import net.minecraftforge.common.util.INBTSerializable;
  * @see ILock
  * @author SciWhiz12
  */
-public interface IKey extends INBTSerializable<INBT> {
+public interface IKey {
     /**
      * <p>
      * Returns {@code true} if this can unlock the given {@link ILock}.

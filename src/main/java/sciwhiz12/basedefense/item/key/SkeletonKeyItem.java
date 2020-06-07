@@ -8,7 +8,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
@@ -50,7 +49,7 @@ public class SkeletonKeyItem extends Item {
 
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT nbt) {
-        return new GenericCapabilityProvider<>(ModCapabilities.KEY, SkeletonKeyCapability::new);
+        return new GenericCapabilityProvider<>(SkeletonKeyCapability::new, ModCapabilities.KEY);
     }
 
     public static class SkeletonKeyCapability implements IKey {
@@ -61,13 +60,5 @@ public class SkeletonKeyItem extends Item {
 
         @Override
         public void onUnlock(ILock lock, IWorldPosCallable worldPos, PlayerEntity player) {}
-
-        @Override
-        public INBT serializeNBT() {
-            return new CompoundNBT();
-        }
-
-        @Override
-        public void deserializeNBT(INBT nbt) {}
     }
 }

@@ -29,7 +29,7 @@ public class BrokenPadlockItem extends Item implements IColorable {
     public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip,
             ITooltipFlag flagIn) {
         if (!flagIn.isAdvanced()) return;
-        Util.addLockInformation(stack, tooltip);
+        Util.addCodeInformation(stack, tooltip);
         Util.addColorInformation(stack, tooltip);
     }
 }

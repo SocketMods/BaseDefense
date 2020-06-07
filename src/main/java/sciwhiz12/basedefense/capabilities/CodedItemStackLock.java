@@ -6,12 +6,14 @@ import java.util.List;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraftforge.common.util.INBTSerializable;
+import sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import sciwhiz12.basedefense.api.capablities.IKey;
+import sciwhiz12.basedefense.api.capablities.ILock;
 import sciwhiz12.basedefense.init.ModCapabilities;
 
-public class CodedItemStackLock extends CodedLock {
+public class CodedItemStackLock implements ICodeHolder, ILock, INBTSerializable<CompoundNBT> {
     private ItemStack lockStack = ItemStack.EMPTY;
 
     public void setStack(ItemStack stack) {
@@ -44,34 +46,42 @@ public class CodedItemStackLock extends CodedLock {
         lockStack.getCapability(ModCapabilities.LOCK).ifPresent((lock) -> { lock.onUnlock(key, worldPos, player); });
     }
 
+    @Override
+    public boolean containsCode(Long code) {
+        return lockStack.getCapability(ModCapabilities.CODE_HOLDER).map((holder) -> holder.containsCode(code)).orElse(
+            false);
+    }
+
+    @Override
+    public void setCodes(List<Long> codes) {
+        if (codes == null) { throw new NullPointerException(); }
+        lockStack.getCapability(ModCapabilities.CODE_HOLDER).ifPresent((holder) -> holder.setCodes(codes));
+    }
+
+    @Override
     public List<Long> getCodes() {
-        return lockStack.getCapability(ModCapabilities.LOCK).filter((lock) -> lock instanceof CodedLock).map((
-                lock) -> ((CodedLock) lock).getCodes()).orElse(Collections.emptyList());
-    }
-
-    public boolean containsCode(long code) {
-        return lockStack.getCapability(ModCapabilities.LOCK).filter((lock) -> lock instanceof CodedLock).map((
-                lock) -> ((CodedLock) lock).containsCode(code)).orElse(false);
-    }
-
-    public void addCode(long code) {
-        lockStack.getCapability(ModCapabilities.LOCK).filter((lock) -> lock instanceof CodedLock).ifPresent((
-                lock) -> ((CodedLock) lock).addCode(code));
+        return lockStack.getCapability(ModCapabilities.CODE_HOLDER).map((holder) -> holder.getCodes()).orElse(Collections
+            .emptyList());
     }
 
     @Override
-    public void removeCode(long code) {
-        lockStack.getCapability(ModCapabilities.LOCK).filter((lock) -> lock instanceof CodedLock).ifPresent((
-                lock) -> ((CodedLock) lock).removeCode(code));
+    public void addCode(Long code) {
+        if (code == null) { throw new NullPointerException(); }
+        lockStack.getCapability(ModCapabilities.CODE_HOLDER).ifPresent((holder) -> holder.addCode(code));
     }
 
     @Override
-    public INBT serializeNBT() {
+    public void removeCode(Long code) {
+        lockStack.getCapability(ModCapabilities.CODE_HOLDER).ifPresent((holder) -> holder.removeCode(code));
+    }
+
+    @Override
+    public CompoundNBT serializeNBT() {
         return this.lockStack.write(new CompoundNBT());
     }
 
     @Override
-    public void deserializeNBT(INBT nbt) {
-        if (nbt instanceof CompoundNBT) { this.lockStack = ItemStack.read((CompoundNBT) nbt); }
+    public void deserializeNBT(CompoundNBT nbt) {
+        this.lockStack = ItemStack.read(nbt);
     }
 }

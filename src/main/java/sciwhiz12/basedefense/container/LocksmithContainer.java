@@ -2,9 +2,10 @@ package sciwhiz12.basedefense.container;
 
 import static sciwhiz12.basedefense.init.ModTextures.ATLAS_BLOCKS_TEXTURE;
 
-import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
+import it.unimi.dsi.fastutil.longs.LongArrayList;
+import it.unimi.dsi.fastutil.longs.LongList;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftResultInventory;
@@ -19,8 +20,6 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import sciwhiz12.basedefense.capabilities.CodedKey;
-import sciwhiz12.basedefense.capabilities.CodedLock;
 import sciwhiz12.basedefense.init.ModBlocks;
 import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.init.ModContainers;
@@ -123,12 +122,12 @@ public class LocksmithContainer extends Container {
         } else {
             ItemStack out = ItemStack.EMPTY;
 
-            final ArrayList<Long> keyCodes = new ArrayList<>();
+            final LongList keyCodes = new LongArrayList();
             AtomicReference<ItemStack> lastKeyRef = new AtomicReference<>(ItemStack.EMPTY);
             for (int i = 1; i < 7; i++) {
                 ItemStack keyStack = this.inputSlots.getStackInSlot(i);
-                keyStack.getCapability(ModCapabilities.KEY).filter((key) -> key instanceof CodedKey).ifPresent((key) -> {
-                    keyCodes.add(((CodedKey) key).getCode());
+                keyStack.getCapability(ModCapabilities.CODE_HOLDER).ifPresent((holder) -> {
+                    keyCodes.addAll(holder.getCodes());
                     lastKeyRef.set(keyStack);
                 });
             }
@@ -136,8 +135,8 @@ public class LocksmithContainer extends Container {
             if (!keyCodes.isEmpty()) {
                 out = new ItemStack(ModItems.LOCK_CORE, 1);
                 ItemStack lastKey = lastKeyRef.get();
-                out.getCapability(ModCapabilities.LOCK).filter((lock) -> lock instanceof CodedLock).ifPresent((lock) -> {
-                    for (long code : keyCodes) { ((CodedLock) lock).addCode(code); }
+                out.getCapability(ModCapabilities.CODE_HOLDER).ifPresent((holder) -> {
+                    for (long code : keyCodes) { holder.addCode(code); }
                 });
                 IColorable.copyColors(lastKey, out);
                 if (lastKey.hasDisplayName()) { out.setDisplayName(lastKey.getDisplayName()); }

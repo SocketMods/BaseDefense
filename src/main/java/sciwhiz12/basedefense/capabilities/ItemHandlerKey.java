@@ -2,8 +2,6 @@ package sciwhiz12.basedefense.capabilities;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
@@ -45,12 +43,4 @@ public class ItemHandlerKey implements IKey {
             }
         });
     }
-
-    @Override
-    public INBT serializeNBT() {
-        return new CompoundNBT();
-    }
-
-    @Override
-    public void deserializeNBT(INBT nbt) {}
 }

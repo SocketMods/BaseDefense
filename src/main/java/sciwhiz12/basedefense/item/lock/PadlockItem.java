@@ -33,7 +33,7 @@ import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.block.PadlockedDoorBlock;
 import sciwhiz12.basedefense.block.PadlockedDoorBlock.DoorSide;
 import sciwhiz12.basedefense.capabilities.CodedLock;
-import sciwhiz12.basedefense.capabilities.GenericCapabilityProvider;
+import sciwhiz12.basedefense.capabilities.SerializableCapabilityProvider;
 import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.item.IColorable;
 import sciwhiz12.basedefense.tileentity.LockableTile;
@@ -55,13 +55,13 @@ public class PadlockItem extends Item implements IColorable {
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         if (!flagIn.isAdvanced()) { return; }
-        Util.addLockInformation(stack, tooltip);
+        Util.addCodeInformation(stack, tooltip);
         Util.addColorInformation(stack, tooltip);
     }
 
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT nbt) {
-        return new GenericCapabilityProvider<>(ModCapabilities.LOCK, () -> new CodedLock() {
+        return new SerializableCapabilityProvider<>(() -> new CodedLock() {
             @Override
             public void onRemove(IKey key, IWorldPosCallable worldPos, PlayerEntity player) {
                 worldPos.consume((world, pos) -> {
@@ -73,7 +73,17 @@ public class PadlockItem extends Item implements IColorable {
                     }
                 });
             }
-        });
+        }, ModCapabilities.CONTAINS_CODE, ModCapabilities.CODE_HOLDER, ModCapabilities.LOCK);
+    }
+
+    @Override
+    public CompoundNBT getShareTag(ItemStack stack) {
+        return Util.getItemShareTag(stack, ModCapabilities.CODE_HOLDER);
+    }
+
+    @Override
+    public void readShareTag(ItemStack stack, CompoundNBT nbt) {
+        Util.readItemShareTag(stack, nbt, ModCapabilities.CODE_HOLDER);
     }
 
     @Override

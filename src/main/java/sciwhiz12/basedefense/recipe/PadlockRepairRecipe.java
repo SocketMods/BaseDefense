@@ -17,8 +17,10 @@ import net.minecraftforge.common.Tags;
 import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.init.ModItems;
 import sciwhiz12.basedefense.init.ModRecipes;
+import sciwhiz12.basedefense.item.IColorable;
 import sciwhiz12.basedefense.item.lock.BrokenPadlockItem;
 import sciwhiz12.basedefense.util.UnlockHelper;
+import sciwhiz12.basedefense.util.Util;
 
 public class PadlockRepairRecipe extends SpecialRecipe {
     public PadlockRepairRecipe(ResourceLocation idIn) {
@@ -78,7 +80,9 @@ public class PadlockRepairRecipe extends SpecialRecipe {
         if (opSlots.isPresent()) {
             ItemStack padlock = inv.getStackInSlot(opSlots.get().getLeft());
             ItemStack output = new ItemStack(ModItems.PADLOCK, 1);
-            output.setTag(padlock.getTag());
+            IColorable.copyColors(padlock, output);
+            Util.copyCodes(padlock, output);
+            if (padlock.hasDisplayName()) { output.setDisplayName(padlock.getDisplayName()); }
             return output;
         }
         return ItemStack.EMPTY;

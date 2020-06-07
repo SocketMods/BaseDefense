@@ -29,6 +29,7 @@ import sciwhiz12.basedefense.client.render.KeyringRenderer;
 import sciwhiz12.basedefense.container.KeyringContainer.Provider;
 import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.init.ModItems;
+import sciwhiz12.basedefense.util.Util;
 
 public class KeyringItem extends Item {
     public KeyringItem() {
@@ -70,30 +71,19 @@ public class KeyringItem extends Item {
     }
 
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT nbt) {
-        return new KeyringProvider();
-    }
-
-    @Override
     public CompoundNBT getShareTag(ItemStack stack) {
-        CompoundNBT nbt = new CompoundNBT();
-        if (stack.hasTag()) { nbt.put("Tag", stack.getTag()); }
-        stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((handler) -> {
-            nbt.put("ItemHandlerCap", CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.writeNBT(handler, null));
-        });
-        return nbt;
+        return Util.getItemShareTag(stack, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
     }
 
     @Override
 
     public void readShareTag(ItemStack stack, CompoundNBT nbt) {
-        if (nbt == null) return;
-        if (nbt.contains("Tag")) { stack.setTag(nbt.getCompound("Tag")); }
-        if (nbt.contains("ItemHandlerCap")) {
-            stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((handler) -> {
-                CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(handler, null, nbt.get("ItemHandlerCap"));
-            });
-        }
+        Util.readItemShareTag(stack, nbt, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+    }
+
+    @Override
+    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT nbt) {
+        return new KeyringProvider();
     }
 
     public static class KeyringProvider implements ICapabilitySerializable<CompoundNBT> {

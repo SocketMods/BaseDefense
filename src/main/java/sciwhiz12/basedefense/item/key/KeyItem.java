@@ -11,13 +11,11 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import sciwhiz12.basedefense.capabilities.CodedKey;
-import sciwhiz12.basedefense.capabilities.GenericCapabilityProvider;
+import sciwhiz12.basedefense.capabilities.SerializableCapabilityProvider;
 import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.item.IColorable;
 import sciwhiz12.basedefense.util.Util;
@@ -43,17 +41,23 @@ public class KeyItem extends Item implements IColorable {
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         if (!flagIn.isAdvanced()) return;
-        long id = stack.getCapability(ModCapabilities.KEY).filter((key) -> key instanceof CodedKey).map((
-                key) -> ((CodedKey) key).getCode()).orElse(-1L);
-        if (id != -1) {
-            tooltip.add(new TranslationTextComponent("tooltip.basedefense.keyid", String.format("%016X", id)).applyTextStyle(
-                TextFormatting.GRAY));
-        }
+        Util.addCodeInformation(stack, tooltip);
         Util.addColorInformation(stack, tooltip);
     }
 
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT nbt) {
-        return new GenericCapabilityProvider<>(ModCapabilities.KEY, CodedKey::new);
+        return new SerializableCapabilityProvider<>(CodedKey::new, ModCapabilities.KEY, ModCapabilities.CONTAINS_CODE,
+            ModCapabilities.CODE_HOLDER);
+    }
+
+    @Override
+    public CompoundNBT getShareTag(ItemStack stack) {
+        return Util.getItemShareTag(stack, ModCapabilities.CODE_HOLDER);
+    }
+
+    @Override
+    public void readShareTag(ItemStack stack, CompoundNBT nbt) {
+        Util.readItemShareTag(stack, nbt, ModCapabilities.CODE_HOLDER);
     }
 }

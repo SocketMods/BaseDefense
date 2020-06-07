@@ -1,31 +1,22 @@
 package sciwhiz12.basedefense.capabilities;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.apache.commons.lang3.ArrayUtils;
-
-import com.google.common.primitives.Longs;
-
+import it.unimi.dsi.fastutil.longs.LongArrayList;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.LongArrayNBT;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraftforge.common.util.INBTSerializable;
 import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.api.capablities.ILock;
 
 /**
- * A blank implementation of {@link ILock}.
+ * An implementation of {@link ILock} that extends {@link CodeHolder}.
  * <p>
  * Used as the default implementation of the {@code ILock} capability. Can be
  * used as a base class.
  * 
  * @author SciWhiz12
  */
-public class CodedLock implements ILock {
-    protected List<Long> codes = new ArrayList<>();
-
+public class CodedLock extends CodeHolder implements ILock, INBTSerializable<LongArrayNBT> {
     @Override
     public boolean canRemove(IKey key, IWorldPosCallable worldPos, PlayerEntity player) {
         return key.canUnlock(this, worldPos, player) && this.canUnlock(key, worldPos, player);
@@ -42,32 +33,13 @@ public class CodedLock implements ILock {
     @Override
     public void onUnlock(IKey key, IWorldPosCallable worldPos, PlayerEntity player) {}
 
-    public List<Long> getCodes() {
-        return Collections.unmodifiableList(this.codes);
-    }
-
-    public boolean containsCode(long code) {
-        return this.codes.contains(code);
-    }
-
-    public void addCode(long code) {
-        this.codes.add(code);
-    }
-
-    public void removeCode(long code) {
-        this.codes.remove((Long) code);
+    @Override
+    public LongArrayNBT serializeNBT() {
+        return new LongArrayNBT(storedCodes.toLongArray());
     }
 
     @Override
-    public INBT serializeNBT() {
-        return new LongArrayNBT(ArrayUtils.toPrimitive(codes.toArray(new Long[0]), -1));
-    }
-
-    @Override
-    public void deserializeNBT(INBT nbt) {
-        if (nbt instanceof LongArrayNBT) {
-            this.codes.clear();
-            this.codes.addAll(Longs.asList(((LongArrayNBT) nbt).getAsLongArray()));
-        }
+    public void deserializeNBT(LongArrayNBT nbt) {
+        this.storedCodes = new LongArrayList(((LongArrayNBT) nbt).getAsLongArray());
     }
 }

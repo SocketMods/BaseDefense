@@ -6,6 +6,7 @@ import java.util.Random;
 
 import org.apache.commons.lang3.StringUtils;
 
+import it.unimi.dsi.fastutil.longs.LongLists;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftResultInventory;
@@ -19,7 +20,6 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import sciwhiz12.basedefense.capabilities.CodedKey;
 import sciwhiz12.basedefense.init.ModBlocks;
 import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.init.ModContainers;
@@ -87,17 +87,14 @@ public class KeysmithContainer extends Container {
     public void onContentsChange() {
         ItemStack blank = this.inputSlots.getStackInSlot(0);
         ItemStack dupl = this.inputSlots.getStackInSlot(1);
-        ItemStack out = ItemStack.EMPTY;
+        ItemStack out = blank.isEmpty() ? ItemStack.EMPTY : new ItemStack(ModItems.KEY, 1);
         if (blank.isEmpty()) {
             this.customName = null;
         } else {
-            out = new ItemStack(ModItems.KEY, 1);
-            long code = dupl.getCapability(ModCapabilities.KEY).filter((duplKey) -> duplKey instanceof CodedKey).map((
-                    duplKey) -> ((CodedKey) duplKey).getCode()).orElseGet(RANDOM::nextLong);
+            out.getCapability(ModCapabilities.CODE_HOLDER).ifPresent((outCode) -> outCode.setCodes(dupl.getCapability(
+                ModCapabilities.CODE_HOLDER).filter((holder) -> holder.getCodes().size() > 0).map((holder) -> holder
+                    .getCodes()).orElseGet(() -> LongLists.singleton(RANDOM.nextLong()))));
             IColorable.copyColors(dupl, out);
-            out.getCapability(ModCapabilities.KEY).filter((key) -> key instanceof CodedKey).ifPresent((key) -> {
-                ((CodedKey) key).setCode(code);
-            });
             if (!StringUtils.isBlank(this.customName)) {
                 out.setDisplayName(new StringTextComponent(this.customName));
             } else if (out.hasDisplayName()) { out.clearCustomName(); }

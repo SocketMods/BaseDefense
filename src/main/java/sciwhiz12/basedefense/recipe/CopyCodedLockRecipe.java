@@ -12,16 +12,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistryEntry;
-import sciwhiz12.basedefense.capabilities.CodedLock;
 import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.init.ModRecipes;
+import sciwhiz12.basedefense.item.IColorable;
+import sciwhiz12.basedefense.util.Util;
 
 public class CopyCodedLockRecipe extends ShapedRecipe {
     public CopyCodedLockRecipe(ResourceLocation idIn, String groupIn, int recipeWidthIn, int recipeHeightIn,
@@ -39,19 +39,9 @@ public class CopyCodedLockRecipe extends ShapedRecipe {
             for (int col = 0; col < inv.getWidth(); col++) {
                 ItemStack stack = inv.getStackInSlot(row + col * inv.getWidth());
                 if (!stack.isEmpty() && stack.getCapability(ModCapabilities.LOCK).isPresent()) {
-                    output.getCapability(ModCapabilities.LOCK).ifPresent((outLock) -> {
-                        if (outLock instanceof CodedLock) {
-                            stack.getCapability(ModCapabilities.LOCK).ifPresent((stackLock) -> {
-                                if (stackLock instanceof CodedLock) {
-                                    for (long code : ((CodedLock) stackLock).getCodes()) {
-                                        ((CodedLock) outLock).addCode(code);
-                                    }
-                                }
-                            });
-                        }
-                    });
-                    CompoundNBT display = null;
-                    if ((display = stack.getChildTag("display")) != null) { output.setTagInfo("display", display.copy()); }
+                    IColorable.copyColors(stack, output);
+                    Util.copyCodes(stack, output);
+                    if (stack.hasDisplayName()) { output.setDisplayName(stack.getDisplayName()); }
                     break;
                 }
             }
