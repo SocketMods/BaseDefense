@@ -2,6 +2,7 @@ package sciwhiz12.basedefense.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
@@ -19,9 +20,9 @@ import sciwhiz12.basedefense.container.LocksmithContainer;
 
 public class LocksmithBlock extends Block {
     public LocksmithBlock() {
-        super(Block.Properties.create(Material.WOOD));
+        super(Block.Properties.create(Material.IRON).hardnessAndResistance(3.5F).sound(SoundType.METAL));
     }
-    
+
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity playerEntity,
             Hand hand, BlockRayTraceResult result) {
