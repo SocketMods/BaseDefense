@@ -79,6 +79,10 @@ public class LockedDoorBlock extends Block {
             BlockRayTraceResult rayTrace) {
         if (worldIn.isBlockPresent(pos) && state.getBlock() == this) { // verify that block is loaded
 
+            BlockPos otherPos = state.get(HALF) == DoubleBlockHalf.LOWER ? pos.up() : pos.down();
+            if (!worldIn.isBlockPresent(otherPos) || worldIn.getBlockState(otherPos).getBlock() != this) {
+                return ActionResultType.FAIL;
+            }
             LockedDoorTile te = (LockedDoorTile) worldIn.getTileEntity(state.get(HALF) == DoubleBlockHalf.LOWER ? pos
                     : pos.down());
             if (te == null) { return ActionResultType.FAIL; }
@@ -120,9 +124,10 @@ public class LockedDoorBlock extends Block {
                 if (player.isSneaking()) { // UNLOCKED, SNEAKING
                     if (!te.getLockStack().isEmpty()) {
                         // UNLOCKED, SNEAKING, HAS LOCK => set to locked and unopened state
+                        boolean wasOpen = state.get(OPEN);
                         setAndNotify(state.with(LOCKED, true).with(OPEN, false), pos, worldIn);
                         playSound(player, worldIn, pos, ModSounds.LOCKED_DOOR_RELOCK);
-                        this.playDoorSound(player, worldIn, pos, false);
+                        if (wasOpen) { this.playDoorSound(player, worldIn, pos, false); }
                     } else { // UNLOCKED, SNEAKING, NO LOCK
                         if (!heldStack.isEmpty() && heldStack.getCapability(ModCapabilities.LOCK).isPresent()) {
                             // UNLOCKED, SNEAKING, NO LOCK, HOLDING LOCK => set held lock to current lock,
@@ -295,7 +300,7 @@ public class LockedDoorBlock extends Block {
         DoubleBlockHalf half = state.get(HALF);
         BlockPos otherPos = (half == DoubleBlockHalf.LOWER) ? pos.up() : pos.down();
         BlockState otherState = worldIn.getBlockState(otherPos);
-        if (otherState.get(HALF) != half) {
+        if (otherState.getBlock() == this && otherState.get(HALF) != half) {
             ItemStack heldItem = player.getHeldItemMainhand();
             if (!worldIn.isRemote && !player.isCreative() && player.canHarvestBlock(otherState)) {
                 BlockPos tePos = (half == DoubleBlockHalf.LOWER) ? pos : otherPos;
