@@ -7,6 +7,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Direction;
@@ -86,18 +87,19 @@ public class KeyringItem extends Item {
         return new KeyringProvider();
     }
 
-    public static class KeyringProvider implements ICapabilitySerializable<CompoundNBT> {
-        private LazyOptional<IItemHandler> item = LazyOptional.of(this::createItemHandler);
+    public static class KeyringProvider implements ICapabilitySerializable<INBT> {
+        private IItemHandler item = KeyringProvider.createItemHandler();
+        private LazyOptional<IItemHandler> itemCap = LazyOptional.of(() -> item);
         private LazyOptional<ItemHandlerKey> key = LazyOptional.of(() -> new ItemHandlerKey(item));
 
         @Override
         public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-            if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) { return item.cast(); }
+            if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) { return itemCap.cast(); }
             if (cap == ModCapabilities.KEY) { return key.cast(); }
             return LazyOptional.empty();
         }
 
-        private ItemStackHandler createItemHandler() {
+        public static ItemStackHandler createItemHandler() {
             return new ItemStackHandler(9) {
                 @Override
                 public boolean isItemValid(int slot, ItemStack stack) {
@@ -107,18 +109,13 @@ public class KeyringItem extends Item {
         }
 
         @Override
-        public CompoundNBT serializeNBT() {
-            final CompoundNBT nbt = new CompoundNBT();
-            item.ifPresent((handler) -> {
-                nbt.put("Items", CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.writeNBT(handler, null));
-            });
-            return nbt;
+        public INBT serializeNBT() {
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.writeNBT(item, null);
         }
 
         @Override
-        public void deserializeNBT(CompoundNBT nbt) {
-            item.ifPresent((handler) -> CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(handler, null, nbt.get(
-                "Items")));
+        public void deserializeNBT(INBT nbt) {
+            CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(item, null, nbt);
         }
     }
 }

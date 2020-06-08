@@ -16,7 +16,5 @@ public class NetworkHandler {
         BaseDefense.LOG.debug("Registering packets");
         CHANNEL.registerMessage(ID++, TextFieldChangePacket.class, TextFieldChangePacket::encode,
             TextFieldChangePacket::decode, TextFieldChangePacket::process);
-        CHANNEL.registerMessage(ID++, UpdatePlayerInvSlotPacket.class, UpdatePlayerInvSlotPacket::encode,
-            UpdatePlayerInvSlotPacket::decode, UpdatePlayerInvSlotPacket::process);
     }
 }

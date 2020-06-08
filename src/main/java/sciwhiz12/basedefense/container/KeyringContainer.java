@@ -7,24 +7,20 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import sciwhiz12.basedefense.init.ModContainers;
 import sciwhiz12.basedefense.item.key.KeyringItem;
-import sciwhiz12.basedefense.net.NetworkHandler;
-import sciwhiz12.basedefense.net.UpdatePlayerInvSlotPacket;
+import sciwhiz12.basedefense.item.key.KeyringItem.KeyringProvider;
 
 public class KeyringContainer extends Container {
-    private final InvWrapper playerInv;
-    private final PlayerEntity player;
+    private final PlayerInventory playerInv;
     private final IItemHandlerModifiable itemHandler;
-    private final ItemStack stack;
 
     public KeyringContainer(int id, PlayerInventory inv) {
         this(id, inv, ItemStack.EMPTY);
@@ -32,43 +28,27 @@ public class KeyringContainer extends Container {
 
     public KeyringContainer(int id, PlayerInventory inv, ItemStack stack) {
         super(ModContainers.KEYRING, id);
-        this.playerInv = new InvWrapper(inv);
-        this.player = inv.player;
-        itemHandler = (IItemHandlerModifiable) stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(
-            new ItemStackHandler(9));
-        this.stack = stack;
+        this.playerInv = inv;
+        itemHandler = (IItemHandlerModifiable) stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseGet(
+            KeyringProvider::createItemHandler);
 
         for (int i = 0; i < 9; i++) {
             addSlot(new SlotItemHandler(itemHandler, i, 8 + i * 18, 18) {
                 @Override
                 public void onSlotChanged() {
-                    if (KeyringContainer.this.player instanceof ServerPlayerEntity) {
-                        for (int i = 0; i < playerInv.getSlots(); i++) {
-                            if (playerInv.getStackInSlot(i) == stack) {
-                                NetworkHandler.CHANNEL.send(PacketDistributor.PLAYER.with(
-                                    () -> (ServerPlayerEntity) KeyringContainer.this.player), new UpdatePlayerInvSlotPacket(
-                                        i, stack));
-                                break;
-                            }
-                        }
+                    super.onSlotChanged();
+                    if (KeyringContainer.this.playerInv.player instanceof ServerPlayerEntity) {
+                        ((ServerPlayerEntity) KeyringContainer.this.playerInv.player).connection.sendPacket(
+                            new SSetSlotPacket(-2, KeyringContainer.this.playerInv.currentItem, stack));
                     }
                 }
             });
         }
 
-        layoutPlayerInventorySlots(8, 48);
+        layoutPlayerInventorySlots(new InvWrapper(playerInv), 8, 48);
     }
 
     public void onContainerClosed(PlayerEntity playerIn) {
-        if (playerIn instanceof ServerPlayerEntity) {
-            for (int i = 0; i < playerInv.getSlots(); i++) {
-                if (playerInv.getStackInSlot(i) == stack) {
-                    NetworkHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerIn),
-                        new UpdatePlayerInvSlotPacket(i, stack));
-                    break;
-                }
-            }
-        }
         super.onContainerClosed(playerIn);
     }
 
@@ -116,7 +96,7 @@ public class KeyringContainer extends Container {
         return index;
     }
 
-    private void layoutPlayerInventorySlots(int leftCol, int topRow) {
+    private void layoutPlayerInventorySlots(IItemHandler playerInv, int leftCol, int topRow) {
         addSlotBox(playerInv, 9, leftCol, topRow, 9, 18, 3, 18);
         topRow += 58;
         addSlotRange(playerInv, 0, leftCol, topRow, 9, 18);
