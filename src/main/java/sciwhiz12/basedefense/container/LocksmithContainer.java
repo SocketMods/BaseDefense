@@ -17,15 +17,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.IntReferenceHolder;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
 import sciwhiz12.basedefense.init.ModBlocks;
 import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.init.ModContainers;
 import sciwhiz12.basedefense.init.ModItems;
 import sciwhiz12.basedefense.init.ModTextures;
 import sciwhiz12.basedefense.item.IColorable;
+import sciwhiz12.basedefense.util.ContainerHelper;
 import sciwhiz12.basedefense.util.UnlockHelper;
 
 public class LocksmithContainer extends Container {
@@ -47,7 +45,6 @@ public class LocksmithContainer extends Container {
             LocksmithContainer.this.onCraftMatrixChanged(this);
         }
     };
-    private final InvWrapper playerInv;
     private final IWorldPosCallable worldPos;
     public final IntReferenceHolder testingState = IntReferenceHolder.single();
 
@@ -57,7 +54,6 @@ public class LocksmithContainer extends Container {
 
     public LocksmithContainer(int windowId, PlayerInventory playerInv, IWorldPosCallable worldPos) {
         super(ModContainers.LOCKSMITH_TABLE, windowId);
-        this.playerInv = new InvWrapper(playerInv);
         this.worldPos = worldPos;
         this.trackInt(this.testingState);
         this.testingState.set(0);
@@ -106,7 +102,7 @@ public class LocksmithContainer extends Container {
             }
         });
 
-        layoutPlayerInventorySlots(8, 84);
+        ContainerHelper.layoutPlayerInventorySlots(this::addSlot, playerInv, 8, 84);
     }
 
     public void onCraftMatrixChanged(IInventory inv) {
@@ -161,29 +157,6 @@ public class LocksmithContainer extends Container {
     @Override
     public boolean canInteractWith(PlayerEntity player) {
         return isWithinUsableDistance(worldPos, player, ModBlocks.LOCKSMITH_TABLE);
-    }
-
-    private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {
-        for (int i = 0; i < amount; i++) {
-            addSlot(new SlotItemHandler(handler, index, x, y));
-            x += dx;
-            index++;
-        }
-        return index;
-    }
-
-    private int addSlotBox(IItemHandler handler, int index, int x, int y, int horAmount, int dx, int verAmount, int dy) {
-        for (int j = 0; j < verAmount; j++) {
-            index = addSlotRange(handler, index, x, y, horAmount, dx);
-            y += dy;
-        }
-        return index;
-    }
-
-    private void layoutPlayerInventorySlots(int leftCol, int topRow) {
-        addSlotBox(playerInv, 9, leftCol, topRow, 9, 18, 3, 18);
-        topRow += 58;
-        addSlotRange(playerInv, 0, leftCol, topRow, 9, 18);
     }
 
     public void onContainerClosed(PlayerEntity playerIn) {

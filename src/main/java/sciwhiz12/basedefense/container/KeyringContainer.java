@@ -10,13 +10,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.SlotItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
 import sciwhiz12.basedefense.init.ModContainers;
 import sciwhiz12.basedefense.item.key.KeyringItem;
 import sciwhiz12.basedefense.item.key.KeyringItem.KeyringProvider;
+import sciwhiz12.basedefense.util.ContainerHelper;
 
 public class KeyringContainer extends Container {
     private final PlayerInventory playerInv;
@@ -45,11 +44,7 @@ public class KeyringContainer extends Container {
             });
         }
 
-        layoutPlayerInventorySlots(new InvWrapper(playerInv), 8, 48);
-    }
-
-    public void onContainerClosed(PlayerEntity playerIn) {
-        super.onContainerClosed(playerIn);
+        ContainerHelper.layoutPlayerInventorySlots(this::addSlot, playerInv, 8, 48);
     }
 
     @Override
@@ -77,29 +72,6 @@ public class KeyringContainer extends Container {
         }
 
         return ItemStack.EMPTY;
-    }
-
-    private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {
-        for (int i = 0; i < amount; i++) {
-            addSlot(new SlotItemHandler(handler, index, x, y));
-            x += dx;
-            index++;
-        }
-        return index;
-    }
-
-    private int addSlotBox(IItemHandler handler, int index, int x, int y, int horAmount, int dx, int verAmount, int dy) {
-        for (int j = 0; j < verAmount; j++) {
-            index = addSlotRange(handler, index, x, y, horAmount, dx);
-            y += dy;
-        }
-        return index;
-    }
-
-    private void layoutPlayerInventorySlots(IItemHandler playerInv, int leftCol, int topRow) {
-        addSlotBox(playerInv, 9, leftCol, topRow, 9, 18, 3, 18);
-        topRow += 58;
-        addSlotRange(playerInv, 0, leftCol, topRow, 9, 18);
     }
 
     public static class Provider implements INamedContainerProvider {

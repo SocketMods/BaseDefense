@@ -17,15 +17,13 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
 import sciwhiz12.basedefense.init.ModBlocks;
 import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.init.ModContainers;
 import sciwhiz12.basedefense.init.ModItems;
 import sciwhiz12.basedefense.init.ModTextures;
 import sciwhiz12.basedefense.item.IColorable;
+import sciwhiz12.basedefense.util.ContainerHelper;
 
 public class KeysmithContainer extends Container {
     private static final Random RANDOM = new Random();
@@ -43,7 +41,6 @@ public class KeysmithContainer extends Container {
             KeysmithContainer.this.onContentsChange();
         }
     };
-    private final InvWrapper playerInv;
     private final IWorldPosCallable worldPos;
     private String customName = null;
 
@@ -53,7 +50,6 @@ public class KeysmithContainer extends Container {
 
     public KeysmithContainer(int windowId, PlayerInventory playerInv, IWorldPosCallable worldPos) {
         super(ModContainers.KEYSMITH_TABLE, windowId);
-        this.playerInv = new InvWrapper(playerInv);
         this.worldPos = worldPos;
 
         this.addSlot(new Slot(this.inputSlots, 0, 14, 24) {
@@ -81,7 +77,7 @@ public class KeysmithContainer extends Container {
                 return stack;
             }
         }.setBackground(ATLAS_BLOCKS_TEXTURE, ModTextures.SLOT_KEY));
-        layoutPlayerInventorySlots(8, 84);
+        ContainerHelper.layoutPlayerInventorySlots(this::addSlot, playerInv, 8, 84);
     }
 
     public void onContentsChange() {
@@ -115,29 +111,6 @@ public class KeysmithContainer extends Container {
     @Override
     public boolean canInteractWith(PlayerEntity player) {
         return isWithinUsableDistance(worldPos, player, ModBlocks.KEYSMITH_TABLE);
-    }
-
-    private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {
-        for (int i = 0; i < amount; i++) {
-            addSlot(new SlotItemHandler(handler, index, x, y));
-            x += dx;
-            index++;
-        }
-        return index;
-    }
-
-    private int addSlotBox(IItemHandler handler, int index, int x, int y, int horAmount, int dx, int verAmount, int dy) {
-        for (int j = 0; j < verAmount; j++) {
-            index = addSlotRange(handler, index, x, y, horAmount, dx);
-            y += dy;
-        }
-        return index;
-    }
-
-    private void layoutPlayerInventorySlots(int leftCol, int topRow) {
-        addSlotBox(playerInv, 9, leftCol, topRow, 9, 18, 3, 18);
-        topRow += 58;
-        addSlotRange(playerInv, 0, leftCol, topRow, 9, 18);
     }
 
     public void onContainerClosed(PlayerEntity playerIn) {
