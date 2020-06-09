@@ -56,11 +56,9 @@ public class KeyringContainer extends Container {
         Slot slot = this.inventorySlots.get(index);
         if (slot != null && slot.getHasStack()) {
             ItemStack slotStack = slot.getStack();
-            if (index == 7) {
-                if (!this.mergeItemStack(slotStack, 10, 46, true)) { return ItemStack.EMPTY; }
-            } else if (index > 6) {
-                if (index >= 10 && index < 46 && !this.mergeItemStack(slotStack, 0, 7, false)) { return ItemStack.EMPTY; }
-            } else if (!this.mergeItemStack(slotStack, 10, 46, false)) { return ItemStack.EMPTY; }
+            if (index > 8) {
+                if (index >= 9 && index < 45 && !this.mergeItemStack(slotStack, 0, 9, false)) { return ItemStack.EMPTY; }
+            } else if (!this.mergeItemStack(slotStack, 9, 46, false)) { return ItemStack.EMPTY; }
 
             if (slotStack.isEmpty()) {
                 slot.putStack(ItemStack.EMPTY);

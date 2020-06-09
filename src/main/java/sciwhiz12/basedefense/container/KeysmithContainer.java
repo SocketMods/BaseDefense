@@ -123,10 +123,10 @@ public class KeysmithContainer extends Container {
         if (slot != null && slot.getHasStack()) {
             ItemStack slotStack = slot.getStack();
             if (index == 2) {
-                if (!this.mergeItemStack(slotStack, 3, 39, true)) { return ItemStack.EMPTY; }
+                if (!this.mergeItemStack(slotStack, 3, 40, true)) { return ItemStack.EMPTY; }
             } else if (index != 0 && index != 1) {
-                if (index >= 3 && index < 39 && !this.mergeItemStack(slotStack, 0, 1, false)) { return ItemStack.EMPTY; }
-            } else if (!this.mergeItemStack(slotStack, 3, 39, false)) { return ItemStack.EMPTY; }
+                if (index >= 3 && index < 39 && !this.mergeItemStack(slotStack, 0, 2, false)) { return ItemStack.EMPTY; }
+            } else if (!this.mergeItemStack(slotStack, 3, 40, false)) { return ItemStack.EMPTY; }
 
             if (slotStack.isEmpty()) {
                 slot.putStack(ItemStack.EMPTY);

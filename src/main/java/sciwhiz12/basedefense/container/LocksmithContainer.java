@@ -174,8 +174,8 @@ public class LocksmithContainer extends Container {
             if (index == 7) {
                 if (!this.mergeItemStack(slotStack, 10, 46, true)) { return ItemStack.EMPTY; }
             } else if (index > 6) {
-                if (index >= 10 && index < 46 && !this.mergeItemStack(slotStack, 0, 7, false)) { return ItemStack.EMPTY; }
-            } else if (!this.mergeItemStack(slotStack, 10, 46, false)) { return ItemStack.EMPTY; }
+                if (index >= 10 && index < 47 && !this.mergeItemStack(slotStack, 0, 8, false)) { return ItemStack.EMPTY; }
+            } else if (!this.mergeItemStack(slotStack, 10, 47, false)) { return ItemStack.EMPTY; }
 
             if (slotStack.isEmpty()) {
                 slot.putStack(ItemStack.EMPTY);
