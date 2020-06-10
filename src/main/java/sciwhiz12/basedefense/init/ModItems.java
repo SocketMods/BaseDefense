@@ -44,7 +44,7 @@ public class ModItems {
     public static final Item LOCKED_ACACIA_DOOR = Null();
     public static final Item LOCKED_DARK_OAK_DOOR = Null();
 
-    public static final ItemGroup GROUP = new ItemGroup(BaseDefense.MODID) {
+    public static ItemGroup GROUP = new ItemGroup(BaseDefense.MODID) {
         @Override
         public ItemStack createIcon() {
             return new ItemStack(ModItems.LOCK_CORE);
