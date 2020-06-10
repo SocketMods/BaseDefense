@@ -1,5 +1,7 @@
 package sciwhiz12.basedefense.init;
 
+import static sciwhiz12.basedefense.util.Util.Null;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.renderer.RenderType;
@@ -21,25 +23,25 @@ import sciwhiz12.basedefense.block.TestLockBlock;
 @EventBusSubscriber(bus = Bus.MOD, modid = BaseDefense.MODID)
 public class ModBlocks {
 
-    public static final Block TEST_LOCK_BLOCK = null;
-    public static final Block KEYSMITH_TABLE = null;
-    public static final Block LOCKSMITH_TABLE = null;
+    public static final Block TEST_LOCK_BLOCK = Null();
+    public static final Block KEYSMITH_TABLE = Null();
+    public static final Block LOCKSMITH_TABLE = Null();
 
-    public static final Block PADLOCKED_IRON_DOOR = null;
-    public static final Block PADLOCKED_OAK_DOOR = null;
-    public static final Block PADLOCKED_BIRCH_DOOR = null;
-    public static final Block PADLOCKED_SPRUCE_DOOR = null;
-    public static final Block PADLOCKED_JUNGLE_DOOR = null;
-    public static final Block PADLOCKED_ACACIA_DOOR = null;
-    public static final Block PADLOCKED_DARK_OAK_DOOR = null;
+    public static final Block PADLOCKED_IRON_DOOR = Null();
+    public static final Block PADLOCKED_OAK_DOOR = Null();
+    public static final Block PADLOCKED_BIRCH_DOOR = Null();
+    public static final Block PADLOCKED_SPRUCE_DOOR = Null();
+    public static final Block PADLOCKED_JUNGLE_DOOR = Null();
+    public static final Block PADLOCKED_ACACIA_DOOR = Null();
+    public static final Block PADLOCKED_DARK_OAK_DOOR = Null();
 
-    public static final Block LOCKED_IRON_DOOR = null;
-    public static final Block LOCKED_OAK_DOOR = null;
-    public static final Block LOCKED_BIRCH_DOOR = null;
-    public static final Block LOCKED_SPRUCE_DOOR = null;
-    public static final Block LOCKED_JUNGLE_DOOR = null;
-    public static final Block LOCKED_ACACIA_DOOR = null;
-    public static final Block LOCKED_DARK_OAK_DOOR = null;
+    public static final Block LOCKED_IRON_DOOR = Null();
+    public static final Block LOCKED_OAK_DOOR = Null();
+    public static final Block LOCKED_BIRCH_DOOR = Null();
+    public static final Block LOCKED_SPRUCE_DOOR = Null();
+    public static final Block LOCKED_JUNGLE_DOOR = Null();
+    public static final Block LOCKED_ACACIA_DOOR = Null();
+    public static final Block LOCKED_DARK_OAK_DOOR = Null();
 
     @SubscribeEvent
     static void onRegister(RegistryEvent.Register<Block> event) {

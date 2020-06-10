@@ -38,18 +38,17 @@ public class CodedItemStackLock implements ICodeHolder, ILock, INBTSerializable<
 
     @Override
     public void onRemove(IKey key, IWorldPosCallable worldPos, PlayerEntity player) {
-        lockStack.getCapability(ModCapabilities.LOCK).ifPresent((lock) -> { lock.onRemove(key, worldPos, player); });
+        lockStack.getCapability(ModCapabilities.LOCK).ifPresent((lock) -> lock.onRemove(key, worldPos, player));
     }
 
     @Override
     public void onUnlock(IKey key, IWorldPosCallable worldPos, PlayerEntity player) {
-        lockStack.getCapability(ModCapabilities.LOCK).ifPresent((lock) -> { lock.onUnlock(key, worldPos, player); });
+        lockStack.getCapability(ModCapabilities.LOCK).ifPresent((lock) -> lock.onUnlock(key, worldPos, player));
     }
 
     @Override
     public boolean containsCode(Long code) {
-        return lockStack.getCapability(ModCapabilities.CODE_HOLDER).map((holder) -> holder.containsCode(code)).orElse(
-            false);
+        return lockStack.getCapability(ModCapabilities.CODE_HOLDER).map((holder) -> holder.containsCode(code)).orElse(false);
     }
 
     @Override
@@ -60,7 +59,7 @@ public class CodedItemStackLock implements ICodeHolder, ILock, INBTSerializable<
 
     @Override
     public List<Long> getCodes() {
-        return lockStack.getCapability(ModCapabilities.CODE_HOLDER).map((holder) -> holder.getCodes()).orElse(Collections
+        return lockStack.getCapability(ModCapabilities.CODE_HOLDER).map(ICodeHolder::getCodes).orElse(Collections
             .emptyList());
     }
 

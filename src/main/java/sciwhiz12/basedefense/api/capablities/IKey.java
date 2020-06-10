@@ -30,7 +30,7 @@ public interface IKey {
      * @return {@code true} if the given {@link ILock} is unlockable, otherwise
      *         {@code false}
      */
-    public boolean canUnlock(ILock lock, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player);
+    boolean canUnlock(ILock lock, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player);
 
     /**
      * <p>
@@ -43,5 +43,5 @@ public interface IKey {
      * @param player   The player peforming the unlock, or {@code null} if not
      *                     applicable
      */
-    public void onUnlock(ILock lock, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player);
+    void onUnlock(ILock lock, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player);
 }

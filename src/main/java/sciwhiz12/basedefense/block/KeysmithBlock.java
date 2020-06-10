@@ -32,9 +32,9 @@ public class KeysmithBlock extends Block {
 
     @Override
     public INamedContainerProvider getContainer(BlockState state, World world, BlockPos pos) {
-        return new SimpleNamedContainerProvider((windowId, playerInventory, playerEntity) -> {
-            return new KeysmithContainer(windowId, playerInventory, IWorldPosCallable.of(world, pos));
-        }, new TranslationTextComponent("container.basedefense.keysmith"));
+        return new SimpleNamedContainerProvider((windowId, playerInventory, playerEntity) -> new KeysmithContainer(windowId,
+            playerInventory, IWorldPosCallable.of(world, pos)), new TranslationTextComponent(
+                "container.basedefense.keysmith"));
     }
 
     @Override

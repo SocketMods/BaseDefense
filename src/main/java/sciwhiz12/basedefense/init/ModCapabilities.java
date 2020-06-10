@@ -1,5 +1,7 @@
 package sciwhiz12.basedefense.init;
 
+import static sciwhiz12.basedefense.util.Util.Null;
+
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
@@ -23,13 +25,13 @@ import sciwhiz12.basedefense.capabilities.CodedLock;
 public class ModCapabilities {
 
     @CapabilityInject(ILock.class)
-    public static final Capability<ILock> LOCK = null;
+    public static final Capability<ILock> LOCK = Null();
     @CapabilityInject(IKey.class)
-    public static final Capability<IKey> KEY = null;
+    public static final Capability<IKey> KEY = Null();
     @CapabilityInject(IContainsCode.class)
-    public static final Capability<IContainsCode> CONTAINS_CODE = null;
+    public static final Capability<IContainsCode> CONTAINS_CODE = Null();
     @CapabilityInject(ICodeHolder.class)
-    public static final Capability<ICodeHolder> CODE_HOLDER = null;
+    public static final Capability<ICodeHolder> CODE_HOLDER = Null();
 
     @SubscribeEvent
     static void onCommonSetup(FMLCommonSetupEvent event) {

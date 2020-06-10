@@ -63,7 +63,7 @@ public class CodedKey implements ICodeHolder, IKey, INBTSerializable<LongNBT> {
     @Override
     public void addCode(Long code) {
         if (code == null) { throw new NullPointerException(); }
-        this.storedCode = code.longValue();
+        this.storedCode = code;
     }
 
     @Override
@@ -74,7 +74,7 @@ public class CodedKey implements ICodeHolder, IKey, INBTSerializable<LongNBT> {
 
     @Override
     public LongNBT serializeNBT() {
-        return this.storedCode != null ? LongNBT.valueOf(this.storedCode.longValue()) : null;
+        return this.storedCode != null ? LongNBT.valueOf(this.storedCode) : null;
     }
 
     @Override

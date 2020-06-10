@@ -9,7 +9,7 @@ import net.minecraftforge.fml.network.NetworkEvent.Context;
 import sciwhiz12.basedefense.container.KeysmithContainer;
 
 public class TextFieldChangePacket {
-    public String text;
+    public final String text;
 
     public TextFieldChangePacket(String text) {
         this.text = text != null ? text : "";

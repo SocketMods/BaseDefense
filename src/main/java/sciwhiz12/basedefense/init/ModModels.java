@@ -19,7 +19,7 @@ import sciwhiz12.basedefense.client.model.LockedDoorModel;
 
 @EventBusSubscriber(value = Dist.CLIENT, bus = Bus.MOD, modid = BaseDefense.MODID)
 public class ModModels {
-    
+
     @SubscribeEvent
     static void onModelBake(ModelBakeEvent event) {
         Block[] doorBlocks = { ModBlocks.LOCKED_IRON_DOOR, ModBlocks.LOCKED_OAK_DOOR, ModBlocks.LOCKED_BIRCH_DOOR,

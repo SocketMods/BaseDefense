@@ -23,7 +23,7 @@ public class ModColors {
     };
 
     public static final IBlockColor LOCKED_DOOR_COLOR = (state, world, pos, tintIndex) -> {
-        if (state.getBlock() instanceof LockedDoorBlock) {
+        if (state.getBlock() instanceof LockedDoorBlock && pos != null) {
             LockedDoorTile tile = (LockedDoorTile) world.getTileEntity(pos);
             if (tile != null && tile.hasColors()) {
                 int[] colors = tile.getColors();

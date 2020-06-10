@@ -92,15 +92,14 @@ public class PadlockedDoorBlock extends Block {
         if (worldIn.isBlockLoaded(pos) && state.getBlock() == this) {
             ItemStack keyStack = player.getHeldItem(handIn);
             TileEntity te = worldIn.getTileEntity(pos);
-            if (te != null && te instanceof PadlockedDoorTile) {
+            if (te instanceof PadlockedDoorTile) {
                 PadlockedDoorTile doorTile = (PadlockedDoorTile) te;
                 if (keyStack.getCapability(ModCapabilities.KEY).isPresent()) {
                     if (allowOpen(state.get(SIDE), state.get(FACING), rayTrace.getFace())) {
                         IWorldPosCallable worldPos = Util.getOrDummy(worldIn, pos);
                         if (UnlockHelper.checkRemove(keyStack, doorTile, worldPos, player)) {
-                            UnlockHelper.consumeIfPresent(keyStack, doorTile, (key, lock) -> {
-                                lock.onRemove(key, worldPos, player);
-                            });
+                            UnlockHelper.consumeIfPresent(keyStack, doorTile, (key, lock) -> lock.onRemove(key, worldPos,
+                                player));
                             replaceDoor(worldIn, pos);
                         }
                         player.swingArm(handIn);
@@ -236,12 +235,12 @@ public class PadlockedDoorBlock extends Block {
         builder.add(HALF, FACING, SIDE, HINGE);
     }
 
-    public static enum DoorSide implements IStringSerializable {
+    public enum DoorSide implements IStringSerializable {
         INSIDE("inside"), OUTSIDE("outside");
 
         private final String name;
 
-        private DoorSide(String name) {
+        DoorSide(String name) {
             this.name = name;
         }
 

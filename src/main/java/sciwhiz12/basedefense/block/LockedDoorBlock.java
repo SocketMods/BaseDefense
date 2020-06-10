@@ -217,7 +217,7 @@ public class LockedDoorBlock extends Block {
         boolean locked = false;
         if (stack.hasTag() && stack.getChildTag("LockItem") != null) {
             TileEntity te = worldIn.getTileEntity(pos);
-            if (te != null && te instanceof LockedDoorTile) {
+            if (te instanceof LockedDoorTile) {
                 ((LockedDoorTile) te).setLockStack(ItemStack.read(stack.getChildTag("LockItem")));
                 locked = true;
                 worldIn.setBlockState(pos, state.with(LOCKED, locked), DEFAULT_AND_RERENDER);
@@ -316,12 +316,10 @@ public class LockedDoorBlock extends Block {
     @Override
     public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
         switch (type) {
+            case AIR:
             case LAND:
                 return state.get(OPEN);
             case WATER:
-                return false;
-            case AIR:
-                return state.get(OPEN);
             default:
                 return false;
         }

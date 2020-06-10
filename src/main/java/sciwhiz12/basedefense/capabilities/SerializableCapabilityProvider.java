@@ -9,7 +9,8 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
 
-public class SerializableCapabilityProvider<C extends INBTSerializable<N>, N extends INBT> implements ICapabilitySerializable<N> {
+public class SerializableCapabilityProvider<C extends INBTSerializable<N>, N extends INBT> implements
+        ICapabilitySerializable<N> {
     private final Capability<?>[] capObjs;
     private final LazyOptional<? extends C> capInst;
 

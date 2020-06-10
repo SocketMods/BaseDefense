@@ -41,9 +41,7 @@ public class ColoringRecipe extends SpecialRecipe {
                 if (colors.size() > 3) { return false; }
             }
         }
-        if (colors.size() <= 0) { return false; }
-        if (colorItem.isEmpty()) { return false; }
-        return true;
+        return colors.size() > 0 && !colorItem.isEmpty();
     }
 
     @Override

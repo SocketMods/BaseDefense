@@ -1,5 +1,7 @@
 package sciwhiz12.basedefense.init;
 
+import static sciwhiz12.basedefense.util.Util.Null;
+
 import java.util.function.Supplier;
 
 import net.minecraft.block.Block;
@@ -21,9 +23,9 @@ import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
 @EventBusSubscriber(bus = Bus.MOD, modid = BaseDefense.MODID)
 public class ModTileEntities {
 
-    public static final TileEntityType<LockableTile> LOCKABLE_TILE = null;
-    public static final TileEntityType<PadlockedDoorTile> PADLOCKED_DOOR = null;
-    public static final TileEntityType<LockedDoorTile> LOCKED_DOOR = null;
+    public static final TileEntityType<LockableTile> LOCKABLE_TILE = Null();
+    public static final TileEntityType<PadlockedDoorTile> PADLOCKED_DOOR = Null();
+    public static final TileEntityType<LockedDoorTile> LOCKED_DOOR = Null();
 
     @SubscribeEvent
     static void onRegister(RegistryEvent.Register<TileEntityType<?>> event) {

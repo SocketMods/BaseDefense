@@ -88,9 +88,9 @@ public class KeyringItem extends Item {
     }
 
     public static class KeyringProvider implements ICapabilitySerializable<INBT> {
-        private IItemHandler item = KeyringProvider.createItemHandler();
-        private LazyOptional<IItemHandler> itemCap = LazyOptional.of(() -> item);
-        private LazyOptional<ItemHandlerKey> key = LazyOptional.of(() -> new ItemHandlerKey(item));
+        private final IItemHandler item = KeyringProvider.createItemHandler();
+        private final LazyOptional<IItemHandler> itemCap = LazyOptional.of(() -> item);
+        private final LazyOptional<ItemHandlerKey> key = LazyOptional.of(() -> new ItemHandlerKey(item));
 
         @Override
         public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {

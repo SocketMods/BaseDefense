@@ -32,7 +32,7 @@ public interface ILock {
      * @return {@code true} if the given {@link IKey} could unlock this, otherwise
      *         {@code false}
      */
-    public boolean canUnlock(IKey key, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player);
+    boolean canUnlock(IKey key, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player);
 
     /**
      * <p>
@@ -53,7 +53,7 @@ public interface ILock {
      * @return {@code true} if the given {@link IKey} could remove this, otherwise
      *         {@code false}
      */
-    public boolean canRemove(IKey key, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player);
+    boolean canRemove(IKey key, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player);
 
     /**
      * <p>
@@ -66,7 +66,7 @@ public interface ILock {
      * @param player   The player peforming the unlock, or {@code null} if not
      *                     applicable
      */
-    public void onUnlock(IKey key, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player);
+    void onUnlock(IKey key, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player);
 
     /**
      * <p>
@@ -79,6 +79,6 @@ public interface ILock {
      * @param player   The player peforming the removal, or {@code null} if not
      *                     applicable
      */
-    public void onRemove(IKey key, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player);
+    void onRemove(IKey key, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player);
 
 }

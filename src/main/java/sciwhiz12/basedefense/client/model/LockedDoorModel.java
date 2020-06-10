@@ -31,7 +31,7 @@ public class LockedDoorModel implements IBakedModel {
         for (BakedQuad quad : this.getQuads(state, side, rand)) {
             if (quad.hasTintIndex()) {
                 Integer colors = data.getData(LockedDoorTile.COLOR_PROPERTY);
-                if (colors != null && colors.intValue() - 1 >= quad.getTintIndex()) { list.add(quad); }
+                if (colors != null && colors - 1 >= quad.getTintIndex()) { list.add(quad); }
             } else {
                 list.add(quad);
             }

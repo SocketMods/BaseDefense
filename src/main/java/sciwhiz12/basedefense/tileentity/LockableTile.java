@@ -17,8 +17,8 @@ import sciwhiz12.basedefense.init.ModTileEntities;
 public class LockableTile extends TileEntity {
     public static final String TAG_LOCK = "Lock";
 
-    private LazyOptional<CodedItemStackLock> lockCap = LazyOptional.of(() -> this.lock);
-    private CodedItemStackLock lock = new CodedItemStackLock();
+    private final LazyOptional<CodedItemStackLock> lockCap = LazyOptional.of(() -> this.lock);
+    private final CodedItemStackLock lock = new CodedItemStackLock();
 
     public LockableTile() {
         super(ModTileEntities.LOCKABLE_TILE);

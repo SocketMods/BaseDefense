@@ -1,5 +1,7 @@
 package sciwhiz12.basedefense.init;
 
+import static sciwhiz12.basedefense.util.Util.Null;
+
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -16,9 +18,9 @@ import sciwhiz12.basedefense.container.LocksmithContainer;
 @EventBusSubscriber(bus = Bus.MOD, modid = BaseDefense.MODID)
 public class ModContainers {
 
-    public static final ContainerType<KeysmithContainer> KEYSMITH_TABLE = null;
-    public static final ContainerType<LocksmithContainer> LOCKSMITH_TABLE = null;
-    public static final ContainerType<KeyringContainer> KEYRING = null;
+    public static final ContainerType<KeysmithContainer> KEYSMITH_TABLE = Null();
+    public static final ContainerType<LocksmithContainer> LOCKSMITH_TABLE = Null();
+    public static final ContainerType<KeyringContainer> KEYRING = Null();
 
     @SubscribeEvent
     static void onRegister(RegistryEvent.Register<ContainerType<?>> event) {

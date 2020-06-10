@@ -9,10 +9,10 @@ import sciwhiz12.basedefense.api.capablities.ILock;
 import sciwhiz12.basedefense.init.ModCapabilities;
 
 public class ItemHandlerKey implements IKey {
-    private IItemHandler itemHandler;
+    private final IItemHandler itemHandler;
 
-    public ItemHandlerKey(IItemHandler hander) {
-        this.itemHandler = hander;
+    public ItemHandlerKey(IItemHandler handler) {
+        this.itemHandler = handler;
     }
 
     @Override

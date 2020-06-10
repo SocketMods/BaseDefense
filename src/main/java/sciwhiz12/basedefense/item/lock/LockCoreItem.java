@@ -47,8 +47,8 @@ public class LockCoreItem extends Item implements IColorable {
 
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT nbt) {
-        return new SerializableCapabilityProvider<>(CodedLock::new, ModCapabilities.CONTAINS_CODE, ModCapabilities.CODE_HOLDER,
-            ModCapabilities.LOCK);
+        return new SerializableCapabilityProvider<>(CodedLock::new, ModCapabilities.CONTAINS_CODE,
+            ModCapabilities.CODE_HOLDER, ModCapabilities.LOCK);
     }
 
     @Override

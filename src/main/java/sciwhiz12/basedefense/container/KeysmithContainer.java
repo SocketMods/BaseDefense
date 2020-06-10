@@ -17,6 +17,7 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.text.StringTextComponent;
+import sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import sciwhiz12.basedefense.init.ModBlocks;
 import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.init.ModContainers;
@@ -88,8 +89,8 @@ public class KeysmithContainer extends Container {
             this.customName = null;
         } else {
             out.getCapability(ModCapabilities.CODE_HOLDER).ifPresent((outCode) -> outCode.setCodes(dupl.getCapability(
-                ModCapabilities.CODE_HOLDER).filter((holder) -> holder.getCodes().size() > 0).map((holder) -> holder
-                    .getCodes()).orElseGet(() -> LongLists.singleton(RANDOM.nextLong()))));
+                ModCapabilities.CODE_HOLDER).filter((holder) -> holder.getCodes().size() > 0).map(ICodeHolder::getCodes)
+                .orElseGet(() -> LongLists.singleton(RANDOM.nextLong()))));
             IColorable.copyColors(dupl, out);
             if (!StringUtils.isBlank(this.customName)) {
                 out.setDisplayName(new StringTextComponent(this.customName));
@@ -115,7 +116,7 @@ public class KeysmithContainer extends Container {
 
     public void onContainerClosed(PlayerEntity playerIn) {
         super.onContainerClosed(playerIn);
-        this.worldPos.consume((world, pos) -> { this.clearContainer(playerIn, world, this.inputSlots); });
+        this.worldPos.consume((world, pos) -> this.clearContainer(playerIn, world, this.inputSlots));
     }
 
     public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {

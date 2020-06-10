@@ -1,5 +1,7 @@
 package sciwhiz12.basedefense.init;
 
+import static sciwhiz12.basedefense.util.Util.Null;
+
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.SpecialRecipeSerializer;
 import net.minecraftforge.event.RegistryEvent;
@@ -18,10 +20,10 @@ import sciwhiz12.basedefense.recipe.PadlockRepairRecipe;
 @EventBusSubscriber(bus = Bus.MOD, modid = BaseDefense.MODID)
 public class ModRecipes {
 
-    public static final IRecipeSerializer<CopyCodedLockRecipe> COPY_LOCK = null;
-    public static final IRecipeSerializer<LockedDoorRecipe> LOCKED_DOOR = null;
-    public static final IRecipeSerializer<PadlockRepairRecipe> PADLOCK_REPAIR = null;
-    public static final IRecipeSerializer<ColoringRecipe> COLORING = null;
+    public static final IRecipeSerializer<CopyCodedLockRecipe> COPY_LOCK = Null();
+    public static final IRecipeSerializer<LockedDoorRecipe> LOCKED_DOOR = Null();
+    public static final IRecipeSerializer<PadlockRepairRecipe> PADLOCK_REPAIR = Null();
+    public static final IRecipeSerializer<ColoringRecipe> COLORING = Null();
 
     @SubscribeEvent
     static void onRegister(RegistryEvent.Register<IRecipeSerializer<?>> event) {

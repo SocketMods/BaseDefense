@@ -40,6 +40,6 @@ public class CodedLock extends CodeHolder implements ILock, INBTSerializable<Lon
 
     @Override
     public void deserializeNBT(LongArrayNBT nbt) {
-        this.storedCodes = new LongArrayList(((LongArrayNBT) nbt).getAsLongArray());
+        this.storedCodes = new LongArrayList(nbt.getAsLongArray());
     }
 }

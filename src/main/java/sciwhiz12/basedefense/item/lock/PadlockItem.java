@@ -66,7 +66,7 @@ public class PadlockItem extends Item implements IColorable {
             public void onRemove(IKey key, IWorldPosCallable worldPos, PlayerEntity player) {
                 worldPos.consume((world, pos) -> {
                     TileEntity te = world.getTileEntity(pos);
-                    if (te != null && te instanceof LockableTile) {
+                    if (te instanceof LockableTile) {
                         LockableTile lockTile = (LockableTile) te;
                         ItemHandlerHelper.giveItemToPlayer(player, lockTile.getLockStack());
                         lockTile.setLockStack(ItemStack.EMPTY);
@@ -116,7 +116,7 @@ public class PadlockItem extends Item implements IColorable {
                 world.setBlockState(pos, newState, flags);
                 world.setBlockState(offPos, newOffState, flags);
                 TileEntity te = world.getTileEntity(isLower ? pos : offPos);
-                if (te != null && te instanceof PadlockedDoorTile) { ((PadlockedDoorTile) te).setLockStack(copy); }
+                if (te instanceof PadlockedDoorTile) { ((PadlockedDoorTile) te).setLockStack(copy); }
             }
             return ActionResultType.SUCCESS;
         }

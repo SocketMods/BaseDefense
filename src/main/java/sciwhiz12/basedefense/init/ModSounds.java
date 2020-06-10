@@ -1,5 +1,7 @@
 package sciwhiz12.basedefense.init;
 
+import static sciwhiz12.basedefense.util.Util.Null;
+
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
@@ -14,9 +16,9 @@ import sciwhiz12.basedefense.BaseDefense;
 @EventBusSubscriber(bus = Bus.MOD, modid = BaseDefense.MODID)
 public class ModSounds {
 
-    public static final SoundEvent LOCKED_DOOR_ATTEMPT = null;
-    public static final SoundEvent LOCKED_DOOR_RELOCK = null;
-    public static final SoundEvent LOCKED_DOOR_UNLOCK = null;
+    public static final SoundEvent LOCKED_DOOR_ATTEMPT = Null();
+    public static final SoundEvent LOCKED_DOOR_RELOCK = Null();
+    public static final SoundEvent LOCKED_DOOR_UNLOCK = Null();
 
     @SubscribeEvent
     static void onRegister(RegistryEvent.Register<SoundEvent> event) {

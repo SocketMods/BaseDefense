@@ -33,7 +33,7 @@ public interface IColorable {
         Preconditions.checkNotNull(colors);
         if (!stack.isEmpty() && stack.getItem() instanceof IColorable) {
             CompoundNBT display = stack.getOrCreateChildTag("display");
-            if (display != null) { display.putIntArray("colors", colors); }
+            display.putIntArray("colors", colors);
         }
     }
 
@@ -59,12 +59,12 @@ public interface IColorable {
         return DyeColor.WHITE;
     }
 
-    public static DyeColor fromColorValue(int value) {
+    static DyeColor fromColorValue(int value) {
         for (DyeColor color : DyeColor.values()) { if (color.getColorValue() == value) { return color; } }
         return DyeColor.WHITE;
     }
 
-    public static void copyColors(ItemStack from, ItemStack to) {
+    static void copyColors(ItemStack from, ItemStack to) {
         Preconditions.checkNotNull(from);
         Preconditions.checkNotNull(to);
         if (from.isEmpty() || to.isEmpty()) { return; }

@@ -16,8 +16,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 public class KeyringRenderer extends ItemStackTileEntityRenderer {
-    private static double[][] transforms = { { 0.6D, 1.5D, 0.001D }, { -0.0185D, 0.75, 0D }, { 1.645D, 1.45D, 0.002D } };
-    private static int[] rotations = { 135, 90, 180 };
+    private static final double[][] transforms = { { 0.6D, 1.5D, 0.001D }, { -0.0185D, 0.75, 0D }, { 1.645D, 1.45D,
+            0.002D } };
+    private static final int[] rotations = { 135, 90, 180 };
 
     public void render(ItemStack stack, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight,
             int combinedOverlay) {
@@ -46,7 +47,7 @@ public class KeyringRenderer extends ItemStackTileEntityRenderer {
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         IBakedModel model = itemRenderer.getItemModelWithOverrides(stack, null, null);
         IVertexBuilder builder = ItemRenderer.getBuffer(buffer, RenderTypeLookup.getRenderType(stack), true, stack
-            .hasEffect());;
+            .hasEffect());
         itemRenderer.renderQuads(matrix, builder, model.getQuads(null, null, new Random(42L)), stack, combinedLight,
             combinedOverlay);
         matrix.pop();

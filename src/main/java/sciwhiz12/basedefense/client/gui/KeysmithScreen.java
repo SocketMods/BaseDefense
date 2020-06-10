@@ -69,8 +69,8 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
     public boolean keyPressed(int key, int scanCode, int modifiers) {
         if (key == GLFW.GLFW_KEY_ESCAPE) { this.minecraft.player.closeScreen(); }
 
-        return !this.nameField.keyPressed(key, scanCode, modifiers) && !this.nameField.canWrite() ? super.keyPressed(key,
-            scanCode, modifiers) : true;
+        return this.nameField.keyPressed(key, scanCode, modifiers) || this.nameField.canWrite() || super.keyPressed(key,
+            scanCode, modifiers);
     }
 
     @Override
@@ -125,7 +125,7 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
                 isEnabledText = true;
                 nameField.setText(I18n.format(ModItems.KEY.getTranslationKey()));
             }
-            this.minecraft.deferTask(() -> { this.nameField.setEnabled(isEnabledText); });
+            this.minecraft.deferTask(() -> this.nameField.setEnabled(isEnabledText));
         } else if (slotInd == 1) {
             if (!stack.isEmpty() && isEnabledText) { nameField.setText(stack.getDisplayName().getString()); }
         }

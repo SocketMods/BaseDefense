@@ -11,7 +11,7 @@ public interface ICodeHolder extends IContainsCode {
     /**
      * @return A unmodifiable copy of the {@link List} of codes
      */
-    public List<Long> getCodes();
+    List<Long> getCodes();
 
     /**
      * Sets the codes of this object to the given list. <br>
@@ -21,7 +21,7 @@ public interface ICodeHolder extends IContainsCode {
      * @param codes A {@code List} of {@code Long} codes
      * @throws NullPointerException if the given {@code List} is null
      */
-    public void setCodes(List<Long> codes);
+    void setCodes(List<Long> codes);
 
     /**
      * Adds the given code to this object's list. <br>
@@ -30,7 +30,7 @@ public interface ICodeHolder extends IContainsCode {
      * @param code A code
      * @throws NullPointerException if the given code is {@code null}
      */
-    public void addCode(Long code);
+    void addCode(Long code);
 
     /**
      * Removes the givem code to this object's list. <br>
@@ -38,5 +38,5 @@ public interface ICodeHolder extends IContainsCode {
      * 
      * @param code A code
      */
-    public void removeCode(Long code);
+    void removeCode(Long code);
 }

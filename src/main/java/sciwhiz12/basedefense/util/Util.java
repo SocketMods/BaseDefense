@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.item.ItemStack;
@@ -24,6 +25,11 @@ import sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import sciwhiz12.basedefense.init.ModCapabilities;
 
 public final class Util {
+    @Nonnull
+    public static <T> T Null() {
+        return null;
+    }
+
     public static IWorldPosCallable getOrDummy(@Nullable World world, @Nullable BlockPos pos) {
         if (world != null && pos != null) { return IWorldPosCallable.of(world, pos); }
         return IWorldPosCallable.DUMMY;
@@ -35,7 +41,7 @@ public final class Util {
     }
 
     public static <F, S> void consumeIfPresent(LazyOptional<F> first, LazyOptional<S> second, BiConsumer<F, S> consumer) {
-        first.ifPresent((fi) -> { second.ifPresent((se) -> consumer.accept(fi, se)); });
+        first.ifPresent((fi) -> second.ifPresent((se) -> consumer.accept(fi, se)));
     }
 
     public static void copyCodes(ItemStack fromStack, ItemStack toStack) {
@@ -44,8 +50,8 @@ public final class Util {
     }
 
     public static void addCodeInformation(ItemStack stack, List<ITextComponent> tooltip) {
-        List<Long> ids = stack.getCapability(ModCapabilities.CODE_HOLDER).filter((lock) -> lock instanceof ICodeHolder)
-            .map((lock) -> ((ICodeHolder) lock).getCodes()).orElse(Collections.emptyList());
+        List<Long> ids = stack.getCapability(ModCapabilities.CODE_HOLDER).filter((lock) -> lock instanceof ICodeHolder).map(
+            ICodeHolder::getCodes).orElse(Collections.emptyList());
         if (ids != null && ids.size() != 0) {
             tooltip.add(new TranslationTextComponent("tooltip.basedefense.storedcodes").applyTextStyle(TextFormatting.GRAY));
             for (long id : ids) {
