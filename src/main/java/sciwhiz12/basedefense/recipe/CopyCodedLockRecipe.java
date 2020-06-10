@@ -21,7 +21,7 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.init.ModRecipes;
 import sciwhiz12.basedefense.item.IColorable;
-import sciwhiz12.basedefense.util.Util;
+import sciwhiz12.basedefense.util.ItemHelper;
 
 public class CopyCodedLockRecipe extends ShapedRecipe {
     public CopyCodedLockRecipe(ResourceLocation idIn, String groupIn, int recipeWidthIn, int recipeHeightIn,
@@ -40,7 +40,7 @@ public class CopyCodedLockRecipe extends ShapedRecipe {
                 ItemStack stack = inv.getStackInSlot(row + col * inv.getWidth());
                 if (!stack.isEmpty() && stack.getCapability(ModCapabilities.LOCK).isPresent()) {
                     IColorable.copyColors(stack, output);
-                    Util.copyCodes(stack, output);
+                    ItemHelper.copyCodes(stack, output);
                     if (stack.hasDisplayName()) { output.setDisplayName(stack.getDisplayName()); }
                     break;
                 }

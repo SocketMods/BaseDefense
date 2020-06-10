@@ -3,11 +3,17 @@ package sciwhiz12.basedefense.util;
 import java.util.function.Consumer;
 
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
+/**
+ * Helper methods for {@link Container}s.
+ * 
+ * @author SciWhiz12
+ */
 public final class ContainerHelper {
     public static int addSlotRange(Consumer<Slot> adder, IItemHandler handler, int index, int x, int y, int amount, int dx) {
         for (int i = 0; i < amount; i++) {

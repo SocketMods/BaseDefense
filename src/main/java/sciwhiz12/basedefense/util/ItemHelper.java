@@ -17,8 +17,12 @@ import net.minecraftforge.common.util.Constants;
 import sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import sciwhiz12.basedefense.init.ModCapabilities;
 
+/**
+ * Helper methods for @{@link Item}s and {@link ItemStack}s.
+ * 
+ * @author SciWhiz12
+ */
 public final class ItemHelper {
-
     public static void addCodeInformation(ItemStack stack, List<ITextComponent> tooltip) {
         List<Long> ids = stack.getCapability(ModCapabilities.CODE_HOLDER).filter((lock) -> lock instanceof ICodeHolder).map(
             ICodeHolder::getCodes).orElse(Collections.emptyList());
@@ -65,6 +69,11 @@ public final class ItemHelper {
                 if (inst == null) { cap.readNBT(inst, null, nbt); }
             }
         }
+    }
+
+    public static void copyCodes(ItemStack fromStack, ItemStack toStack) {
+        Util.consumeIfPresent(fromStack.getCapability(ModCapabilities.CODE_HOLDER), toStack.getCapability(
+            ModCapabilities.CODE_HOLDER), (from, to) -> to.setCodes(from.getCodes()));
     }
 
 }

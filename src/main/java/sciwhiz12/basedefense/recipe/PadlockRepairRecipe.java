@@ -19,8 +19,8 @@ import sciwhiz12.basedefense.init.ModItems;
 import sciwhiz12.basedefense.init.ModRecipes;
 import sciwhiz12.basedefense.item.IColorable;
 import sciwhiz12.basedefense.item.lock.BrokenPadlockItem;
+import sciwhiz12.basedefense.util.ItemHelper;
 import sciwhiz12.basedefense.util.UnlockHelper;
-import sciwhiz12.basedefense.util.Util;
 
 public class PadlockRepairRecipe extends SpecialRecipe {
     public PadlockRepairRecipe(ResourceLocation idIn) {
@@ -81,7 +81,7 @@ public class PadlockRepairRecipe extends SpecialRecipe {
             ItemStack padlock = inv.getStackInSlot(opSlots.get().getLeft());
             ItemStack output = new ItemStack(ModItems.PADLOCK, 1);
             IColorable.copyColors(padlock, output);
-            Util.copyCodes(padlock, output);
+            ItemHelper.copyCodes(padlock, output);
             if (padlock.hasDisplayName()) { output.setDisplayName(padlock.getDisplayName()); }
             return output;
         }

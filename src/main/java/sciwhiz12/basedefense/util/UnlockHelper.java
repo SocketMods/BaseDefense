@@ -16,6 +16,11 @@ import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.api.capablities.ILock;
 import sciwhiz12.basedefense.init.ModCapabilities;
 
+/**
+ * Helper methods for unlocking and removing {@link ILock}s using {@link IKey}s.
+ * 
+ * @author SciWhiz12
+ */
 public final class UnlockHelper {
     public static void consumeIfPresent(ICapabilityProvider keyProvider, ICapabilityProvider lockProvider,
             BiConsumer<IKey, ILock> consumer) {
