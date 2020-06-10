@@ -11,7 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import sciwhiz12.basedefense.item.IColorable;
-import sciwhiz12.basedefense.util.Util;
+import sciwhiz12.basedefense.util.ItemHelper;
 
 public class BrokenPadlockItem extends Item implements IColorable {
     private static final IItemPropertyGetter COLOR_GETTER = (stack, world, livingEntity) -> {
@@ -28,7 +28,7 @@ public class BrokenPadlockItem extends Item implements IColorable {
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         if (!flagIn.isAdvanced()) return;
-        Util.addCodeInformation(stack, tooltip);
-        Util.addColorInformation(stack, tooltip);
+        ItemHelper.addCodeInformation(stack, tooltip);
+        ItemHelper.addColorInformation(stack, tooltip);
     }
 }

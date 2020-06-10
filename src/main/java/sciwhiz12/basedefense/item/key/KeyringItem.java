@@ -30,7 +30,7 @@ import sciwhiz12.basedefense.client.render.KeyringRenderer;
 import sciwhiz12.basedefense.container.KeyringContainer.Provider;
 import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.init.ModItems;
-import sciwhiz12.basedefense.util.Util;
+import sciwhiz12.basedefense.util.ItemHelper;
 
 public class KeyringItem extends Item {
     public KeyringItem() {
@@ -73,13 +73,13 @@ public class KeyringItem extends Item {
 
     @Override
     public CompoundNBT getShareTag(ItemStack stack) {
-        return Util.getItemShareTag(stack, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+        return ItemHelper.getItemShareTag(stack, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
     }
 
     @Override
 
     public void readShareTag(ItemStack stack, CompoundNBT nbt) {
-        Util.readItemShareTag(stack, nbt, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+        ItemHelper.readItemShareTag(stack, nbt, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
     }
 
     @Override

@@ -16,7 +16,7 @@ import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.api.capablities.ILock;
 import sciwhiz12.basedefense.init.ModCapabilities;
 
-public class UnlockHelper {
+public final class UnlockHelper {
     public static void consumeIfPresent(ICapabilityProvider keyProvider, ICapabilityProvider lockProvider,
             BiConsumer<IKey, ILock> consumer) {
         final LazyOptional<ILock> lockCap = lockProvider.getCapability(ModCapabilities.LOCK);

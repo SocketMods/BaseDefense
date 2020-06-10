@@ -19,7 +19,7 @@ import sciwhiz12.basedefense.capabilities.CodedLock;
 import sciwhiz12.basedefense.capabilities.SerializableCapabilityProvider;
 import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.item.IColorable;
-import sciwhiz12.basedefense.util.Util;
+import sciwhiz12.basedefense.util.ItemHelper;
 
 public class LockCoreItem extends Item implements IColorable {
     private static final IItemPropertyGetter COLOR_GETTER = (stack, world, livingEntity) -> {
@@ -36,8 +36,8 @@ public class LockCoreItem extends Item implements IColorable {
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         if (!flagIn.isAdvanced()) { return; }
-        Util.addCodeInformation(stack, tooltip);
-        Util.addColorInformation(stack, tooltip);
+        ItemHelper.addCodeInformation(stack, tooltip);
+        ItemHelper.addColorInformation(stack, tooltip);
     }
 
     @Override
@@ -53,11 +53,11 @@ public class LockCoreItem extends Item implements IColorable {
 
     @Override
     public CompoundNBT getShareTag(ItemStack stack) {
-        return Util.getItemShareTag(stack, ModCapabilities.CODE_HOLDER);
+        return ItemHelper.getItemShareTag(stack, ModCapabilities.CODE_HOLDER);
     }
 
     @Override
     public void readShareTag(ItemStack stack, CompoundNBT nbt) {
-        Util.readItemShareTag(stack, nbt, ModCapabilities.CODE_HOLDER);
+        ItemHelper.readItemShareTag(stack, nbt, ModCapabilities.CODE_HOLDER);
     }
 }
