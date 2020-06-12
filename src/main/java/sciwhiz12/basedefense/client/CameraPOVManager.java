@@ -1,18 +1,18 @@
 package sciwhiz12.basedefense.client;
 
-import java.lang.reflect.Field;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ActiveRenderInfo;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityViewRenderEvent.CameraSetup;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.RenderTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import sciwhiz12.basedefense.BaseDefense;
 
 @EventBusSubscriber(value = Dist.CLIENT, bus = Bus.FORGE, modid = BaseDefense.MODID)
@@ -21,33 +21,20 @@ public class CameraPOVManager {
     public static volatile boolean renderingCamera = false;
 
     private static Entity prevRenderEntity;
-    private static boolean prevIgnoreFrustumCheck = false;
     private static int currentCameraEntityId;
 
     public static void changeEntityID(int newId) {
         Minecraft mc = Minecraft.getInstance();
         int newEntityId = newId;
-        if (cameraEntityId == newId) { newEntityId = -1; }
-        Entity newEntity = mc.world.getEntityByID(newEntityId);
-        if (newEntityId >= 0 && newEntity != null) {
-            cameraEntityId = newEntityId;
+        if (newId != mc.player.getEntityId() && cameraEntityId != newEntityId) {
+            Entity newEntity = mc.world.getEntityByID(newEntityId);
+            if (newEntityId >= 0 && newEntity != null) {
+                cameraEntityId = newEntityId;
+            } else {
+                cameraEntityId = -1;
+            }
         } else {
             cameraEntityId = -1;
-        }
-        System.out.println(cameraEntityId);
-    }
-
-    public static final Field THIRD_PERSON = ObfuscationReflectionHelper.findField(ActiveRenderInfo.class, "field_216799_k");
-
-    @SubscribeEvent
-    static void onCameraSetup(CameraSetup event) {
-        if (renderingCamera) {
-            // try {
-            // THIRD_PERSON.setBoolean(event.getInfo(), true);
-            // }
-            // catch (IllegalArgumentException | IllegalAccessException e) {
-            // throw new RuntimeException("CameraSetup for player camera", e);
-            // }
         }
     }
 
@@ -61,8 +48,6 @@ public class CameraPOVManager {
                 Entity newEntity = mc.world.getEntityByID(currentCameraEntityId);
                 if (newEntity != null) {
                     prevRenderEntity = mc.renderViewEntity;
-                    if (prevRenderEntity != null) { prevIgnoreFrustumCheck = prevRenderEntity.ignoreFrustumCheck; }
-                    prevRenderEntity.ignoreFrustumCheck = true;
                     mc.setRenderViewEntity(newEntity);
                     renderingCamera = true;
                 } else {
@@ -72,11 +57,29 @@ public class CameraPOVManager {
         } else if (event.phase == Phase.END) {
             if (renderingCamera) {
                 Minecraft mc = Minecraft.getInstance();
-                prevRenderEntity.ignoreFrustumCheck = prevIgnoreFrustumCheck;
                 mc.setRenderViewEntity(prevRenderEntity);
                 prevRenderEntity = null;
                 renderingCamera = false;
             }
+        }
+    }
+
+    @SubscribeEvent
+    static void onRenderWorldLast(RenderWorldLastEvent event) {
+        if (renderingCamera) {
+            Minecraft mc = Minecraft.getInstance();
+            if (mc == null) return;
+            EntityRendererManager manager = mc.getRenderManager();
+            float partialTicks = event.getPartialTicks();
+            Entity entity = mc.player;
+            IRenderTypeBuffer buffer = mc.getRenderTypeBuffers().getBufferSource();
+            Vec3d projectedView = mc.gameRenderer.getActiveRenderInfo().getProjectedView();
+            double x = MathHelper.lerp((double) partialTicks, entity.lastTickPosX, entity.getPosX());
+            double y = MathHelper.lerp((double) partialTicks, entity.lastTickPosY, entity.getPosY());
+            double z = MathHelper.lerp((double) partialTicks, entity.lastTickPosZ, entity.getPosZ());
+            float yaw = MathHelper.lerp(partialTicks, entity.prevRotationYaw, entity.rotationYaw);
+            manager.renderEntityStatic(entity, x - projectedView.getX(), y - projectedView.getY(), z - projectedView.getZ(),
+                yaw, partialTicks, event.getMatrixStack(), buffer, manager.getPackedLight(entity, partialTicks));
         }
     }
 }

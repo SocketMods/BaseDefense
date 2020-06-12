@@ -34,10 +34,7 @@ public class ChangePOVPacket {
     public static void process(ChangePOVPacket pkt, Supplier<Context> ctx) {
         ctx.get().enqueueWork(() -> {
             NetworkDirection dir = ctx.get().getDirection();
-            if (dir == NetworkDirection.PLAY_TO_CLIENT) {
-                System.out.println("RECEIVED");
-                CameraPOVManager.changeEntityID(pkt.entityId);
-            }
+            if (dir == NetworkDirection.PLAY_TO_CLIENT) { CameraPOVManager.changeEntityID(pkt.entityId); }
         });
         ctx.get().setPacketHandled(true);
     }
