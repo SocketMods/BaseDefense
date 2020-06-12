@@ -22,5 +22,8 @@ public class NetworkHandler {
             ID++, TextFieldChangePacket.class, TextFieldChangePacket::encode, TextFieldChangePacket::decode,
             TextFieldChangePacket::process
         );
+        CHANNEL.registerMessage(
+            ID++, ChangePOVPacket.class, ChangePOVPacket::encode, ChangePOVPacket::decode, ChangePOVPacket::process
+        );
     }
 }
