@@ -73,13 +73,15 @@ public class CameraPOVManager {
             float partialTicks = event.getPartialTicks();
             Entity entity = mc.player;
             IRenderTypeBuffer buffer = mc.getRenderTypeBuffers().getBufferSource();
-            Vec3d projectedView = mc.gameRenderer.getActiveRenderInfo().getProjectedView();
-            double x = MathHelper.lerp((double) partialTicks, entity.lastTickPosX, entity.getPosX());
-            double y = MathHelper.lerp((double) partialTicks, entity.lastTickPosY, entity.getPosY());
-            double z = MathHelper.lerp((double) partialTicks, entity.lastTickPosZ, entity.getPosZ());
-            float yaw = MathHelper.lerp(partialTicks, entity.prevRotationYaw, entity.rotationYaw);
-            manager.renderEntityStatic(entity, x - projectedView.getX(), y - projectedView.getY(), z - projectedView.getZ(),
-                yaw, partialTicks, event.getMatrixStack(), buffer, manager.getPackedLight(entity, partialTicks));
+            Vec3d projView = mc.gameRenderer.getActiveRenderInfo().getProjectedView();
+            double x = MathHelper.lerp((double) partialTicks, mc.player.lastTickPosX, mc.player.getPosX());
+            double y = MathHelper.lerp((double) partialTicks, mc.player.lastTickPosY, mc.player.getPosY());
+            double z = MathHelper.lerp((double) partialTicks, mc.player.lastTickPosZ, mc.player.getPosZ());
+            // float yaw = MathHelper.lerp(partialTicks, mc.player.prevRotationYaw,
+            // mc.player.rotationYaw);
+            float yaw = MathHelper.interpolateAngle(partialTicks, mc.player.prevRotationYaw, mc.player.rotationYaw);
+            manager.renderEntityStatic(mc.player, x - projView.x, y - projView.y, z - projView.z, yaw, partialTicks, event
+                .getMatrixStack(), buffer, manager.getPackedLight(entity, partialTicks));
         }
     }
 }
