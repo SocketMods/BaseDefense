@@ -12,6 +12,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderNameplateEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -71,5 +74,15 @@ public class CameraPOVManager {
     @SubscribeEvent
     public void onRenderNameplate(RenderNameplateEvent event) {
         if (isCameraRendering()) { event.setResult(Result.DENY); }
+    }
+
+    @SubscribeEvent
+    public void onRenderGameOverlay(RenderGameOverlayEvent.Pre event) {
+        if (isCameraRendering()) { if (event.getType() == ElementType.ALL) { event.setCanceled(true); } }
+    }
+    
+    @SubscribeEvent
+    public void onRenderHand(RenderHandEvent event) {
+        if (isCameraRendering()) { event.setCanceled(true); }
     }
 }
