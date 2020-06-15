@@ -1,14 +1,10 @@
 package sciwhiz12.basedefense.client;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
@@ -18,6 +14,8 @@ import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderNameplateEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent.Phase;
+import net.minecraftforge.event.TickEvent.RenderTickEvent;
 import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -33,56 +31,106 @@ public class CameraPOVManager {
         MinecraftForge.EVENT_BUS.register(INSTANCE);
     }
 
-    public final Minecraft mc;
-    public volatile boolean renderingCamera = false;
+    private final Minecraft mc;
+    private Entity prevViewEntity;
+    private boolean prevHideGUI;
+    private int prevThirdPerson;
+    private volatile int viewEntityID = -1;
+    private volatile boolean renderingCamera = false;
 
-    public CameraPOVManager(Minecraft inst) {
+    CameraPOVManager(Minecraft inst) {
         this.mc = inst;
     }
 
-    public void changeRenderViewEntity(final int newEntityId) {
-        if (mc.world == null) { return; }
-        Entity newEntity = mc.world.getEntityByID(newEntityId);
-        mc.setRenderViewEntity(newEntity);
+    private Entity validateEntityID() {
+        if (mc.world != null) {
+            Entity entity = mc.world.getEntityByID(viewEntityID);
+            if (entity != null && entity != mc.player) {
+                return entity;
+            }
+        }
+        viewEntityID = -1;
+        return null;
     }
 
-    public boolean isCameraRendering() {
-        return !(mc.renderViewEntity instanceof PlayerEntity);
+    public void setViewEntityID(final int entityID) {
+        viewEntityID = entityID;
+        validateEntityID();
+    }
+
+    public int getViewEntityID() {
+        return viewEntityID;
+    }
+
+    public boolean isRenderingCamera() {
+        return renderingCamera;
+    }
+
+    @SubscribeEvent
+    public void onRenderTick(RenderTickEvent event) {
+        if (event.phase == Phase.START && !renderingCamera) {
+            Entity entity = validateEntityID();
+            if (entity == null) {
+                return;
+            }
+            prevViewEntity = mc.getRenderViewEntity();
+            mc.setRenderViewEntity(entity);
+            prevHideGUI = mc.gameSettings.hideGUI;
+            prevThirdPerson = mc.gameSettings.thirdPersonView;
+            mc.gameSettings.hideGUI = true;
+            mc.gameSettings.thirdPersonView = 0;
+            renderingCamera = true;
+        } else if (event.phase == Phase.END && renderingCamera) {
+            mc.setRenderViewEntity(prevViewEntity);
+            prevViewEntity = null;
+            mc.gameSettings.hideGUI = prevHideGUI;
+            mc.gameSettings.thirdPersonView = prevThirdPerson;
+            renderingCamera = false;
+        }
     }
 
     @SubscribeEvent
     public void onRenderWorldLast(RenderWorldLastEvent event) {
-        if (isCameraRendering()) {
-            EntityRendererManager manager = mc.getRenderManager();
-            ActiveRenderInfo renderInfo = mc.gameRenderer.getActiveRenderInfo();
-            float partialTicks = event.getPartialTicks();
+        if (isRenderingCamera()) {
             ClientPlayerEntity player = mc.player;
-            IRenderTypeBuffer.Impl buffer = mc.getRenderTypeBuffers().getBufferSource();
-            Vec3d projView = renderInfo.getProjectedView();
-            double x = MathHelper.lerp((double) partialTicks, player.lastTickPosX, player.getPosX());
-            double y = MathHelper.lerp((double) partialTicks, player.lastTickPosY, player.getPosY());
-            double z = MathHelper.lerp((double) partialTicks, player.lastTickPosZ, player.getPosZ());
+            if (mc.player == null) {
+                return;
+            }
+            EntityRendererManager manager = mc.getRenderManager();
+            float partialTicks = event.getPartialTicks();
+            Vec3d projView = mc.gameRenderer.getActiveRenderInfo().getProjectedView();
+            double x = MathHelper.lerp(partialTicks, player.lastTickPosX, player.getPosX());
+            double y = MathHelper.lerp(partialTicks, player.lastTickPosY, player.getPosY());
+            double z = MathHelper.lerp(partialTicks, player.lastTickPosZ, player.getPosZ());
             float yaw = MathHelper.lerp(partialTicks, mc.player.prevRotationYaw, mc.player.rotationYaw);
-            int packedLight = manager.getPackedLight(player, partialTicks);
             MatrixStack stack = event.getMatrixStack();
-
+            stack.push();
             manager.renderEntityStatic(player, x - projView.x, y - projView.y, z - projView.z, yaw, partialTicks, stack,
-                buffer, packedLight);
+                    mc.getRenderTypeBuffers().getBufferSource(), manager.getPackedLight(player, partialTicks));
+            stack.pop();
         }
     }
 
     @SubscribeEvent
     public void onRenderNameplate(RenderNameplateEvent event) {
-        if (isCameraRendering()) { event.setResult(Result.DENY); }
+        if (isRenderingCamera()) {
+            event.setResult(Result.DENY);
+        }
     }
 
     @SubscribeEvent
     public void onRenderGameOverlay(RenderGameOverlayEvent.Pre event) {
-        if (isCameraRendering()) { if (event.getType() == ElementType.ALL) { event.setCanceled(true); } }
+        if (isRenderingCamera()) {
+            if (event.getType() == ElementType.ALL) {
+                event.setCanceled(true);
+            }
+        }
     }
-    
+
     @SubscribeEvent
     public void onRenderHand(RenderHandEvent event) {
-        if (isCameraRendering()) { event.setCanceled(true); }
+        if (isRenderingCamera()) {
+            event.setCanceled(true);
+        }
     }
 }
