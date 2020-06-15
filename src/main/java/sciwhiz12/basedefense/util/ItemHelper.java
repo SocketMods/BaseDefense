@@ -24,6 +24,9 @@ import sciwhiz12.basedefense.init.ModCapabilities;
  * @author SciWhiz12
  */
 public final class ItemHelper {
+    // Prevent instantiation
+    private ItemHelper() {}
+
     public static void addCodeInformation(ItemStack stack, List<ITextComponent> tooltip) {
         List<Long> ids = stack.getCapability(ModCapabilities.CODE_HOLDER).map(ICodeHolder::getCodes).orElse(Collections
             .emptyList());

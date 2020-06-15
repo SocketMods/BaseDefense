@@ -22,6 +22,9 @@ import sciwhiz12.basedefense.init.ModCapabilities;
  * @author SciWhiz12
  */
 public final class UnlockHelper {
+    // Prevent instantiation
+    private UnlockHelper() {}
+
     public static void consumeIfPresent(@Nullable ICapabilityProvider keyProvider,
             @Nullable ICapabilityProvider lockProvider, BiConsumer<IKey, ILock> consumer) {
         if (keyProvider == null) { return; }

@@ -15,6 +15,9 @@ import net.minecraftforge.items.wrapper.InvWrapper;
  * @author SciWhiz12
  */
 public final class ContainerHelper {
+    // Prevent instantiation
+    private ContainerHelper() {}
+
     public static int addSlotRange(Consumer<Slot> adder, IItemHandler handler, int index, int x, int y, int amount, int dx) {
         for (int i = 0; i < amount; i++) {
             adder.accept(new SlotItemHandler(handler, index, x, y));

@@ -19,6 +19,9 @@ import net.minecraftforge.registries.ObjectHolder;
  * @author SciWhiz12
  */
 public final class Util {
+    // Prevent instantiation
+    private Util() {}
+
     /**
      * A fix for IntelliJ IDEA's "Constant conditions" inspection. Used for
      * {@link ObjectHolder} and {@link CapabilityInject} fields.
