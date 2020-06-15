@@ -42,6 +42,6 @@ public class ModTileEntities {
     }
 
     private static <T extends TileEntity> TileEntityType<T> makeType(Supplier<T> factory, Block... validBlocks) {
-        return Builder.create(factory, validBlocks).build(null);
+        return Builder.create(factory, validBlocks).build(Null());
     }
 }

@@ -126,7 +126,7 @@ public class KeysmithContainer extends Container {
             if (index == 2) {
                 if (!this.mergeItemStack(slotStack, 3, 40, true)) { return ItemStack.EMPTY; }
             } else if (index != 0 && index != 1) {
-                if (index >= 3 && index < 39 && !this.mergeItemStack(slotStack, 0, 2, false)) { return ItemStack.EMPTY; }
+                if (index < 39 && !this.mergeItemStack(slotStack, 0, 2, false)) { return ItemStack.EMPTY; }
             } else if (!this.mergeItemStack(slotStack, 3, 40, false)) { return ItemStack.EMPTY; }
 
             if (slotStack.isEmpty()) {

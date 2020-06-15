@@ -22,8 +22,10 @@ import sciwhiz12.basedefense.init.ModCapabilities;
  * @author SciWhiz12
  */
 public final class UnlockHelper {
-    public static void consumeIfPresent(ICapabilityProvider keyProvider, ICapabilityProvider lockProvider,
-            BiConsumer<IKey, ILock> consumer) {
+    public static void consumeIfPresent(@Nullable ICapabilityProvider keyProvider,
+            @Nullable ICapabilityProvider lockProvider, BiConsumer<IKey, ILock> consumer) {
+        if (keyProvider == null) { return; }
+        if (lockProvider == null) { return; }
         final LazyOptional<ILock> lockCap = lockProvider.getCapability(ModCapabilities.LOCK);
         final LazyOptional<IKey> keyCap = keyProvider.getCapability(ModCapabilities.KEY);
         Util.consumeIfPresent(keyCap, lockCap, consumer);

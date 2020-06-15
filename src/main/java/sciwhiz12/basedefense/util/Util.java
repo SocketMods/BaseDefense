@@ -25,6 +25,7 @@ public final class Util {
      * 
      * @return {@code null}
      */
+    @SuppressWarnings("ConstantConditions")
     @Nonnull
     public static <T> T Null() {
         return null;

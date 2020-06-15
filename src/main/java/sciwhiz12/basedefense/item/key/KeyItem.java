@@ -8,6 +8,7 @@ import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -34,8 +35,11 @@ public class KeyItem extends Item implements IColorable {
 
     @Override
     public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, PlayerEntity player) {
-        return world.isBlockLoaded(pos) && world.getTileEntity(pos) != null && world.getTileEntity(pos).getCapability(
-            ModCapabilities.LOCK).isPresent();
+        if (world.isBlockLoaded(pos)) {
+            TileEntity tile = world.getTileEntity(pos);
+            return tile != null && tile.getCapability(ModCapabilities.LOCK).isPresent();
+        }
+        return false;
     }
 
     @Override

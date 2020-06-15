@@ -12,10 +12,9 @@ import net.minecraftforge.common.util.NonNullSupplier;
 public class SerializableCapabilityProvider<C extends INBTSerializable<N>, N extends INBT> implements
         ICapabilitySerializable<N> {
     private final Capability<?>[] capObjs;
-    private final LazyOptional<? extends C> capInst;
+    private final LazyOptional<C> capInst;
 
-    @SafeVarargs
-    public SerializableCapabilityProvider(NonNullSupplier<? extends C> factory, Capability<?>... caps) {
+    public SerializableCapabilityProvider(NonNullSupplier<C> factory, Capability<?>... caps) {
         this.capObjs = caps;
         this.capInst = LazyOptional.of(factory);
     }
@@ -29,13 +28,11 @@ public class SerializableCapabilityProvider<C extends INBTSerializable<N>, N ext
     @SuppressWarnings("unchecked")
     @Override
     public N serializeNBT() {
-        C inst = capInst.orElse(null);
-        N nbt = inst != null ? inst.serializeNBT() : null;
-        return nbt != null ? nbt : (N) EndNBT.INSTANCE;
+        return capInst.map(INBTSerializable::serializeNBT).orElse((N) EndNBT.INSTANCE);
     }
 
     @Override
     public void deserializeNBT(N nbt) {
-        if (!(nbt instanceof EndNBT)) capInst.ifPresent((inst) -> inst.deserializeNBT(nbt));
+        if (!(nbt instanceof EndNBT)) { capInst.ifPresent((inst) -> inst.deserializeNBT(nbt)); }
     }
 }

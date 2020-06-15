@@ -2,6 +2,7 @@ package sciwhiz12.basedefense.init;
 
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -24,9 +25,9 @@ public class ModColors {
 
     public static final IBlockColor LOCKED_DOOR_COLOR = (state, world, pos, tintIndex) -> {
         if (state.getBlock() instanceof LockedDoorBlock && pos != null) {
-            LockedDoorTile tile = (LockedDoorTile) world.getTileEntity(pos);
-            if (tile != null && tile.hasColors()) {
-                int[] colors = tile.getColors();
+            TileEntity tile = world.getTileEntity(pos);
+            if (tile instanceof LockedDoorTile && ((LockedDoorTile) tile).hasColors()) {
+                int[] colors = ((LockedDoorTile) tile).getColors();
                 // 0 : NONE, 1 : ind. 0 ; 2 : inds. 1, 2 ;
                 if (colors.length - 1 >= tintIndex) { return colors[tintIndex]; }
             }

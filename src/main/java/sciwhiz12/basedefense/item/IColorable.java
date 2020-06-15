@@ -11,8 +11,11 @@ import net.minecraft.nbt.CompoundNBT;
 public interface IColorable {
     default boolean hasColors(ItemStack stack) {
         Preconditions.checkNotNull(stack);
-        return !stack.isEmpty() && stack.getItem() instanceof IColorable && stack.getChildTag("display") != null && stack
-            .getChildTag("display").getIntArray("colors").length > 0;
+        if (!stack.isEmpty() && stack.getItem() instanceof IColorable) {
+            CompoundNBT display = stack.getChildTag("display");
+            if (display != null) { return display.getIntArray("colors").length > 0; }
+        }
+        return false;
     }
 
     default void setColor(ItemStack stack, int index, DyeColor color) {

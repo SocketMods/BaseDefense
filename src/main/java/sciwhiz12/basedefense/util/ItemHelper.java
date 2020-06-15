@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -19,14 +20,14 @@ import sciwhiz12.basedefense.init.ModCapabilities;
 
 /**
  * Helper methods for @{@link Item}s and {@link ItemStack}s.
- * 
+ *
  * @author SciWhiz12
  */
 public final class ItemHelper {
     public static void addCodeInformation(ItemStack stack, List<ITextComponent> tooltip) {
-        List<Long> ids = stack.getCapability(ModCapabilities.CODE_HOLDER).filter((lock) -> lock instanceof ICodeHolder).map(
-            ICodeHolder::getCodes).orElse(Collections.emptyList());
-        if (ids != null && ids.size() != 0) {
+        List<Long> ids = stack.getCapability(ModCapabilities.CODE_HOLDER).map(ICodeHolder::getCodes).orElse(Collections
+            .emptyList());
+        if (ids.size() != 0) {
             tooltip.add(new TranslationTextComponent("tooltip.basedefense.storedcodes").applyTextStyle(TextFormatting.GRAY));
             for (long id : ids) {
                 tooltip.add(new StringTextComponent("  " + String.format("%016X", id)).applyTextStyle(
@@ -53,8 +54,10 @@ public final class ItemHelper {
         CompoundNBT shareTag = new CompoundNBT();
         if (stack.hasTag()) { shareTag.put("Tag", stack.getTag()); }
         for (Capability<T> cap : caps) {
-            INBT nbt = cap.writeNBT(stack.getCapability(cap).orElse(null), null);
-            if (nbt != null) { shareTag.put(cap.getName(), nbt); }
+            stack.getCapability(cap).ifPresent((inst) -> {
+                INBT nbt = cap.writeNBT(inst, null);
+                if (nbt != null) { shareTag.put(cap.getName(), nbt); }
+            });
         }
         return !shareTag.isEmpty() ? shareTag : null;
     }
@@ -65,8 +68,7 @@ public final class ItemHelper {
         if (nbt.contains("Tag", Constants.NBT.TAG_COMPOUND)) { stack.setTag(nbt.getCompound("Tag")); }
         for (Capability<T> cap : caps) {
             if (nbt.contains(cap.getName())) {
-                T inst = stack.getCapability(cap).orElse(null);
-                if (inst == null) { cap.readNBT(inst, null, nbt); }
+                stack.getCapability(cap).ifPresent((inst) -> cap.readNBT(inst, null, nbt));
             }
         }
     }
