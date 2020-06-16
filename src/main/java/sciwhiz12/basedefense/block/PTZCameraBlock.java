@@ -1,5 +1,9 @@
 package sciwhiz12.basedefense.block;
 
+import static sciwhiz12.basedefense.util.ShapeUtil.rotateCuboidShape;
+
+import javax.annotation.Nullable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -23,15 +27,18 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import sciwhiz12.basedefense.tileentity.PTZCameraTile;
 
-import javax.annotation.Nullable;
-
 public class PTZCameraBlock extends Block {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty ENABLED = BlockStateProperties.ENABLED;
 
+    private static final VoxelShape SOUTH_SHAPE = makeCuboidShape(4.5D, 7.5D, 0D, 11.5D, 13.5D, 6.5D);
+    private static final VoxelShape EAST_SHAPE = rotateCuboidShape(SOUTH_SHAPE, Rotation.COUNTERCLOCKWISE_90);
+    private static final VoxelShape NORTH_SHAPE = rotateCuboidShape(SOUTH_SHAPE, Rotation.CLOCKWISE_180);
+    private static final VoxelShape WEST_SHAPE = rotateCuboidShape(SOUTH_SHAPE, Rotation.CLOCKWISE_90);
+
     public PTZCameraBlock() {
         super(Block.Properties.create(Material.IRON).notSolid());
-        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH).with(ENABLED, true));
+        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.SOUTH).with(ENABLED, true));
     }
 
     @Override
@@ -46,7 +53,17 @@ public class PTZCameraBlock extends Block {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return makeCuboidShape(0D, 4D, 0D, 16D, 13.5D, 16D);
+        switch (state.get(FACING)) {
+            default:
+            case SOUTH:
+                return SOUTH_SHAPE;
+            case WEST:
+                return WEST_SHAPE;
+            case NORTH:
+                return NORTH_SHAPE;
+            case EAST:
+                return EAST_SHAPE;
+        }
     }
 
     @Override
@@ -72,9 +89,9 @@ public class PTZCameraBlock extends Block {
     }
 
     public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
-                                          BlockPos currentPos, BlockPos facingPos) {
+            BlockPos currentPos, BlockPos facingPos) {
         return facing.getOpposite() == stateIn.get(FACING) && !stateIn.isValidPosition(worldIn, currentPos) ? Blocks.AIR
-                .getDefaultState() : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+            .getDefaultState() : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
     @Nullable
@@ -88,9 +105,7 @@ public class PTZCameraBlock extends Block {
             if (direction.getAxis().isHorizontal()) {
                 Direction opp = direction.getOpposite();
                 state = state.with(FACING, opp);
-                if (state.isValidPosition(world, pos)) {
-                    return state;
-                }
+                if (state.isValidPosition(world, pos)) { return state; }
             }
         }
 
