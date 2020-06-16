@@ -33,13 +33,8 @@ public class PTZCameraRenderer extends TileEntityRenderer<PTZCameraTile> {
         BlockState state = tileEntity.getBlockState();
         if (state.getBlock() instanceof PTZCameraBlock) {
             matrixStack.rotate(Vector3f.YP.rotationDegrees(state.get(PTZCameraBlock.FACING).getHorizontalAngle()));
+            model.cam.rotateAngleY = tileEntity.getYaw();
         }
-        long gameTime = tileEntity.getWorld().getGameTime();
-        int cycle = 65;
-        long clampedTime = gameTime % (cycle * 2);
-        double rotation = Math.sin(clampedTime * (Math.PI / cycle)) * 0.9;
-        float rot = (float) ((Math.ceil(rotation * 100D)) / 100D);
-        model.cam.rotateAngleY = rot;
 
         IVertexBuilder vertex = buffer.getBuffer(RenderType.getEntitySolid(ModTextures.PTZ_CAMERA_MODEL));
         model.render(matrixStack, vertex, combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1F);

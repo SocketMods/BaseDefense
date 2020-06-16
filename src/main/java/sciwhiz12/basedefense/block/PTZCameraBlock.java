@@ -1,13 +1,12 @@
 package sciwhiz12.basedefense.block;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -24,11 +23,15 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import sciwhiz12.basedefense.tileentity.PTZCameraTile;
 
+import javax.annotation.Nullable;
+
 public class PTZCameraBlock extends Block {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final BooleanProperty ENABLED = BlockStateProperties.ENABLED;
 
     public PTZCameraBlock() {
         super(Block.Properties.create(Material.IRON).notSolid());
+        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH).with(ENABLED, true));
     }
 
     @Override
@@ -58,21 +61,20 @@ public class PTZCameraBlock extends Block {
 
     @Override
     protected void fillStateContainer(Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, ENABLED);
     }
 
     public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
         Direction facing = state.get(FACING);
         BlockPos blockPos = pos.offset(facing.getOpposite());
         BlockState blockState = worldIn.getBlockState(blockPos);
-        return facing.getAxis().isHorizontal() && blockState.isSolidSide(worldIn, blockPos, facing) && !blockState
-            .canProvidePower();
+        return facing.getAxis().isHorizontal() && blockState.isSolidSide(worldIn, blockPos, facing);
     }
 
     public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
-            BlockPos currentPos, BlockPos facingPos) {
+                                          BlockPos currentPos, BlockPos facingPos) {
         return facing.getOpposite() == stateIn.get(FACING) && !stateIn.isValidPosition(worldIn, currentPos) ? Blocks.AIR
-            .getDefaultState() : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+                .getDefaultState() : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
     @Nullable
@@ -86,7 +88,9 @@ public class PTZCameraBlock extends Block {
             if (direction.getAxis().isHorizontal()) {
                 Direction opp = direction.getOpposite();
                 state = state.with(FACING, opp);
-                if (state.isValidPosition(world, pos)) { return state; }
+                if (state.isValidPosition(world, pos)) {
+                    return state;
+                }
             }
         }
 
