@@ -10,7 +10,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -25,11 +24,11 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
+import net.minecraft.world.World;
 import sciwhiz12.basedefense.tileentity.PTZCameraTile;
 
 public class PTZCameraBlock extends Block {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    public static final BooleanProperty ENABLED = BlockStateProperties.ENABLED;
 
     private static final VoxelShape SOUTH_SHAPE = makeCuboidShape(4.5D, 7.5D, 0D, 11.5D, 13.5D, 6.5D);
     private static final VoxelShape EAST_SHAPE = rotateCuboidShape(SOUTH_SHAPE, Rotation.COUNTERCLOCKWISE_90);
@@ -38,7 +37,7 @@ public class PTZCameraBlock extends Block {
 
     public PTZCameraBlock() {
         super(Block.Properties.create(Material.IRON).notSolid());
-        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.SOUTH).with(ENABLED, true));
+        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.SOUTH));
     }
 
     @Override
@@ -78,7 +77,7 @@ public class PTZCameraBlock extends Block {
 
     @Override
     protected void fillStateContainer(Builder<Block, BlockState> builder) {
-        builder.add(FACING, ENABLED);
+        builder.add(FACING);
     }
 
     public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
@@ -120,5 +119,12 @@ public class PTZCameraBlock extends Block {
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+    }
+
+    @Override
+    public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos,
+            boolean isMoving) {
+        TileEntity te = world.getTileEntity(pos);
+        if (te instanceof PTZCameraTile) { ((PTZCameraTile) te).calculateMaxYaw(); }
     }
 }

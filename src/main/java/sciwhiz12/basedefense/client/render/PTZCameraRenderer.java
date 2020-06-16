@@ -33,8 +33,8 @@ public class PTZCameraRenderer extends TileEntityRenderer<PTZCameraTile> {
         BlockState state = tileEntity.getBlockState();
         if (state.getBlock() instanceof PTZCameraBlock) {
             matrixStack.rotate(Vector3f.YP.rotationDegrees(state.get(PTZCameraBlock.FACING).getHorizontalAngle()));
-            model.cam.rotateAngleY = tileEntity.getYaw();
-            model.arm.rotateAngleX = -tileEntity.getPitch() + 0.4363F;
+            model.cam.rotateAngleY = (float) tileEntity.getRenderYaw();
+            model.arm.rotateAngleX = (float) (-tileEntity.getPitch() + 0.4363F);
         }
 
         IVertexBuilder vertex = buffer.getBuffer(RenderType.getEntitySolid(ModTextures.PTZ_CAMERA_MODEL));
