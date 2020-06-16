@@ -1,3 +1,5 @@
 {
-    "parent": "builtin/generated"
+    "textures": {
+        "particle": "minecraft:block/iron_block"
+    }
 }
