@@ -16,7 +16,7 @@ import sciwhiz12.basedefense.init.ModTextures;
 import sciwhiz12.basedefense.tileentity.PTZCameraTile;
 
 public class PTZCameraRenderer extends TileEntityRenderer<PTZCameraTile> {
-    private PTZCameraModel model = new PTZCameraModel();
+    private final PTZCameraModel model = new PTZCameraModel();
 
     public PTZCameraRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
@@ -34,6 +34,7 @@ public class PTZCameraRenderer extends TileEntityRenderer<PTZCameraTile> {
         if (state.getBlock() instanceof PTZCameraBlock) {
             matrixStack.rotate(Vector3f.YP.rotationDegrees(state.get(PTZCameraBlock.FACING).getHorizontalAngle()));
             model.cam.rotateAngleY = tileEntity.getYaw();
+            model.arm.rotateAngleX = -tileEntity.getPitch() + 0.4363F;
         }
 
         IVertexBuilder vertex = buffer.getBuffer(RenderType.getEntitySolid(ModTextures.PTZ_CAMERA_MODEL));
