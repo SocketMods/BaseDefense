@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "basedefense:locked_acacia_door"
+    ]
+  },
+  "criteria": {
+    "has_lock_core": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "basedefense:lock_core"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "basedefense:locked_acacia_door"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_lock_core",
+      "has_the_recipe"
+    ]
+  ]
+}

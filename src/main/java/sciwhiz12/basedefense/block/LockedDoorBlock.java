@@ -53,6 +53,7 @@ public class LockedDoorBlock extends Block {
     protected static final VoxelShape NORTH_AABB = Block.makeCuboidShape(0.0D, 0.0D, 13.0D, 16.0D, 16.0D, 16.0D);
     protected static final VoxelShape WEST_AABB = Block.makeCuboidShape(13.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
     protected static final VoxelShape EAST_AABB = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 3.0D, 16.0D, 16.0D);
+    public final Block baseBlock;
 
     public LockedDoorBlock() {
         this(Blocks.IRON_DOOR);
@@ -60,6 +61,7 @@ public class LockedDoorBlock extends Block {
 
     public LockedDoorBlock(Block block) {
         super(Block.Properties.from(block));
+        this.baseBlock = block;
         this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(HINGE, DoorHingeSide.LEFT)
             .with(HALF, DoubleBlockHalf.LOWER).with(OPEN, false).with(LOCKED, false));
     }

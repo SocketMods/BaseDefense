@@ -49,8 +49,6 @@ minecraft {
                 }
             }
         }
-        
-        
 
         data {
             workingDirectory project.file('run/data')
@@ -59,7 +57,7 @@ minecraft {
 
             property 'forge.logging.console.level', 'debug'
 
-            args '--mod', 'basedefense', '--all', '--output', file('src/generated/resources/')
+            args '--mod', 'basedefense', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
                 basedefense {

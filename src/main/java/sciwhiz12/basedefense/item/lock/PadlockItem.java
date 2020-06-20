@@ -1,9 +1,6 @@
 package sciwhiz12.basedefense.item.lock;
 
-import static sciwhiz12.basedefense.block.PadlockedDoorBlock.FACING;
-import static sciwhiz12.basedefense.block.PadlockedDoorBlock.HALF;
-import static sciwhiz12.basedefense.block.PadlockedDoorBlock.HINGE;
-import static sciwhiz12.basedefense.block.PadlockedDoorBlock.SIDE;
+import static sciwhiz12.basedefense.block.PadlockedDoorBlock.*;
 
 import java.util.List;
 
@@ -31,10 +28,11 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.ItemHandlerHelper;
 import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.block.PadlockedDoorBlock;
-import sciwhiz12.basedefense.block.PadlockedDoorBlock.DoorSide;
+import sciwhiz12.basedefense.block.PadlockedDoorBlock.*;
 import sciwhiz12.basedefense.capabilities.CodedLock;
 import sciwhiz12.basedefense.capabilities.SerializableCapabilityProvider;
 import sciwhiz12.basedefense.init.ModCapabilities;
+import sciwhiz12.basedefense.init.ModItems;
 import sciwhiz12.basedefense.item.IColorable;
 import sciwhiz12.basedefense.tileentity.LockableTile;
 import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
@@ -48,7 +46,7 @@ public class PadlockItem extends Item implements IColorable {
     };
 
     public PadlockItem() {
-        super(new Item.Properties().maxDamage(0));
+        super(new Item.Properties().maxDamage(0).group(ModItems.GROUP));
         this.addPropertyOverride(new ResourceLocation("colors"), COLOR_GETTER);
     }
 

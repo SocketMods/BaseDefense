@@ -58,7 +58,7 @@ public class PadlockedDoorBlock extends Block {
     protected static final VoxelShape WEST_AABB = Block.makeCuboidShape(13.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
     protected static final VoxelShape EAST_AABB = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 3.0D, 16.0D, 16.0D);
 
-    private final Block block;
+    public final Block baseBlock;
 
     public PadlockedDoorBlock() {
         this(Blocks.IRON_DOOR);
@@ -66,7 +66,7 @@ public class PadlockedDoorBlock extends Block {
 
     public PadlockedDoorBlock(Block blockIn) {
         super(Block.Properties.from(blockIn));
-        this.block = blockIn;
+        this.baseBlock = blockIn;
         replacement_block_map.put(blockIn.delegate, this.delegate);
         this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(SIDE, DoorSide.OUTSIDE)
             .with(HINGE, DoorHingeSide.LEFT).with(HALF, DoubleBlockHalf.LOWER));
@@ -115,7 +115,7 @@ public class PadlockedDoorBlock extends Block {
                         }
                     } else {
                         player.sendStatusMessage(new TranslationTextComponent("status.basedefense.padlocked_door.locked",
-                            new TranslationTextComponent(this.block.getTranslationKey()).applyTextStyle(
+                            new TranslationTextComponent(this.baseBlock.getTranslationKey()).applyTextStyle(
                                 TextFormatting.WHITE)).applyTextStyles(TextFormatting.GRAY, TextFormatting.ITALIC), true);
                     }
                 }
@@ -135,7 +135,7 @@ public class PadlockedDoorBlock extends Block {
 
         final Direction facing = state.get(FACING);
         final DoorHingeSide hinge = state.get(HINGE);
-        final BlockState defState = this.block.getDefaultState().with(DoorBlock.HINGE, hinge).with(DoorBlock.FACING, facing)
+        final BlockState defState = this.baseBlock.getDefaultState().with(DoorBlock.HINGE, hinge).with(DoorBlock.FACING, facing)
             .with(DoorBlock.OPEN, false);
 
         final BlockState newState = defState.with(DoorBlock.HALF, state.get(HALF));

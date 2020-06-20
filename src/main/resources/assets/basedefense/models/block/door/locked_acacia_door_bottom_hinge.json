@@ -1,0 +1,7 @@
+{
+  "parent": "basedefense:block/locked_door_bottom_hinge",
+  "textures": {
+    "top": "block/acacia_door_top",
+    "bottom": "block/acacia_door_bottom"
+  }
+}
