@@ -21,28 +21,30 @@ import sciwhiz12.basedefense.item.lock.BrokenPadlockItem;
 import sciwhiz12.basedefense.item.lock.LockCoreItem;
 import sciwhiz12.basedefense.item.lock.PadlockItem;
 
+import java.security.Key;
+
 @ObjectHolder(BaseDefense.MODID)
 @EventBusSubscriber(bus = Bus.MOD, modid = BaseDefense.MODID)
 public class ModItems {
     public static final Item BLANK_KEY = Null();
-    public static final Item KEY = Null();
-    public static final Item SKELETON_KEY = Null();
-    public static final Item LOCK_CORE = Null();
-    public static final Item PADLOCK = Null();
-    public static final Item BROKEN_PADLOCK = Null();
-    public static final Item KEYRING = Null();
+    public static final KeyItem KEY = Null();
+    public static final SkeletonKeyItem SKELETON_KEY = Null();
+    public static final LockCoreItem LOCK_CORE = Null();
+    public static final PadlockItem PADLOCK = Null();
+    public static final BrokenPadlockItem BROKEN_PADLOCK = Null();
+    public static final KeyringItem KEYRING = Null();
 
-    public static final Item TEST_LOCK_BLOCK = Null();
-    public static final Item KEYSMITH_TABLE = Null();
-    public static final Item LOCKSMITH_TABLE = Null();
+    public static final BlockItem TEST_LOCK_BLOCK = Null();
+    public static final BlockItem KEYSMITH_TABLE = Null();
+    public static final BlockItem LOCKSMITH_TABLE = Null();
 
-    public static final Item LOCKED_IRON_DOOR = Null();
-    public static final Item LOCKED_OAK_DOOR = Null();
-    public static final Item LOCKED_BIRCH_DOOR = Null();
-    public static final Item LOCKED_SPRUCE_DOOR = Null();
-    public static final Item LOCKED_JUNGLE_DOOR = Null();
-    public static final Item LOCKED_ACACIA_DOOR = Null();
-    public static final Item LOCKED_DARK_OAK_DOOR = Null();
+    public static final BlockItem LOCKED_IRON_DOOR = Null();
+    public static final BlockItem LOCKED_OAK_DOOR = Null();
+    public static final BlockItem LOCKED_BIRCH_DOOR = Null();
+    public static final BlockItem LOCKED_SPRUCE_DOOR = Null();
+    public static final BlockItem LOCKED_JUNGLE_DOOR = Null();
+    public static final BlockItem LOCKED_ACACIA_DOOR = Null();
+    public static final BlockItem LOCKED_DARK_OAK_DOOR = Null();
 
     public static ItemGroup GROUP = new ItemGroup(BaseDefense.MODID) {
         @Override
