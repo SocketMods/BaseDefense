@@ -5,6 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.pathfinding.PathType;
@@ -16,6 +17,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 import sciwhiz12.basedefense.container.LocksmithContainer;
 
 public class LocksmithBlock extends Block {
@@ -26,7 +28,7 @@ public class LocksmithBlock extends Block {
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity playerEntity,
             Hand hand, BlockRayTraceResult result) {
-        playerEntity.openContainer(state.getContainer(world, pos));
+        if (!world.isRemote) { NetworkHooks.openGui((ServerPlayerEntity) playerEntity, getContainer(state, world, pos)); }
         return ActionResultType.SUCCESS;
     }
 
