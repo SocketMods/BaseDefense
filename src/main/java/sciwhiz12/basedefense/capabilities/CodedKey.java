@@ -1,5 +1,7 @@
 package sciwhiz12.basedefense.capabilities;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
@@ -52,7 +54,7 @@ public class CodedKey implements ICodeHolder, IKey, INBTSerializable<LongNBT> {
      */
     @Override
     public void setCodes(List<Long> codes) {
-        if (codes == null) { throw new NullPointerException(); }
+        checkNotNull(codes);
         this.storedCode = codes.size() > 0 ? codes.get(0) : null;
     }
 
@@ -62,14 +64,12 @@ public class CodedKey implements ICodeHolder, IKey, INBTSerializable<LongNBT> {
      */
     @Override
     public void addCode(Long code) {
-        if (code == null) { throw new NullPointerException(); }
-        this.storedCode = code;
+        this.storedCode = checkNotNull(code);
     }
 
     @Override
     public void removeCode(Long code) {
-        if (code == null) { throw new NullPointerException(); }
-        if (this.storedCode.longValue() == code.longValue()) { this.storedCode = null; }
+        if (this.storedCode.longValue() == checkNotNull(code).longValue()) { this.storedCode = null; }
     }
 
     @Override

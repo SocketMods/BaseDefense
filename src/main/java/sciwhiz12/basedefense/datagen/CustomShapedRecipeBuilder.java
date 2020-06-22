@@ -1,14 +1,14 @@
 package sciwhiz12.basedefense.datagen;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -22,7 +22,6 @@ import net.minecraft.advancements.ICriterionInstance;
 import net.minecraft.advancements.IRequirementsStrategy;
 import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
 import net.minecraft.data.IFinishedRecipe;
-import net.minecraft.data.ShapedRecipeBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
@@ -30,14 +29,13 @@ import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
+import net.minecraftforge.registries.ForgeRegistries;
 
 /**
- * Copy of {@link ShapedRecipeBuilder} that allows a custom
+ * Copy of {@link net.minecraft.data.ShapedRecipeBuilder} that allows a custom
  * {@link IRecipeSerializer<ShapedRecipe>}.
  */
 public class CustomShapedRecipeBuilder {
-    private static final Logger LOGGER = LogManager.getLogger();
     private final IRecipeSerializer<? extends ShapedRecipe> serializer;
     private final Item result;
     private final int count;
@@ -87,26 +85,22 @@ public class CustomShapedRecipeBuilder {
      * Adds a key to the recipe pattern.
      */
     public CustomShapedRecipeBuilder key(Character symbol, Ingredient ingredientIn) {
-        if (this.key.containsKey(symbol)) {
-            throw new IllegalArgumentException("Symbol '" + symbol + "' is already defined!");
-        } else if (symbol == ' ') {
-            throw new IllegalArgumentException("Symbol ' ' (whitespace) is reserved and cannot be defined");
-        } else {
-            this.key.put(symbol, ingredientIn);
-            return this;
-        }
+        checkArgument(!key.containsKey(symbol), "Symbol '%s' is already defined!", symbol);
+        checkArgument(symbol != ' ', "Symbol ' ' (whitespace) is reserved and cannot be defined");
+        this.key.put(symbol, ingredientIn);
+        return this;
     }
 
     /**
      * Adds a new entry to the patterns for this recipe.
      */
     public CustomShapedRecipeBuilder patternLine(String patternIn) {
-        if (!this.pattern.isEmpty() && patternIn.length() != this.pattern.get(0).length()) {
-            throw new IllegalArgumentException("Pattern must be the same width on every line!");
-        } else {
-            this.pattern.add(patternIn);
-            return this;
-        }
+        checkArgument(
+            pattern.isEmpty() || patternIn.length() == pattern.get(0).length(),
+            "Pattern must be the same width on every line!"
+        );
+        this.pattern.add(patternIn);
+        return this;
     }
 
     /**
@@ -126,7 +120,7 @@ public class CustomShapedRecipeBuilder {
      * Builds this recipe into an {@link IFinishedRecipe}.
      */
     public void build(Consumer<IFinishedRecipe> consumerIn) {
-        this.build(consumerIn, Registry.ITEM.getKey(this.result));
+        this.build(consumerIn, ForgeRegistries.ITEMS.getKey(this.result));
     }
 
     /**
@@ -134,18 +128,16 @@ public class CustomShapedRecipeBuilder {
      * {@link #build(Consumer)} if save is the same as the ID for the result.
      */
     public void build(Consumer<IFinishedRecipe> consumerIn, String save) {
-        ResourceLocation resourcelocation = Registry.ITEM.getKey(this.result);
-        if ((new ResourceLocation(save)).equals(resourcelocation)) {
-            throw new IllegalStateException("Shaped Recipe " + save + " should remove its 'save' argument");
-        } else {
-            this.build(consumerIn, new ResourceLocation(save));
-        }
+        ResourceLocation resultLoc = ForgeRegistries.ITEMS.getKey(this.result);
+        checkState(
+            !new ResourceLocation(save).equals(resultLoc), "Shaped recipe %s should remove its 'save' argument", save
+        );
+        this.build(consumerIn, new ResourceLocation(save));
     }
 
     /**
      * Builds this recipe into an {@link IFinishedRecipe}.
      */
-    @SuppressWarnings("ConstantConditions")
     public void build(Consumer<IFinishedRecipe> consumerIn, ResourceLocation id) {
         this.validate(id);
         this.advancementBuilder.withParentId(new ResourceLocation("recipes/root")).withCriterion(
@@ -153,10 +145,8 @@ public class CustomShapedRecipeBuilder {
         ).withRewards(AdvancementRewards.Builder.recipe(id)).withRequirementsStrategy(IRequirementsStrategy.OR);
         consumerIn.accept(
             new Result(
-                id, this.serializer, this.result, this.count, this.group == null ? "" : this.group, this.pattern, this.key,
-                this.advancementBuilder, new ResourceLocation(
-                    id.getNamespace(), "recipes/" + this.result.getGroup().getPath() + "/" + id.getPath()
-                )
+                id, serializer, result, count, group == null ? "" : group, pattern, key, advancementBuilder,
+                new ResourceLocation(id.getNamespace(), "recipes/" + result.getGroup().getPath() + "/" + id.getPath())
             )
         );
     }
@@ -165,33 +155,24 @@ public class CustomShapedRecipeBuilder {
      * Makes sure that this recipe is valid and obtainable.
      */
     private void validate(ResourceLocation id) {
-        if (this.pattern.isEmpty()) {
-            throw new IllegalStateException("No pattern is defined for shaped recipe " + id + "!");
-        } else {
-            Set<Character> set = Sets.newHashSet(this.key.keySet());
-            set.remove(' ');
+        checkState(!pattern.isEmpty(), "No pattern is defined for shaped recipe %s!", id);
+        Set<Character> set = Sets.newHashSet(this.key.keySet());
+        set.remove(' ');
 
-            for (String s : this.pattern) {
-                for (int i = 0; i < s.length(); ++i) {
-                    char c0 = s.charAt(i);
-                    if (!this.key.containsKey(c0) && c0 != ' ') {
-                        throw new IllegalStateException("Pattern in recipe " + id + " uses undefined symbol '" + c0 + "'");
-                    }
-
-                    set.remove(c0);
-                }
-            }
-
-            if (!set.isEmpty()) {
-                throw new IllegalStateException("Ingredients are defined but not used in pattern for recipe " + id);
-            } else if (this.pattern.size() == 1 && this.pattern.get(0).length() == 1) {
-                throw new IllegalStateException(
-                    "Shaped recipe " + id + " only takes in a single item - should it be a shapeless recipe instead?"
-                );
-            } else if (this.advancementBuilder.getCriteria().isEmpty()) {
-                throw new IllegalStateException("No way of obtaining recipe " + id);
+        for (String s : this.pattern) {
+            for (int i = 0; i < s.length(); ++i) {
+                char sym = s.charAt(i);
+                checkState(key.containsKey(sym) || sym == ' ', "Pattern in recipe %s uses undefined symbol '%s'", id, sym);
+                set.remove(sym);
             }
         }
+
+        checkState(set.isEmpty(), "Ingredients are defined but not used in pattern for recipe %s", id);
+        checkState(
+            pattern.size() != 1 || pattern.get(0).length() != 1,
+            "Shaped recipe %s only takes in a single item - should be a shapeless recipe", id
+        );
+        checkState(!advancementBuilder.getCriteria().isEmpty(), "No way of obtaining recipe %s", id);
     }
 
     public static class Result implements IFinishedRecipe {
@@ -235,7 +216,7 @@ public class CustomShapedRecipeBuilder {
 
             json.add("key", keysObj);
             JsonObject resultObj = new JsonObject();
-            resultObj.addProperty("item", Registry.ITEM.getKey(this.result).toString());
+            resultObj.addProperty("item", ForgeRegistries.ITEMS.getKey(this.result).toString());
             if (this.count > 1) { resultObj.addProperty("count", this.count); }
 
             json.add("result", resultObj);

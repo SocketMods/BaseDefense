@@ -1,5 +1,10 @@
 package sciwhiz12.basedefense.util;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static sciwhiz12.basedefense.init.ModCapabilities.KEY;
+import static sciwhiz12.basedefense.init.ModCapabilities.LOCK;
+import static sciwhiz12.basedefense.util.Util.mapIfBothPresent;
+
 import java.util.function.BiConsumer;
 
 import javax.annotation.Nullable;
@@ -14,7 +19,6 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.api.capablities.ILock;
-import sciwhiz12.basedefense.init.ModCapabilities;
 
 /**
  * Helper methods for unlocking and removing {@link ILock}s using {@link IKey}s.
@@ -29,8 +33,8 @@ public final class UnlockHelper {
             @Nullable ICapabilityProvider lockProvider, BiConsumer<IKey, ILock> consumer) {
         if (keyProvider == null) { return; }
         if (lockProvider == null) { return; }
-        final LazyOptional<ILock> lockCap = lockProvider.getCapability(ModCapabilities.LOCK);
-        final LazyOptional<IKey> keyCap = keyProvider.getCapability(ModCapabilities.KEY);
+        final LazyOptional<ILock> lockCap = lockProvider.getCapability(LOCK);
+        final LazyOptional<IKey> keyCap = keyProvider.getCapability(KEY);
         Util.consumeIfPresent(keyCap, lockCap, consumer);
     }
 
@@ -41,12 +45,14 @@ public final class UnlockHelper {
 
     public static boolean checkUnlock(ICapabilityProvider keyProv, ICapabilityProvider lockProv, IWorldPosCallable worldPos,
             @Nullable PlayerEntity player) {
-        Preconditions.checkNotNull(keyProv);
-        Preconditions.checkNotNull(lockProv);
-        Preconditions.checkNotNull(worldPos);
-        return Util.mapIfBothPresent(lockProv.getCapability(ModCapabilities.LOCK), keyProv.getCapability(
-            ModCapabilities.KEY), false, (lock, key) -> key.canUnlock(lock, worldPos, player) && lock.canUnlock(key,
-                worldPos, player));
+        checkNotNull(keyProv);
+        checkNotNull(lockProv);
+        checkNotNull(worldPos);
+        return mapIfBothPresent(
+            lockProv.getCapability(LOCK), keyProv.getCapability(KEY), false, (lock, key) -> key.canUnlock(
+                lock, worldPos, player
+            ) && lock.canUnlock(key, worldPos, player)
+        );
     }
 
     public static boolean checkRemove(ICapabilityProvider keyProv, ICapabilityProvider lockProv, @Nullable World world,
@@ -56,10 +62,13 @@ public final class UnlockHelper {
 
     public static boolean checkRemove(ICapabilityProvider keyProv, ICapabilityProvider lockProv, IWorldPosCallable worldPos,
             @Nullable PlayerEntity player) {
-        Preconditions.checkNotNull(keyProv);
-        Preconditions.checkNotNull(lockProv);
-        Preconditions.checkNotNull(worldPos);
-        return Util.mapIfBothPresent(lockProv.getCapability(ModCapabilities.LOCK), keyProv.getCapability(
-            ModCapabilities.KEY), false, (lock, key) -> lock.canRemove(key, worldPos, player));
+        checkNotNull(keyProv);
+        checkNotNull(lockProv);
+        checkNotNull(worldPos);
+        return mapIfBothPresent(
+            lockProv.getCapability(LOCK), keyProv.getCapability(KEY), false, (lock, key) -> lock.canRemove(
+                key, worldPos, player
+            )
+        );
     }
 }

@@ -1,7 +1,6 @@
 package sciwhiz12.basedefense.datagen;
 
-import static sciwhiz12.basedefense.datagen.DataGen.modLoc;
-import static sciwhiz12.basedefense.datagen.DataGen.modStr;
+import static sciwhiz12.basedefense.BaseDefense.modLoc;
 
 import java.util.function.Consumer;
 
@@ -12,6 +11,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.SpecialRecipeSerializer;
 import net.minecraftforge.common.Tags;
+import sciwhiz12.basedefense.BaseDefense;
 import sciwhiz12.basedefense.block.LockedDoorBlock;
 import sciwhiz12.basedefense.init.ModBlocks;
 import sciwhiz12.basedefense.init.ModItems;
@@ -65,5 +65,9 @@ public class Recipes extends RecipeProvider {
 
     <T extends IRecipe<?>> SpecialRecipeSerializer<T> asSpecial(IRecipeSerializer<T> serializer) {
         return (SpecialRecipeSerializer<T>) serializer;
+    }
+
+    public static String modStr(String path) {
+        return BaseDefense.MODID + ":" + path;
     }
 }

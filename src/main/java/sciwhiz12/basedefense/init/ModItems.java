@@ -21,8 +21,6 @@ import sciwhiz12.basedefense.item.lock.BrokenPadlockItem;
 import sciwhiz12.basedefense.item.lock.LockCoreItem;
 import sciwhiz12.basedefense.item.lock.PadlockItem;
 
-import java.security.Key;
-
 @ObjectHolder(BaseDefense.MODID)
 @EventBusSubscriber(bus = Bus.MOD, modid = BaseDefense.MODID)
 public class ModItems {

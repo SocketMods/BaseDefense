@@ -13,11 +13,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 import sciwhiz12.basedefense.BaseDefense;
-import sciwhiz12.basedefense.block.KeysmithBlock;
-import sciwhiz12.basedefense.block.LockedDoorBlock;
-import sciwhiz12.basedefense.block.LocksmithBlock;
-import sciwhiz12.basedefense.block.PadlockedDoorBlock;
-import sciwhiz12.basedefense.block.TestLockBlock;
+import sciwhiz12.basedefense.block.*;
 
 @ObjectHolder(BaseDefense.MODID)
 @EventBusSubscriber(bus = Bus.MOD, modid = BaseDefense.MODID)

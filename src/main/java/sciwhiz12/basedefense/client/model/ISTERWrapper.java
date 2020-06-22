@@ -2,12 +2,10 @@ package sciwhiz12.basedefense.client.model;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
-import net.minecraft.client.renderer.TransformationMatrix;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraftforge.client.model.BakedModelWrapper;
-import net.minecraftforge.common.model.TransformationHelper;
 
 public class ISTERWrapper extends BakedModelWrapper<IBakedModel> {
     protected TransformType currentPerspective;

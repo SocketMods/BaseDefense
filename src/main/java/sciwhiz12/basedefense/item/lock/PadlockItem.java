@@ -1,6 +1,7 @@
 package sciwhiz12.basedefense.item.lock;
 
 import static sciwhiz12.basedefense.block.PadlockedDoorBlock.*;
+import static sciwhiz12.basedefense.init.ModCapabilities.*;
 
 import java.util.List;
 
@@ -8,7 +9,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
@@ -28,10 +28,8 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.ItemHandlerHelper;
 import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.block.PadlockedDoorBlock;
-import sciwhiz12.basedefense.block.PadlockedDoorBlock.*;
 import sciwhiz12.basedefense.capabilities.CodedLock;
 import sciwhiz12.basedefense.capabilities.SerializableCapabilityProvider;
-import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.init.ModItems;
 import sciwhiz12.basedefense.item.IColorable;
 import sciwhiz12.basedefense.tileentity.LockableTile;
@@ -39,15 +37,9 @@ import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
 import sciwhiz12.basedefense.util.ItemHelper;
 
 public class PadlockItem extends Item implements IColorable {
-    private static final IItemPropertyGetter COLOR_GETTER = (stack, world, livingEntity) -> {
-        CompoundNBT tag = stack.getChildTag("display");
-        if (tag != null && tag.contains("colors")) { return (float) tag.getIntArray("colors").length; }
-        return 0.0F;
-    };
-
     public PadlockItem() {
         super(new Item.Properties().maxDamage(0).group(ModItems.GROUP));
-        this.addPropertyOverride(new ResourceLocation("colors"), COLOR_GETTER);
+        this.addPropertyOverride(new ResourceLocation("colors"), IColorable.COLOR_GETTER);
     }
 
     @Override
@@ -71,17 +63,17 @@ public class PadlockItem extends Item implements IColorable {
                     }
                 });
             }
-        }, ModCapabilities.CONTAINS_CODE, ModCapabilities.CODE_HOLDER, ModCapabilities.LOCK);
+        }, CONTAINS_CODE, CODE_HOLDER, LOCK);
     }
 
     @Override
     public CompoundNBT getShareTag(ItemStack stack) {
-        return ItemHelper.getItemShareTag(stack, ModCapabilities.CODE_HOLDER);
+        return ItemHelper.getItemShareTag(stack, CODE_HOLDER);
     }
 
     @Override
     public void readShareTag(ItemStack stack, CompoundNBT nbt) {
-        ItemHelper.readItemShareTag(stack, nbt, ModCapabilities.CODE_HOLDER);
+        ItemHelper.readItemShareTag(stack, nbt, CODE_HOLDER);
     }
 
     @Override

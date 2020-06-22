@@ -1,8 +1,11 @@
 package sciwhiz12.basedefense;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
 import sciwhiz12.basedefense.net.NetworkHandler;
 
@@ -14,5 +17,9 @@ public class BaseDefense {
 
     public BaseDefense() {
         NetworkHandler.registerPackets();
+    }
+
+    public static ResourceLocation modLoc(String path) {
+        return new ResourceLocation(MODID, checkNotNull(path));
     }
 }

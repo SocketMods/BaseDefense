@@ -1,9 +1,13 @@
 package sciwhiz12.basedefense.item.key;
 
+import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+
 import java.util.List;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -22,12 +26,12 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import sciwhiz12.basedefense.capabilities.ItemHandlerKey;
 import sciwhiz12.basedefense.client.render.KeyringRenderer;
-import sciwhiz12.basedefense.container.KeyringContainer.Provider;
+import sciwhiz12.basedefense.container.KeyringContainer;
 import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.init.ModItems;
 import sciwhiz12.basedefense.util.ItemHelper;
@@ -39,22 +43,25 @@ public class KeyringItem extends Item {
 
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((handler) -> {
+        stack.getCapability(ITEM_HANDLER_CAPABILITY).ifPresent((handler) -> {
             int keys = 0;
             for (int i = 0; i < handler.getSlots(); i++) {
                 ItemStack key = handler.getStackInSlot(i);
                 if (!key.isEmpty() && key.getItem() instanceof KeyItem) { keys++; }
             }
             if (keys > 0) {
-                tooltip.add(new TranslationTextComponent("tooltip.basedefense.keyring.count", keys).applyTextStyle(
-                    TextFormatting.GRAY));
+                tooltip.add(
+                    new TranslationTextComponent("tooltip.basedefense.keyring.count", keys).applyTextStyle(
+                        TextFormatting.GRAY
+                    )
+                );
             }
         });
     }
 
     @Override
     public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, PlayerEntity player) {
-        if (world.isBlockLoaded(pos)) {
+        if (world.isAreaLoaded(pos, 0)) {
             TileEntity te = world.getTileEntity(pos);
             return te != null && te.getCapability(ModCapabilities.LOCK).isPresent();
         }
@@ -64,8 +71,12 @@ public class KeyringItem extends Item {
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);
-        if (playerIn.isSneaking()) {
-            playerIn.openContainer(new Provider(stack));
+        if (!worldIn.isRemote && playerIn.isSneaking()) {
+            NetworkHooks.openGui(
+                (ServerPlayerEntity) playerIn, new SimpleNamedContainerProvider(
+                    (id, inv, player) -> new KeyringContainer(id, inv, stack), stack.getDisplayName()
+                ), buf -> buf.writeItemStack(stack)
+            );
             return ActionResult.resultSuccess(stack);
         }
         return ActionResult.resultPass(stack);
@@ -73,13 +84,13 @@ public class KeyringItem extends Item {
 
     @Override
     public CompoundNBT getShareTag(ItemStack stack) {
-        return ItemHelper.getItemShareTag(stack, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+        return ItemHelper.getItemShareTag(stack, ITEM_HANDLER_CAPABILITY);
     }
 
     @Override
 
     public void readShareTag(ItemStack stack, CompoundNBT nbt) {
-        ItemHelper.readItemShareTag(stack, nbt, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+        ItemHelper.readItemShareTag(stack, nbt, ITEM_HANDLER_CAPABILITY);
     }
 
     @Override
@@ -88,18 +99,18 @@ public class KeyringItem extends Item {
     }
 
     public static class KeyringProvider implements ICapabilitySerializable<INBT> {
-        private final IItemHandler item = KeyringProvider.createItemHandler();
+        private final IItemHandler item = createItemHandler();
         private final LazyOptional<IItemHandler> itemCap = LazyOptional.of(() -> item);
         private final LazyOptional<ItemHandlerKey> key = LazyOptional.of(() -> new ItemHandlerKey(item));
 
         @Override
         public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-            if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) { return itemCap.cast(); }
+            if (cap == ITEM_HANDLER_CAPABILITY) { return itemCap.cast(); }
             if (cap == ModCapabilities.KEY) { return key.cast(); }
             return LazyOptional.empty();
         }
 
-        public static ItemStackHandler createItemHandler() {
+        private ItemStackHandler createItemHandler() {
             return new ItemStackHandler(9) {
                 @Override
                 public boolean isItemValid(int slot, ItemStack stack) {
@@ -110,12 +121,12 @@ public class KeyringItem extends Item {
 
         @Override
         public INBT serializeNBT() {
-            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.writeNBT(item, null);
+            return ITEM_HANDLER_CAPABILITY.writeNBT(item, null);
         }
 
         @Override
         public void deserializeNBT(INBT nbt) {
-            CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(item, null, nbt);
+            ITEM_HANDLER_CAPABILITY.readNBT(item, null, nbt);
         }
     }
 }

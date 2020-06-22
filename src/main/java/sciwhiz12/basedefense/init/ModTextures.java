@@ -1,5 +1,7 @@
 package sciwhiz12.basedefense.init;
 
+import static sciwhiz12.basedefense.BaseDefense.modLoc;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +25,11 @@ public class ModTextures {
     public static final ResourceLocation SLOT_LOCK_CORE = addSprite("item/slot_lock_core");
     public static final ResourceLocation SLOT_INGOT_OUTLINE = addSprite("item/slot_ingot_outline");
 
+    public static final ResourceLocation KEYRING_GUI = modLoc("textures/gui/keyring_gui.png");
+    public static final ResourceLocation LOCKSMITH_GUI = modLoc("textures/gui/locksmith_gui.png");
+
     private static ResourceLocation addSprite(String location) {
-        ResourceLocation loc = new ResourceLocation(BaseDefense.MODID, location);
+        ResourceLocation loc = modLoc(location);
         sprite_list.add(loc);
         return loc;
     }

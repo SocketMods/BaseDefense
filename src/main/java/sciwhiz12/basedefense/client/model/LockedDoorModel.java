@@ -20,6 +20,7 @@ public class LockedDoorModel implements IBakedModel {
         this.parentModel = parent;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand) {
         return parentModel.getQuads(state, side, rand);
@@ -59,6 +60,7 @@ public class LockedDoorModel implements IBakedModel {
         return parentModel.isBuiltInRenderer();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public TextureAtlasSprite getParticleTexture() {
         return parentModel.getParticleTexture();

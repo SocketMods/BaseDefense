@@ -15,23 +15,24 @@ import sciwhiz12.basedefense.recipe.ColoringRecipe;
 import sciwhiz12.basedefense.recipe.CopyCodedLockRecipe;
 import sciwhiz12.basedefense.recipe.LockedDoorRecipe;
 import sciwhiz12.basedefense.recipe.PadlockRepairRecipe;
+import sciwhiz12.basedefense.util.RecipeHelper;
 
 @ObjectHolder(BaseDefense.MODID)
 @EventBusSubscriber(bus = Bus.MOD, modid = BaseDefense.MODID)
 public class ModRecipes {
 
-    public static final IRecipeSerializer<CopyCodedLockRecipe> COPY_LOCK = Null();
-    public static final IRecipeSerializer<LockedDoorRecipe> LOCKED_DOOR = Null();
-    public static final IRecipeSerializer<PadlockRepairRecipe> PADLOCK_REPAIR = Null();
-    public static final IRecipeSerializer<ColoringRecipe> COLORING = Null();
+    public static final RecipeHelper.ShapedSerializer<CopyCodedLockRecipe> COPY_LOCK = Null();
+    public static final RecipeHelper.ShapedSerializer<LockedDoorRecipe> LOCKED_DOOR = Null();
+    public static final SpecialRecipeSerializer<PadlockRepairRecipe> PADLOCK_REPAIR = Null();
+    public static final SpecialRecipeSerializer<ColoringRecipe> COLORING = Null();
 
     @SubscribeEvent
     static void onRegister(RegistryEvent.Register<IRecipeSerializer<?>> event) {
         BaseDefense.LOG.debug("Registering recipe serializers");
         final IForgeRegistry<IRecipeSerializer<?>> reg = event.getRegistry();
 
-        reg.register(new CopyCodedLockRecipe.Serializer().setRegistryName("copy_lock"));
-        reg.register(new LockedDoorRecipe.Serializer().setRegistryName("locked_door"));
+        reg.register(new RecipeHelper.ShapedSerializer<>(CopyCodedLockRecipe::new).setRegistryName("copy_lock"));
+        reg.register(new RecipeHelper.ShapedSerializer<>(LockedDoorRecipe::new).setRegistryName("locked_door"));
         reg.register(new SpecialRecipeSerializer<>(PadlockRepairRecipe::new).setRegistryName("padlock_repair"));
         reg.register(new SpecialRecipeSerializer<>(ColoringRecipe::new).setRegistryName("coloring"));
     }

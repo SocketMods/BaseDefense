@@ -36,7 +36,7 @@ public class TestLockBlock extends Block {
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
             BlockRayTraceResult rayTrace) {
-        if (!world.isRemote && world.isBlockLoaded(pos) && world.getTileEntity(pos) != null) {
+        if (!world.isRemote && world.isBlockPresent(pos) && world.getTileEntity(pos) != null) {
             TileEntity tileEntity = world.getTileEntity(pos);
             ItemStack keyStack = player.getHeldItem(hand);
             IWorldPosCallable worldPos = Util.getOrDummy(world, pos);

@@ -33,12 +33,20 @@ public class ModTileEntities {
         final IForgeRegistry<TileEntityType<?>> reg = event.getRegistry();
 
         reg.register(makeType(LockableTile::new, ModBlocks.TEST_LOCK_BLOCK).setRegistryName("lockable_tile"));
-        reg.register(makeType(PadlockedDoorTile::new, ModBlocks.PADLOCKED_IRON_DOOR, ModBlocks.PADLOCKED_OAK_DOOR,
-            ModBlocks.PADLOCKED_BIRCH_DOOR, ModBlocks.PADLOCKED_SPRUCE_DOOR, ModBlocks.PADLOCKED_JUNGLE_DOOR,
-            ModBlocks.PADLOCKED_ACACIA_DOOR, ModBlocks.PADLOCKED_DARK_OAK_DOOR).setRegistryName("padlocked_door"));
-        reg.register(makeType(LockedDoorTile::new, ModBlocks.LOCKED_IRON_DOOR, ModBlocks.LOCKED_OAK_DOOR,
-            ModBlocks.LOCKED_BIRCH_DOOR, ModBlocks.LOCKED_SPRUCE_DOOR, ModBlocks.LOCKED_JUNGLE_DOOR,
-            ModBlocks.LOCKED_ACACIA_DOOR, ModBlocks.LOCKED_DARK_OAK_DOOR).setRegistryName("locked_door"));
+        reg.register(
+            makeType(
+                PadlockedDoorTile::new, ModBlocks.PADLOCKED_IRON_DOOR, ModBlocks.PADLOCKED_OAK_DOOR,
+                ModBlocks.PADLOCKED_BIRCH_DOOR, ModBlocks.PADLOCKED_SPRUCE_DOOR, ModBlocks.PADLOCKED_JUNGLE_DOOR,
+                ModBlocks.PADLOCKED_ACACIA_DOOR, ModBlocks.PADLOCKED_DARK_OAK_DOOR
+            ).setRegistryName("padlocked_door")
+        );
+        reg.register(
+            makeType(
+                LockedDoorTile::new, ModBlocks.LOCKED_IRON_DOOR, ModBlocks.LOCKED_OAK_DOOR, ModBlocks.LOCKED_BIRCH_DOOR,
+                ModBlocks.LOCKED_SPRUCE_DOOR, ModBlocks.LOCKED_JUNGLE_DOOR, ModBlocks.LOCKED_ACACIA_DOOR,
+                ModBlocks.LOCKED_DARK_OAK_DOOR
+            ).setRegistryName("locked_door")
+        );
     }
 
     private static <T extends TileEntity> TileEntityType<T> makeType(Supplier<T> factory, Block... validBlocks) {

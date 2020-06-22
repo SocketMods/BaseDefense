@@ -5,10 +5,17 @@ import java.util.Arrays;
 import com.google.common.base.Preconditions;
 
 import net.minecraft.item.DyeColor;
+import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 
 public interface IColorable {
+    IItemPropertyGetter COLOR_GETTER = (stack, world, livingEntity) -> {
+        CompoundNBT tag = stack.getChildTag("display");
+        if (tag != null && tag.contains("colors")) { return (float) tag.getIntArray("colors").length; }
+        return 0.0F;
+    };
+
     default boolean hasColors(ItemStack stack) {
         Preconditions.checkNotNull(stack);
         if (!stack.isEmpty() && stack.getItem() instanceof IColorable) {

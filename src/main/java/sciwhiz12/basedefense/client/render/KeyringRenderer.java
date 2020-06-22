@@ -1,5 +1,8 @@
 package sciwhiz12.basedefense.client.render;
 
+import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+
+import java.util.List;
 import java.util.Random;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -10,10 +13,11 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class KeyringRenderer extends ItemStackTileEntityRenderer {
     private static final double[][] transforms = { { 0.6D, 1.5D, 0.001D }, { -0.0185D, 0.75, 0D }, { 1.645D, 1.45D,
@@ -22,7 +26,7 @@ public class KeyringRenderer extends ItemStackTileEntityRenderer {
 
     public void render(ItemStack stack, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight,
             int combinedOverlay) {
-        stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((handler) -> {
+        stack.getCapability(ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
             int keys = 0;
             for (int i = 0; i < handler.getSlots() && keys < 3; i++) {
                 ItemStack keyStack = handler.getStackInSlot(i);
@@ -46,10 +50,11 @@ public class KeyringRenderer extends ItemStackTileEntityRenderer {
         matrix.push();
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         IBakedModel model = itemRenderer.getItemModelWithOverrides(stack, null, null);
-        IVertexBuilder builder = ItemRenderer.getBuffer(buffer, RenderTypeLookup.getRenderType(stack), true, stack
-            .hasEffect());
-        itemRenderer.renderQuads(matrix, builder, model.getQuads(null, null, new Random(42L)), stack, combinedLight,
-            combinedOverlay);
+        IVertexBuilder builder = ItemRenderer.getBuffer(
+            buffer, RenderTypeLookup.getRenderType(stack), true, stack.hasEffect()
+        );
+        List<BakedQuad> quads = model.getQuads(null, null, new Random(42L), EmptyModelData.INSTANCE);
+        itemRenderer.renderQuads(matrix, builder, quads, stack, combinedLight, combinedOverlay);
         matrix.pop();
     }
 }

@@ -1,6 +1,11 @@
 package sciwhiz12.basedefense.item.key;
 
+import static sciwhiz12.basedefense.init.ModCapabilities.KEY;
+import static sciwhiz12.basedefense.init.ModCapabilities.LOCK;
+
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,7 +25,6 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.api.capablities.ILock;
 import sciwhiz12.basedefense.capabilities.GenericCapabilityProvider;
-import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.init.ModItems;
 
 public class SkeletonKeyItem extends Item {
@@ -30,7 +34,9 @@ public class SkeletonKeyItem extends Item {
 
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new TranslationTextComponent("tooltip.basedefense.skeleton_key").applyTextStyle(TextFormatting.RED));
+        tooltip.add(
+            new TranslationTextComponent("tooltip.basedefense.skeleton_key").applyTextStyle(TextFormatting.DARK_RED)
+        );
     }
 
     @Override
@@ -40,25 +46,20 @@ public class SkeletonKeyItem extends Item {
 
     @Override
     public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, PlayerEntity player) {
-        if (world.isBlockLoaded(pos)) {
-            TileEntity te = world.getTileEntity(pos);
-            return te != null && te.getCapability(ModCapabilities.LOCK).isPresent();
-        }
-        return false;
+        TileEntity te = world.getTileEntity(pos);
+        return te != null && te.getCapability(LOCK).isPresent();
     }
 
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT nbt) {
-        return new GenericCapabilityProvider<>(SkeletonKeyCapability::new, ModCapabilities.KEY);
-    }
+        return new GenericCapabilityProvider<>(() -> new IKey() {
+            @Override
+            public boolean canUnlock(ILock lock, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
+                return true;
+            }
 
-    public static class SkeletonKeyCapability implements IKey {
-        @Override
-        public boolean canUnlock(ILock lock, IWorldPosCallable worldPos, PlayerEntity player) {
-            return true;
-        }
-
-        @Override
-        public void onUnlock(ILock lock, IWorldPosCallable worldPos, PlayerEntity player) {}
+            @Override
+            public void onUnlock(ILock lock, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player) {}
+        }, KEY);
     }
 }

@@ -3,6 +3,7 @@ package sciwhiz12.basedefense.init;
 import static sciwhiz12.basedefense.util.Util.Null;
 
 import net.minecraft.inventory.container.ContainerType;
+import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -29,6 +30,6 @@ public class ModContainers {
 
         reg.register(new ContainerType<>(KeysmithContainer::new).setRegistryName("keysmith_table"));
         reg.register(new ContainerType<>(LocksmithContainer::new).setRegistryName("locksmith_table"));
-        reg.register(new ContainerType<>(KeyringContainer::new).setRegistryName("keyring"));
+        reg.register(IForgeContainerType.create(KeyringContainer::new).setRegistryName("keyring"));
     }
 }

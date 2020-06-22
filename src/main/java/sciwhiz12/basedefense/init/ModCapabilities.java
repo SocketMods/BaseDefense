@@ -36,13 +36,13 @@ public class ModCapabilities {
     @SubscribeEvent
     static void onCommonSetup(FMLCommonSetupEvent event) {
         BaseDefense.LOG.debug("Registering capabilities");
-        CapabilityManager.INSTANCE.register(ILock.class, new Storage<>(), CodedLock::new);
-        CapabilityManager.INSTANCE.register(IKey.class, new Storage<>(), CodedKey::new);
-        CapabilityManager.INSTANCE.register(IContainsCode.class, new Storage<>(), CodeHolder::new);
-        CapabilityManager.INSTANCE.register(ICodeHolder.class, new Storage<>(), CodeHolder::new);
+        CapabilityManager.INSTANCE.register(ILock.class, new FlexibleStorage<>(), CodedLock::new);
+        CapabilityManager.INSTANCE.register(IKey.class, new FlexibleStorage<>(), CodedKey::new);
+        CapabilityManager.INSTANCE.register(IContainsCode.class, new FlexibleStorage<>(), CodeHolder::new);
+        CapabilityManager.INSTANCE.register(ICodeHolder.class, new FlexibleStorage<>(), CodeHolder::new);
     }
 
-    static class Storage<T> implements Capability.IStorage<T> {
+    public static class FlexibleStorage<T> implements Capability.IStorage<T> {
         @SuppressWarnings("unchecked")
         @Override
         public INBT writeNBT(Capability<T> capability, T instance, Direction side) {

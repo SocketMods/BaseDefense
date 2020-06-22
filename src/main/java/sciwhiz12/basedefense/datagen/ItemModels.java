@@ -1,6 +1,7 @@
 package sciwhiz12.basedefense.datagen;
 
 import static sciwhiz12.basedefense.BaseDefense.MODID;
+import static sciwhiz12.basedefense.util.Util.appendPath;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.item.Item;
@@ -8,7 +9,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.*;
 import sciwhiz12.basedefense.init.ModItems;
 
-@SuppressWarnings("ConstantConditions")
 public class ItemModels extends ItemModelProvider {
     public ItemModels(DataGenerator generator, ExistingFileHelper existingFileHelper) {
         super(generator, MODID, existingFileHelper);
@@ -37,9 +37,9 @@ public class ItemModels extends ItemModelProvider {
         final ResourceLocation baseLoc = itemLoc(ModItems.KEY.getRegistryName());
         final ItemModelBuilder base = factory.apply(baseLoc);
         base.parent(keyParent);
-        base.texture("layer0", appendLoc(baseLoc, "_body"));
-        base.texture("layer1", appendLoc(baseLoc, "_head"));
-        coloredItem(baseLoc, keyParent, base, appendLoc(baseLoc, "_body"), appendLoc(baseLoc, "_overlay"));
+        base.texture("layer0", appendPath(baseLoc, "_body"));
+        base.texture("layer1", appendPath(baseLoc, "_head"));
+        coloredItem(baseLoc, keyParent, base, appendPath(baseLoc, "_body"), appendPath(baseLoc, "_overlay"));
     }
 
     void singleTextureItem(Item i) {
@@ -59,9 +59,9 @@ public class ItemModels extends ItemModelProvider {
 
     void coloredItem(final ResourceLocation baseLoc, final ModelFile parent, final ItemModelBuilder defaultModel,
             final ResourceLocation baseTexture, final ResourceLocation overlayTexture) {
-        final ResourceLocation color1 = appendLoc(baseLoc, "_color_1");
-        final ResourceLocation color2 = appendLoc(baseLoc, "_color_2");
-        final ResourceLocation color3 = appendLoc(baseLoc, "_color_3");
+        final ResourceLocation color1 = appendPath(baseLoc, "_color_1");
+        final ResourceLocation color2 = appendPath(baseLoc, "_color_2");
+        final ResourceLocation color3 = appendPath(baseLoc, "_color_3");
 
         final ItemModelBuilder overlay1 = factory.apply(color1);
         final ItemModelBuilder overlay2 = factory.apply(color2);
@@ -118,9 +118,5 @@ public class ItemModels extends ItemModelProvider {
 
     ResourceLocation itemLoc(ResourceLocation loc) {
         return new ResourceLocation(loc.getNamespace(), ModelProvider.ITEM_FOLDER + "/" + loc.getPath());
-    }
-
-    ResourceLocation appendLoc(ResourceLocation base, String append) {
-        return new ResourceLocation(base.getNamespace(), base.getPath() + append);
     }
 }

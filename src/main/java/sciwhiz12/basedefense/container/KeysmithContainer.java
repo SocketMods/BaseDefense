@@ -1,5 +1,6 @@
 package sciwhiz12.basedefense.container;
 
+import static sciwhiz12.basedefense.init.ModCapabilities.CODE_HOLDER;
 import static sciwhiz12.basedefense.init.ModTextures.ATLAS_BLOCKS_TEXTURE;
 
 import java.util.Random;
@@ -19,7 +20,6 @@ import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.text.StringTextComponent;
 import sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import sciwhiz12.basedefense.init.ModBlocks;
-import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.init.ModContainers;
 import sciwhiz12.basedefense.init.ModItems;
 import sciwhiz12.basedefense.init.ModTextures;
@@ -88,9 +88,12 @@ public class KeysmithContainer extends Container {
         if (blank.isEmpty()) {
             this.customName = null;
         } else {
-            out.getCapability(ModCapabilities.CODE_HOLDER).ifPresent((outCode) -> outCode.setCodes(dupl.getCapability(
-                ModCapabilities.CODE_HOLDER).filter((holder) -> holder.getCodes().size() > 0).map(ICodeHolder::getCodes)
-                .orElseGet(() -> LongLists.singleton(RANDOM.nextLong()))));
+            out.getCapability(CODE_HOLDER).ifPresent(
+                outCode -> outCode.setCodes(
+                    dupl.getCapability(CODE_HOLDER).filter(holder -> holder.getCodes().size() > 0).map(ICodeHolder::getCodes)
+                        .orElseGet(() -> LongLists.singleton(RANDOM.nextLong()))
+                )
+            );
             IColorable.copyColors(dupl, out);
             if (!StringUtils.isBlank(this.customName)) {
                 out.setDisplayName(new StringTextComponent(this.customName));

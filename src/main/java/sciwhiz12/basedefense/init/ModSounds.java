@@ -1,8 +1,8 @@
 package sciwhiz12.basedefense.init;
 
+import static sciwhiz12.basedefense.BaseDefense.modLoc;
 import static sciwhiz12.basedefense.util.Util.Null;
 
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -25,12 +25,8 @@ public class ModSounds {
         BaseDefense.LOG.debug("Registering sounds");
         final IForgeRegistry<SoundEvent> reg = event.getRegistry();
 
-        reg.register(new SoundEvent(makeLocation("locked_door.attempt")).setRegistryName("locked_door_attempt"));
-        reg.register(new SoundEvent(makeLocation("locked_door.relock")).setRegistryName("locked_door_relock"));
-        reg.register(new SoundEvent(makeLocation("locked_door.unlock")).setRegistryName("locked_door_unlock"));
-    }
-
-    private static ResourceLocation makeLocation(String path) {
-        return new ResourceLocation(BaseDefense.MODID, path);
+        reg.register(new SoundEvent(modLoc("locked_door.attempt")).setRegistryName("locked_door_attempt"));
+        reg.register(new SoundEvent(modLoc("locked_door.relock")).setRegistryName("locked_door_relock"));
+        reg.register(new SoundEvent(modLoc("locked_door.unlock")).setRegistryName("locked_door_unlock"));
     }
 }

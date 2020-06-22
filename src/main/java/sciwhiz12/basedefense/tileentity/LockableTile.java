@@ -72,7 +72,9 @@ public class LockableTile extends TileEntity {
 
     public void setLockStack(ItemStack stack) {
         lock.setStack(stack);
-        this.world.notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.DEFAULT);
+        if (world != null) {
+            this.world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.DEFAULT);
+        }
         this.markDirty();
     }
 

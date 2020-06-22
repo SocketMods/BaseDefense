@@ -1,5 +1,6 @@
 package sciwhiz12.basedefense.container;
 
+import static sciwhiz12.basedefense.init.ModCapabilities.CODE_HOLDER;
 import static sciwhiz12.basedefense.init.ModTextures.ATLAS_BLOCKS_TEXTURE;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -18,7 +19,6 @@ import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.IntReferenceHolder;
 import net.minecraftforge.common.Tags;
 import sciwhiz12.basedefense.init.ModBlocks;
-import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.init.ModContainers;
 import sciwhiz12.basedefense.init.ModItems;
 import sciwhiz12.basedefense.init.ModTextures;
@@ -122,7 +122,7 @@ public class LocksmithContainer extends Container {
             AtomicReference<ItemStack> lastKeyRef = new AtomicReference<>(ItemStack.EMPTY);
             for (int i = 1; i < 7; i++) {
                 ItemStack keyStack = this.inputSlots.getStackInSlot(i);
-                keyStack.getCapability(ModCapabilities.CODE_HOLDER).ifPresent((holder) -> {
+                keyStack.getCapability(CODE_HOLDER).ifPresent(holder -> {
                     keyCodes.addAll(holder.getCodes());
                     lastKeyRef.set(keyStack);
                 });
@@ -131,9 +131,7 @@ public class LocksmithContainer extends Container {
             if (!keyCodes.isEmpty()) {
                 out = new ItemStack(ModItems.LOCK_CORE, 1);
                 ItemStack lastKey = lastKeyRef.get();
-                out.getCapability(ModCapabilities.CODE_HOLDER).ifPresent((holder) -> {
-                    for (long code : keyCodes) { holder.addCode(code); }
-                });
+                out.getCapability(CODE_HOLDER).ifPresent(holder -> { for (long code : keyCodes) { holder.addCode(code); } });
                 IColorable.copyColors(lastKey, out);
                 if (lastKey.hasDisplayName()) { out.setDisplayName(lastKey.getDisplayName()); }
             }

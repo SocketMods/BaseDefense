@@ -1,5 +1,7 @@
 package sciwhiz12.basedefense.datagen;
 
+import static sciwhiz12.basedefense.util.Util.appendPath;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.data.DataGenerator;
@@ -56,7 +58,7 @@ public class BlockStates extends BlockStateProvider {
     }
 
     void padlockedDoor(PadlockedDoorBlock block) {
-        final String base = block.baseBlock.getRegistryName().getPath();
+        String base = block.baseBlock.getRegistryName().getPath();
         ModelFile bottomLeft = models().getExistingFile(mcLoc(base + "_bottom"));
         ModelFile bottomRight = models().getExistingFile(mcLoc(base + "_bottom_hinge"));
         ModelFile topLeft = models().getExistingFile(mcLoc(base + "_top"));
@@ -80,17 +82,13 @@ public class BlockStates extends BlockStateProvider {
     }
 
     BlockModelBuilder lockedDoorModel(LockedDoorBlock block, String locAppend) {
-        final String parent = ModelProvider.BLOCK_FOLDER + "/door/" + block.getRegistryName().getPath() + locAppend;
-        final ResourceLocation blockTex = blockTexture(block.baseBlock);
+        String parent = ModelProvider.BLOCK_FOLDER + "/door/" + block.getRegistryName().getPath() + locAppend;
+        ResourceLocation blockTex = blockTexture(block.baseBlock);
 
         BlockModelBuilder model = models().withExistingParent(parent, modLoc("locked_door" + locAppend));
-        model.texture("top", append(blockTex, "_top"));
-        model.texture("bottom", append(blockTex, "_bottom"));
+        model.texture("top", appendPath(blockTex, "_top"));
+        model.texture("bottom", appendPath(blockTex, "_bottom"));
 
         return model;
-    }
-
-    ResourceLocation append(ResourceLocation loc, String append) {
-        return new ResourceLocation(loc.getNamespace(), loc.getPath() + append);
     }
 }

@@ -69,8 +69,9 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
     public boolean keyPressed(int key, int scanCode, int modifiers) {
         if (key == GLFW.GLFW_KEY_ESCAPE) { this.minecraft.player.closeScreen(); }
 
-        return this.nameField.keyPressed(key, scanCode, modifiers) || this.nameField.canWrite() || super.keyPressed(key,
-            scanCode, modifiers);
+        return this.nameField.keyPressed(key, scanCode, modifiers) || this.nameField.canWrite() || super.keyPressed(
+            key, scanCode, modifiers
+        );
     }
 
     @Override

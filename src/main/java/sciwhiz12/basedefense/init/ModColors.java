@@ -24,7 +24,7 @@ public class ModColors {
     };
 
     public static final IBlockColor LOCKED_DOOR_COLOR = (state, world, pos, tintIndex) -> {
-        if (state.getBlock() instanceof LockedDoorBlock && pos != null) {
+        if (world != null && pos != null && state.getBlock() instanceof LockedDoorBlock) {
             TileEntity tile = world.getTileEntity(pos);
             if (tile instanceof LockedDoorTile && ((LockedDoorTile) tile).hasColors()) {
                 int[] colors = ((LockedDoorTile) tile).getColors();
@@ -38,15 +38,18 @@ public class ModColors {
     @SubscribeEvent
     static void registerItemColors(ColorHandlerEvent.Item event) {
         BaseDefense.LOG.debug("Registering item colors");
-        event.getItemColors().register(ITEM_COLOR, ModItems.KEY, ModItems.LOCK_CORE, ModItems.PADLOCK,
-            ModItems.BROKEN_PADLOCK);
+        event.getItemColors().register(
+            ITEM_COLOR, ModItems.KEY, ModItems.LOCK_CORE, ModItems.PADLOCK, ModItems.BROKEN_PADLOCK
+        );
     }
 
     @SubscribeEvent
     static void registerBlockColors(ColorHandlerEvent.Block event) {
         BaseDefense.LOG.debug("Registering block colors");
-        event.getBlockColors().register(LOCKED_DOOR_COLOR, ModBlocks.LOCKED_IRON_DOOR, ModBlocks.LOCKED_OAK_DOOR,
-            ModBlocks.LOCKED_BIRCH_DOOR, ModBlocks.LOCKED_SPRUCE_DOOR, ModBlocks.LOCKED_JUNGLE_DOOR,
-            ModBlocks.LOCKED_ACACIA_DOOR, ModBlocks.LOCKED_DARK_OAK_DOOR);
+        event.getBlockColors().register(
+            LOCKED_DOOR_COLOR, ModBlocks.LOCKED_IRON_DOOR, ModBlocks.LOCKED_OAK_DOOR, ModBlocks.LOCKED_BIRCH_DOOR,
+            ModBlocks.LOCKED_SPRUCE_DOOR, ModBlocks.LOCKED_JUNGLE_DOOR, ModBlocks.LOCKED_ACACIA_DOOR,
+            ModBlocks.LOCKED_DARK_OAK_DOOR
+        );
     }
 }

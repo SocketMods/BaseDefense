@@ -1,5 +1,8 @@
 package sciwhiz12.basedefense.capabilities;
 
+import static sciwhiz12.basedefense.init.ModCapabilities.CODE_HOLDER;
+import static sciwhiz12.basedefense.init.ModCapabilities.LOCK;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -11,7 +14,6 @@ import net.minecraftforge.common.util.INBTSerializable;
 import sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.api.capablities.ILock;
-import sciwhiz12.basedefense.init.ModCapabilities;
 
 public class CodedItemStackLock implements ICodeHolder, ILock, INBTSerializable<CompoundNBT> {
     private ItemStack lockStack = ItemStack.EMPTY;
@@ -26,52 +28,49 @@ public class CodedItemStackLock implements ICodeHolder, ILock, INBTSerializable<
 
     @Override
     public boolean canRemove(IKey key, IWorldPosCallable worldPos, PlayerEntity player) {
-        return lockStack.getCapability(ModCapabilities.LOCK).map((lock) -> lock.canRemove(key, worldPos, player)).orElse(
-            false);
+        return lockStack.getCapability(LOCK).map(lock -> lock.canRemove(key, worldPos, player)).orElse(false);
     }
 
     @Override
     public boolean canUnlock(IKey key, IWorldPosCallable worldPos, PlayerEntity player) {
-        return lockStack.getCapability(ModCapabilities.LOCK).map((lock) -> lock.canUnlock(key, worldPos, player)).orElse(
-            false);
+        return lockStack.getCapability(LOCK).map(lock -> lock.canUnlock(key, worldPos, player)).orElse(false);
     }
 
     @Override
     public void onRemove(IKey key, IWorldPosCallable worldPos, PlayerEntity player) {
-        lockStack.getCapability(ModCapabilities.LOCK).ifPresent((lock) -> lock.onRemove(key, worldPos, player));
+        lockStack.getCapability(LOCK).ifPresent(lock -> lock.onRemove(key, worldPos, player));
     }
 
     @Override
     public void onUnlock(IKey key, IWorldPosCallable worldPos, PlayerEntity player) {
-        lockStack.getCapability(ModCapabilities.LOCK).ifPresent((lock) -> lock.onUnlock(key, worldPos, player));
+        lockStack.getCapability(LOCK).ifPresent(lock -> lock.onUnlock(key, worldPos, player));
     }
 
     @Override
     public boolean containsCode(Long code) {
-        return lockStack.getCapability(ModCapabilities.CODE_HOLDER).map((holder) -> holder.containsCode(code)).orElse(false);
+        return lockStack.getCapability(CODE_HOLDER).map(holder -> holder.containsCode(code)).orElse(false);
     }
 
     @Override
     public void setCodes(List<Long> codes) {
         if (codes == null) { throw new NullPointerException(); }
-        lockStack.getCapability(ModCapabilities.CODE_HOLDER).ifPresent((holder) -> holder.setCodes(codes));
+        lockStack.getCapability(CODE_HOLDER).ifPresent(holder -> holder.setCodes(codes));
     }
 
     @Override
     public List<Long> getCodes() {
-        return lockStack.getCapability(ModCapabilities.CODE_HOLDER).map(ICodeHolder::getCodes).orElse(Collections
-            .emptyList());
+        return lockStack.getCapability(CODE_HOLDER).map(ICodeHolder::getCodes).orElseGet(Collections::emptyList);
     }
 
     @Override
     public void addCode(Long code) {
         if (code == null) { throw new NullPointerException(); }
-        lockStack.getCapability(ModCapabilities.CODE_HOLDER).ifPresent((holder) -> holder.addCode(code));
+        lockStack.getCapability(CODE_HOLDER).ifPresent(holder -> holder.addCode(code));
     }
 
     @Override
     public void removeCode(Long code) {
-        lockStack.getCapability(ModCapabilities.CODE_HOLDER).ifPresent((holder) -> holder.removeCode(code));
+        lockStack.getCapability(CODE_HOLDER).ifPresent(holder -> holder.removeCode(code));
     }
 
     @Override

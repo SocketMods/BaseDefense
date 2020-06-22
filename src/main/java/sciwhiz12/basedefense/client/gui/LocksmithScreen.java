@@ -1,12 +1,12 @@
 package sciwhiz12.basedefense.client.gui;
 
+import static sciwhiz12.basedefense.init.ModTextures.LOCKSMITH_GUI;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import sciwhiz12.basedefense.BaseDefense;
 import sciwhiz12.basedefense.container.LocksmithContainer;
 
 public class LocksmithScreen extends ContainerScreen<LocksmithContainer> {
@@ -15,8 +15,6 @@ public class LocksmithScreen extends ContainerScreen<LocksmithContainer> {
         this.xSize = 176;
         this.ySize = 166;
     }
-
-    private final ResourceLocation LOCKSMITH_GUI = new ResourceLocation(BaseDefense.MODID, "textures/gui/locksmith_gui.png");
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
