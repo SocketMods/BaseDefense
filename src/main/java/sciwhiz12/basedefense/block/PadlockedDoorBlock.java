@@ -31,6 +31,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.registries.IRegistryDelegate;
 import sciwhiz12.basedefense.init.ModCapabilities;
+import sciwhiz12.basedefense.init.ModSounds;
 import sciwhiz12.basedefense.item.lock.PadlockItem;
 import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
 import sciwhiz12.basedefense.util.UnlockHelper;
@@ -128,6 +129,7 @@ public class PadlockedDoorBlock extends Block {
                             ).applyTextStyles(TextFormatting.GRAY, TextFormatting.ITALIC), true
                         );
                     }
+                    worldIn.playSound(player, pos, ModSounds.LOCKED_DOOR_ATTEMPT, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
                 }
             }
         }
