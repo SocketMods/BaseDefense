@@ -12,11 +12,10 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import sciwhiz12.basedefense.BaseDefense;
 import sciwhiz12.basedefense.container.KeysmithContainer;
 import sciwhiz12.basedefense.init.ModItems;
+import sciwhiz12.basedefense.init.ModTextures;
 import sciwhiz12.basedefense.net.NetworkHandler;
 import sciwhiz12.basedefense.net.TextFieldChangePacket;
 
@@ -48,8 +47,6 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
         this.children.add(this.nameField);
         this.setFocusedDefault(this.nameField);
     }
-
-    private final ResourceLocation KEYSMITH_GUI = new ResourceLocation(BaseDefense.MODID, "textures/gui/keysmith_gui.png");
 
     @Override
     public void resize(Minecraft mc, int width, int height) {
@@ -90,7 +87,7 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        this.minecraft.getTextureManager().bindTexture(KEYSMITH_GUI);
+        this.minecraft.getTextureManager().bindTexture(ModTextures.KEYSMITH_GUI);
         int relX = (this.width - this.xSize) / 2;
         int relY = (this.height - this.ySize) / 2;
         this.blit(relX, relY, 0, 0, this.xSize, this.ySize);

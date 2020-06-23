@@ -1,5 +1,7 @@
 package sciwhiz12.basedefense.init;
 
+import static sciwhiz12.basedefense.BaseDefense.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +13,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import sciwhiz12.basedefense.BaseDefense;
-
-import static sciwhiz12.basedefense.BaseDefense.*;
 
 @EventBusSubscriber(value = Dist.CLIENT, bus = Bus.MOD, modid = BaseDefense.MODID)
 public class ModTextures {
@@ -26,6 +26,7 @@ public class ModTextures {
     public static final ResourceLocation SLOT_INGOT_OUTLINE = addSprite("item/slot_ingot_outline");
 
     public static final ResourceLocation KEYRING_GUI = modLoc("textures/gui/keyring_gui.png");
+    public static final ResourceLocation KEYSMITH_GUI = modLoc("textures/gui/keysmith_gui.png");
     public static final ResourceLocation LOCKSMITH_GUI = modLoc("textures/gui/locksmith_gui.png");
 
     private static ResourceLocation addSprite(String location) {
