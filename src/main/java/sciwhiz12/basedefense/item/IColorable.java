@@ -1,14 +1,19 @@
 package sciwhiz12.basedefense.item;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.Arrays;
 
-import com.google.common.base.Preconditions;
-
-import net.minecraft.item.DyeColor;
 import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 
+/**
+ * Interface for colorable items.
+ *
+ * @author SciWhiz12
+ */
 public interface IColorable {
     IItemPropertyGetter COLOR_GETTER = (stack, world, livingEntity) -> {
         CompoundNBT tag = stack.getChildTag("display");
@@ -16,67 +21,98 @@ public interface IColorable {
         return 0.0F;
     };
 
+    /**
+     * @param stack The {@code ItemStack} to query
+     * @return {@code true} if the stack has colors, otherwise {@code false}
+     */
     default boolean hasColors(ItemStack stack) {
-        Preconditions.checkNotNull(stack);
-        if (!stack.isEmpty() && stack.getItem() instanceof IColorable) {
+        checkNotNull(stack);
+        if (!stack.isEmpty() && stack.getItem() == this) {
             CompoundNBT display = stack.getChildTag("display");
             if (display != null) { return display.getIntArray("colors").length > 0; }
         }
         return false;
     }
 
-    default void setColor(ItemStack stack, int index, DyeColor color) {
-        Preconditions.checkNotNull(stack);
-        Preconditions.checkNotNull(color);
-        if (index < 0) { throw new IllegalArgumentException(String.valueOf(index)); }
-        if (!stack.isEmpty() && stack.getItem() instanceof IColorable) {
+    /**
+     * Sets the color of the stack at the index to the given color.
+     * 
+     * @param stack The {@code ItemStack} to modify
+     * @param index The color index to change
+     * @param color The color to change to
+     */
+    default void setColor(ItemStack stack, int index, int color) {
+        checkNotNull(stack);
+        checkArgument(index >= 0, "Index is negative: %s", index);
+        if (!stack.isEmpty() && stack.getItem() == this) {
             CompoundNBT display = stack.getOrCreateChildTag("display");
             int[] colors = display.getIntArray("colors");
             if (colors.length <= index) { colors = Arrays.copyOf(colors, index + 1); }
-            colors[index] = color.getColorValue();
+            colors[index] = color;
             display.putIntArray("colors", colors);
         }
     }
 
+    /**
+     * Sets the colors of the given stack to the given array.
+     * 
+     * @param stack  The {@code ItemStack} to modify
+     * @param colors The array of new colors
+     */
     default void setColors(ItemStack stack, int[] colors) {
-        Preconditions.checkNotNull(stack);
-        Preconditions.checkNotNull(colors);
-        if (!stack.isEmpty() && stack.getItem() instanceof IColorable) {
+        checkNotNull(stack);
+        checkNotNull(colors);
+        if (!stack.isEmpty() && stack.getItem() == this) {
             CompoundNBT display = stack.getOrCreateChildTag("display");
             display.putIntArray("colors", colors);
         }
     }
 
+    /**
+     * Returns the current colors of the given stack.
+     *
+     * @param stack The {@code ItemStack} to query
+     * @return the array of colors of the given stack, otherwise an empty array
+     */
     default int[] getColors(ItemStack stack) {
-        Preconditions.checkNotNull(stack);
-        if (!stack.isEmpty() && stack.getItem() instanceof IColorable && stack.hasTag()) {
+        checkNotNull(stack);
+        if (!stack.isEmpty() && stack.getItem() == this && stack.hasTag()) {
             CompoundNBT display = stack.getChildTag("display");
             if (display != null) { return display.getIntArray("colors"); }
         }
         return new int[0];
     }
 
-    default DyeColor getColor(ItemStack stack, int index) {
-        Preconditions.checkNotNull(stack);
-        if (index < 0) { throw new IllegalArgumentException(String.valueOf(index)); }
-        if (!stack.isEmpty() && stack.getItem() instanceof IColorable && stack.hasTag()) {
+    /**
+     * Gets the color at the specified index of the given stack.
+     *
+     * @param stack The {@code ItemStack} to query
+     * @param index The color index to query
+     * @return The color at that specified index, otherwise {@code 0}
+     */
+    default int getColor(ItemStack stack, int index) {
+        checkNotNull(stack);
+        checkArgument(index >= 0, "Index is negative: %s", index);
+        if (!stack.isEmpty() && stack.getItem() == this && stack.hasTag()) {
             CompoundNBT display = stack.getChildTag("display");
             if (display != null) {
                 int[] colors = display.getIntArray("colors");
-                if (colors.length - index > 0) { return fromColorValue(colors[index]); }
+                if (colors.length - index > 0) { return colors[index]; }
             }
         }
-        return DyeColor.WHITE;
+        return 0;
     }
 
-    static DyeColor fromColorValue(int value) {
-        for (DyeColor color : DyeColor.values()) { if (color.getColorValue() == value) { return color; } }
-        return DyeColor.WHITE;
-    }
-
+    /**
+     * Copies the colors from the first {@link ItemStack} to the second
+     * {@code ItemStack}.
+     *
+     * @param from The source {@code ItemStack}
+     * @param to   The destination {@code ItemStack}
+     */
     static void copyColors(ItemStack from, ItemStack to) {
-        Preconditions.checkNotNull(from);
-        Preconditions.checkNotNull(to);
+        checkNotNull(from);
+        checkNotNull(to);
         if (from.isEmpty() || to.isEmpty()) { return; }
         if (from.getItem() instanceof IColorable && to.getItem() instanceof IColorable) {
             IColorable fromItem = (IColorable) from.getItem();

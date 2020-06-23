@@ -71,7 +71,7 @@ public class ColoringRecipe extends SpecialRecipe {
         ItemStack output = colorItem.copy();
         IColorable color = (IColorable) output.getItem();
 
-        for (int idx = 0; idx < colors.size(); idx++) { color.setColor(output, idx, colors.get(idx)); }
+        for (int idx = 0; idx < colors.size(); idx++) { color.setColor(output, idx, colors.get(idx).getColorValue()); }
         return output;
     }
 

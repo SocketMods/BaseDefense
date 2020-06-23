@@ -18,7 +18,7 @@ public class ModColors {
 
     public static final IItemColor ITEM_COLOR = (stack, tintIndex) -> {
         if (stack.getItem() instanceof IColorable && tintIndex >= 2) {
-            return ((IColorable) stack.getItem()).getColor(stack, tintIndex - 2).getColorValue();
+            return ((IColorable) stack.getItem()).getColor(stack, tintIndex - 2);
         }
         return -1;
     };
