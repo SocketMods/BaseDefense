@@ -36,7 +36,10 @@ public class ModTextures {
 
     @SubscribeEvent
     static void onTextureStitchPre(TextureStitchEvent.Pre event) {
-        BaseDefense.LOG.debug("Adding textures to atlas");
-        for (ResourceLocation spriteLoc : sprite_list) { event.addSprite(spriteLoc); }
+        ResourceLocation mapLoc = event.getMap().getTextureLocation();
+        if (mapLoc.equals(ATLAS_BLOCKS_TEXTURE)) {
+            BaseDefense.LOG.debug("Adding textures to atlas: {}", mapLoc);
+            for (ResourceLocation spriteLoc : sprite_list) { event.addSprite(spriteLoc); }
+        }
     }
 }
