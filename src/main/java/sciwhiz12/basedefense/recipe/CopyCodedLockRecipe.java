@@ -1,5 +1,7 @@
 package sciwhiz12.basedefense.recipe;
 
+import static sciwhiz12.basedefense.Reference.Capabilities.LOCK;
+
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -7,8 +9,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import sciwhiz12.basedefense.init.ModCapabilities;
-import sciwhiz12.basedefense.init.ModRecipes;
+import sciwhiz12.basedefense.Reference.RecipeSerializers;
 import sciwhiz12.basedefense.item.IColorable;
 import sciwhiz12.basedefense.util.ItemHelper;
 
@@ -23,7 +24,7 @@ public class CopyCodedLockRecipe extends ShapedRecipe {
         for (int row = 0; row < inv.getHeight(); row++) {
             for (int col = 0; col < inv.getWidth(); col++) {
                 ItemStack stack = inv.getStackInSlot(row + col * inv.getWidth());
-                if (!stack.isEmpty() && stack.getCapability(ModCapabilities.LOCK).isPresent()) {
+                if (!stack.isEmpty() && stack.getCapability(LOCK).isPresent()) {
                     IColorable.copyColors(stack, output);
                     ItemHelper.copyCodes(stack, output);
                     if (stack.hasDisplayName()) { output.setDisplayName(stack.getDisplayName()); }
@@ -35,6 +36,6 @@ public class CopyCodedLockRecipe extends ShapedRecipe {
     }
 
     public IRecipeSerializer<?> getSerializer() {
-        return ModRecipes.COPY_LOCK;
+        return RecipeSerializers.COPY_LOCK;
     }
 }

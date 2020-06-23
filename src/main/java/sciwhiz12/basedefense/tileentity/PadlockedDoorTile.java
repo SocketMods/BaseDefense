@@ -1,9 +1,9 @@
 package sciwhiz12.basedefense.tileentity;
 
-import sciwhiz12.basedefense.init.ModTileEntities;
+import sciwhiz12.basedefense.Reference.TileEntities;
 
 public class PadlockedDoorTile extends LockableTile {
     public PadlockedDoorTile() {
-        super(ModTileEntities.PADLOCKED_DOOR);
+        super(TileEntities.PADLOCKED_DOOR);
     }
 }

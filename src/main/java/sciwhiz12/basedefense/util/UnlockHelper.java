@@ -1,8 +1,8 @@
 package sciwhiz12.basedefense.util;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static sciwhiz12.basedefense.init.ModCapabilities.KEY;
-import static sciwhiz12.basedefense.init.ModCapabilities.LOCK;
+import static sciwhiz12.basedefense.Reference.Capabilities.KEY;
+import static sciwhiz12.basedefense.Reference.Capabilities.LOCK;
 import static sciwhiz12.basedefense.util.Util.mapIfBothPresent;
 
 import java.util.function.BiConsumer;

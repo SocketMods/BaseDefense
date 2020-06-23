@@ -1,5 +1,6 @@
 package sciwhiz12.basedefense.datagen;
 
+import static sciwhiz12.basedefense.Reference.MODID;
 import static sciwhiz12.basedefense.util.Util.appendPath;
 
 import net.minecraft.block.Block;
@@ -9,37 +10,36 @@ import net.minecraft.state.properties.DoorHingeSide;
 import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.*;
-import sciwhiz12.basedefense.BaseDefense;
+import sciwhiz12.basedefense.Reference.Blocks;
 import sciwhiz12.basedefense.block.LockedDoorBlock;
 import sciwhiz12.basedefense.block.PadlockedDoorBlock;
-import sciwhiz12.basedefense.init.ModBlocks;
 
 public class BlockStates extends BlockStateProvider {
     public BlockStates(DataGenerator gen, ExistingFileHelper exFileHelper) {
-        super(gen, BaseDefense.MODID, exFileHelper);
+        super(gen, MODID, exFileHelper);
     }
 
     @Override
     protected void registerStatesAndModels() {
-        standardCubeAll(ModBlocks.TEST_LOCK_BLOCK);
-        standardCubeAll(ModBlocks.KEYSMITH_TABLE);
-        standardCubeAll(ModBlocks.LOCKSMITH_TABLE);
+        standardCubeAll(Blocks.TEST_LOCK_BLOCK);
+        standardCubeAll(Blocks.KEYSMITH_TABLE);
+        standardCubeAll(Blocks.LOCKSMITH_TABLE);
 
-        padlockedDoor(ModBlocks.PADLOCKED_OAK_DOOR);
-        padlockedDoor(ModBlocks.PADLOCKED_BIRCH_DOOR);
-        padlockedDoor(ModBlocks.PADLOCKED_SPRUCE_DOOR);
-        padlockedDoor(ModBlocks.PADLOCKED_JUNGLE_DOOR);
-        padlockedDoor(ModBlocks.PADLOCKED_ACACIA_DOOR);
-        padlockedDoor(ModBlocks.PADLOCKED_DARK_OAK_DOOR);
-        padlockedDoor(ModBlocks.PADLOCKED_IRON_DOOR);
+        padlockedDoor(Blocks.PADLOCKED_OAK_DOOR);
+        padlockedDoor(Blocks.PADLOCKED_BIRCH_DOOR);
+        padlockedDoor(Blocks.PADLOCKED_SPRUCE_DOOR);
+        padlockedDoor(Blocks.PADLOCKED_JUNGLE_DOOR);
+        padlockedDoor(Blocks.PADLOCKED_ACACIA_DOOR);
+        padlockedDoor(Blocks.PADLOCKED_DARK_OAK_DOOR);
+        padlockedDoor(Blocks.PADLOCKED_IRON_DOOR);
 
-        lockedDoor(ModBlocks.LOCKED_OAK_DOOR);
-        lockedDoor(ModBlocks.LOCKED_BIRCH_DOOR);
-        lockedDoor(ModBlocks.LOCKED_SPRUCE_DOOR);
-        lockedDoor(ModBlocks.LOCKED_JUNGLE_DOOR);
-        lockedDoor(ModBlocks.LOCKED_ACACIA_DOOR);
-        lockedDoor(ModBlocks.LOCKED_DARK_OAK_DOOR);
-        lockedDoor(ModBlocks.LOCKED_IRON_DOOR);
+        lockedDoor(Blocks.LOCKED_OAK_DOOR);
+        lockedDoor(Blocks.LOCKED_BIRCH_DOOR);
+        lockedDoor(Blocks.LOCKED_SPRUCE_DOOR);
+        lockedDoor(Blocks.LOCKED_JUNGLE_DOOR);
+        lockedDoor(Blocks.LOCKED_ACACIA_DOOR);
+        lockedDoor(Blocks.LOCKED_DARK_OAK_DOOR);
+        lockedDoor(Blocks.LOCKED_IRON_DOOR);
     }
 
     void lockedDoor(LockedDoorBlock block) {

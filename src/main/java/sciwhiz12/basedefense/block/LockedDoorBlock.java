@@ -1,6 +1,8 @@
 package sciwhiz12.basedefense.block;
 
 import static net.minecraftforge.common.util.Constants.BlockFlags.DEFAULT_AND_RERENDER;
+import static sciwhiz12.basedefense.Reference.Sounds;
+import static sciwhiz12.basedefense.Reference.Capabilities.LOCK;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -32,8 +34,6 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
-import sciwhiz12.basedefense.init.ModCapabilities;
-import sciwhiz12.basedefense.init.ModSounds;
 import sciwhiz12.basedefense.item.LockedDoorBlockItem;
 import sciwhiz12.basedefense.tileentity.LockedDoorTile;
 import sciwhiz12.basedefense.util.UnlockHelper;
@@ -95,7 +95,7 @@ public class LockedDoorBlock extends Block {
                     if (player.isSneaking()) { // LOCKED, KEY, SNEAKING => toggle locked state
                         final boolean newLocked = !state.get(LOCKED);
                         newState = state.with(LOCKED, newLocked);
-                        final SoundEvent sound = newLocked ? ModSounds.LOCKED_DOOR_RELOCK : ModSounds.LOCKED_DOOR_UNLOCK;
+                        final SoundEvent sound = newLocked ? Sounds.LOCKED_DOOR_RELOCK : Sounds.LOCKED_DOOR_UNLOCK;
                         playSound(player, worldIn, pos, sound);
                     } else { // LOCKED, KEY, NOT SNEAKING => toggle open state
                         final boolean newOpen = !state.get(OPEN);
@@ -123,7 +123,7 @@ public class LockedDoorBlock extends Block {
                                 ).applyTextStyle(TextFormatting.GRAY), true
                             );
                         }
-                        playSound(player, worldIn, pos, ModSounds.LOCKED_DOOR_ATTEMPT);
+                        playSound(player, worldIn, pos, Sounds.LOCKED_DOOR_ATTEMPT);
                         return ActionResultType.SUCCESS;
                     }
                     return ActionResultType.PASS;
@@ -134,16 +134,16 @@ public class LockedDoorBlock extends Block {
                         // UNLOCKED, SNEAKING, HAS LOCK => set to locked and unopened state
                         boolean wasOpen = state.get(OPEN);
                         setAndNotify(state.with(LOCKED, true).with(OPEN, false), pos, worldIn);
-                        playSound(player, worldIn, pos, ModSounds.LOCKED_DOOR_RELOCK);
+                        playSound(player, worldIn, pos, Sounds.LOCKED_DOOR_RELOCK);
                         if (wasOpen) { this.playDoorSound(player, worldIn, pos, false); }
                     } else { // UNLOCKED, SNEAKING, NO LOCK
-                        if (!heldStack.isEmpty() && heldStack.getCapability(ModCapabilities.LOCK).isPresent()) {
+                        if (!heldStack.isEmpty() && heldStack.getCapability(LOCK).isPresent()) {
                             // UNLOCKED, SNEAKING, NO LOCK, HOLDING LOCK => set held lock to current lock,
                             // remove from inv, set to locked state
                             te.setLockStack(heldStack.copy());
                             heldStack.setCount(heldStack.getCount() - 1);
                             setAndNotify(state.with(LOCKED, true), pos, worldIn);
-                            playSound(player, worldIn, pos, ModSounds.LOCKED_DOOR_RELOCK);
+                            playSound(player, worldIn, pos, Sounds.LOCKED_DOOR_RELOCK);
                             te.requestModelDataUpdate();
                         } // UNLOCKED, SNEAKING, NO LOCK, NOT HOLDING LOCK => nothing;
                     }

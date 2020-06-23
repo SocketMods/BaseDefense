@@ -1,7 +1,8 @@
 package sciwhiz12.basedefense.container;
 
-import static sciwhiz12.basedefense.init.ModCapabilities.CODE_HOLDER;
-import static sciwhiz12.basedefense.init.ModTextures.ATLAS_BLOCKS_TEXTURE;
+import static sciwhiz12.basedefense.Reference.Blocks;
+import static sciwhiz12.basedefense.Reference.Containers;
+import static sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
 
 import java.util.Random;
 
@@ -18,11 +19,9 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.text.StringTextComponent;
+import sciwhiz12.basedefense.ClientReference.Textures;
+import sciwhiz12.basedefense.Reference.Items;
 import sciwhiz12.basedefense.api.capablities.ICodeHolder;
-import sciwhiz12.basedefense.init.ModBlocks;
-import sciwhiz12.basedefense.init.ModContainers;
-import sciwhiz12.basedefense.init.ModItems;
-import sciwhiz12.basedefense.init.ModTextures;
 import sciwhiz12.basedefense.item.IColorable;
 import sciwhiz12.basedefense.util.ContainerHelper;
 
@@ -50,21 +49,21 @@ public class KeysmithContainer extends Container {
     }
 
     public KeysmithContainer(int windowId, PlayerInventory playerInv, IWorldPosCallable worldPos) {
-        super(ModContainers.KEYSMITH_TABLE, windowId);
+        super(Containers.KEYSMITH_TABLE, windowId);
         this.worldPos = worldPos;
 
         this.addSlot(new Slot(this.inputSlots, 0, 14, 24) {
             @Override
             public boolean isItemValid(ItemStack stack) {
-                return stack.getItem() == ModItems.BLANK_KEY;
+                return stack.getItem() == Items.BLANK_KEY;
             }
-        }.setBackground(ATLAS_BLOCKS_TEXTURE, ModTextures.SLOT_BLANK_KEY));
+        }.setBackground(Textures.ATLAS_BLOCKS_TEXTURE, Textures.SLOT_BLANK_KEY));
         this.addSlot(new Slot(this.inputSlots, 1, 31, 46) {
             @Override
             public boolean isItemValid(ItemStack stack) {
-                return stack.getItem() == ModItems.KEY;
+                return stack.getItem() == Items.KEY;
             }
-        }.setBackground(ATLAS_BLOCKS_TEXTURE, ModTextures.SLOT_KEY));
+        }.setBackground(Textures.ATLAS_BLOCKS_TEXTURE, Textures.SLOT_KEY));
         this.addSlot(new Slot(this.outputSlot, 0, 64, 24) {
             @Override
             public boolean isItemValid(ItemStack stack) {
@@ -77,14 +76,14 @@ public class KeysmithContainer extends Container {
                 KeysmithContainer.this.setOutputName(null);
                 return stack;
             }
-        }.setBackground(ATLAS_BLOCKS_TEXTURE, ModTextures.SLOT_KEY));
+        }.setBackground(Textures.ATLAS_BLOCKS_TEXTURE, Textures.SLOT_KEY));
         ContainerHelper.layoutPlayerInventorySlots(this::addSlot, playerInv, 8, 84);
     }
 
     public void onContentsChange() {
         ItemStack blank = this.inputSlots.getStackInSlot(0);
         ItemStack dupl = this.inputSlots.getStackInSlot(1);
-        ItemStack out = blank.isEmpty() ? ItemStack.EMPTY : new ItemStack(ModItems.KEY, 1);
+        ItemStack out = blank.isEmpty() ? ItemStack.EMPTY : new ItemStack(Items.KEY, 1);
         if (blank.isEmpty()) {
             this.customName = null;
         } else {
@@ -114,7 +113,7 @@ public class KeysmithContainer extends Container {
 
     @Override
     public boolean canInteractWith(PlayerEntity player) {
-        return isWithinUsableDistance(worldPos, player, ModBlocks.KEYSMITH_TABLE);
+        return isWithinUsableDistance(worldPos, player, Blocks.KEYSMITH_TABLE);
     }
 
     public void onContainerClosed(PlayerEntity playerIn) {

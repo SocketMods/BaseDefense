@@ -1,13 +1,13 @@
 package sciwhiz12.basedefense.datagen;
 
-import static sciwhiz12.basedefense.BaseDefense.MODID;
+import static sciwhiz12.basedefense.Reference.MODID;
 import static sciwhiz12.basedefense.util.Util.appendPath;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.*;
-import sciwhiz12.basedefense.init.ModItems;
+import sciwhiz12.basedefense.Reference.Items;
 
 public class ItemModels extends ItemModelProvider {
     public ItemModels(DataGenerator generator, ExistingFileHelper existingFileHelper) {
@@ -16,20 +16,20 @@ public class ItemModels extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        singleTextureItem(ModItems.BLANK_KEY);
-        singleTextureItem(ModItems.SKELETON_KEY);
-        singleTextureItem(ModItems.KEYRING);
+        singleTextureItem(Items.BLANK_KEY);
+        singleTextureItem(Items.SKELETON_KEY);
+        singleTextureItem(Items.KEYRING);
 
-        singleTextureItem(ModItems.LOCKED_OAK_DOOR);
-        singleTextureItem(ModItems.LOCKED_BIRCH_DOOR);
-        singleTextureItem(ModItems.LOCKED_SPRUCE_DOOR);
-        singleTextureItem(ModItems.LOCKED_JUNGLE_DOOR);
-        singleTextureItem(ModItems.LOCKED_ACACIA_DOOR);
-        singleTextureItem(ModItems.LOCKED_DARK_OAK_DOOR);
-        singleTextureItem(ModItems.LOCKED_IRON_DOOR);
+        singleTextureItem(Items.LOCKED_OAK_DOOR);
+        singleTextureItem(Items.LOCKED_BIRCH_DOOR);
+        singleTextureItem(Items.LOCKED_SPRUCE_DOOR);
+        singleTextureItem(Items.LOCKED_JUNGLE_DOOR);
+        singleTextureItem(Items.LOCKED_ACACIA_DOOR);
+        singleTextureItem(Items.LOCKED_DARK_OAK_DOOR);
+        singleTextureItem(Items.LOCKED_IRON_DOOR);
 
-        coloredItem(ModItems.PADLOCK);
-        coloredItem(ModItems.LOCK_CORE);
+        coloredItem(Items.PADLOCK);
+        coloredItem(Items.LOCK_CORE);
 
         coloredKey();
     }
@@ -37,7 +37,7 @@ public class ItemModels extends ItemModelProvider {
     void coloredKey() {
         final ItemModelBuilder keyParent = getKeyDisplayParent();
         generatedModels.put(keyParent.getLocation(), keyParent);
-        final ResourceLocation baseLoc = itemLoc(ModItems.KEY.getRegistryName());
+        final ResourceLocation baseLoc = itemLoc(Items.KEY.getRegistryName());
         final ItemModelBuilder base = factory.apply(baseLoc);
         base.parent(keyParent);
         base.texture("layer0", appendPath(baseLoc, "_body"));

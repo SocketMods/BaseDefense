@@ -1,7 +1,7 @@
 package sciwhiz12.basedefense.util;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static sciwhiz12.basedefense.init.ModCapabilities.CODE_HOLDER;
+import static sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
 
 import java.util.ArrayList;
 import java.util.Collections;

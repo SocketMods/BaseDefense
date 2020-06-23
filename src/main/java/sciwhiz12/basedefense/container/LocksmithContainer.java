@@ -1,7 +1,6 @@
 package sciwhiz12.basedefense.container;
 
-import static sciwhiz12.basedefense.init.ModCapabilities.CODE_HOLDER;
-import static sciwhiz12.basedefense.init.ModTextures.ATLAS_BLOCKS_TEXTURE;
+import static sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -18,10 +17,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.IntReferenceHolder;
 import net.minecraftforge.common.Tags;
-import sciwhiz12.basedefense.init.ModBlocks;
-import sciwhiz12.basedefense.init.ModContainers;
-import sciwhiz12.basedefense.init.ModItems;
-import sciwhiz12.basedefense.init.ModTextures;
+import sciwhiz12.basedefense.ClientReference.Textures;
+import sciwhiz12.basedefense.Reference;
+import sciwhiz12.basedefense.Reference.Blocks;
 import sciwhiz12.basedefense.item.IColorable;
 import sciwhiz12.basedefense.util.ContainerHelper;
 import sciwhiz12.basedefense.util.UnlockHelper;
@@ -53,7 +51,7 @@ public class LocksmithContainer extends Container {
     }
 
     public LocksmithContainer(int windowId, PlayerInventory playerInv, IWorldPosCallable worldPos) {
-        super(ModContainers.LOCKSMITH_TABLE, windowId);
+        super(Reference.Containers.LOCKSMITH_TABLE, windowId);
         this.worldPos = worldPos;
         this.trackInt(this.testingState);
         this.testingState.set(0);
@@ -62,21 +60,21 @@ public class LocksmithContainer extends Container {
             public boolean isItemValid(ItemStack stack) {
                 return Tags.Items.INGOTS_IRON.contains(stack.getItem());
             }
-        }.setBackground(ATLAS_BLOCKS_TEXTURE, ModTextures.SLOT_INGOT_OUTLINE));
+        }.setBackground(Textures.ATLAS_BLOCKS_TEXTURE, Textures.SLOT_INGOT_OUTLINE));
 
         for (int i = 1; i < 4; i++) {
             this.addSlot(new Slot(this.inputSlots, i, 13 + ((i - 1) * 18), 21) {
                 public boolean isItemValid(ItemStack stack) {
-                    return stack.getItem() == ModItems.KEY;
+                    return stack.getItem() == Reference.Items.KEY;
                 }
-            }.setBackground(ATLAS_BLOCKS_TEXTURE, ModTextures.SLOT_KEY));
+            }.setBackground(Textures.ATLAS_BLOCKS_TEXTURE, Textures.SLOT_KEY));
         }
         for (int i = 4; i < 7; i++) {
             this.addSlot(new Slot(this.inputSlots, i, 13 + ((i - 4) * 18), 50) {
                 public boolean isItemValid(ItemStack stack) {
-                    return stack.getItem() == ModItems.KEY;
+                    return stack.getItem() == Reference.Items.KEY;
                 }
-            }.setBackground(ATLAS_BLOCKS_TEXTURE, ModTextures.SLOT_KEY));
+            }.setBackground(Textures.ATLAS_BLOCKS_TEXTURE, Textures.SLOT_KEY));
         }
 
         this.addSlot(new Slot(this.outputSlot, 0, 80, 13) {
@@ -88,17 +86,17 @@ public class LocksmithContainer extends Container {
                 LocksmithContainer.this.inputSlots.decrStackSize(0, 1);
                 return stack;
             }
-        }.setBackground(ATLAS_BLOCKS_TEXTURE, ModTextures.SLOT_LOCK_CORE));
+        }.setBackground(Textures.ATLAS_BLOCKS_TEXTURE, Textures.SLOT_LOCK_CORE));
 
         this.addSlot(new Slot(this.testingSlots, 0, 135, 19) {
             public boolean isItemValid(ItemStack stack) {
-                return stack.getItem() == ModItems.KEY;
+                return stack.getItem() == Reference.Items.KEY;
             }
-        }.setBackground(ATLAS_BLOCKS_TEXTURE, ModTextures.SLOT_KEY));
+        }.setBackground(Textures.ATLAS_BLOCKS_TEXTURE, Textures.SLOT_KEY));
 
         this.addSlot(new Slot(this.testingSlots, 1, 135, 40) {
             public boolean isItemValid(ItemStack stack) {
-                return stack.getItem() == ModItems.LOCK_CORE;
+                return stack.getItem() == Reference.Items.LOCK_CORE;
             }
         });
 
@@ -129,7 +127,7 @@ public class LocksmithContainer extends Container {
             }
 
             if (!keyCodes.isEmpty()) {
-                out = new ItemStack(ModItems.LOCK_CORE, 1);
+                out = new ItemStack(Reference.Items.LOCK_CORE, 1);
                 ItemStack lastKey = lastKeyRef.get();
                 out.getCapability(CODE_HOLDER).ifPresent(holder -> { for (long code : keyCodes) { holder.addCode(code); } });
                 IColorable.copyColors(lastKey, out);
@@ -154,7 +152,7 @@ public class LocksmithContainer extends Container {
 
     @Override
     public boolean canInteractWith(PlayerEntity player) {
-        return isWithinUsableDistance(worldPos, player, ModBlocks.LOCKSMITH_TABLE);
+        return isWithinUsableDistance(worldPos, player, Blocks.LOCKSMITH_TABLE);
     }
 
     public void onContainerClosed(PlayerEntity playerIn) {

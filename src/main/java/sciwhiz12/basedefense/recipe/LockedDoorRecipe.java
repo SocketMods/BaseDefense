@@ -8,9 +8,9 @@ import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import sciwhiz12.basedefense.init.ModRecipes;
-import sciwhiz12.basedefense.item.lock.LockCoreItem;
+import sciwhiz12.basedefense.Reference.RecipeSerializers;
 import sciwhiz12.basedefense.item.LockedDoorBlockItem;
+import sciwhiz12.basedefense.item.lock.LockCoreItem;
 
 public class LockedDoorRecipe extends ShapedRecipe {
     public LockedDoorRecipe(ResourceLocation idIn, String groupIn, int recipeWidthIn, int recipeHeightIn,
@@ -40,6 +40,6 @@ public class LockedDoorRecipe extends ShapedRecipe {
 
     @Override
     public IRecipeSerializer<?> getSerializer() {
-        return ModRecipes.LOCKED_DOOR;
+        return RecipeSerializers.LOCKED_DOOR;
     }
 }

@@ -1,6 +1,7 @@
 package sciwhiz12.basedefense.item;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
 
 import java.util.List;
 
@@ -16,12 +17,11 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import sciwhiz12.basedefense.block.LockedDoorBlock;
-import sciwhiz12.basedefense.init.ModItems;
 import sciwhiz12.basedefense.util.ItemHelper;
 
 public class LockedDoorBlockItem extends BlockItem {
     public LockedDoorBlockItem(LockedDoorBlock blockIn) {
-        super(blockIn, new Item.Properties().group(ModItems.GROUP).maxDamage(0));
+        super(blockIn, new Item.Properties().group(ITEM_GROUP).maxDamage(0));
     }
 
     @Override

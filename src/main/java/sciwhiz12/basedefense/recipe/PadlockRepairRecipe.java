@@ -1,5 +1,7 @@
 package sciwhiz12.basedefense.recipe;
 
+import static sciwhiz12.basedefense.Reference.Capabilities.KEY;
+
 import java.util.Optional;
 
 import org.apache.commons.lang3.tuple.Triple;
@@ -14,9 +16,8 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Tags;
-import sciwhiz12.basedefense.init.ModCapabilities;
-import sciwhiz12.basedefense.init.ModItems;
-import sciwhiz12.basedefense.init.ModRecipes;
+import sciwhiz12.basedefense.Reference.Items;
+import sciwhiz12.basedefense.Reference.RecipeSerializers;
 import sciwhiz12.basedefense.item.IColorable;
 import sciwhiz12.basedefense.item.lock.BrokenPadlockItem;
 import sciwhiz12.basedefense.util.ItemHelper;
@@ -49,7 +50,7 @@ public class PadlockRepairRecipe extends SpecialRecipe {
                     } else {
                         hasInvalid = true;
                     }
-                } else if (stack.getCapability(ModCapabilities.KEY).isPresent()) {
+                } else if (stack.getCapability(KEY).isPresent()) {
                     if (keySlot < 0) {
                         keySlot = slot;
                     } else {
@@ -79,7 +80,7 @@ public class PadlockRepairRecipe extends SpecialRecipe {
         Optional<Triple<Integer, Integer, Integer>> opSlots = getSlots(inv);
         if (opSlots.isPresent()) {
             ItemStack padlock = inv.getStackInSlot(opSlots.get().getLeft());
-            ItemStack output = new ItemStack(ModItems.PADLOCK, 1);
+            ItemStack output = new ItemStack(Items.PADLOCK, 1);
             IColorable.copyColors(padlock, output);
             ItemHelper.copyCodes(padlock, output);
             if (padlock.hasDisplayName()) { output.setDisplayName(padlock.getDisplayName()); }
@@ -108,7 +109,7 @@ public class PadlockRepairRecipe extends SpecialRecipe {
 
     @Override
     public IRecipeSerializer<?> getSerializer() {
-        return ModRecipes.PADLOCK_REPAIR;
+        return RecipeSerializers.PADLOCK_REPAIR;
     }
 
 }

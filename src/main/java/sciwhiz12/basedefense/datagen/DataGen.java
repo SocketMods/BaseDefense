@@ -1,6 +1,7 @@
 package sciwhiz12.basedefense.datagen;
 
 import static sciwhiz12.basedefense.BaseDefense.LOG;
+import static sciwhiz12.basedefense.Reference.MODID;
 
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
@@ -10,9 +11,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
-import sciwhiz12.basedefense.BaseDefense;
 
-@EventBusSubscriber(modid = BaseDefense.MODID, bus = Bus.MOD)
+@EventBusSubscriber(modid = MODID, bus = Bus.MOD)
 public class DataGen {
     public static final Marker DATAGEN = MarkerManager.getMarker("DATAGEN");
 

@@ -1,5 +1,8 @@
 package sciwhiz12.basedefense.block;
 
+import static sciwhiz12.basedefense.Reference.Sounds;
+import static sciwhiz12.basedefense.Reference.Capabilities.KEY;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,8 +33,6 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.registries.IRegistryDelegate;
-import sciwhiz12.basedefense.init.ModCapabilities;
-import sciwhiz12.basedefense.init.ModSounds;
 import sciwhiz12.basedefense.item.lock.PadlockItem;
 import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
 import sciwhiz12.basedefense.util.UnlockHelper;
@@ -96,7 +97,7 @@ public class PadlockedDoorBlock extends Block {
             TileEntity te = worldIn.getTileEntity(pos);
             if (te instanceof PadlockedDoorTile) {
                 PadlockedDoorTile doorTile = (PadlockedDoorTile) te;
-                if (keyStack.getCapability(ModCapabilities.KEY).isPresent()) {
+                if (keyStack.getCapability(KEY).isPresent()) {
                     if (allowOpen(state.get(SIDE), state.get(FACING), rayTrace.getFace())) {
                         IWorldPosCallable worldPos = Util.getOrDummy(worldIn, pos);
                         if (UnlockHelper.checkRemove(keyStack, doorTile, worldPos, player)) {
@@ -129,7 +130,10 @@ public class PadlockedDoorBlock extends Block {
                             ).applyTextStyles(TextFormatting.GRAY, TextFormatting.ITALIC), true
                         );
                     }
-                    worldIn.playSound(player, pos, ModSounds.LOCKED_DOOR_ATTEMPT, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
+                    worldIn.playSound(
+                        player, pos, Sounds.LOCKED_DOOR_ATTEMPT, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F
+                                + 0.9F
+                    );
                 }
             }
         }

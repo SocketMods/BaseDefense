@@ -4,14 +4,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
-import sciwhiz12.basedefense.init.ModTileEntities;
+import sciwhiz12.basedefense.Reference.TileEntities;
 import sciwhiz12.basedefense.item.IColorable;
 
 public class LockedDoorTile extends LockableTile {
     public static final ModelProperty<Integer> COLOR_PROPERTY = new ModelProperty<>();
 
     public LockedDoorTile() {
-        super(ModTileEntities.LOCKED_DOOR);
+        super(TileEntities.LOCKED_DOOR);
     }
 
     public boolean hasColors() {

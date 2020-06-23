@@ -1,6 +1,6 @@
 package sciwhiz12.basedefense.item.lock;
 
-import static sciwhiz12.basedefense.init.ModCapabilities.*;
+import static sciwhiz12.basedefense.Reference.Capabilities.*;
 
 import java.util.List;
 

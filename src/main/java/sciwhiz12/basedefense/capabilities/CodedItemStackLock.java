@@ -1,7 +1,7 @@
 package sciwhiz12.basedefense.capabilities;
 
-import static sciwhiz12.basedefense.init.ModCapabilities.CODE_HOLDER;
-import static sciwhiz12.basedefense.init.ModCapabilities.LOCK;
+import static sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
+import static sciwhiz12.basedefense.Reference.Capabilities.LOCK;
 
 import java.util.Collections;
 import java.util.List;

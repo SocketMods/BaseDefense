@@ -13,9 +13,9 @@ import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
+import sciwhiz12.basedefense.ClientReference.Textures;
+import sciwhiz12.basedefense.Reference;
 import sciwhiz12.basedefense.container.KeysmithContainer;
-import sciwhiz12.basedefense.init.ModItems;
-import sciwhiz12.basedefense.init.ModTextures;
 import sciwhiz12.basedefense.net.NetworkHandler;
 import sciwhiz12.basedefense.net.TextFieldChangePacket;
 
@@ -87,7 +87,7 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        this.minecraft.getTextureManager().bindTexture(ModTextures.KEYSMITH_GUI);
+        this.minecraft.getTextureManager().bindTexture(Textures.KEYSMITH_GUI);
         int relX = (this.width - this.xSize) / 2;
         int relY = (this.height - this.ySize) / 2;
         this.blit(relX, relY, 0, 0, this.xSize, this.ySize);
@@ -99,7 +99,7 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
     }
 
     private void onTextChange(String newText) {
-        boolean flag1 = newText.equals(I18n.format(ModItems.KEY.getTranslationKey()));
+        boolean flag1 = newText.equals(I18n.format(Reference.Items.KEY.getTranslationKey()));
         boolean flag2 = StringUtils.isBlank(newText);
         if (flag1 || flag2) { newText = ""; }
         container.setOutputName(newText);
@@ -121,7 +121,7 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
                 nameField.setText("");
             } else if (!stack.isEmpty() && !isEnabledText) {
                 isEnabledText = true;
-                nameField.setText(I18n.format(ModItems.KEY.getTranslationKey()));
+                nameField.setText(I18n.format(Reference.Items.KEY.getTranslationKey()));
             }
             this.minecraft.deferTask(() -> this.nameField.setEnabled(isEnabledText));
         } else if (slotInd == 1) {

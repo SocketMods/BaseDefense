@@ -5,7 +5,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.util.IWorldPosCallable;
@@ -22,18 +21,6 @@ import net.minecraftforge.common.util.LazyOptional;
 public final class Util {
     // Prevent instantiation
     private Util() {}
-
-    /**
-     * A fix for IntelliJ IDEA's "Constant conditions" inspection. Used for
-     * {@link net.minecraftforge.registries.ObjectHolder} and
-     * {@link net.minecraftforge.common.capabilities.CapabilityInject} fields.
-     * 
-     * @return {@code null}
-     */
-    @Nonnull
-    public static <T> T Null() {
-        return null;
-    }
 
     /**
      * Returns an {@link IWorldPosCallable} containing the given parameters, or

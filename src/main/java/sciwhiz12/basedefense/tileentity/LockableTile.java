@@ -1,5 +1,7 @@
 package sciwhiz12.basedefense.tileentity;
 
+import static sciwhiz12.basedefense.Reference.Capabilities.LOCK;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -10,9 +12,8 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
+import sciwhiz12.basedefense.Reference.TileEntities;
 import sciwhiz12.basedefense.capabilities.CodedItemStackLock;
-import sciwhiz12.basedefense.init.ModCapabilities;
-import sciwhiz12.basedefense.init.ModTileEntities;
 
 public class LockableTile extends TileEntity {
     public static final String TAG_LOCK = "Lock";
@@ -21,7 +22,7 @@ public class LockableTile extends TileEntity {
     private final CodedItemStackLock lock = new CodedItemStackLock();
 
     public LockableTile() {
-        super(ModTileEntities.LOCKABLE_TILE);
+        super(TileEntities.LOCKABLE_TILE);
     }
 
     public LockableTile(TileEntityType<?> type) {
@@ -30,7 +31,7 @@ public class LockableTile extends TileEntity {
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (cap == ModCapabilities.LOCK) { return lockCap.cast(); }
+        if (cap == LOCK) { return lockCap.cast(); }
         return super.getCapability(cap, side);
     }
 

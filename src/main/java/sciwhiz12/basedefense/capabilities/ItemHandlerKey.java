@@ -1,6 +1,6 @@
 package sciwhiz12.basedefense.capabilities;
 
-import static sciwhiz12.basedefense.init.ModCapabilities.KEY;
+import static sciwhiz12.basedefense.Reference.Capabilities.KEY;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;

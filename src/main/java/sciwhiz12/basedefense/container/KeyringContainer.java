@@ -12,7 +12,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.SlotItemHandler;
-import sciwhiz12.basedefense.init.ModContainers;
+import sciwhiz12.basedefense.Reference.Containers;
 import sciwhiz12.basedefense.item.key.KeyringItem;
 import sciwhiz12.basedefense.util.ContainerHelper;
 
@@ -25,7 +25,7 @@ public class KeyringContainer extends Container {
     }
 
     public KeyringContainer(int id, PlayerInventory inv, ItemStack stack) {
-        super(ModContainers.KEYRING, id);
+        super(Containers.KEYRING, id);
         this.playerInv = inv;
         itemHandler = (IItemHandlerModifiable) stack.getCapability(ITEM_HANDLER_CAPABILITY).orElseThrow(
             IllegalStateException::new

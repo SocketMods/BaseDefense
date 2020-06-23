@@ -1,6 +1,9 @@
 package sciwhiz12.basedefense.item.key;
 
 import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
+import static sciwhiz12.basedefense.Reference.Capabilities.KEY;
+import static sciwhiz12.basedefense.Reference.Capabilities.LOCK;
 
 import java.util.List;
 
@@ -32,13 +35,11 @@ import net.minecraftforge.items.ItemStackHandler;
 import sciwhiz12.basedefense.capabilities.ItemHandlerKey;
 import sciwhiz12.basedefense.client.render.KeyringRenderer;
 import sciwhiz12.basedefense.container.KeyringContainer;
-import sciwhiz12.basedefense.init.ModCapabilities;
-import sciwhiz12.basedefense.init.ModItems;
 import sciwhiz12.basedefense.util.ItemHelper;
 
 public class KeyringItem extends Item {
     public KeyringItem() {
-        super(new Item.Properties().group(ModItems.GROUP).maxDamage(0).setISTER(() -> KeyringRenderer::new));
+        super(new Item.Properties().group(ITEM_GROUP).maxDamage(0).setISTER(() -> KeyringRenderer::new));
     }
 
     @Override
@@ -63,7 +64,7 @@ public class KeyringItem extends Item {
     public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, PlayerEntity player) {
         if (world.isAreaLoaded(pos, 0)) {
             TileEntity te = world.getTileEntity(pos);
-            return te != null && te.getCapability(ModCapabilities.LOCK).isPresent();
+            return te != null && te.getCapability(LOCK).isPresent();
         }
         return false;
     }
@@ -106,7 +107,7 @@ public class KeyringItem extends Item {
         @Override
         public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
             if (cap == ITEM_HANDLER_CAPABILITY) { return itemCap.cast(); }
-            if (cap == ModCapabilities.KEY) { return key.cast(); }
+            if (cap == KEY) { return key.cast(); }
             return LazyOptional.empty();
         }
 

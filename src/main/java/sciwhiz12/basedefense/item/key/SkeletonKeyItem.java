@@ -1,7 +1,8 @@
 package sciwhiz12.basedefense.item.key;
 
-import static sciwhiz12.basedefense.init.ModCapabilities.KEY;
-import static sciwhiz12.basedefense.init.ModCapabilities.LOCK;
+import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
+import static sciwhiz12.basedefense.Reference.Capabilities.KEY;
+import static sciwhiz12.basedefense.Reference.Capabilities.LOCK;
 
 import java.util.List;
 
@@ -25,11 +26,10 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.api.capablities.ILock;
 import sciwhiz12.basedefense.capabilities.GenericCapabilityProvider;
-import sciwhiz12.basedefense.init.ModItems;
 
 public class SkeletonKeyItem extends Item {
     public SkeletonKeyItem() {
-        super(new Item.Properties().maxDamage(0).rarity(Rarity.EPIC).group(ModItems.GROUP));
+        super(new Item.Properties().maxDamage(0).rarity(Rarity.EPIC).group(ITEM_GROUP));
     }
 
     @Override

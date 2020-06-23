@@ -1,7 +1,8 @@
 package sciwhiz12.basedefense.item.lock;
 
+import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
+import static sciwhiz12.basedefense.Reference.Capabilities.*;
 import static sciwhiz12.basedefense.block.PadlockedDoorBlock.*;
-import static sciwhiz12.basedefense.init.ModCapabilities.*;
 
 import java.util.List;
 
@@ -30,7 +31,6 @@ import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.block.PadlockedDoorBlock;
 import sciwhiz12.basedefense.capabilities.CodedLock;
 import sciwhiz12.basedefense.capabilities.SerializableCapabilityProvider;
-import sciwhiz12.basedefense.init.ModItems;
 import sciwhiz12.basedefense.item.IColorable;
 import sciwhiz12.basedefense.tileentity.LockableTile;
 import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
@@ -38,7 +38,7 @@ import sciwhiz12.basedefense.util.ItemHelper;
 
 public class PadlockItem extends Item implements IColorable {
     public PadlockItem() {
-        super(new Item.Properties().maxDamage(0).group(ModItems.GROUP));
+        super(new Item.Properties().maxDamage(0).group(ITEM_GROUP));
         this.addPropertyOverride(new ResourceLocation("colors"), IColorable.COLOR_GETTER);
     }
 

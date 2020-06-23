@@ -10,7 +10,7 @@ import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.SpecialRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import sciwhiz12.basedefense.init.ModRecipes;
+import sciwhiz12.basedefense.Reference.RecipeSerializers;
 import sciwhiz12.basedefense.item.IColorable;
 
 public class ColoringRecipe extends SpecialRecipe {
@@ -85,6 +85,6 @@ public class ColoringRecipe extends SpecialRecipe {
 
     @Override
     public IRecipeSerializer<?> getSerializer() {
-        return ModRecipes.COLORING;
+        return RecipeSerializers.COLORING;
     }
 }
