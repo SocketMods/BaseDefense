@@ -2,7 +2,6 @@ package sciwhiz12.basedefense.init;
 
 import static sciwhiz12.basedefense.util.Util.Null;
 
-import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -56,8 +55,10 @@ public class ModItems {
         BaseDefense.LOG.debug("Registering items");
         final IForgeRegistry<Item> reg = event.getRegistry();
 
-        final Item.Properties default_props = new Item.Properties().group(GROUP);
-        reg.register(new Item(default_props).setRegistryName("blank_key"));
+        final Item.Properties defaultProps = new Item.Properties().group(GROUP);
+        final Item.Properties noDamageProps = new Item.Properties().group(GROUP).maxDamage(0);
+
+        reg.register(new Item(defaultProps).setRegistryName("blank_key"));
         reg.register(new KeyItem().setRegistryName("key"));
         reg.register(new SkeletonKeyItem().setRegistryName("skeleton_key"));
         reg.register(new LockCoreItem().setRegistryName("lock_core"));
@@ -65,13 +66,16 @@ public class ModItems {
         reg.register(new BrokenPadlockItem().setRegistryName("broken_padlock"));
         reg.register(new KeyringItem().setRegistryName("keyring"));
 
-        final Block[] blocks = { ModBlocks.TEST_LOCK_BLOCK, ModBlocks.KEYSMITH_TABLE, ModBlocks.LOCKSMITH_TABLE };
-        for (Block b : blocks) { reg.register(new BlockItem(b, default_props).setRegistryName(b.getRegistryName())); }
+        reg.register(new BlockItem(ModBlocks.LOCKED_OAK_DOOR, defaultProps).setRegistryName("test_lock_block"));
+        reg.register(new BlockItem(ModBlocks.LOCKED_OAK_DOOR, defaultProps).setRegistryName("keysmith_table"));
+        reg.register(new BlockItem(ModBlocks.LOCKED_OAK_DOOR, defaultProps).setRegistryName("locksmith_table"));
 
-        final Item.Properties zero_damage_props = new Item.Properties().group(GROUP).maxDamage(0);
-        final Block[] doors = { ModBlocks.LOCKED_IRON_DOOR, ModBlocks.LOCKED_OAK_DOOR, ModBlocks.LOCKED_BIRCH_DOOR,
-                ModBlocks.LOCKED_SPRUCE_DOOR, ModBlocks.LOCKED_JUNGLE_DOOR, ModBlocks.LOCKED_ACACIA_DOOR,
-                ModBlocks.LOCKED_DARK_OAK_DOOR };
-        for (Block b : doors) { reg.register(new BlockItem(b, zero_damage_props).setRegistryName(b.getRegistryName())); }
+        reg.register(new BlockItem(ModBlocks.LOCKED_OAK_DOOR, noDamageProps).setRegistryName("locked_oak_door"));
+        reg.register(new BlockItem(ModBlocks.LOCKED_BIRCH_DOOR, noDamageProps).setRegistryName("locked_birch_door"));
+        reg.register(new BlockItem(ModBlocks.LOCKED_SPRUCE_DOOR, noDamageProps).setRegistryName("locked_spruce_door"));
+        reg.register(new BlockItem(ModBlocks.LOCKED_JUNGLE_DOOR, noDamageProps).setRegistryName("locked_jungle_door"));
+        reg.register(new BlockItem(ModBlocks.LOCKED_ACACIA_DOOR, noDamageProps).setRegistryName("locked_acacia_door"));
+        reg.register(new BlockItem(ModBlocks.LOCKED_DARK_OAK_DOOR, noDamageProps).setRegistryName("locked_dark_oak_door"));
+        reg.register(new BlockItem(ModBlocks.LOCKED_IRON_DOOR, noDamageProps).setRegistryName("locked_iron_door"));
     }
 }

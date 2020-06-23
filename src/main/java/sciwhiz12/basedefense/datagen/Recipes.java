@@ -46,20 +46,26 @@ public class Recipes extends RecipeProvider {
                 .key('C', ModItems.LOCK_CORE)
                 .addCriterion("has_lock_core", InventoryChangeTrigger.Instance.forItems(ModItems.LOCK_CORE))
                 .build(consumer, modLoc("padlock"));
+        // @formatter:on
+        lockedDoorRecipe(consumer, ModBlocks.LOCKED_OAK_DOOR);
+        lockedDoorRecipe(consumer, ModBlocks.LOCKED_BIRCH_DOOR);
+        lockedDoorRecipe(consumer, ModBlocks.LOCKED_SPRUCE_DOOR);
+        lockedDoorRecipe(consumer, ModBlocks.LOCKED_JUNGLE_DOOR);
+        lockedDoorRecipe(consumer, ModBlocks.LOCKED_ACACIA_DOOR);
+        lockedDoorRecipe(consumer, ModBlocks.LOCKED_DARK_OAK_DOOR);
+        lockedDoorRecipe(consumer, ModBlocks.LOCKED_IRON_DOOR);
+    }
 
-        LockedDoorBlock[] lockedDoorBlocks = { ModBlocks.LOCKED_OAK_DOOR, ModBlocks.LOCKED_BIRCH_DOOR,
-                ModBlocks.LOCKED_SPRUCE_DOOR, ModBlocks.LOCKED_JUNGLE_DOOR, ModBlocks.LOCKED_ACACIA_DOOR,
-                ModBlocks.LOCKED_DARK_OAK_DOOR, ModBlocks.LOCKED_IRON_DOOR };
-        for (LockedDoorBlock lockedDoor : lockedDoorBlocks) {
-            CustomShapedRecipeBuilder.shapedRecipe(ModRecipes.LOCKED_DOOR, lockedDoor)
-                    .setGroup("locked_door")
-                    .patternLine("IdC")
-                    .key('I', Tags.Items.INGOTS_IRON)
-                    .key('d', lockedDoor.baseBlock)
-                    .key('C', ModItems.LOCK_CORE)
-                    .addCriterion("has_lock_core", InventoryChangeTrigger.Instance.forItems(ModItems.LOCK_CORE))
-                    .build(consumer, lockedDoor.getRegistryName());
-        }
+    void lockedDoorRecipe(Consumer<IFinishedRecipe> consumer, LockedDoorBlock block) {
+        // @formatter:off
+        CustomShapedRecipeBuilder.shapedRecipe(ModRecipes.LOCKED_DOOR, block)
+                .setGroup("locked_door")
+                .patternLine("IdC")
+                .key('I', Tags.Items.INGOTS_IRON)
+                .key('d', block.baseBlock)
+                .key('C', ModItems.LOCK_CORE)
+                .addCriterion("has_lock_core", InventoryChangeTrigger.Instance.forItems(ModItems.LOCK_CORE))
+                .build(consumer, block.getRegistryName());
         // @formatter:on
     }
 

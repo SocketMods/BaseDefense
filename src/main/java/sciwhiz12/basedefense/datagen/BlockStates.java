@@ -25,15 +25,21 @@ public class BlockStates extends BlockStateProvider {
         standardCubeAll(ModBlocks.KEYSMITH_TABLE);
         standardCubeAll(ModBlocks.LOCKSMITH_TABLE);
 
-        final PadlockedDoorBlock[] padlockedDoors = { ModBlocks.PADLOCKED_OAK_DOOR, ModBlocks.PADLOCKED_BIRCH_DOOR,
-                ModBlocks.PADLOCKED_SPRUCE_DOOR, ModBlocks.PADLOCKED_JUNGLE_DOOR, ModBlocks.PADLOCKED_ACACIA_DOOR,
-                ModBlocks.PADLOCKED_DARK_OAK_DOOR, ModBlocks.PADLOCKED_IRON_DOOR };
-        for (PadlockedDoorBlock b : padlockedDoors) { padlockedDoor(b); }
+        padlockedDoor(ModBlocks.PADLOCKED_OAK_DOOR);
+        padlockedDoor(ModBlocks.PADLOCKED_BIRCH_DOOR);
+        padlockedDoor(ModBlocks.PADLOCKED_SPRUCE_DOOR);
+        padlockedDoor(ModBlocks.PADLOCKED_JUNGLE_DOOR);
+        padlockedDoor(ModBlocks.PADLOCKED_ACACIA_DOOR);
+        padlockedDoor(ModBlocks.PADLOCKED_DARK_OAK_DOOR);
+        padlockedDoor(ModBlocks.PADLOCKED_IRON_DOOR);
 
-        final LockedDoorBlock[] lockedDoors = { ModBlocks.LOCKED_OAK_DOOR, ModBlocks.LOCKED_BIRCH_DOOR,
-                ModBlocks.LOCKED_SPRUCE_DOOR, ModBlocks.LOCKED_JUNGLE_DOOR, ModBlocks.LOCKED_ACACIA_DOOR,
-                ModBlocks.LOCKED_DARK_OAK_DOOR, ModBlocks.LOCKED_IRON_DOOR };
-        for (LockedDoorBlock b : lockedDoors) { lockedDoor(b); }
+        lockedDoor(ModBlocks.LOCKED_OAK_DOOR);
+        lockedDoor(ModBlocks.LOCKED_BIRCH_DOOR);
+        lockedDoor(ModBlocks.LOCKED_SPRUCE_DOOR);
+        lockedDoor(ModBlocks.LOCKED_JUNGLE_DOOR);
+        lockedDoor(ModBlocks.LOCKED_ACACIA_DOOR);
+        lockedDoor(ModBlocks.LOCKED_DARK_OAK_DOOR);
+        lockedDoor(ModBlocks.LOCKED_IRON_DOOR);
     }
 
     void lockedDoor(LockedDoorBlock block) {

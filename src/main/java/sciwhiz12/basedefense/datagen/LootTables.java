@@ -1,9 +1,10 @@
 package sciwhiz12.basedefense.datagen;
 
+import static net.minecraft.state.properties.DoubleBlockHalf.LOWER;
+
 import net.minecraft.advancements.criterion.StatePropertiesPredicate;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.world.storage.loot.ConstantRange;
 import net.minecraft.world.storage.loot.ItemLootEntry;
@@ -28,38 +29,49 @@ public class LootTables extends BaseLootTableProvider {
         addStandardDropTable(ModBlocks.LOCKSMITH_TABLE);
         addStandardDropTable(ModBlocks.KEYSMITH_TABLE);
 
-        StatePropertiesPredicate.Builder lowerPredicate;
+        lockedDoor(ModBlocks.LOCKED_OAK_DOOR);
+        lockedDoor(ModBlocks.LOCKED_BIRCH_DOOR);
+        lockedDoor(ModBlocks.LOCKED_SPRUCE_DOOR);
+        lockedDoor(ModBlocks.LOCKED_JUNGLE_DOOR);
+        lockedDoor(ModBlocks.LOCKED_ACACIA_DOOR);
+        lockedDoor(ModBlocks.LOCKED_DARK_OAK_DOOR);
+        lockedDoor(ModBlocks.LOCKED_IRON_DOOR);
 
-        LockedDoorBlock[] lockedDoorBlocks = { ModBlocks.LOCKED_OAK_DOOR, ModBlocks.LOCKED_BIRCH_DOOR,
-                ModBlocks.LOCKED_SPRUCE_DOOR, ModBlocks.LOCKED_JUNGLE_DOOR, ModBlocks.LOCKED_ACACIA_DOOR,
-                ModBlocks.LOCKED_DARK_OAK_DOOR, ModBlocks.LOCKED_IRON_DOOR };
-        lowerPredicate = StatePropertiesPredicate.Builder.newBuilder().withProp(LockedDoorBlock.HALF, DoubleBlockHalf.LOWER);
-        for (LockedDoorBlock lockedDoor : lockedDoorBlocks) {
-            LootPool.Builder builder = LootPool.builder().rolls(ConstantRange.of(1));
-            builder.acceptCondition(SurvivesExplosion.builder());
-            builder.acceptCondition(BlockStateProperty.builder(lockedDoor).fromProperties(lowerPredicate));
-            builder.addEntry(ItemLootEntry.builder(lockedDoor.baseBlock));
-            addTable(lockedDoor, LootTable.builder().addLootPool(builder));
-        }
+        padlockedDoor(ModBlocks.PADLOCKED_OAK_DOOR);
+        padlockedDoor(ModBlocks.PADLOCKED_BIRCH_DOOR);
+        padlockedDoor(ModBlocks.PADLOCKED_SPRUCE_DOOR);
+        padlockedDoor(ModBlocks.PADLOCKED_JUNGLE_DOOR);
+        padlockedDoor(ModBlocks.PADLOCKED_ACACIA_DOOR);
+        padlockedDoor(ModBlocks.PADLOCKED_DARK_OAK_DOOR);
+        padlockedDoor(ModBlocks.PADLOCKED_IRON_DOOR);
+    }
 
-        PadlockedDoorBlock[] padlockedDoorBlocks = { ModBlocks.PADLOCKED_OAK_DOOR, ModBlocks.PADLOCKED_BIRCH_DOOR,
-                ModBlocks.PADLOCKED_SPRUCE_DOOR, ModBlocks.PADLOCKED_JUNGLE_DOOR, ModBlocks.PADLOCKED_ACACIA_DOOR,
-                ModBlocks.PADLOCKED_DARK_OAK_DOOR, ModBlocks.PADLOCKED_IRON_DOOR };
-        lowerPredicate = StatePropertiesPredicate.Builder.newBuilder().withProp(
-            PadlockedDoorBlock.HALF, DoubleBlockHalf.LOWER
+    void lockedDoor(LockedDoorBlock block) {
+        StatePropertiesPredicate.Builder predicate = StatePropertiesPredicate.Builder.newBuilder().withProp(
+            LockedDoorBlock.HALF, LOWER
         );
-        for (PadlockedDoorBlock padlockedDoor : padlockedDoorBlocks) {
-            LootPool.Builder doorItem = createStandardDrops(padlockedDoor.baseBlock);
-            doorItem.acceptCondition(BlockStateProperty.builder(padlockedDoor).fromProperties(lowerPredicate));
 
-            LootPool.Builder padlock = createStandardDrops(ModItems.BROKEN_PADLOCK);
-            padlock.acceptCondition(BlockStateProperty.builder(padlockedDoor).fromProperties(lowerPredicate));
-            CopyNbt.Builder copyFunc = CopyNbt.builder(CopyNbt.Source.BLOCK_ENTITY);
-            copyFunc.addOperation("LockItem.tag", "{}", CopyNbt.Action.MERGE);
-            padlock.acceptFunction(copyFunc);
+        LootPool.Builder builder = createStandardDrops(block.baseBlock);
+        builder.acceptCondition(BlockStateProperty.builder(block).fromProperties(predicate));
 
-            addTable(padlockedDoor, LootTable.builder().addLootPool(doorItem).addLootPool(padlock));
-        }
+        addTable(block, LootTable.builder().addLootPool(builder));
+    }
+
+    void padlockedDoor(PadlockedDoorBlock block) {
+        StatePropertiesPredicate.Builder predicate = StatePropertiesPredicate.Builder.newBuilder().withProp(
+            PadlockedDoorBlock.HALF, LOWER
+        );
+
+        LootPool.Builder doorItem = createStandardDrops(block.baseBlock);
+        doorItem.acceptCondition(BlockStateProperty.builder(block).fromProperties(predicate));
+
+        LootPool.Builder padlock = createStandardDrops(ModItems.BROKEN_PADLOCK);
+        padlock.acceptCondition(BlockStateProperty.builder(block).fromProperties(predicate));
+        CopyNbt.Builder copyFunc = CopyNbt.builder(CopyNbt.Source.BLOCK_ENTITY);
+        copyFunc.addOperation("LockItem.tag", "{}", CopyNbt.Action.MERGE);
+        padlock.acceptFunction(copyFunc);
+
+        addTable(block, LootTable.builder().addLootPool(doorItem).addLootPool(padlock));
     }
 
     void addStandardDropTable(Block b) {

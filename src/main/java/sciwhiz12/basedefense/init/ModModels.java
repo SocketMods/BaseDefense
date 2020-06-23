@@ -22,10 +22,13 @@ public class ModModels {
 
     @SubscribeEvent
     static void onModelBake(ModelBakeEvent event) {
-        Block[] doorBlocks = { ModBlocks.LOCKED_IRON_DOOR, ModBlocks.LOCKED_OAK_DOOR, ModBlocks.LOCKED_BIRCH_DOOR,
-                ModBlocks.LOCKED_SPRUCE_DOOR, ModBlocks.LOCKED_JUNGLE_DOOR, ModBlocks.LOCKED_ACACIA_DOOR,
-                ModBlocks.LOCKED_DARK_OAK_DOOR };
-        for (Block b : doorBlocks) { overrideBlockModel(event, b, LockedDoorModel::new); }
+        overrideBlockModel(event, ModBlocks.LOCKED_OAK_DOOR, LockedDoorModel::new);
+        overrideBlockModel(event, ModBlocks.LOCKED_BIRCH_DOOR, LockedDoorModel::new);
+        overrideBlockModel(event, ModBlocks.LOCKED_SPRUCE_DOOR, LockedDoorModel::new);
+        overrideBlockModel(event, ModBlocks.LOCKED_JUNGLE_DOOR, LockedDoorModel::new);
+        overrideBlockModel(event, ModBlocks.LOCKED_ACACIA_DOOR, LockedDoorModel::new);
+        overrideBlockModel(event, ModBlocks.LOCKED_DARK_OAK_DOOR, LockedDoorModel::new);
+        overrideBlockModel(event, ModBlocks.LOCKED_IRON_DOOR, LockedDoorModel::new);
 
         overrideItemModel(event, ModItems.KEYRING, ISTERWrapper::new);
     }
