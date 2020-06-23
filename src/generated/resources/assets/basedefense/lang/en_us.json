@@ -33,6 +33,7 @@
   "subtitle.basedefense.locked_door.unlock": "Door unlocks",
   "tooltip.basedefense.color": "Color #%s: %s",
   "tooltip.basedefense.keyring.count": "Contains %s key(s)",
+  "tooltip.basedefense.locked_door.has_lock": "Contains installed lock",
   "tooltip.basedefense.skeleton_key": "for Server Operators!",
   "tooltip.basedefense.storedcodes": "Stored Codes:"
 }

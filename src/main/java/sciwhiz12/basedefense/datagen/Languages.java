@@ -60,6 +60,7 @@ public class Languages extends LanguageProvider {
         add("tooltip", "skeleton_key", "for Server Operators!");
         add("tooltip", "color", "Color #%s: %s");
         add("tooltip", "keyring.count", "Contains %s key(s)");
+        add("tooltip", "locked_door.has_lock", "Contains installed lock");
 
         add("status", "padlocked_door.locked", "This %s is locked.");
         add("status", "padlocked_door.info", "\"%s\"");

@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 import sciwhiz12.basedefense.BaseDefense;
+import sciwhiz12.basedefense.item.LockedDoorBlockItem;
 import sciwhiz12.basedefense.item.key.KeyItem;
 import sciwhiz12.basedefense.item.key.KeyringItem;
 import sciwhiz12.basedefense.item.key.SkeletonKeyItem;
@@ -58,7 +59,6 @@ public class ModItems {
         final IForgeRegistry<Item> reg = event.getRegistry();
 
         final Item.Properties defaultProps = new Item.Properties().group(GROUP);
-        final Item.Properties noDamageProps = new Item.Properties().group(GROUP).maxDamage(0);
 
         reg.register(new Item(defaultProps).setRegistryName("blank_key"));
         reg.register(new KeyItem().setRegistryName("key"));
@@ -72,12 +72,12 @@ public class ModItems {
         reg.register(new BlockItem(ModBlocks.KEYSMITH_TABLE, defaultProps).setRegistryName("keysmith_table"));
         reg.register(new BlockItem(ModBlocks.LOCKSMITH_TABLE, defaultProps).setRegistryName("locksmith_table"));
 
-        reg.register(new BlockItem(ModBlocks.LOCKED_OAK_DOOR, noDamageProps).setRegistryName("locked_oak_door"));
-        reg.register(new BlockItem(ModBlocks.LOCKED_BIRCH_DOOR, noDamageProps).setRegistryName("locked_birch_door"));
-        reg.register(new BlockItem(ModBlocks.LOCKED_SPRUCE_DOOR, noDamageProps).setRegistryName("locked_spruce_door"));
-        reg.register(new BlockItem(ModBlocks.LOCKED_JUNGLE_DOOR, noDamageProps).setRegistryName("locked_jungle_door"));
-        reg.register(new BlockItem(ModBlocks.LOCKED_ACACIA_DOOR, noDamageProps).setRegistryName("locked_acacia_door"));
-        reg.register(new BlockItem(ModBlocks.LOCKED_DARK_OAK_DOOR, noDamageProps).setRegistryName("locked_dark_oak_door"));
-        reg.register(new BlockItem(ModBlocks.LOCKED_IRON_DOOR, noDamageProps).setRegistryName("locked_iron_door"));
+        reg.register(new LockedDoorBlockItem(ModBlocks.LOCKED_OAK_DOOR).setRegistryName("locked_oak_door"));
+        reg.register(new LockedDoorBlockItem(ModBlocks.LOCKED_BIRCH_DOOR).setRegistryName("locked_birch_door"));
+        reg.register(new LockedDoorBlockItem(ModBlocks.LOCKED_SPRUCE_DOOR).setRegistryName("locked_spruce_door"));
+        reg.register(new LockedDoorBlockItem(ModBlocks.LOCKED_JUNGLE_DOOR).setRegistryName("locked_jungle_door"));
+        reg.register(new LockedDoorBlockItem(ModBlocks.LOCKED_ACACIA_DOOR).setRegistryName("locked_acacia_door"));
+        reg.register(new LockedDoorBlockItem(ModBlocks.LOCKED_DARK_OAK_DOOR).setRegistryName("locked_dark_oak_door"));
+        reg.register(new LockedDoorBlockItem(ModBlocks.LOCKED_IRON_DOOR).setRegistryName("locked_iron_door"));
     }
 }

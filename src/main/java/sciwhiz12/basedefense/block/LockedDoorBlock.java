@@ -34,6 +34,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import sciwhiz12.basedefense.init.ModCapabilities;
 import sciwhiz12.basedefense.init.ModSounds;
+import sciwhiz12.basedefense.item.LockedDoorBlockItem;
 import sciwhiz12.basedefense.tileentity.LockedDoorTile;
 import sciwhiz12.basedefense.util.UnlockHelper;
 
@@ -223,10 +224,10 @@ public class LockedDoorBlock extends Block {
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         boolean locked = false;
-        if (stack.hasTag() && stack.getChildTag("LockItem") != null) {
+        if (!stack.isEmpty() && stack.getItem() instanceof LockedDoorBlockItem) {
             TileEntity te = worldIn.getTileEntity(pos);
             if (te instanceof LockedDoorTile) {
-                ((LockedDoorTile) te).setLockStack(ItemStack.read(stack.getChildTag("LockItem")));
+                ((LockedDoorTile) te).setLockStack(((LockedDoorBlockItem) stack.getItem()).getLockStack(stack));
                 locked = true;
                 worldIn.setBlockState(pos, state.with(LOCKED, locked), DEFAULT_AND_RERENDER);
             }
