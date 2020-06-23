@@ -1,5 +1,8 @@
 package sciwhiz12.basedefense.init;
 
+import static sciwhiz12.basedefense.BaseDefense.CLIENT;
+import static sciwhiz12.basedefense.BaseDefense.LOG;
+
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.tileentity.TileEntity;
@@ -37,7 +40,7 @@ public class ModColors {
 
     @SubscribeEvent
     static void registerItemColors(ColorHandlerEvent.Item event) {
-        BaseDefense.LOG.debug("Registering item colors");
+        LOG.debug(CLIENT, "Registering item colors");
         event.getItemColors().register(
             ITEM_COLOR, ModItems.KEY, ModItems.LOCK_CORE, ModItems.PADLOCK, ModItems.BROKEN_PADLOCK
         );
@@ -45,7 +48,7 @@ public class ModColors {
 
     @SubscribeEvent
     static void registerBlockColors(ColorHandlerEvent.Block event) {
-        BaseDefense.LOG.debug("Registering block colors");
+        LOG.debug(CLIENT, "Registering block colors");
         event.getBlockColors().register(
             LOCKED_DOOR_COLOR, ModBlocks.LOCKED_IRON_DOOR, ModBlocks.LOCKED_OAK_DOOR, ModBlocks.LOCKED_BIRCH_DOOR,
             ModBlocks.LOCKED_SPRUCE_DOOR, ModBlocks.LOCKED_JUNGLE_DOOR, ModBlocks.LOCKED_ACACIA_DOOR,

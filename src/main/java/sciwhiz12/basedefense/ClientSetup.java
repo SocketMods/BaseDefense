@@ -1,5 +1,8 @@
 package sciwhiz12.basedefense;
 
+import static sciwhiz12.basedefense.BaseDefense.CLIENT;
+import static sciwhiz12.basedefense.BaseDefense.LOG;
+
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,11 +22,16 @@ import sciwhiz12.basedefense.init.ModTileEntities;
 public class ClientSetup {
     @SubscribeEvent
     static void onClientSetup(FMLClientSetupEvent event) {
-        BaseDefense.LOG.debug("Setting up on client");
+        LOG.debug(CLIENT, "Setting up on client");
+
         ModBlocks.setupRenderLayer();
+
+        LOG.debug(CLIENT, "Registering screen factories");
         ScreenManager.registerFactory(ModContainers.KEYSMITH_TABLE, KeysmithScreen::new);
         ScreenManager.registerFactory(ModContainers.LOCKSMITH_TABLE, LocksmithScreen::new);
         ScreenManager.registerFactory(ModContainers.KEYRING, KeyringScreen::new);
+
+        LOG.debug(CLIENT, "Binding tile entity renderers");
         ClientRegistry.bindTileEntityRenderer(ModTileEntities.PADLOCKED_DOOR, PadlockedDoorRenderer::new);
     }
 }

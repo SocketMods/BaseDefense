@@ -1,5 +1,7 @@
 package sciwhiz12.basedefense.init;
 
+import static sciwhiz12.basedefense.BaseDefense.COMMON;
+import static sciwhiz12.basedefense.BaseDefense.LOG;
 import static sciwhiz12.basedefense.util.Util.Null;
 
 import net.minecraft.nbt.INBT;
@@ -35,7 +37,7 @@ public class ModCapabilities {
 
     @SubscribeEvent
     static void onCommonSetup(FMLCommonSetupEvent event) {
-        BaseDefense.LOG.debug("Registering capabilities");
+        LOG.debug(COMMON, "Registering capabilities");
         CapabilityManager.INSTANCE.register(ILock.class, new FlexibleStorage<>(), CodedLock::new);
         CapabilityManager.INSTANCE.register(IKey.class, new FlexibleStorage<>(), CodedKey::new);
         CapabilityManager.INSTANCE.register(IContainsCode.class, new FlexibleStorage<>(), CodeHolder::new);

@@ -1,5 +1,7 @@
 package sciwhiz12.basedefense.init;
 
+import static sciwhiz12.basedefense.BaseDefense.COMMON;
+import static sciwhiz12.basedefense.BaseDefense.LOG;
 import static sciwhiz12.basedefense.util.Util.Null;
 
 import java.util.function.Supplier;
@@ -29,7 +31,7 @@ public class ModTileEntities {
 
     @SubscribeEvent
     static void onRegister(RegistryEvent.Register<TileEntityType<?>> event) {
-        BaseDefense.LOG.debug("Registering tile entities");
+        LOG.debug(COMMON, "Registering tile entities");
         final IForgeRegistry<TileEntityType<?>> reg = event.getRegistry();
 
         reg.register(makeType(LockableTile::new, ModBlocks.TEST_LOCK_BLOCK).setRegistryName("lockable_tile"));

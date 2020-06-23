@@ -1,7 +1,5 @@
 package sciwhiz12.basedefense.init;
 
-import static sciwhiz12.basedefense.BaseDefense.modLoc;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +11,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import sciwhiz12.basedefense.BaseDefense;
+
+import static sciwhiz12.basedefense.BaseDefense.*;
 
 @EventBusSubscriber(value = Dist.CLIENT, bus = Bus.MOD, modid = BaseDefense.MODID)
 public class ModTextures {
@@ -38,7 +38,7 @@ public class ModTextures {
     static void onTextureStitchPre(TextureStitchEvent.Pre event) {
         ResourceLocation mapLoc = event.getMap().getTextureLocation();
         if (mapLoc.equals(ATLAS_BLOCKS_TEXTURE)) {
-            BaseDefense.LOG.debug("Adding textures to atlas: {}", mapLoc);
+            LOG.debug(CLIENT, "Adding sprites to atlas: {}", mapLoc);
             for (ResourceLocation spriteLoc : sprite_list) { event.addSprite(spriteLoc); }
         }
     }

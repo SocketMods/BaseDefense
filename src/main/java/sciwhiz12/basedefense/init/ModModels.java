@@ -1,5 +1,8 @@
 package sciwhiz12.basedefense.init;
 
+import static sciwhiz12.basedefense.BaseDefense.CLIENT;
+import static sciwhiz12.basedefense.BaseDefense.LOG;
+
 import java.util.function.Function;
 
 import net.minecraft.block.Block;
@@ -22,6 +25,7 @@ public class ModModels {
 
     @SubscribeEvent
     static void onModelBake(ModelBakeEvent event) {
+        LOG.debug(CLIENT, "Overriding models");
         overrideBlockModel(event, ModBlocks.LOCKED_OAK_DOOR, LockedDoorModel::new);
         overrideBlockModel(event, ModBlocks.LOCKED_BIRCH_DOOR, LockedDoorModel::new);
         overrideBlockModel(event, ModBlocks.LOCKED_SPRUCE_DOOR, LockedDoorModel::new);

@@ -1,5 +1,6 @@
 package sciwhiz12.basedefense.init;
 
+import static sciwhiz12.basedefense.BaseDefense.*;
 import static sciwhiz12.basedefense.util.Util.Null;
 
 import net.minecraft.block.Block;
@@ -41,7 +42,7 @@ public class ModBlocks {
 
     @SubscribeEvent
     static void onRegister(RegistryEvent.Register<Block> event) {
-        BaseDefense.LOG.debug("Registering blocks");
+        LOG.debug(COMMON, "Registering blocks");
         final IForgeRegistry<Block> reg = event.getRegistry();
 
         reg.register(new TestLockBlock().setRegistryName("test_lock_block"));
@@ -67,6 +68,7 @@ public class ModBlocks {
     }
 
     public static void setupRenderLayer() {
+        LOG.debug(CLIENT, "Setting up block render layers");
         final RenderType solid = RenderType.getSolid();
         RenderTypeLookup.setRenderLayer(ModBlocks.TEST_LOCK_BLOCK, solid);
         RenderTypeLookup.setRenderLayer(ModBlocks.KEYSMITH_TABLE, solid);

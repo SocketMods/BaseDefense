@@ -1,5 +1,7 @@
 package sciwhiz12.basedefense.init;
 
+import static sciwhiz12.basedefense.BaseDefense.COMMON;
+import static sciwhiz12.basedefense.BaseDefense.LOG;
 import static sciwhiz12.basedefense.util.Util.Null;
 
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -28,7 +30,7 @@ public class ModRecipes {
 
     @SubscribeEvent
     static void onRegister(RegistryEvent.Register<IRecipeSerializer<?>> event) {
-        BaseDefense.LOG.debug("Registering recipe serializers");
+        LOG.debug(COMMON, "Registering recipe serializers");
         final IForgeRegistry<IRecipeSerializer<?>> reg = event.getRegistry();
 
         reg.register(new RecipeHelper.ShapedSerializer<>(CopyCodedLockRecipe::new).setRegistryName("copy_lock"));

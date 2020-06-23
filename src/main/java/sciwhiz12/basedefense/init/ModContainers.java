@@ -1,5 +1,7 @@
 package sciwhiz12.basedefense.init;
 
+import static sciwhiz12.basedefense.BaseDefense.COMMON;
+import static sciwhiz12.basedefense.BaseDefense.LOG;
 import static sciwhiz12.basedefense.util.Util.Null;
 
 import net.minecraft.inventory.container.ContainerType;
@@ -25,7 +27,7 @@ public class ModContainers {
 
     @SubscribeEvent
     static void onRegister(RegistryEvent.Register<ContainerType<?>> event) {
-        BaseDefense.LOG.debug("Registering containers");
+        LOG.debug(COMMON, "Registering containers");
         final IForgeRegistry<ContainerType<?>> reg = event.getRegistry();
 
         reg.register(new ContainerType<>(KeysmithContainer::new).setRegistryName("keysmith_table"));

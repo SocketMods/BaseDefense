@@ -1,5 +1,7 @@
 package sciwhiz12.basedefense.init;
 
+import static sciwhiz12.basedefense.BaseDefense.COMMON;
+import static sciwhiz12.basedefense.BaseDefense.LOG;
 import static sciwhiz12.basedefense.util.Util.Null;
 
 import net.minecraft.item.BlockItem;
@@ -52,7 +54,7 @@ public class ModItems {
 
     @SubscribeEvent
     static void onRegister(RegistryEvent.Register<Item> event) {
-        BaseDefense.LOG.debug("Registering items");
+        LOG.debug(COMMON, "Registering items");
         final IForgeRegistry<Item> reg = event.getRegistry();
 
         final Item.Properties defaultProps = new Item.Properties().group(GROUP);

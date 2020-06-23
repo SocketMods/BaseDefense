@@ -1,5 +1,8 @@
 package sciwhiz12.basedefense.net;
 
+import static sciwhiz12.basedefense.BaseDefense.COMMON;
+import static sciwhiz12.basedefense.BaseDefense.LOG;
+
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
@@ -15,7 +18,7 @@ public class NetworkHandler {
     private static int ID = 1;
 
     public static void registerPackets() {
-        BaseDefense.LOG.debug("Registering packets");
+        LOG.debug(COMMON, "Registering packets");
         CHANNEL.registerMessage(
             ID++, TextFieldChangePacket.class, TextFieldChangePacket::encode, TextFieldChangePacket::decode,
             TextFieldChangePacket::process

@@ -1,6 +1,6 @@
 package sciwhiz12.basedefense.init;
 
-import static sciwhiz12.basedefense.BaseDefense.modLoc;
+import static sciwhiz12.basedefense.BaseDefense.*;
 import static sciwhiz12.basedefense.util.Util.Null;
 
 import net.minecraft.util.SoundEvent;
@@ -22,7 +22,7 @@ public class ModSounds {
 
     @SubscribeEvent
     static void onRegister(RegistryEvent.Register<SoundEvent> event) {
-        BaseDefense.LOG.debug("Registering sounds");
+        LOG.debug(COMMON, "Registering sound events");
         final IForgeRegistry<SoundEvent> reg = event.getRegistry();
 
         reg.register(new SoundEvent(modLoc("locked_door.attempt")).setRegistryName("locked_door_attempt"));
