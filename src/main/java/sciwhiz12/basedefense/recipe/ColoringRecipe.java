@@ -21,13 +21,15 @@ public class ColoringRecipe extends SpecialRecipe {
     @Override
     public boolean matches(CraftingInventory inv, World worldIn) {
         final int width = inv.getWidth();
-        List<DyeColor> colors = new ArrayList<>(4);
+        final int height = inv.getHeight();
+        int colors = 0;
         ItemStack colorItem = ItemStack.EMPTY;
         if (inv.isEmpty()) { return false; }
-        for (int col = 0; col < inv.getHeight(); col++) {
-            for (int row = 0; row < width; row++) {
+        for (int row = 0; row < width; row++) {
+            for (int col = 0; col < height; col++) {
                 ItemStack stack = inv.getStackInSlot(row * width + col);
                 if (stack.isEmpty()) { continue; }
+                System.out.println(stack.toString());
                 if (stack.getItem() instanceof IColorable) {
                     if (colorItem.isEmpty()) {
                         colorItem = stack;
@@ -37,20 +39,21 @@ public class ColoringRecipe extends SpecialRecipe {
                     }
                 }
                 DyeColor color = DyeColor.getColor(stack);
-                if (color != null) { colors.add(color); }
-                if (colors.size() > 3) { return false; }
+                if (color != null) { colors++; }
+                if (colors > 3) { return false; }
             }
         }
-        return colors.size() > 0 && !colorItem.isEmpty();
+        return colors > 0 && !colorItem.isEmpty();
     }
 
     @Override
     public ItemStack getCraftingResult(CraftingInventory inv) {
         final int width = inv.getWidth();
+        final int height = inv.getHeight();
         List<DyeColor> colors = new ArrayList<>(4);
         ItemStack colorItem = ItemStack.EMPTY;
-        for (int col = 0; col < width; col++) {
-            for (int row = 0; row < inv.getHeight(); row++) {
+        for (int row = 0; row < width; row++) {
+            for (int col = 0; col < height; col++) {
                 ItemStack stack = inv.getStackInSlot(row * width + col);
                 if (stack.isEmpty()) { continue; }
                 if (stack.getItem() instanceof IColorable) {
@@ -66,7 +69,7 @@ public class ColoringRecipe extends SpecialRecipe {
                 if (colors.size() > 3) { return ItemStack.EMPTY; }
             }
         }
-        if (colors.size() <= 0) { return ItemStack.EMPTY; }
+        if (colors.size() == 0) { return ItemStack.EMPTY; }
         if (colorItem.isEmpty()) { return ItemStack.EMPTY; }
         ItemStack output = colorItem.copy();
         IColorable color = (IColorable) output.getItem();
