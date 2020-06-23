@@ -37,10 +37,14 @@ import sciwhiz12.basedefense.util.UnlockHelper;
 import sciwhiz12.basedefense.util.Util;
 
 public class PadlockedDoorBlock extends Block {
-    private static final Map<IRegistryDelegate<Block>, IRegistryDelegate<Block>> replacement_block_map = new HashMap<>();
+    private static final Map<IRegistryDelegate<Block>, IRegistryDelegate<Block>> REPLACEMENT_MAP = new HashMap<>();
+
+    public static void clearReplacements() {
+        REPLACEMENT_MAP.clear();
+    }
 
     public static PadlockedDoorBlock getReplacement(Block blockIn) {
-        return (PadlockedDoorBlock) replacement_block_map.get(blockIn.delegate).get();
+        return (PadlockedDoorBlock) REPLACEMENT_MAP.get(blockIn.delegate).get();
     }
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -61,7 +65,7 @@ public class PadlockedDoorBlock extends Block {
     public PadlockedDoorBlock(Block blockIn) {
         super(Block.Properties.from(blockIn));
         this.baseBlock = blockIn;
-        replacement_block_map.put(blockIn.delegate, this.delegate);
+        REPLACEMENT_MAP.put(blockIn.delegate, this.delegate);
         this.setDefaultState(
             this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(SIDE, DoorSide.OUTSIDE).with(
                 HINGE, DoorHingeSide.LEFT

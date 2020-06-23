@@ -48,11 +48,13 @@ public class ModBlocks {
         reg.register(new KeysmithBlock().setRegistryName("keysmith_table"));
         reg.register(new LocksmithBlock().setRegistryName("locksmith_table"));
 
+        PadlockedDoorBlock.clearReplacements();
         Block[] doorBlocks = { Blocks.IRON_DOOR, Blocks.OAK_DOOR, Blocks.BIRCH_DOOR, Blocks.SPRUCE_DOOR, Blocks.JUNGLE_DOOR,
                 Blocks.ACACIA_DOOR, Blocks.DARK_OAK_DOOR };
         for (Block b : doorBlocks) {
-            reg.register(new PadlockedDoorBlock(b).setRegistryName("padlocked_" + b.getRegistryName().getPath()));
-            reg.register(new LockedDoorBlock(b).setRegistryName("locked_" + b.getRegistryName().getPath()));
+            String doorPath = b.getRegistryName().getPath();
+            reg.register(new PadlockedDoorBlock(b).setRegistryName("padlocked_" + doorPath));
+            reg.register(new LockedDoorBlock(b).setRegistryName("locked_" + doorPath));
         }
     }
 
