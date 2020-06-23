@@ -68,9 +68,9 @@ public class ModItems {
         reg.register(new BrokenPadlockItem().setRegistryName("broken_padlock"));
         reg.register(new KeyringItem().setRegistryName("keyring"));
 
-        reg.register(new BlockItem(ModBlocks.LOCKED_OAK_DOOR, defaultProps).setRegistryName("test_lock_block"));
-        reg.register(new BlockItem(ModBlocks.LOCKED_OAK_DOOR, defaultProps).setRegistryName("keysmith_table"));
-        reg.register(new BlockItem(ModBlocks.LOCKED_OAK_DOOR, defaultProps).setRegistryName("locksmith_table"));
+        reg.register(new BlockItem(ModBlocks.TEST_LOCK_BLOCK, defaultProps).setRegistryName("test_lock_block"));
+        reg.register(new BlockItem(ModBlocks.KEYSMITH_TABLE, defaultProps).setRegistryName("keysmith_table"));
+        reg.register(new BlockItem(ModBlocks.LOCKSMITH_TABLE, defaultProps).setRegistryName("locksmith_table"));
 
         reg.register(new BlockItem(ModBlocks.LOCKED_OAK_DOOR, noDamageProps).setRegistryName("locked_oak_door"));
         reg.register(new BlockItem(ModBlocks.LOCKED_BIRCH_DOOR, noDamageProps).setRegistryName("locked_birch_door"));
