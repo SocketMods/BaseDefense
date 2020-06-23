@@ -20,10 +20,13 @@ public class ItemModels extends ItemModelProvider {
         singleTextureItem(ModItems.SKELETON_KEY);
         singleTextureItem(ModItems.KEYRING);
 
-        final Item[] doorItems = { ModItems.LOCKED_OAK_DOOR, ModItems.LOCKED_BIRCH_DOOR, ModItems.LOCKED_SPRUCE_DOOR,
-                ModItems.LOCKED_JUNGLE_DOOR, ModItems.LOCKED_ACACIA_DOOR, ModItems.LOCKED_DARK_OAK_DOOR,
-                ModItems.LOCKED_IRON_DOOR };
-        for (Item i : doorItems) { singleTextureItem(i); }
+        singleTextureItem(ModItems.LOCKED_OAK_DOOR);
+        singleTextureItem(ModItems.LOCKED_BIRCH_DOOR);
+        singleTextureItem(ModItems.LOCKED_SPRUCE_DOOR);
+        singleTextureItem(ModItems.LOCKED_JUNGLE_DOOR);
+        singleTextureItem(ModItems.LOCKED_ACACIA_DOOR);
+        singleTextureItem(ModItems.LOCKED_DARK_OAK_DOOR);
+        singleTextureItem(ModItems.LOCKED_IRON_DOOR);
 
         coloredItem(ModItems.PADLOCK);
         coloredItem(ModItems.LOCK_CORE);
