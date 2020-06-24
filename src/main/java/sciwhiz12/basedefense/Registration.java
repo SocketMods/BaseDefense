@@ -4,6 +4,7 @@ import static sciwhiz12.basedefense.BaseDefense.COMMON;
 import static sciwhiz12.basedefense.BaseDefense.LOG;
 import static sciwhiz12.basedefense.Reference.*;
 import static sciwhiz12.basedefense.Reference.Blocks.*;
+import static sciwhiz12.basedefense.util.Util.Null;
 
 import java.util.function.Supplier;
 
