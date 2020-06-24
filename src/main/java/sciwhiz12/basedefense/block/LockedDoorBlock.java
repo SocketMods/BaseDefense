@@ -78,20 +78,19 @@ public class LockedDoorBlock extends Block {
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
             BlockRayTraceResult rayTrace) {
         if (worldIn.isBlockPresent(pos) && state.getBlock() == this) { // verify that block is loaded
-
-            BlockPos otherPos = state.get(HALF) == DoubleBlockHalf.LOWER ? pos.up() : pos.down();
+            DoubleBlockHalf half = state.get(HALF);
+            BlockPos otherPos = half == DoubleBlockHalf.LOWER ? pos.up() : pos.down();
             if (!worldIn.isBlockPresent(otherPos) || worldIn.getBlockState(otherPos).getBlock() != this) {
                 return ActionResultType.FAIL;
             }
-            LockedDoorTile te = (LockedDoorTile) worldIn.getTileEntity(
-                state.get(HALF) == DoubleBlockHalf.LOWER ? pos : pos.down()
-            );
+            BlockPos lowerPos = half == DoubleBlockHalf.LOWER ? pos : pos.down();
+            LockedDoorTile te = (LockedDoorTile) worldIn.getTileEntity(lowerPos);
             if (te == null) { return ActionResultType.FAIL; }
             ItemStack heldStack = player.getHeldItem(handIn);
             if (state.get(LOCKED)) { // LOCKED
-                if (UnlockHelper.checkUnlock(heldStack, te, worldIn, pos, player)) {
+                if (UnlockHelper.checkUnlock(heldStack, te, worldIn, lowerPos, player)) {
                     // LOCKED, KEY
-                    BlockState newState = state;
+                    BlockState newState;
                     if (player.isSneaking()) { // LOCKED, KEY, SNEAKING => toggle locked state
                         final boolean newLocked = !state.get(LOCKED);
                         newState = state.with(LOCKED, newLocked);
