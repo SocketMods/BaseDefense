@@ -33,7 +33,7 @@ public interface ICodeHolder extends IContainsCode {
     void addCode(Long code);
 
     /**
-     * Removes the givem code to this object's list. <br>
+     * Removes the given code to this object's list. <br>
      * A {@code null} parameter will result in no action.
      * 
      * @param code A code

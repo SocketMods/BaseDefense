@@ -25,7 +25,7 @@ public interface IKey {
      * @param lock     The lock to be checked
      * @param worldPos The world and position of the unlock action, or {@code null}
      *                     if not applicable
-     * @param player   The player peforming the unlock, or {@code null} if not
+     * @param player   The player performing the unlock, or {@code null} if not
      *                     applicable
      * @return {@code true} if the given {@link ILock} is unlockable, otherwise
      *         {@code false}
@@ -40,7 +40,7 @@ public interface IKey {
      * @param lock     The lock
      * @param worldPos The world and position of the unlock action, or {@code null}
      *                     if not applicable
-     * @param player   The player peforming the unlock, or {@code null} if not
+     * @param player   The player performing the unlock, or {@code null} if not
      *                     applicable
      */
     void onUnlock(ILock lock, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player);

@@ -27,7 +27,7 @@ public interface ILock {
      * @param key      The key to be checked
      * @param worldPos The world and position of the unlock action, or {@code null}
      *                     if not applicable
-     * @param player   The player peforming the unlock, or {@code null} if not
+     * @param player   The player performing the unlock, or {@code null} if not
      *                     applicable
      * @return {@code true} if the given {@link IKey} could unlock this, otherwise
      *         {@code false}
@@ -42,13 +42,13 @@ public interface ILock {
      * <p>
      * Unlike an unlock operation, in which the {@code IKey} determines if the
      * unlock operation can happen, in a removal operation the {@code ILock}
-     * decides. This allows, for example, doors with unremovable locks.
+     * decides. This allows, for example, doors with irremovable locks.
      * </p>
      * 
      * @param key      The key to be checked
      * @param worldPos The world and position of the removal action, or {@code null}
      *                     if not applicable
-     * @param player   The player peforming the removal, or {@code null} if not
+     * @param player   The player performing the removal, or {@code null} if not
      *                     applicable
      * @return {@code true} if the given {@link IKey} could remove this, otherwise
      *         {@code false}
@@ -63,7 +63,7 @@ public interface ILock {
      * @param key      The key
      * @param worldPos The world and position of the unlock action, or {@code null}
      *                     if not applicable
-     * @param player   The player peforming the unlock, or {@code null} if not
+     * @param player   The player performing the unlock, or {@code null} if not
      *                     applicable
      */
     void onUnlock(IKey key, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player);
@@ -76,7 +76,7 @@ public interface ILock {
      * @param key      The key
      * @param worldPos The world and position of the removal action, or {@code null}
      *                     if not applicable
-     * @param player   The player peforming the removal, or {@code null} if not
+     * @param player   The player performing the removal, or {@code null} if not
      *                     applicable
      */
     void onRemove(IKey key, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player);
