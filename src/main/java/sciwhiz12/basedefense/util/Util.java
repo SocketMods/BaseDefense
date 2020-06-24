@@ -12,9 +12,7 @@ import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.registries.ObjectHolder;
 
 /**
  * General utility methods.
@@ -27,7 +25,8 @@ public final class Util {
 
     /**
      * A fix for IntelliJ IDEA's "Constant conditions" inspection. Used for
-     * {@link ObjectHolder} and {@link CapabilityInject} fields.
+     * {@link net.minecraftforge.registries.ObjectHolder} and
+     * {@link net.minecraftforge.common.capabilities.CapabilityInject} fields.
      *
      * @return {@code null}
      */
