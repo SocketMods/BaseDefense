@@ -41,6 +41,9 @@ import sciwhiz12.basedefense.client.render.PadlockedDoorRenderer;
  */
 @EventBusSubscriber(value = Dist.CLIENT, bus = Bus.MOD, modid = MODID)
 public class ClientRegistration {
+    // Prevent instantiation
+    private ClientRegistration() {}
+
     @SubscribeEvent
     static void onClientSetup(FMLClientSetupEvent event) {
         LOG.debug(CLIENT, "Setting up on client");

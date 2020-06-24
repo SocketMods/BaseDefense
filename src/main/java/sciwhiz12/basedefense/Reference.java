@@ -66,6 +66,9 @@ public final class Reference {
         public static final LockedDoorBlock LOCKED_JUNGLE_DOOR = Null();
         public static final LockedDoorBlock LOCKED_ACACIA_DOOR = Null();
         public static final LockedDoorBlock LOCKED_DARK_OAK_DOOR = Null();
+
+        // Prevent instantiation
+        private Blocks() {}
     }
 
     public static final class Capabilities {
@@ -77,6 +80,9 @@ public final class Reference {
         public static final Capability<IContainsCode> CONTAINS_CODE = Null();
         @CapabilityInject(ICodeHolder.class)
         public static final Capability<ICodeHolder> CODE_HOLDER = Null();
+
+        // Prevent instantiation
+        private Capabilities() {}
     }
 
     public static final ItemGroup ITEM_GROUP = new ItemGroup(MODID) {
@@ -107,6 +113,9 @@ public final class Reference {
         public static final BlockItem LOCKED_JUNGLE_DOOR = Null();
         public static final BlockItem LOCKED_ACACIA_DOOR = Null();
         public static final BlockItem LOCKED_DARK_OAK_DOOR = Null();
+
+        // Prevent instantiation
+        private Items() {}
     }
 
     @ObjectHolder(MODID)
@@ -114,6 +123,9 @@ public final class Reference {
         public static final ContainerType<KeysmithContainer> KEYSMITH_TABLE = Null();
         public static final ContainerType<LocksmithContainer> LOCKSMITH_TABLE = Null();
         public static final ContainerType<KeyringContainer> KEYRING = Null();
+
+        // Prevent instantiation
+        private Containers() {}
     }
 
     @ObjectHolder(MODID)
@@ -122,6 +134,9 @@ public final class Reference {
         public static final RecipeHelper.ShapedSerializer<LockedDoorRecipe> LOCKED_DOOR = Null();
         public static final SpecialRecipeSerializer<PadlockRepairRecipe> PADLOCK_REPAIR = Null();
         public static final SpecialRecipeSerializer<ColoringRecipe> COLORING = Null();
+
+        // Prevent instantiation
+        private RecipeSerializers() {}
     }
 
     @ObjectHolder(MODID)
@@ -129,6 +144,9 @@ public final class Reference {
         public static final SoundEvent LOCKED_DOOR_ATTEMPT = Null();
         public static final SoundEvent LOCKED_DOOR_RELOCK = Null();
         public static final SoundEvent LOCKED_DOOR_UNLOCK = Null();
+
+        // Prevent instantiation
+        private Sounds() {}
     }
 
     @ObjectHolder(MODID)
@@ -136,7 +154,13 @@ public final class Reference {
         public static final TileEntityType<LockableTile> LOCKABLE_TILE = Null();
         public static final TileEntityType<PadlockedDoorTile> PADLOCKED_DOOR = Null();
         public static final TileEntityType<LockedDoorTile> LOCKED_DOOR = Null();
+
+        // Prevent instantiation
+        private TileEntities() {}
     }
+
+    // Prevent instantiation
+    private Reference() {}
 
     /**
      * Creates a {@link ResourceLocation} with the namespace as

@@ -40,6 +40,9 @@ public final class ClientReference {
             }
             return -1;
         };
+
+        // Prevent instantiation
+        private Colors() {}
     }
 
     public static final class Textures {
@@ -61,5 +64,11 @@ public final class ClientReference {
             SPRITE_LIST.add(loc);
             return loc;
         }
+
+        // Prevent instantiation
+        private Textures() {}
     }
+
+    // Prevent instantiation
+    private ClientReference() {}
 }

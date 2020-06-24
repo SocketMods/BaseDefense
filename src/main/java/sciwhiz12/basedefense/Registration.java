@@ -60,6 +60,9 @@ import sciwhiz12.basedefense.util.RecipeHelper;
  */
 @Mod.EventBusSubscriber(bus = Bus.MOD, modid = MODID)
 public final class Registration {
+    // Prevent instantiation
+    private Registration() {}
+
     @SubscribeEvent
     static void registerBlocks(RegistryEvent.Register<Block> event) {
         LOG.debug(COMMON, "Registering blocks");
