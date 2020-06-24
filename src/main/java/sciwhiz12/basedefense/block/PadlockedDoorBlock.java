@@ -109,7 +109,7 @@ public class PadlockedDoorBlock extends Block {
                         player.swingArm(handIn);
                         return ActionResultType.SUCCESS;
                     }
-                } else {
+                } else if (handIn == Hand.OFF_HAND) {
                     if (player.isSneaking() && allowOpen(state.get(SIDE), state.get(FACING), rayTrace.getFace())) {
                         ItemStack lockStack = doorTile.getLockStack();
                         if (!lockStack.isEmpty() && lockStack.hasDisplayName()) {
