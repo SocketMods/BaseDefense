@@ -6,6 +6,17 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
 
+/**
+ * A generic capability provider. Provides multiple capability instances from
+ * one capability factory.
+ * <p>
+ * If a capability is requested, and that capability matches one of those passed
+ * into the constructor, then this returns the casted {@link LazyOptional} of
+ * the single capability instance.
+ * 
+ * @param <C> The capability type
+ * @author SciWhiz12
+ */
 public class GenericCapabilityProvider<C> implements ICapabilityProvider {
     private final Capability<C>[] capObjs;
     private final LazyOptional<C> capInst;

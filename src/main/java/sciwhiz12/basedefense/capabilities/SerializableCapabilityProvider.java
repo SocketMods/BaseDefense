@@ -9,6 +9,14 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
 
+/**
+ * A version of {@link GenericCapabilityProvider} that caters to capability
+ * instances which are {@link INBTSerializable}.
+ * 
+ * @param <C> The capability type
+ * @param <N> The {@link INBT} type that the capability supports
+ * @author SciWhiz12
+ */
 public class SerializableCapabilityProvider<C extends INBTSerializable<N>, N extends INBT> implements
         ICapabilitySerializable<N> {
     private final Capability<?>[] capObjs;

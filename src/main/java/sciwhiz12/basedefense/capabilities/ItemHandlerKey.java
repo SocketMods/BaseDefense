@@ -9,6 +9,12 @@ import net.minecraftforge.items.IItemHandler;
 import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.api.capablities.ILock;
 
+/**
+ * Implementation of {@link IKey} which defers to checking a given
+ * {@link IItemHandler} for unlocking.
+ * 
+ * @author SciWhiz12
+ */
 public class ItemHandlerKey implements IKey {
     private final IItemHandler itemHandler;
 
