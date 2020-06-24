@@ -1,6 +1,7 @@
 package sciwhiz12.basedefense;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static sciwhiz12.basedefense.util.Util.Null;
 
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
@@ -171,15 +172,5 @@ public final class Reference {
      */
     public static ResourceLocation modLoc(String path) {
         return new ResourceLocation(MODID, checkNotNull(path));
-    }
-
-    /**
-     * A fix for IntelliJ IDEA's "Constant conditions" inspection. Used for
-     * {@link ObjectHolder} and {@link CapabilityInject} fields.
-     *
-     * @return {@code null}
-     */
-    public static <T> T Null() {
-        return null;
     }
 }

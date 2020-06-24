@@ -5,13 +5,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.registries.ObjectHolder;
 
 /**
  * General utility methods.
@@ -21,6 +24,17 @@ import net.minecraftforge.common.util.LazyOptional;
 public final class Util {
     // Prevent instantiation
     private Util() {}
+
+    /**
+     * A fix for IntelliJ IDEA's "Constant conditions" inspection. Used for
+     * {@link ObjectHolder} and {@link CapabilityInject} fields.
+     *
+     * @return {@code null}
+     */
+    @Nonnull
+    public static <T> T Null() {
+        return null;
+    }
 
     /**
      * Returns an {@link IWorldPosCallable} containing the given parameters, or
