@@ -17,7 +17,6 @@ public class ItemModels extends ItemModelProvider {
     @Override
     protected void registerModels() {
         singleTextureItem(Items.BLANK_KEY);
-        singleTextureItem(Items.SKELETON_KEY);
         singleTextureItem(Items.KEYRING);
 
         singleTextureItem(Items.LOCKED_OAK_DOOR);
@@ -31,23 +30,28 @@ public class ItemModels extends ItemModelProvider {
         coloredItem(Items.PADLOCK);
         coloredItem(Items.LOCK_CORE);
 
-        coloredKey();
-    }
-
-    void coloredKey() {
         final ItemModelBuilder keyParent = getKeyDisplayParent();
         generatedModels.put(keyParent.getLocation(), keyParent);
+        coloredKey(keyParent);
+        singleTextureItem(Items.SKELETON_KEY, keyParent);
+    }
+
+    void coloredKey(ModelFile parent) {
         final ResourceLocation baseLoc = itemLoc(Items.KEY.getRegistryName());
         final ItemModelBuilder base = factory.apply(baseLoc);
-        base.parent(keyParent);
+        base.parent(parent);
         base.texture("layer0", appendPath(baseLoc, "_body"));
         base.texture("layer1", appendPath(baseLoc, "_head"));
-        coloredItem(baseLoc, keyParent, base, appendPath(baseLoc, "_body"), appendPath(baseLoc, "_overlay"));
+        coloredItem(baseLoc, parent, base, appendPath(baseLoc, "_body"), appendPath(baseLoc, "_overlay"));
     }
 
     void singleTextureItem(Item i) {
+        singleTextureItem(i, factory.apply(mcLoc("item/generated")));
+    }
+
+    void singleTextureItem(Item i, ModelFile parent) {
         final ResourceLocation location = itemLoc(i.getRegistryName());
-        ItemModelBuilder builder = factory.apply(location).parent(factory.apply(mcLoc("item/generated")));
+        ItemModelBuilder builder = factory.apply(location).parent(parent);
         generatedModels.put(location, builder.texture("layer0", location));
     }
 
