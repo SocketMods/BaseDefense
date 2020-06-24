@@ -91,7 +91,6 @@ public class ClientRegistration {
     static void setupRenderLayer() {
         LOG.debug(CLIENT, "Setting up block render layers");
         final RenderType solid = RenderType.getSolid();
-        RenderTypeLookup.setRenderLayer(Blocks.TEST_LOCK_BLOCK, solid);
         RenderTypeLookup.setRenderLayer(Blocks.KEYSMITH_TABLE, solid);
         RenderTypeLookup.setRenderLayer(Blocks.LOCKSMITH_TABLE, solid);
         final RenderType cutoutMipped = RenderType.getCutoutMipped();

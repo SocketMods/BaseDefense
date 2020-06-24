@@ -25,7 +25,6 @@ public class LootTables extends BaseLootTableProvider {
 
     @Override
     protected void addTables() {
-        addStandardDropTable(Blocks.TEST_LOCK_BLOCK);
         addStandardDropTable(Blocks.LOCKSMITH_TABLE);
         addStandardDropTable(Blocks.KEYSMITH_TABLE);
 

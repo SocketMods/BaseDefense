@@ -48,7 +48,6 @@ public final class Reference {
 
     @ObjectHolder(MODID)
     public static final class Blocks {
-        public static final TestLockBlock TEST_LOCK_BLOCK = Null();
         public static final KeysmithBlock KEYSMITH_TABLE = Null();
         public static final LocksmithBlock LOCKSMITH_TABLE = Null();
 
@@ -103,7 +102,6 @@ public final class Reference {
         public static final BrokenPadlockItem BROKEN_PADLOCK = Null();
         public static final KeyringItem KEYRING = Null();
 
-        public static final BlockItem TEST_LOCK_BLOCK = Null();
         public static final BlockItem KEYSMITH_TABLE = Null();
         public static final BlockItem LOCKSMITH_TABLE = Null();
 

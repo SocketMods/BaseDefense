@@ -20,7 +20,6 @@ public class Languages extends LanguageProvider {
     }
 
     void addBlocks() {
-        add(Blocks.TEST_LOCK_BLOCK, "Lock Testing Block");
         add(Blocks.KEYSMITH_TABLE, "Keysmith Table");
         add(Blocks.LOCKSMITH_TABLE, "Locksmith Table");
 

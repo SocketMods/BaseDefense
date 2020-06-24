@@ -21,7 +21,6 @@ public class BlockStates extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        standardCubeAll(Blocks.TEST_LOCK_BLOCK);
         standardCubeAll(Blocks.KEYSMITH_TABLE);
         standardCubeAll(Blocks.LOCKSMITH_TABLE);
 

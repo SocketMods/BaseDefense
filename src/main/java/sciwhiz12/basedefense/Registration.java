@@ -30,7 +30,10 @@ import sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import sciwhiz12.basedefense.api.capablities.IContainsCode;
 import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.api.capablities.ILock;
-import sciwhiz12.basedefense.block.*;
+import sciwhiz12.basedefense.block.KeysmithBlock;
+import sciwhiz12.basedefense.block.LockedDoorBlock;
+import sciwhiz12.basedefense.block.LocksmithBlock;
+import sciwhiz12.basedefense.block.PadlockedDoorBlock;
 import sciwhiz12.basedefense.capabilities.CodeHolder;
 import sciwhiz12.basedefense.capabilities.CodedKey;
 import sciwhiz12.basedefense.capabilities.CodedLock;
@@ -69,7 +72,6 @@ public final class Registration {
         LOG.debug(COMMON, "Registering blocks");
         final IForgeRegistry<Block> reg = event.getRegistry();
 
-        reg.register(new TestLockBlock().setRegistryName("test_lock_block"));
         reg.register(new KeysmithBlock().setRegistryName("keysmith_table"));
         reg.register(new LocksmithBlock().setRegistryName("locksmith_table"));
 
@@ -125,7 +127,6 @@ public final class Registration {
         reg.register(new BrokenPadlockItem().setRegistryName("broken_padlock"));
         reg.register(new KeyringItem().setRegistryName("keyring"));
 
-        reg.register(new BlockItem(TEST_LOCK_BLOCK, defaultProps).setRegistryName("test_lock_block"));
         reg.register(new BlockItem(KEYSMITH_TABLE, defaultProps).setRegistryName("keysmith_table"));
         reg.register(new BlockItem(LOCKSMITH_TABLE, defaultProps).setRegistryName("locksmith_table"));
 
@@ -164,7 +165,7 @@ public final class Registration {
         LOG.debug(COMMON, "Registering tile entities");
         final IForgeRegistry<TileEntityType<?>> reg = event.getRegistry();
 
-        reg.register(makeType(LockableTile::new, TEST_LOCK_BLOCK).setRegistryName("lockable_tile"));
+        reg.register(makeType(LockableTile::new).setRegistryName("lockable_tile"));
         reg.register(
             makeType(
                 PadlockedDoorTile::new, PADLOCKED_IRON_DOOR, PADLOCKED_OAK_DOOR, PADLOCKED_BIRCH_DOOR, PADLOCKED_SPRUCE_DOOR,
