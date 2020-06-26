@@ -28,7 +28,7 @@ public class LockedDoorBlockItem extends BlockItem {
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         if (hasLockStack(stack)) {
             tooltip.add(
-                new TranslationTextComponent("tooltip.basedefense.locked_door.has_lock").applyTextStyle(TextFormatting.GRAY)
+                new TranslationTextComponent("tooltip.basedefense.locked_door.has_lock").func_240699_a_(TextFormatting.GRAY)
             );
             if (!flagIn.isAdvanced()) { return; }
             ItemStack lockStack = getLockStack(stack);

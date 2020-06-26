@@ -1,5 +1,6 @@
 package sciwhiz12.basedefense.client.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -16,24 +17,23 @@ public class KeyringScreen extends ContainerScreen<KeyringContainer> {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground();
-        super.render(mouseX, mouseY, partialTicks);
-        this.renderHoveredToolTip(mouseX, mouseY);
+    public void func_230430_a_(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        this.func_230446_a_(stack);
+        super.func_230430_a_(stack, mouseX, mouseY, partialTicks);
+        this.func_230459_a_(stack, mouseX, mouseY);
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        this.font.drawString(this.title.getFormattedText(), 8, 6, 4210752);
-        this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8, 37, 4210752);
+    protected void func_230451_b_(MatrixStack stack, int mouseX, int mouseY) {
+        this.field_230712_o_.func_238421_b_(stack, field_230704_d_.getString(), 8, 6, 4210752);
+        this.field_230712_o_.func_238421_b_(stack, playerInventory.getDisplayName().getString(), 8, 37, 4210752);
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+    @SuppressWarnings("deprecation")
+    protected void func_230450_a_(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(Textures.KEYRING_GUI);
-        int relX = (this.width - this.xSize) / 2;
-        int relY = (this.height - this.ySize) / 2;
-        this.blit(relX, relY, 0, 0, this.xSize, this.ySize);
+        this.field_230706_i_.getTextureManager().bindTexture(Textures.KEYRING_GUI);
+        this.func_238474_b_(stack, guiLeft, guiTop, 0, 0, xSize, ySize);
     }
 }

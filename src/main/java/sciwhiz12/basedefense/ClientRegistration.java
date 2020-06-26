@@ -2,6 +2,7 @@ package sciwhiz12.basedefense;
 
 import static sciwhiz12.basedefense.BaseDefense.CLIENT;
 import static sciwhiz12.basedefense.BaseDefense.LOG;
+import static sciwhiz12.basedefense.ClientReference.PropertyOverrides.COLORS;
 import static sciwhiz12.basedefense.Reference.*;
 
 import java.util.function.Function;
@@ -15,6 +16,7 @@ import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -26,6 +28,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import sciwhiz12.basedefense.ClientReference.Colors;
+import sciwhiz12.basedefense.ClientReference.PropertyOverrides;
 import sciwhiz12.basedefense.ClientReference.Textures;
 import sciwhiz12.basedefense.client.gui.KeyringScreen;
 import sciwhiz12.basedefense.client.gui.KeysmithScreen;
@@ -50,6 +53,16 @@ public class ClientRegistration {
         bindTileEntityRenderers();
         registerScreenFactories();
         setupRenderLayer();
+        registerPropertyOverrides();
+    }
+
+    static void registerPropertyOverrides() {
+        LOG.debug(CLIENT, "Registering item property overrides");
+
+        ItemModelsProperties.func_239418_a_(Items.KEY, COLORS, PropertyOverrides.COLORS_GETTER);
+        ItemModelsProperties.func_239418_a_(Items.LOCK_CORE, COLORS, PropertyOverrides.COLORS_GETTER);
+        ItemModelsProperties.func_239418_a_(Items.PADLOCK, COLORS, PropertyOverrides.COLORS_GETTER);
+        ItemModelsProperties.func_239418_a_(Items.BROKEN_LOCK_PIECES, COLORS, PropertyOverrides.COLORS_GETTER);
     }
 
     @SubscribeEvent

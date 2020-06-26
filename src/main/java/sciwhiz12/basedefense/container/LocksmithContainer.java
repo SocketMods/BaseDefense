@@ -58,7 +58,7 @@ public class LocksmithContainer extends Container {
 
         this.addSlot(new Slot(this.inputSlots, 0, 80, 50) {
             public boolean isItemValid(ItemStack stack) {
-                return Tags.Items.INGOTS_IRON.contains(stack.getItem());
+                return Tags.Items.INGOTS_IRON.func_230235_a_(stack.getItem());
             }
         }.setBackground(Textures.ATLAS_BLOCKS_TEXTURE, Textures.SLOT_INGOT_OUTLINE));
 

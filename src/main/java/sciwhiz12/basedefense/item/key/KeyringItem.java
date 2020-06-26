@@ -52,7 +52,7 @@ public class KeyringItem extends Item {
             }
             if (keys > 0) {
                 tooltip.add(
-                    new TranslationTextComponent("tooltip.basedefense.keyring.count", keys).applyTextStyle(
+                    new TranslationTextComponent("tooltip.basedefense.keyring.count", keys).func_240699_a_(
                         TextFormatting.GRAY
                     )
                 );

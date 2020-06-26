@@ -3,6 +3,9 @@ package sciwhiz12.basedefense.client.gui;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.glfw.GLFW;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -13,6 +16,7 @@ import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import sciwhiz12.basedefense.ClientReference.Textures;
 import sciwhiz12.basedefense.Reference;
 import sciwhiz12.basedefense.container.KeysmithContainer;
@@ -30,71 +34,71 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
     }
 
     @Override
-    protected void init() {
-        super.init();
-        this.minecraft.keyboardListener.enableRepeatEvents(true);
-        int i = (this.width - this.xSize) / 2;
-        int j = (this.height - this.ySize) / 2;
-        this.nameField = new TextFieldWidget(this.font, i + 91, j + 28, 82, 12, "");
+    protected void func_231160_c_() {
+        super.func_231160_c_();
+        this.field_230706_i_.keyboardListener.enableRepeatEvents(true);
+        this.nameField = new TextFieldWidget(
+            this.field_230712_o_, guiLeft + 91, guiTop + 28, 82, 12, new StringTextComponent("")
+        );
         this.nameField.setCanLoseFocus(false);
-        this.nameField.changeFocus(true);
+        this.nameField.func_231049_c__(true);
         this.nameField.setTextColor(-1);
         this.nameField.setDisabledTextColour(-1);
         this.nameField.setEnableBackgroundDrawing(false);
         this.nameField.setMaxStringLength(35);
         this.nameField.setResponder(this::onTextChange);
         this.container.addListener(this);
-        this.children.add(this.nameField);
-        this.setFocusedDefault(this.nameField);
+        this.field_230710_m_.add(nameField);
+        this.setFocusedDefault(nameField);
     }
 
     @Override
-    public void resize(Minecraft mc, int width, int height) {
+    public void func_231152_a_(Minecraft mc, int width, int height) {
         String s = this.nameField.getText();
-        this.init(mc, width, height);
+        super.func_231152_a_(mc, width, height);
         this.nameField.setText(s);
     }
 
     @Override
-    public void removed() {
-        super.removed();
+    public void func_231023_e_() {
+        super.func_231023_e_();
         this.container.removeListener(this);
-        this.minecraft.keyboardListener.enableRepeatEvents(false);
+        this.field_230706_i_.keyboardListener.enableRepeatEvents(false);
     }
 
     @Override
-    public boolean keyPressed(int key, int scanCode, int modifiers) {
-        if (key == GLFW.GLFW_KEY_ESCAPE) { this.minecraft.player.closeScreen(); }
+    public boolean func_231046_a_(int key, int scanCode, int modifiers) {
+        if (key == GLFW.GLFW_KEY_ESCAPE) { field_230706_i_.player.closeScreen(); }
 
-        return this.nameField.keyPressed(key, scanCode, modifiers) || this.nameField.canWrite() || super.keyPressed(
+        return this.nameField.func_231046_a_(key, scanCode, modifiers) || this.nameField.canWrite() || super.func_231046_a_(
             key, scanCode, modifiers
         );
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground();
-        super.render(mouseX, mouseY, partialTicks);
-        this.nameField.render(mouseX, mouseY, partialTicks);
-        this.renderHoveredToolTip(mouseX, mouseY);
+    public void func_230430_a_(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        this.func_230446_a_(stack);
+        super.func_230430_a_(stack, mouseX, mouseY, partialTicks);
+        this.nameField.func_230430_a_(stack, mouseX, mouseY, partialTicks);
+        this.func_230459_a_(stack, mouseX, mouseY);
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        this.font.drawString(this.title.getFormattedText(), 8, 6, 4210752);
-        this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8, 73, 4210752);
+    protected void func_230451_b_(MatrixStack stack, int mouseX, int mouseY) {
+        this.field_230712_o_.func_238421_b_(stack, field_230704_d_.getString(), 8, 6, 4210752);
+        this.field_230712_o_.func_238421_b_(stack, playerInventory.getDisplayName().getString(), 8, 73, 4210752);
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        this.minecraft.getTextureManager().bindTexture(Textures.KEYSMITH_GUI);
-        int relX = (this.width - this.xSize) / 2;
-        int relY = (this.height - this.ySize) / 2;
-        this.blit(relX, relY, 0, 0, this.xSize, this.ySize);
+    @SuppressWarnings("deprecation")
+    protected void func_230450_a_(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        this.field_230706_i_.getTextureManager().bindTexture(Textures.KEYSMITH_GUI);
+        this.func_238474_b_(stack, guiLeft, guiTop, 0, 0, xSize, ySize);
         if (this.nameField.canWrite()) {
-            this.blit(relX + 88, relY + 24, 0, 166, 82, 15);
+            this.func_238474_b_(stack, guiLeft + 88, guiTop + 24, 0, 166, 82, 15);
         } else {
-            this.blit(relX + 88, relY + 24, 0, 181, 82, 15);
+            this.func_238474_b_(stack, guiLeft + 88, guiTop + 24, 0, 181, 82, 15);
         }
     }
 
@@ -123,7 +127,7 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
                 isEnabledText = true;
                 nameField.setText(I18n.format(Reference.Items.KEY.getTranslationKey()));
             }
-            this.minecraft.deferTask(() -> this.nameField.setEnabled(isEnabledText));
+            this.field_230706_i_.deferTask(() -> this.nameField.setEnabled(isEnabledText));
         } else if (slotInd == 1) {
             if (!stack.isEmpty() && isEnabledText) { nameField.setText(stack.getDisplayName().getString()); }
         }

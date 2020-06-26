@@ -14,6 +14,8 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameters;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.EnumProperty;
@@ -33,8 +35,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootParameters;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.IRegistryDelegate;
@@ -124,10 +124,9 @@ public class PadlockedDoorBlock extends Block {
                         if (!lockStack.isEmpty() && lockStack.hasDisplayName()) {
                             player.sendStatusMessage(
                                 new TranslationTextComponent(
-                                    "status.basedefense.padlocked_door.info", lockStack.getDisplayName().applyTextStyle(
-                                        TextFormatting.WHITE
-                                    )
-                                ).applyTextStyles(TextFormatting.YELLOW, TextFormatting.ITALIC), true
+                                    "status.basedefense.padlocked_door.info", lockStack.getDisplayName().func_230532_e_()
+                                        .func_240699_a_(TextFormatting.WHITE)
+                                ).func_240701_a_(TextFormatting.YELLOW, TextFormatting.ITALIC), true
                             );
                         }
                     } else {
@@ -135,8 +134,8 @@ public class PadlockedDoorBlock extends Block {
                             new TranslationTextComponent(
                                 "status.basedefense.padlocked_door.locked", new TranslationTextComponent(
                                     this.baseBlock.getTranslationKey()
-                                ).applyTextStyle(TextFormatting.WHITE)
-                            ).applyTextStyles(TextFormatting.GRAY, TextFormatting.ITALIC), true
+                                ).func_240699_a_(TextFormatting.WHITE)
+                            ).func_240701_a_(TextFormatting.GRAY, TextFormatting.ITALIC), true
                         );
                     }
                     worldIn.playSound(
@@ -223,7 +222,7 @@ public class PadlockedDoorBlock extends Block {
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return this.blocksMovement ? state.getShape(worldIn, pos) : VoxelShapes.empty();
+        return this.field_235688_at_ ? state.getShape(worldIn, pos) : VoxelShapes.empty();
     }
 
     @Override
@@ -249,7 +248,7 @@ public class PadlockedDoorBlock extends Block {
         BlockState otherState = worldIn.getBlockState(otherPos);
         if (otherState.get(HALF) != half) {
             ItemStack itemstack = player.getHeldItemMainhand();
-            if (!worldIn.isRemote && !player.isCreative() && player.canHarvestBlock(otherState)) {
+            if (!worldIn.isRemote && !player.isCreative() && player.func_234569_d_(otherState)) {
                 BlockPos tePos = (half == DoubleBlockHalf.LOWER) ? pos : otherPos;
                 Block.spawnDrops(state, worldIn, pos, worldIn.getTileEntity(tePos), player, itemstack);
                 Block.spawnDrops(otherState, worldIn, otherPos, worldIn.getTileEntity(tePos), player, itemstack);
@@ -282,8 +281,9 @@ public class PadlockedDoorBlock extends Block {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return mirrorIn == Mirror.NONE ? state : state.rotate(mirrorIn.toRotation(state.get(FACING))).cycle(HINGE);
+        return mirrorIn == Mirror.NONE ? state : state.rotate(mirrorIn.toRotation(state.get(FACING))).func_235896_a_(HINGE);
     }
 
     @Override
@@ -301,7 +301,7 @@ public class PadlockedDoorBlock extends Block {
         }
 
         @Override
-        public String getName() {
+        public String func_176610_l() {
             return name;
         }
 

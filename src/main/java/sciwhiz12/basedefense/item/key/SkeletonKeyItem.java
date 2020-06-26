@@ -35,7 +35,7 @@ public class SkeletonKeyItem extends Item {
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         tooltip.add(
-            new TranslationTextComponent("tooltip.basedefense.skeleton_key").applyTextStyle(TextFormatting.DARK_RED)
+            new TranslationTextComponent("tooltip.basedefense.skeleton_key").func_240699_a_(TextFormatting.DARK_RED)
         );
     }
 

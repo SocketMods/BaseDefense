@@ -20,7 +20,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
@@ -39,7 +38,6 @@ import sciwhiz12.basedefense.util.ItemHelper;
 public class PadlockItem extends Item implements IColorable {
     public PadlockItem() {
         super(new Item.Properties().maxDamage(0).group(ITEM_GROUP));
-        this.addPropertyOverride(new ResourceLocation("colors"), IColorable.COLOR_GETTER);
     }
 
     @Override

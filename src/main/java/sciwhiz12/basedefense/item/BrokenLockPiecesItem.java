@@ -10,7 +10,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -24,12 +24,11 @@ import sciwhiz12.basedefense.util.ItemHelper;
 public class BrokenLockPiecesItem extends Item implements IColorable {
     public BrokenLockPiecesItem() {
         super(new Item.Properties().maxDamage(0).group(ITEM_GROUP));
-        this.addPropertyOverride(new ResourceLocation("colors"), IColorable.COLOR_GETTER);
     }
 
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        if (hasPreviousName(stack)) { tooltip.add(getPreviousName(stack).applyTextStyle(TextFormatting.ITALIC)); }
+        if (hasPreviousName(stack)) { tooltip.add(getPreviousName(stack).func_240699_a_(TextFormatting.ITALIC)); }
         if (!flagIn.isAdvanced()) return;
         ItemHelper.addCodeInformation(stack, tooltip);
         ItemHelper.addColorInformation(stack, tooltip);
@@ -39,8 +38,8 @@ public class BrokenLockPiecesItem extends Item implements IColorable {
         return stack.hasTag() && stack.getTag().contains("BrokenLockName", Constants.NBT.TAG_STRING);
     }
 
-    public ITextComponent getPreviousName(ItemStack stack) {
-        return hasPreviousName(stack) ? ITextComponent.Serializer.fromJson(stack.getTag().getString("BrokenLockName"))
+    public IFormattableTextComponent getPreviousName(ItemStack stack) {
+        return hasPreviousName(stack) ? ITextComponent.Serializer.func_240643_a_(stack.getTag().getString("BrokenLockName"))
                 : new StringTextComponent("");
     }
 

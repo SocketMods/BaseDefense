@@ -8,6 +8,8 @@ import java.util.List;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.item.IItemPropertyGetter;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import sciwhiz12.basedefense.block.LockedDoorBlock;
@@ -43,6 +45,19 @@ public final class ClientReference {
 
         // Prevent instantiation
         private Colors() {}
+    }
+
+    public static final class PropertyOverrides {
+        public static final ResourceLocation COLORS = new ResourceLocation("colors");
+
+        public static final IItemPropertyGetter COLORS_GETTER = (stack, world, livingEntity) -> {
+            CompoundNBT tag = stack.getChildTag("display");
+            if (tag != null && tag.contains("colors")) { return (float) tag.getIntArray("colors").length; }
+            return 0.0F;
+        };
+
+        // Prevent instantiation
+        private PropertyOverrides() {}
     }
 
     public static final class Textures {

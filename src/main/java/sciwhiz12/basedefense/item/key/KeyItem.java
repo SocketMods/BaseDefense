@@ -10,7 +10,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IWorldReader;
@@ -24,7 +23,6 @@ import sciwhiz12.basedefense.util.ItemHelper;
 public class KeyItem extends Item implements IColorable {
     public KeyItem() {
         super(new Item.Properties().maxDamage(0));
-        this.addPropertyOverride(new ResourceLocation("colors"), IColorable.COLOR_GETTER);
     }
 
     @Override

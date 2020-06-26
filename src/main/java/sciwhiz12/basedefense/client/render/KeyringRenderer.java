@@ -12,11 +12,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class KeyringRenderer extends ItemStackTileEntityRenderer {
@@ -51,7 +51,7 @@ public class KeyringRenderer extends ItemStackTileEntityRenderer {
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         IBakedModel model = itemRenderer.getItemModelWithOverrides(stack, null, null);
         IVertexBuilder builder = ItemRenderer.getBuffer(
-            buffer, RenderTypeLookup.getRenderType(stack), true, stack.hasEffect()
+            buffer, RenderTypeLookup.func_239219_a_(stack, false), true, stack.hasEffect()
         );
         List<BakedQuad> quads = model.getQuads(null, null, new Random(42L), EmptyModelData.INSTANCE);
         itemRenderer.renderQuads(matrix, builder, quads, stack, combinedLight, combinedOverlay);

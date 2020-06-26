@@ -34,10 +34,10 @@ public final class ItemHelper {
         tooltip = tooltip != null ? tooltip : new ArrayList<>();
         List<Long> ids = stack.getCapability(CODE_HOLDER).map(ICodeHolder::getCodes).orElse(Collections.emptyList());
         if (ids.size() != 0) {
-            tooltip.add(new TranslationTextComponent("tooltip.basedefense.storedcodes").applyTextStyle(TextFormatting.GRAY));
+            tooltip.add(new TranslationTextComponent("tooltip.basedefense.storedcodes").func_240699_a_(TextFormatting.GRAY));
             for (long id : ids) {
                 tooltip.add(
-                    new StringTextComponent("  " + String.format("%016X", id)).applyTextStyle(TextFormatting.DARK_GRAY)
+                    new StringTextComponent("  " + String.format("%016X", id)).func_240699_a_(TextFormatting.DARK_GRAY)
                 );
             }
         }
@@ -53,8 +53,8 @@ public final class ItemHelper {
                 tooltip.add(
                     new TranslationTextComponent(
                         "tooltip.basedefense.color", i + 1, new StringTextComponent(String.format("#%06X", colors[i]))
-                            .applyTextStyle(TextFormatting.DARK_GRAY)
-                    ).applyTextStyle(TextFormatting.GRAY)
+                            .func_240699_a_(TextFormatting.DARK_GRAY)
+                    ).func_240699_a_(TextFormatting.GRAY)
                 );
             }
         }

@@ -24,9 +24,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -110,16 +110,16 @@ public class LockedDoorBlock extends Block {
                             // LOCKED, NO KEY, SNEAKING => inform player of lock name
                             player.sendStatusMessage(
                                 new TranslationTextComponent(
-                                    "\"%s\"", lock.getDisplayName().applyTextStyle(TextFormatting.WHITE)
-                                ).applyTextStyle(TextFormatting.YELLOW), true
+                                    "\"%s\"", lock.getDisplayName().func_230532_e_().func_240699_a_(TextFormatting.WHITE)
+                                ).func_240699_a_(TextFormatting.YELLOW), true
                             );
                         } else { // LOCKED, NO KEY, NOT SNEAKING => inform player that door is locked
                             player.sendStatusMessage(
                                 new TranslationTextComponent(
-                                    "Door is locked!", new TranslationTextComponent(this.getTranslationKey()).applyTextStyle(
+                                    "Door is locked!", new TranslationTextComponent(this.getTranslationKey()).func_240699_a_(
                                         TextFormatting.WHITE
                                     )
-                                ).applyTextStyle(TextFormatting.GRAY), true
+                                ).func_240699_a_(TextFormatting.GRAY), true
                             );
                         }
                         playSound(player, worldIn, pos, Sounds.LOCKED_DOOR_ATTEMPT);
@@ -284,19 +284,19 @@ public class LockedDoorBlock extends Block {
         BlockPos rightPos = blockPos.offset(rightFacing);
         BlockState rightState = world.getBlockState(rightPos);
         BlockPos rightAbovePos = abovePos.offset(rightFacing);
-        BlockState rigthAboveState = world.getBlockState(rightAbovePos);
-        int i = (leftState.isCollisionShapeOpaque(world, leftPos) ? -1 : 0) + (leftAboveState.isCollisionShapeOpaque(
-            world, leftAbovePos
-        ) ? -1 : 0) + (rightState.isCollisionShapeOpaque(world, rightPos) ? 1 : 0) + (rigthAboveState.isCollisionShapeOpaque(
-            world, rightAbovePos
-        ) ? 1 : 0);
-        boolean leftHasDoor = leftState.getBlock() == this && leftState.get(HALF) == DoubleBlockHalf.LOWER;
-        boolean rightHasDoor = rightState.getBlock() == this && rightState.get(HALF) == DoubleBlockHalf.LOWER;
+        BlockState rightAboveState = world.getBlockState(rightAbovePos);
+        int i = (leftState.func_235785_r_(world, leftPos) ? -1 : 0) + (leftAboveState.func_235785_r_(world, leftAbovePos)
+                ? -1
+                : 0) + (rightState.func_235785_r_(world, rightPos) ? 1 : 0) + (rightAboveState.func_235785_r_(
+                    world, rightAbovePos
+                ) ? 1 : 0);
+        boolean leftHasDoor = leftState.isIn(this) && leftState.get(HALF) == DoubleBlockHalf.LOWER;
+        boolean rightHasDoor = rightState.isIn(this) && rightState.get(HALF) == DoubleBlockHalf.LOWER;
         if ((!leftHasDoor || rightHasDoor) && i <= 0) {
             if ((!rightHasDoor || leftHasDoor) && i >= 0) {
                 int xOffset = horizFacing.getXOffset();
                 int yOffset = horizFacing.getZOffset();
-                Vec3d hitVec = context.getHitVec();
+                Vector3d hitVec = context.getHitVec();
                 double d0 = hitVec.x - (double) blockPos.getX();
                 double d1 = hitVec.z - (double) blockPos.getZ();
                 return (xOffset >= 0 || !(d1 < 0.5D)) && (xOffset <= 0 || !(d1 > 0.5D)) && (yOffset >= 0 || !(d0 > 0.5D))
@@ -316,7 +316,7 @@ public class LockedDoorBlock extends Block {
         BlockState otherState = worldIn.getBlockState(otherPos);
         if (otherState.getBlock() == this && otherState.get(HALF) != half) {
             ItemStack heldItem = player.getHeldItemMainhand();
-            if (!worldIn.isRemote && !player.isCreative() && player.canHarvestBlock(otherState)) {
+            if (!worldIn.isRemote && !player.isCreative() && player.func_234569_d_(otherState)) {
                 BlockPos tePos = (half == DoubleBlockHalf.LOWER) ? pos : otherPos;
                 Block.spawnDrops(state, worldIn, pos, worldIn.getTileEntity(tePos), player, heldItem);
                 Block.spawnDrops(otherState, worldIn, otherPos, worldIn.getTileEntity(tePos), player, heldItem);
@@ -356,8 +356,9 @@ public class LockedDoorBlock extends Block {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return mirrorIn == Mirror.NONE ? state : state.rotate(mirrorIn.toRotation(state.get(FACING))).cycle(HINGE);
+        return mirrorIn == Mirror.NONE ? state : state.rotate(mirrorIn.toRotation(state.get(FACING))).func_235896_a_(HINGE);
     }
 
     @Override

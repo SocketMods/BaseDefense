@@ -5,7 +5,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Arrays;
 
-import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 
@@ -15,12 +14,6 @@ import net.minecraft.nbt.CompoundNBT;
  * @author SciWhiz12
  */
 public interface IColorable {
-    IItemPropertyGetter COLOR_GETTER = (stack, world, livingEntity) -> {
-        CompoundNBT tag = stack.getChildTag("display");
-        if (tag != null && tag.contains("colors")) { return (float) tag.getIntArray("colors").length; }
-        return 0.0F;
-    };
-
     /**
      * @param stack The {@code ItemStack} to query
      * @return {@code true} if the stack has colors, otherwise {@code false}
