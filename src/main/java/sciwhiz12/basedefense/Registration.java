@@ -41,17 +41,16 @@ import sciwhiz12.basedefense.capabilities.FlexibleStorage;
 import sciwhiz12.basedefense.container.KeyringContainer;
 import sciwhiz12.basedefense.container.KeysmithContainer;
 import sciwhiz12.basedefense.container.LocksmithContainer;
+import sciwhiz12.basedefense.item.BrokenLockPiecesItem;
 import sciwhiz12.basedefense.item.LockedDoorBlockItem;
 import sciwhiz12.basedefense.item.key.KeyItem;
 import sciwhiz12.basedefense.item.key.KeyringItem;
 import sciwhiz12.basedefense.item.key.SkeletonKeyItem;
-import sciwhiz12.basedefense.item.lock.BrokenPadlockItem;
 import sciwhiz12.basedefense.item.lock.LockCoreItem;
 import sciwhiz12.basedefense.item.lock.PadlockItem;
 import sciwhiz12.basedefense.recipe.ColoringRecipe;
 import sciwhiz12.basedefense.recipe.CopyCodedLockRecipe;
 import sciwhiz12.basedefense.recipe.LockedDoorRecipe;
-import sciwhiz12.basedefense.recipe.PadlockRepairRecipe;
 import sciwhiz12.basedefense.tileentity.LockableTile;
 import sciwhiz12.basedefense.tileentity.LockedDoorTile;
 import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
@@ -124,8 +123,8 @@ public final class Registration {
         reg.register(new SkeletonKeyItem().setRegistryName("skeleton_key"));
         reg.register(new LockCoreItem().setRegistryName("lock_core"));
         reg.register(new PadlockItem().setRegistryName("padlock"));
-        reg.register(new BrokenPadlockItem().setRegistryName("broken_padlock"));
         reg.register(new KeyringItem().setRegistryName("keyring"));
+        reg.register(new BrokenLockPiecesItem().setRegistryName("broken_lock_pieces"));
 
         reg.register(new BlockItem(KEYSMITH_TABLE, defaultProps).setRegistryName("keysmith_table"));
         reg.register(new BlockItem(LOCKSMITH_TABLE, defaultProps).setRegistryName("locksmith_table"));
@@ -146,7 +145,6 @@ public final class Registration {
 
         reg.register(new RecipeHelper.ShapedSerializer<>(CopyCodedLockRecipe::new).setRegistryName("copy_lock"));
         reg.register(new RecipeHelper.ShapedSerializer<>(LockedDoorRecipe::new).setRegistryName("locked_door"));
-        reg.register(new SpecialRecipeSerializer<>(PadlockRepairRecipe::new).setRegistryName("padlock_repair"));
         reg.register(new SpecialRecipeSerializer<>(ColoringRecipe::new).setRegistryName("coloring"));
     }
 

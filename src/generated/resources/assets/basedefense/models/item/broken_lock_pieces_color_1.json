@@ -1,0 +1,8 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "basedefense:item/broken_lock_pieces",
+    "layer1": "basedefense:item/broken_lock_pieces",
+    "layer2": "basedefense:item/broken_lock_pieces_color_1"
+  }
+}

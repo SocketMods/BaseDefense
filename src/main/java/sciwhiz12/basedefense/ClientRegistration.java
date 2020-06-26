@@ -55,7 +55,9 @@ public class ClientRegistration {
     @SubscribeEvent
     static void registerItemColors(ColorHandlerEvent.Item event) {
         LOG.debug(CLIENT, "Registering item colors");
-        event.getItemColors().register(Colors.ITEM_COLOR, Items.KEY, Items.LOCK_CORE, Items.PADLOCK, Items.BROKEN_PADLOCK);
+        event.getItemColors().register(
+            Colors.ITEM_COLOR, Items.KEY, Items.LOCK_CORE, Items.PADLOCK, Items.BROKEN_LOCK_PIECES
+        );
     }
 
     @SubscribeEvent

@@ -19,20 +19,22 @@ import sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import sciwhiz12.basedefense.api.capablities.IContainsCode;
 import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.api.capablities.ILock;
-import sciwhiz12.basedefense.block.*;
+import sciwhiz12.basedefense.block.KeysmithBlock;
+import sciwhiz12.basedefense.block.LockedDoorBlock;
+import sciwhiz12.basedefense.block.LocksmithBlock;
+import sciwhiz12.basedefense.block.PadlockedDoorBlock;
 import sciwhiz12.basedefense.container.KeyringContainer;
 import sciwhiz12.basedefense.container.KeysmithContainer;
 import sciwhiz12.basedefense.container.LocksmithContainer;
+import sciwhiz12.basedefense.item.BrokenLockPiecesItem;
 import sciwhiz12.basedefense.item.key.KeyItem;
 import sciwhiz12.basedefense.item.key.KeyringItem;
 import sciwhiz12.basedefense.item.key.SkeletonKeyItem;
-import sciwhiz12.basedefense.item.lock.BrokenPadlockItem;
 import sciwhiz12.basedefense.item.lock.LockCoreItem;
 import sciwhiz12.basedefense.item.lock.PadlockItem;
 import sciwhiz12.basedefense.recipe.ColoringRecipe;
 import sciwhiz12.basedefense.recipe.CopyCodedLockRecipe;
 import sciwhiz12.basedefense.recipe.LockedDoorRecipe;
-import sciwhiz12.basedefense.recipe.PadlockRepairRecipe;
 import sciwhiz12.basedefense.tileentity.LockableTile;
 import sciwhiz12.basedefense.tileentity.LockedDoorTile;
 import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
@@ -99,8 +101,8 @@ public final class Reference {
         public static final SkeletonKeyItem SKELETON_KEY = Null();
         public static final LockCoreItem LOCK_CORE = Null();
         public static final PadlockItem PADLOCK = Null();
-        public static final BrokenPadlockItem BROKEN_PADLOCK = Null();
         public static final KeyringItem KEYRING = Null();
+        public static final BrokenLockPiecesItem BROKEN_LOCK_PIECES = Null();
 
         public static final BlockItem KEYSMITH_TABLE = Null();
         public static final BlockItem LOCKSMITH_TABLE = Null();
@@ -131,7 +133,6 @@ public final class Reference {
     public static final class RecipeSerializers {
         public static final RecipeHelper.ShapedSerializer<CopyCodedLockRecipe> COPY_LOCK = Null();
         public static final RecipeHelper.ShapedSerializer<LockedDoorRecipe> LOCKED_DOOR = Null();
-        public static final SpecialRecipeSerializer<PadlockRepairRecipe> PADLOCK_REPAIR = Null();
         public static final SpecialRecipeSerializer<ColoringRecipe> COLORING = Null();
 
         // Prevent instantiation

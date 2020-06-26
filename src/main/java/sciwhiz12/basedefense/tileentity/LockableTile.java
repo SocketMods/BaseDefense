@@ -1,6 +1,6 @@
 package sciwhiz12.basedefense.tileentity;
 
-import static sciwhiz12.basedefense.Reference.Capabilities.LOCK;
+import static sciwhiz12.basedefense.Reference.Capabilities.*;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -31,7 +31,7 @@ public class LockableTile extends TileEntity {
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (cap == LOCK) { return lockCap.cast(); }
+        if (cap == CONTAINS_CODE || cap == CODE_HOLDER || cap == LOCK) { return lockCap.cast(); }
         return super.getCapability(cap, side);
     }
 

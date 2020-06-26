@@ -25,7 +25,6 @@ public class Recipes extends RecipeProvider {
     @Override
     protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {
         // @formatter:off
-        CustomRecipeBuilder.customRecipe(asSpecial(RecipeSerializers.PADLOCK_REPAIR)).build(consumer, modStr("padlock_repair"));
         CustomRecipeBuilder.customRecipe(asSpecial(RecipeSerializers.COLORING)).build(consumer, modStr("coloring"));
         ShapedRecipeBuilder.shapedRecipe(Reference.Items.BLANK_KEY, 2)
                 .patternLine(" g ")

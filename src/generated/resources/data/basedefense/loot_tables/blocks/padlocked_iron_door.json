@@ -27,7 +27,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "basedefense:broken_padlock"
+          "name": "basedefense:broken_lock_pieces"
         }
       ],
       "conditions": [
@@ -40,19 +40,6 @@
           "properties": {
             "half": "lower"
           }
-        }
-      ],
-      "functions": [
-        {
-          "function": "minecraft:copy_nbt",
-          "source": "block_entity",
-          "ops": [
-            {
-              "source": "LockItem.tag",
-              "target": "{}",
-              "op": "merge"
-            }
-          ]
         }
       ]
     }

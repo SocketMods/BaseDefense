@@ -12,7 +12,6 @@ import net.minecraft.world.storage.loot.LootPool;
 import net.minecraft.world.storage.loot.LootTable;
 import net.minecraft.world.storage.loot.conditions.BlockStateProperty;
 import net.minecraft.world.storage.loot.conditions.SurvivesExplosion;
-import net.minecraft.world.storage.loot.functions.CopyNbt;
 import sciwhiz12.basedefense.Reference.Blocks;
 import sciwhiz12.basedefense.Reference.Items;
 import sciwhiz12.basedefense.block.LockedDoorBlock;
@@ -64,11 +63,8 @@ public class LootTables extends BaseLootTableProvider {
         LootPool.Builder doorItem = createStandardDrops(block.baseBlock);
         doorItem.acceptCondition(BlockStateProperty.builder(block).fromProperties(predicate));
 
-        LootPool.Builder padlock = createStandardDrops(Items.BROKEN_PADLOCK);
+        LootPool.Builder padlock = createStandardDrops(Items.BROKEN_LOCK_PIECES);
         padlock.acceptCondition(BlockStateProperty.builder(block).fromProperties(predicate));
-        CopyNbt.Builder copyFunc = CopyNbt.builder(CopyNbt.Source.BLOCK_ENTITY);
-        copyFunc.addOperation("LockItem.tag", "{}", CopyNbt.Action.MERGE);
-        padlock.acceptFunction(copyFunc);
 
         addTable(block, LootTable.builder().addLootPool(doorItem).addLootPool(padlock));
     }

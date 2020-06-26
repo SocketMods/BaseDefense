@@ -29,6 +29,7 @@ public class ItemModels extends ItemModelProvider {
 
         coloredItem(Items.PADLOCK);
         coloredItem(Items.LOCK_CORE);
+        coloredItem(Items.BROKEN_LOCK_PIECES);
 
         final ItemModelBuilder keyParent = getKeyDisplayParent();
         generatedModels.put(keyParent.getLocation(), keyParent);

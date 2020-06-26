@@ -18,7 +18,7 @@
   "container.basedefense.keysmith": "Keysmithing",
   "container.basedefense.locksmith": "Locksmithing",
   "item.basedefense.blank_key": "Blank Key",
-  "item.basedefense.broken_padlock": "Broken Padlock",
+  "item.basedefense.broken_lock_pieces": "Broken Lock Pieces",
   "item.basedefense.key": "Key",
   "item.basedefense.keyring": "Keyring",
   "item.basedefense.lock_core": "Lock Core",

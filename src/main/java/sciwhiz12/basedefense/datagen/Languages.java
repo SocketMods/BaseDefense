@@ -46,8 +46,8 @@ public class Languages extends LanguageProvider {
         add(Items.SKELETON_KEY, "Skeleton Key");
         add(Items.LOCK_CORE, "Lock Core");
         add(Items.PADLOCK, "Padlock");
-        add(Items.BROKEN_PADLOCK, "Broken Padlock");
         add(Items.KEYRING, "Keyring");
+        add(Items.BROKEN_LOCK_PIECES, "Broken Lock Pieces");
     }
 
     void addOthers() {

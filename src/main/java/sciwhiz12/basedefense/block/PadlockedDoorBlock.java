@@ -1,9 +1,11 @@
 package sciwhiz12.basedefense.block;
 
 import static sciwhiz12.basedefense.Reference.Sounds;
+import static sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
 import static sciwhiz12.basedefense.Reference.Capabilities.KEY;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.minecraft.block.Block;
@@ -31,9 +33,16 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootParameters;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.IRegistryDelegate;
+import sciwhiz12.basedefense.api.capablities.ICodeHolder;
+import sciwhiz12.basedefense.item.BrokenLockPiecesItem;
+import sciwhiz12.basedefense.item.IColorable;
 import sciwhiz12.basedefense.item.lock.PadlockItem;
+import sciwhiz12.basedefense.tileentity.LockableTile;
 import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
 import sciwhiz12.basedefense.util.UnlockHelper;
 import sciwhiz12.basedefense.util.Util;
@@ -165,6 +174,36 @@ public class PadlockedDoorBlock extends Block {
 
     public boolean isValidLock(ItemStack stack) {
         return stack.getItem() instanceof PadlockItem;
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+        List<ItemStack> drops = super.getDrops(state, builder);
+        TileEntity te = builder.get(LootParameters.BLOCK_ENTITY);
+        if (!drops.isEmpty() && te != null) {
+            for (ItemStack stack : drops) {
+                LazyOptional<ICodeHolder> codeCap = stack.getCapability(CODE_HOLDER);
+                if (!stack.isEmpty() && codeCap.isPresent()) {
+                    te.getCapability(CODE_HOLDER).ifPresent(
+                        teCode -> codeCap.ifPresent(stackCode -> stackCode.setCodes(teCode.getCodes()))
+                    );
+                    if (te instanceof LockableTile) {
+                        ItemStack lockStack = ((LockableTile) te).getLockStack();
+                        if (stack.getItem() instanceof IColorable && lockStack.getItem() instanceof IColorable) {
+                            IColorable from = (IColorable) lockStack.getItem();
+                            IColorable to = (IColorable) stack.getItem();
+                            to.setColors(stack, from.getColors(lockStack));
+                        }
+                        if (stack.getItem() instanceof BrokenLockPiecesItem) {
+                            ((BrokenLockPiecesItem) stack.getItem()).setPreviousName(stack, lockStack.getDisplayName());
+                        } else if (lockStack.hasDisplayName()) { stack.setDisplayName(lockStack.getDisplayName()); }
+                    }
+                    break;
+                }
+            }
+        }
+        return drops;
     }
 
     @Override
