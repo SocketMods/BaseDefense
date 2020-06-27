@@ -144,7 +144,7 @@ public class LocksmithContainer extends Container {
         ItemStack keyStack = this.testingSlots.getStackInSlot(0);
         ItemStack lockStack = this.testingSlots.getStackInSlot(1);
         if (!keyStack.isEmpty() && !lockStack.isEmpty()) {
-            if (UnlockHelper.checkUnlock(keyStack, lockStack, IWorldPosCallable.DUMMY, null)) { flag = 1; }
+            if (UnlockHelper.checkUnlock(keyStack, lockStack, IWorldPosCallable.DUMMY, null, false)) { flag = 1; }
         }
         this.testingState.set(flag);
         this.detectAndSendChanges();

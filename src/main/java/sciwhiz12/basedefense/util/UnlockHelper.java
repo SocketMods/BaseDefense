@@ -36,37 +36,44 @@ public final class UnlockHelper {
         Util.consumeIfPresent(keyCap, lockCap, consumer);
     }
 
-    public static boolean checkUnlock(ICapabilityProvider keyProv, ICapabilityProvider lockProv, @Nullable World world,
-            @Nullable BlockPos pos, @Nullable PlayerEntity player) {
-        return checkUnlock(keyProv, lockProv, Util.getOrDummy(world, pos), player);
+    public static boolean checkUnlock(final ICapabilityProvider keyProv, final ICapabilityProvider lockProv,
+            final @Nullable World world, final @Nullable BlockPos pos, final @Nullable PlayerEntity player,
+            final boolean onUnlock) {
+        return checkUnlock(keyProv, lockProv, Util.getOrDummy(world, pos), player, onUnlock);
     }
 
-    public static boolean checkUnlock(ICapabilityProvider keyProv, ICapabilityProvider lockProv, IWorldPosCallable worldPos,
-            @Nullable PlayerEntity player) {
+    public static boolean checkUnlock(final ICapabilityProvider keyProv, final ICapabilityProvider lockProv,
+            final IWorldPosCallable worldPos, final @Nullable PlayerEntity player, final boolean onUnlock) {
         checkNotNull(keyProv);
         checkNotNull(lockProv);
         checkNotNull(worldPos);
-        return mapIfBothPresent(
-            lockProv.getCapability(LOCK), keyProv.getCapability(KEY), false, (lock, key) -> key.canUnlock(
-                lock, worldPos, player
-            ) && lock.canUnlock(key, worldPos, player)
-        );
+        return mapIfBothPresent(lockProv.getCapability(LOCK), keyProv.getCapability(KEY), false, (lock, key) -> {
+            boolean success;
+            if (success = key.canUnlock(lock, worldPos, player) && lock.canUnlock(key, worldPos, player)) {
+                if (onUnlock) {
+                    key.onUnlock(lock, worldPos, player);
+                    lock.onUnlock(key, worldPos, player);
+                }
+            }
+            return success;
+        });
     }
 
-    public static boolean checkRemove(ICapabilityProvider keyProv, ICapabilityProvider lockProv, @Nullable World world,
-            @Nullable BlockPos pos, @Nullable PlayerEntity player) {
-        return checkRemove(keyProv, lockProv, Util.getOrDummy(world, pos), player);
+    public static boolean checkRemove(final ICapabilityProvider keyProv, final ICapabilityProvider lockProv,
+            final @Nullable World world, final @Nullable BlockPos pos, final @Nullable PlayerEntity player,
+            final boolean onUnlock) {
+        return checkRemove(keyProv, lockProv, Util.getOrDummy(world, pos), player, onUnlock);
     }
 
-    public static boolean checkRemove(ICapabilityProvider keyProv, ICapabilityProvider lockProv, IWorldPosCallable worldPos,
-            @Nullable PlayerEntity player) {
+    public static boolean checkRemove(final ICapabilityProvider keyProv, final ICapabilityProvider lockProv,
+            final IWorldPosCallable worldPos, final @Nullable PlayerEntity player, final boolean onUnlock) {
         checkNotNull(keyProv);
         checkNotNull(lockProv);
         checkNotNull(worldPos);
-        return mapIfBothPresent(
-            lockProv.getCapability(LOCK), keyProv.getCapability(KEY), false, (lock, key) -> lock.canRemove(
-                key, worldPos, player
-            )
-        );
+        return mapIfBothPresent(lockProv.getCapability(LOCK), keyProv.getCapability(KEY), false, (lock, key) -> {
+            boolean success;
+            if (success = lock.canRemove(key, worldPos, player)) { if (onUnlock) { lock.onRemove(key, worldPos, player); } }
+            return success;
+        });
     }
 }

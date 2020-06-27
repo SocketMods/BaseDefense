@@ -109,10 +109,7 @@ public class PadlockedDoorBlock extends Block {
                 if (keyStack.getCapability(KEY).isPresent()) {
                     if (allowOpen(state.get(SIDE), state.get(FACING), rayTrace.getFace())) {
                         IWorldPosCallable worldPos = Util.getOrDummy(worldIn, pos);
-                        if (UnlockHelper.checkRemove(keyStack, doorTile, worldPos, player)) {
-                            UnlockHelper.consumeIfPresent(
-                                keyStack, doorTile, (key, lock) -> lock.onRemove(key, worldPos, player)
-                            );
+                        if (UnlockHelper.checkRemove(keyStack, doorTile, worldPos, player, true)) {
                             replaceDoor(worldIn, pos);
                         }
                         player.swingArm(handIn);
