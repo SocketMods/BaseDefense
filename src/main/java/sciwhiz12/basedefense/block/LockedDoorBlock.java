@@ -1,5 +1,6 @@
 package sciwhiz12.basedefense.block;
 
+import static net.minecraft.util.text.TextFormatting.*;
 import static net.minecraftforge.common.util.Constants.BlockFlags.DEFAULT_AND_RERENDER;
 import static sciwhiz12.basedefense.Reference.Sounds;
 import static sciwhiz12.basedefense.Reference.Capabilities.LOCK;
@@ -27,7 +28,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
@@ -110,16 +110,18 @@ public class LockedDoorBlock extends Block {
                             // LOCKED, NO KEY, SNEAKING => inform player of lock name
                             player.sendStatusMessage(
                                 new TranslationTextComponent(
-                                    "\"%s\"", lock.getDisplayName().func_230532_e_().func_240699_a_(TextFormatting.WHITE)
-                                ).func_240699_a_(TextFormatting.YELLOW), true
+                                    "status.basedefense.door.info", lock.getDisplayName().func_230532_e_().func_240699_a_(
+                                        WHITE
+                                    )
+                                ).func_240701_a_(YELLOW, ITALIC), true
                             );
                         } else { // LOCKED, NO KEY, NOT SNEAKING => inform player that door is locked
                             player.sendStatusMessage(
                                 new TranslationTextComponent(
-                                    "Door is locked!", new TranslationTextComponent(this.getTranslationKey()).func_240699_a_(
-                                        TextFormatting.WHITE
-                                    )
-                                ).func_240699_a_(TextFormatting.GRAY), true
+                                    "status.basedefense.door.locked", new TranslationTextComponent(
+                                        this.baseBlock.getTranslationKey()
+                                    ).func_240699_a_(WHITE)
+                                ).func_240701_a_(GRAY, ITALIC), true
                             );
                         }
                         playSound(player, worldIn, pos, Sounds.LOCKED_DOOR_ATTEMPT);

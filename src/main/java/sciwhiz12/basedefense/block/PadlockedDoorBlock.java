@@ -1,5 +1,6 @@
 package sciwhiz12.basedefense.block;
 
+import static net.minecraft.util.text.TextFormatting.*;
 import static sciwhiz12.basedefense.Reference.Sounds;
 import static sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
 import static sciwhiz12.basedefense.Reference.Capabilities.KEY;
@@ -30,7 +31,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
@@ -124,18 +124,18 @@ public class PadlockedDoorBlock extends Block {
                         if (!lockStack.isEmpty() && lockStack.hasDisplayName()) {
                             player.sendStatusMessage(
                                 new TranslationTextComponent(
-                                    "status.basedefense.padlocked_door.info", lockStack.getDisplayName().func_230532_e_()
-                                        .func_240699_a_(TextFormatting.WHITE)
-                                ).func_240701_a_(TextFormatting.YELLOW, TextFormatting.ITALIC), true
+                                    "status.basedefense.door.info", lockStack.getDisplayName().func_230532_e_()
+                                        .func_240699_a_(WHITE)
+                                ).func_240701_a_(YELLOW, ITALIC), true
                             );
                         }
                     } else {
                         player.sendStatusMessage(
                             new TranslationTextComponent(
-                                "status.basedefense.padlocked_door.locked", new TranslationTextComponent(
+                                "status.basedefense.door.locked", new TranslationTextComponent(
                                     this.baseBlock.getTranslationKey()
-                                ).func_240699_a_(TextFormatting.WHITE)
-                            ).func_240701_a_(TextFormatting.GRAY, TextFormatting.ITALIC), true
+                                ).func_240699_a_(WHITE)
+                            ).func_240701_a_(GRAY, ITALIC), true
                         );
                     }
                     worldIn.playSound(

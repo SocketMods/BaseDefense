@@ -62,8 +62,8 @@ public class Languages extends LanguageProvider {
         add("tooltip", "keyring.count", "Contains %s key(s)");
         add("tooltip", "locked_door.has_lock", "Contains installed lock");
 
-        add("status", "padlocked_door.locked", "This %s is locked.");
-        add("status", "padlocked_door.info", "\"%s\"");
+        add("status", "door.locked", "This %s is locked.");
+        add("status", "door.info", "\"%s\"");
 
         add("subtitle", "locked_door.attempt", "Door locked");
         add("subtitle", "locked_door.relock", "Door relocks");
