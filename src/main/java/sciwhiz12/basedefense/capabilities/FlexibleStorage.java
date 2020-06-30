@@ -7,8 +7,8 @@ import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.util.INBTSerializable;
 
 /**
- * A flexible {@link IStorage} for capabilities. <br/>
- * 
+ * A flexible {@link IStorage} for capabilities.
+ * <p>
  * Checks if the given capability is a subclass of {@link INBTSerializable}, and
  * if so, passes the {@link INBT} to the instance.
  * 

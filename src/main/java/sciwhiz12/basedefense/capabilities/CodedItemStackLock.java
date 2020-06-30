@@ -15,6 +15,12 @@ import sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.api.capablities.ILock;
 
+/**
+ * An {@link ILock} and {@link ICodeHolder} that simply references the stored
+ * {@link ItemStack}'s capabilities, if present.
+ *
+ * @author SciWhiz12
+ */
 public class CodedItemStackLock implements ICodeHolder, ILock, INBTSerializable<CompoundNBT> {
     private ItemStack lockStack = ItemStack.EMPTY;
 
