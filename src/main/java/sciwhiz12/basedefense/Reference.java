@@ -3,6 +3,7 @@ package sciwhiz12.basedefense;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static sciwhiz12.basedefense.util.Util.Null;
 
+import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -19,13 +20,11 @@ import sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import sciwhiz12.basedefense.api.capablities.IContainsCode;
 import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.api.capablities.ILock;
-import sciwhiz12.basedefense.block.KeysmithBlock;
-import sciwhiz12.basedefense.block.LockedDoorBlock;
-import sciwhiz12.basedefense.block.LocksmithBlock;
-import sciwhiz12.basedefense.block.PadlockedDoorBlock;
+import sciwhiz12.basedefense.block.*;
 import sciwhiz12.basedefense.container.KeyringContainer;
 import sciwhiz12.basedefense.container.KeysmithContainer;
 import sciwhiz12.basedefense.container.LocksmithContainer;
+import sciwhiz12.basedefense.entity.PTZCameraEntity;
 import sciwhiz12.basedefense.item.BrokenLockPiecesItem;
 import sciwhiz12.basedefense.item.key.KeyItem;
 import sciwhiz12.basedefense.item.key.KeyringItem;
@@ -37,6 +36,7 @@ import sciwhiz12.basedefense.recipe.CopyCodedLockRecipe;
 import sciwhiz12.basedefense.recipe.LockedDoorRecipe;
 import sciwhiz12.basedefense.tileentity.LockableTile;
 import sciwhiz12.basedefense.tileentity.LockedDoorTile;
+import sciwhiz12.basedefense.tileentity.PTZCameraTile;
 import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
 import sciwhiz12.basedefense.util.RecipeHelper;
 
@@ -68,6 +68,8 @@ public final class Reference {
         public static final LockedDoorBlock LOCKED_JUNGLE_DOOR = Null();
         public static final LockedDoorBlock LOCKED_ACACIA_DOOR = Null();
         public static final LockedDoorBlock LOCKED_DARK_OAK_DOOR = Null();
+
+        public static final PTZCameraBlock PTZ_CAMERA = Null();
 
         // Prevent instantiation
         private Blocks() {}
@@ -115,6 +117,8 @@ public final class Reference {
         public static final BlockItem LOCKED_ACACIA_DOOR = Null();
         public static final BlockItem LOCKED_DARK_OAK_DOOR = Null();
 
+        public static final BlockItem PTZ_CAMERA = Null();
+
         // Prevent instantiation
         private Items() {}
     }
@@ -127,6 +131,14 @@ public final class Reference {
 
         // Prevent instantiation
         private Containers() {}
+    }
+
+    @ObjectHolder(MODID)
+    public static final class Entities {
+        public static final EntityType<PTZCameraEntity> PTZ_CAMERA = Null();
+
+        // Prevent instantiation
+        private Entities() {}
     }
 
     @ObjectHolder(MODID)
@@ -154,6 +166,7 @@ public final class Reference {
         public static final TileEntityType<LockableTile> LOCKABLE_TILE = Null();
         public static final TileEntityType<PadlockedDoorTile> PADLOCKED_DOOR = Null();
         public static final TileEntityType<LockedDoorTile> LOCKED_DOOR = Null();
+        public static final TileEntityType<PTZCameraTile> PTZ_CAMERA = Null();
 
         // Prevent instantiation
         private TileEntities() {}

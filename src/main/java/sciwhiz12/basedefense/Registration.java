@@ -10,6 +10,9 @@ import java.util.function.Supplier;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -30,10 +33,7 @@ import sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import sciwhiz12.basedefense.api.capablities.IContainsCode;
 import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.api.capablities.ILock;
-import sciwhiz12.basedefense.block.KeysmithBlock;
-import sciwhiz12.basedefense.block.LockedDoorBlock;
-import sciwhiz12.basedefense.block.LocksmithBlock;
-import sciwhiz12.basedefense.block.PadlockedDoorBlock;
+import sciwhiz12.basedefense.block.*;
 import sciwhiz12.basedefense.capabilities.CodeHolder;
 import sciwhiz12.basedefense.capabilities.CodedKey;
 import sciwhiz12.basedefense.capabilities.CodedLock;
@@ -41,6 +41,7 @@ import sciwhiz12.basedefense.capabilities.FlexibleStorage;
 import sciwhiz12.basedefense.container.KeyringContainer;
 import sciwhiz12.basedefense.container.KeysmithContainer;
 import sciwhiz12.basedefense.container.LocksmithContainer;
+import sciwhiz12.basedefense.entity.PTZCameraEntity;
 import sciwhiz12.basedefense.item.BrokenLockPiecesItem;
 import sciwhiz12.basedefense.item.LockedDoorBlockItem;
 import sciwhiz12.basedefense.item.key.KeyItem;
@@ -53,6 +54,7 @@ import sciwhiz12.basedefense.recipe.CopyCodedLockRecipe;
 import sciwhiz12.basedefense.recipe.LockedDoorRecipe;
 import sciwhiz12.basedefense.tileentity.LockableTile;
 import sciwhiz12.basedefense.tileentity.LockedDoorTile;
+import sciwhiz12.basedefense.tileentity.PTZCameraTile;
 import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
 import sciwhiz12.basedefense.util.RecipeHelper;
 
@@ -90,6 +92,8 @@ public final class Registration {
         reg.register(new LockedDoorBlock(Blocks.ACACIA_DOOR).setRegistryName("locked_acacia_door"));
         reg.register(new LockedDoorBlock(Blocks.DARK_OAK_DOOR).setRegistryName("locked_dark_oak_door"));
         reg.register(new LockedDoorBlock(Blocks.IRON_DOOR).setRegistryName("locked_iron_door"));
+
+        reg.register(new PTZCameraBlock().setRegistryName("ptz_camera"));
     }
 
     @SubscribeEvent
@@ -138,6 +142,13 @@ public final class Registration {
         reg.register(new LockedDoorBlockItem(LOCKED_IRON_DOOR).setRegistryName("locked_iron_door"));
     }
 
+    static void registerEntities(RegistryEvent.Register<EntityType<?>> event) {
+        LOG.debug(COMMON, "Registering entities");
+        final IForgeRegistry<EntityType<?>> reg = event.getRegistry();
+
+        reg.register(makeType("ptz_camera", PTZCameraEntity::new, EntityClassification.MISC));
+    }
+
     @SubscribeEvent
     static void registerRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> event) {
         LOG.debug(COMMON, "Registering recipe serializers");
@@ -176,9 +187,17 @@ public final class Registration {
                 LOCKED_JUNGLE_DOOR, LOCKED_ACACIA_DOOR, LOCKED_DARK_OAK_DOOR
             ).setRegistryName("locked_door")
         );
+        reg.register(makeType(PTZCameraTile::new, PTZ_CAMERA));
     }
 
     private static <T extends TileEntity> TileEntityType<T> makeType(Supplier<T> factory, Block... validBlocks) {
         return TileEntityType.Builder.create(factory, validBlocks).build(Null());
+    }
+
+    private static <T extends Entity> EntityType<T> makeType(String name, EntityType.IFactory<T> factory,
+            EntityClassification classification) {
+        EntityType<T> type = EntityType.Builder.create(factory, classification).build(modLoc(name).toString());
+        type.setRegistryName(modLoc(name));
+        return type;
     }
 }

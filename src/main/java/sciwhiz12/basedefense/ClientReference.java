@@ -74,6 +74,8 @@ public final class ClientReference {
         public static final ResourceLocation KEYSMITH_GUI = modLoc("textures/gui/keysmith_gui.png");
         public static final ResourceLocation LOCKSMITH_GUI = modLoc("textures/gui/locksmith_gui.png");
 
+        public static final ResourceLocation PTZ_CAMERA_MODEL = modLoc("textures/model/ptz_camera.png");
+
         static ResourceLocation addSprite(String location) {
             ResourceLocation loc = modLoc(location);
             SPRITE_LIST.add(loc);

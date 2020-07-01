@@ -1,6 +1,7 @@
 package sciwhiz12.basedefense.net;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
@@ -22,6 +23,11 @@ public class NetworkHandler {
                 .encoder(TextFieldChangePacket::encode)
                 .decoder(TextFieldChangePacket::decode)
                 .consumer(TextFieldChangePacket::process)
+                .add();
+        CHANNEL.messageBuilder(ChangePOVPacket.class, ID++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(ChangePOVPacket::encode)
+                .decoder(ChangePOVPacket::decode)
+                .consumer(ChangePOVPacket::process)
                 .add();
     }
 }

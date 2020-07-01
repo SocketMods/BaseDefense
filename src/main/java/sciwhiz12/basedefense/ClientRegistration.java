@@ -18,6 +18,7 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -30,6 +31,7 @@ import sciwhiz12.basedefense.client.gui.LocksmithScreen;
 import sciwhiz12.basedefense.client.model.ISTERWrapper;
 import sciwhiz12.basedefense.client.model.LockedDoorModel;
 import sciwhiz12.basedefense.client.render.PadlockedDoorRenderer;
+import sciwhiz12.basedefense.entity.BlankRenderer;
 
 import java.util.function.Function;
 
@@ -53,6 +55,7 @@ public class ClientRegistration {
     static void onClientSetup(FMLClientSetupEvent event) {
         LOG.debug(CLIENT, "Setting up on client");
         bindTileEntityRenderers();
+        registerEntityRenderers();
         setupRenderLayer();
         registerPropertyOverrides();
         DeferredWorkQueue.runLater(ClientRegistration::registerScreenFactories);
@@ -94,6 +97,11 @@ public class ClientRegistration {
     static void bindTileEntityRenderers() {
         LOG.debug(CLIENT, "Binding tile entity renderers");
         ClientRegistry.bindTileEntityRenderer(TileEntities.PADLOCKED_DOOR, PadlockedDoorRenderer::new);
+    }
+
+    static void registerEntityRenderers() {
+        LOG.debug(CLIENT, "Registering entity renderers");
+        RenderingRegistry.registerEntityRenderingHandler(Entities.PTZ_CAMERA, BlankRenderer::new);
     }
 
     @SubscribeEvent
