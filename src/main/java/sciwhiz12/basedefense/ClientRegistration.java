@@ -30,6 +30,7 @@ import sciwhiz12.basedefense.client.gui.KeysmithScreen;
 import sciwhiz12.basedefense.client.gui.LocksmithScreen;
 import sciwhiz12.basedefense.client.model.ISTERWrapper;
 import sciwhiz12.basedefense.client.model.LockedDoorModel;
+import sciwhiz12.basedefense.client.render.PTZCameraRenderer;
 import sciwhiz12.basedefense.client.render.PadlockedDoorRenderer;
 import sciwhiz12.basedefense.entity.BlankRenderer;
 
@@ -97,6 +98,7 @@ public class ClientRegistration {
     static void bindTileEntityRenderers() {
         LOG.debug(CLIENT, "Binding tile entity renderers");
         ClientRegistry.bindTileEntityRenderer(TileEntities.PADLOCKED_DOOR, PadlockedDoorRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(TileEntities.PTZ_CAMERA, PTZCameraRenderer::new);
     }
 
     static void registerEntityRenderers() {

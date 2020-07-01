@@ -140,8 +140,11 @@ public final class Registration {
         reg.register(new LockedDoorBlockItem(LOCKED_ACACIA_DOOR).setRegistryName("locked_acacia_door"));
         reg.register(new LockedDoorBlockItem(LOCKED_DARK_OAK_DOOR).setRegistryName("locked_dark_oak_door"));
         reg.register(new LockedDoorBlockItem(LOCKED_IRON_DOOR).setRegistryName("locked_iron_door"));
+
+        reg.register(new BlockItem(PTZ_CAMERA, defaultProps).setRegistryName("ptz_camera"));
     }
 
+    @SubscribeEvent
     static void registerEntities(RegistryEvent.Register<EntityType<?>> event) {
         LOG.debug(COMMON, "Registering entities");
         final IForgeRegistry<EntityType<?>> reg = event.getRegistry();
@@ -187,7 +190,7 @@ public final class Registration {
                 LOCKED_JUNGLE_DOOR, LOCKED_ACACIA_DOOR, LOCKED_DARK_OAK_DOOR
             ).setRegistryName("locked_door")
         );
-        reg.register(makeType(PTZCameraTile::new, PTZ_CAMERA));
+        reg.register(makeType(PTZCameraTile::new, PTZ_CAMERA).setRegistryName("ptz_camera"));
     }
 
     private static <T extends TileEntity> TileEntityType<T> makeType(Supplier<T> factory, Block... validBlocks) {
