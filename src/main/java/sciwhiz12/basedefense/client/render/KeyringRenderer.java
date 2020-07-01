@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.vector.Vector3f;
@@ -24,8 +25,9 @@ public class KeyringRenderer extends ItemStackTileEntityRenderer {
             0.002D } };
     private static final int[] rotations = { 135, 90, 180 };
 
-    public void render(ItemStack stack, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight,
-            int combinedOverlay) {
+    @Override
+    public void func_239207_a_(ItemStack stack, ItemCameraTransforms.TransformType transform, MatrixStack matrixStack,
+            IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
         stack.getCapability(ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
             int keys = 0;
             for (int i = 0; i < handler.getSlots() && keys < 3; i++) {
