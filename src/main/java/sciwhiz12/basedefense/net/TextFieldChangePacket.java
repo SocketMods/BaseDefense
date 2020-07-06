@@ -1,12 +1,12 @@
 package sciwhiz12.basedefense.net;
 
-import java.util.function.Supplier;
-
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import sciwhiz12.basedefense.container.KeysmithContainer;
+
+import java.util.function.Supplier;
 
 public class TextFieldChangePacket {
     public final String text;
@@ -23,15 +23,17 @@ public class TextFieldChangePacket {
         return new TextFieldChangePacket(buf.readString(64));
     }
 
-    public static void process(TextFieldChangePacket pkt, Supplier<Context> ctx) {
+    public static boolean process(TextFieldChangePacket pkt, Supplier<Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ctx.get().getDirection();
             ServerPlayerEntity sender = ctx.get().getSender();
             if (sender != null) {
                 Container cont = sender.openContainer;
-                if (cont instanceof KeysmithContainer) { ((KeysmithContainer) cont).setOutputName(pkt.text); }
+                if (cont instanceof KeysmithContainer) {
+                    ((KeysmithContainer) cont).setOutputName(pkt.text);
+                }
             }
         });
-        ctx.get().setPacketHandled(true);
+        return true;
     }
 }
