@@ -1,12 +1,5 @@
 package sciwhiz12.basedefense;
 
-import static sciwhiz12.basedefense.BaseDefense.CLIENT;
-import static sciwhiz12.basedefense.BaseDefense.LOG;
-import static sciwhiz12.basedefense.ClientReference.PropertyOverrides.COLORS;
-import static sciwhiz12.basedefense.Reference.*;
-
-import java.util.function.Function;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.ScreenManager;
@@ -23,6 +16,7 @@ import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
@@ -37,6 +31,13 @@ import sciwhiz12.basedefense.client.model.ISTERWrapper;
 import sciwhiz12.basedefense.client.model.LockedDoorModel;
 import sciwhiz12.basedefense.client.render.PadlockedDoorRenderer;
 
+import java.util.function.Function;
+
+import static sciwhiz12.basedefense.BaseDefense.CLIENT;
+import static sciwhiz12.basedefense.BaseDefense.LOG;
+import static sciwhiz12.basedefense.ClientReference.PropertyOverrides.COLORS;
+import static sciwhiz12.basedefense.Reference.*;
+
 /**
  * Class for registering <strong>client-side only</strong> objects of this mod.
  *
@@ -47,13 +48,14 @@ public class ClientRegistration {
     // Prevent instantiation
     private ClientRegistration() {}
 
+    @SuppressWarnings("deprecation")
     @SubscribeEvent
     static void onClientSetup(FMLClientSetupEvent event) {
         LOG.debug(CLIENT, "Setting up on client");
         bindTileEntityRenderers();
-        registerScreenFactories();
         setupRenderLayer();
         registerPropertyOverrides();
+        DeferredWorkQueue.runLater(ClientRegistration::registerScreenFactories);
     }
 
     static void registerPropertyOverrides() {
