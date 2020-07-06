@@ -2,7 +2,6 @@ package sciwhiz12.basedefense.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
@@ -14,6 +13,7 @@ public class KeyringScreen extends ContainerScreen<KeyringContainer> {
         super(container, inv, title);
         this.xSize = 176;
         this.ySize = 130;
+        this.field_238745_s_ = 37;
     }
 
     @Override
@@ -21,12 +21,6 @@ public class KeyringScreen extends ContainerScreen<KeyringContainer> {
         this.func_230446_a_(stack);
         super.func_230430_a_(stack, mouseX, mouseY, partialTicks);
         this.func_230459_a_(stack, mouseX, mouseY);
-    }
-
-    @Override
-    protected void func_230451_b_(MatrixStack stack, int mouseX, int mouseY) {
-        this.field_230712_o_.func_238421_b_(stack, field_230704_d_.getString(), 8, 6, 4210752);
-        this.field_230712_o_.func_238421_b_(stack, playerInventory.getDisplayName().getString(), 8, 37, 4210752);
     }
 
     @Override

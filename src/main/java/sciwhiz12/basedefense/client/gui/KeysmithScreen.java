@@ -1,11 +1,7 @@
 package sciwhiz12.basedefense.client.gui;
 
-import org.apache.commons.lang3.StringUtils;
-import org.lwjgl.glfw.GLFW;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -17,6 +13,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import org.apache.commons.lang3.StringUtils;
+import org.lwjgl.glfw.GLFW;
 import sciwhiz12.basedefense.ClientReference.Textures;
 import sciwhiz12.basedefense.Reference;
 import sciwhiz12.basedefense.container.KeysmithContainer;
@@ -81,12 +79,6 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
         super.func_230430_a_(stack, mouseX, mouseY, partialTicks);
         this.nameField.func_230430_a_(stack, mouseX, mouseY, partialTicks);
         this.func_230459_a_(stack, mouseX, mouseY);
-    }
-
-    @Override
-    protected void func_230451_b_(MatrixStack stack, int mouseX, int mouseY) {
-        this.field_230712_o_.func_238421_b_(stack, field_230704_d_.getString(), 8, 6, 4210752);
-        this.field_230712_o_.func_238421_b_(stack, playerInventory.getDisplayName().getString(), 8, 73, 4210752);
     }
 
     @Override
