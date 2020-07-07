@@ -1,9 +1,5 @@
 package sciwhiz12.basedefense.container;
 
-import static sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
-
-import java.util.concurrent.atomic.AtomicReference;
-
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,6 +19,10 @@ import sciwhiz12.basedefense.Reference.Blocks;
 import sciwhiz12.basedefense.item.IColorable;
 import sciwhiz12.basedefense.util.ContainerHelper;
 import sciwhiz12.basedefense.util.UnlockHelper;
+
+import java.util.concurrent.atomic.AtomicReference;
+
+import static sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
 
 public class LocksmithContainer extends Container {
     private final IInventory outputSlot = new CraftResultInventory() {
@@ -58,7 +58,7 @@ public class LocksmithContainer extends Container {
 
         this.addSlot(new Slot(this.inputSlots, 0, 80, 50) {
             public boolean isItemValid(ItemStack stack) {
-                return Tags.Items.INGOTS_IRON.func_230235_a_(stack.getItem());
+                return Tags.Items.INGOTS_IRON.contains(stack.getItem());
             }
         }.setBackground(Textures.ATLAS_BLOCKS_TEXTURE, Textures.SLOT_INGOT_OUTLINE));
 

@@ -32,52 +32,54 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
     }
 
     @Override
-    protected void func_231160_c_() {
-        super.func_231160_c_();
-        this.field_230706_i_.keyboardListener.enableRepeatEvents(true);
+    protected void init() {
+        super.init();
+        this.minecraft.keyboardListener.enableRepeatEvents(true);
         this.nameField = new TextFieldWidget(
-            this.field_230712_o_, guiLeft + 91, guiTop + 28, 82, 12, new StringTextComponent("")
+                this.font, guiLeft + 91, guiTop + 28, 82, 12, new StringTextComponent("")
         );
         this.nameField.setCanLoseFocus(false);
-        this.nameField.func_231049_c__(true);
+        this.nameField.setFocused2(true);
         this.nameField.setTextColor(-1);
         this.nameField.setDisabledTextColour(-1);
         this.nameField.setEnableBackgroundDrawing(false);
         this.nameField.setMaxStringLength(35);
         this.nameField.setResponder(this::onTextChange);
         this.container.addListener(this);
-        this.field_230710_m_.add(nameField);
+        this.children.add(nameField);
         this.setFocusedDefault(nameField);
     }
 
     @Override
-    public void func_231152_a_(Minecraft mc, int width, int height) {
+    public void resize(Minecraft mc, int width, int height) {
         String s = this.nameField.getText();
-        super.func_231152_a_(mc, width, height);
+        super.resize(mc, width, height);
         this.nameField.setText(s);
     }
 
     @Override
-    public void func_231023_e_() {
-        super.func_231023_e_();
+    public void removed() {
+        super.removed();
         this.container.removeListener(this);
-        this.field_230706_i_.keyboardListener.enableRepeatEvents(false);
+        this.minecraft.keyboardListener.enableRepeatEvents(false);
     }
 
     @Override
-    public boolean func_231046_a_(int key, int scanCode, int modifiers) {
-        if (key == GLFW.GLFW_KEY_ESCAPE) { field_230706_i_.player.closeScreen(); }
+    public boolean keyPressed(int key, int scanCode, int modifiers) {
+        if (key == GLFW.GLFW_KEY_ESCAPE) {
+            minecraft.player.closeScreen();
+        }
 
-        return this.nameField.func_231046_a_(key, scanCode, modifiers) || this.nameField.canWrite() || super.func_231046_a_(
-            key, scanCode, modifiers
+        return this.nameField.keyPressed(key, scanCode, modifiers) || this.nameField.canWrite() || super.keyPressed(
+                key, scanCode, modifiers
         );
     }
 
     @Override
-    public void func_230430_a_(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-        this.func_230446_a_(stack);
-        super.func_230430_a_(stack, mouseX, mouseY, partialTicks);
-        this.nameField.func_230430_a_(stack, mouseX, mouseY, partialTicks);
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(stack);
+        super.render(stack, mouseX, mouseY, partialTicks);
+        this.nameField.render(stack, mouseX, mouseY, partialTicks);
         this.func_230459_a_(stack, mouseX, mouseY);
     }
 
@@ -85,12 +87,12 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
     @SuppressWarnings("deprecation")
     protected void func_230450_a_(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.field_230706_i_.getTextureManager().bindTexture(Textures.KEYSMITH_GUI);
-        this.func_238474_b_(stack, guiLeft, guiTop, 0, 0, xSize, ySize);
+        this.minecraft.getTextureManager().bindTexture(Textures.KEYSMITH_GUI);
+        this.blit(stack, guiLeft, guiTop, 0, 0, xSize, ySize);
         if (this.nameField.canWrite()) {
-            this.func_238474_b_(stack, guiLeft + 88, guiTop + 24, 0, 166, 82, 15);
+            this.blit(stack, guiLeft + 88, guiTop + 24, 0, 166, 82, 15);
         } else {
-            this.func_238474_b_(stack, guiLeft + 88, guiTop + 24, 0, 181, 82, 15);
+            this.blit(stack, guiLeft + 88, guiTop + 24, 0, 181, 82, 15);
         }
     }
 
@@ -119,7 +121,7 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
                 isEnabledText = true;
                 nameField.setText(I18n.format(Reference.Items.KEY.getTranslationKey()));
             }
-            this.field_230706_i_.deferTask(() -> this.nameField.setEnabled(isEnabledText));
+            this.minecraft.deferTask(() -> this.nameField.setEnabled(isEnabledText));
         } else if (slotInd == 1) {
             if (!stack.isEmpty() && isEnabledText) { nameField.setText(stack.getDisplayName().getString()); }
         }

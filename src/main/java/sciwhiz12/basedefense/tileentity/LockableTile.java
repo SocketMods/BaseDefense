@@ -1,7 +1,5 @@
 package sciwhiz12.basedefense.tileentity;
 
-import static sciwhiz12.basedefense.Reference.Capabilities.*;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -15,6 +13,8 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
 import sciwhiz12.basedefense.Reference.TileEntities;
 import sciwhiz12.basedefense.capabilities.CodedItemStackLock;
+
+import static sciwhiz12.basedefense.Reference.Capabilities.*;
 
 public class LockableTile extends TileEntity {
     public static final String TAG_LOCK = "Lock";
@@ -54,8 +54,8 @@ public class LockableTile extends TileEntity {
     }
 
     @Override
-    public void func_230337_a_(BlockState state, CompoundNBT compound) {
-        super.func_230337_a_(state, compound);
+    public void read(BlockState state, CompoundNBT compound) {
+        super.read(state, compound);
         lock.setStack(ItemStack.read(compound.getCompound(TAG_LOCK)));
     }
 

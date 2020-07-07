@@ -1,14 +1,5 @@
 package sciwhiz12.basedefense.block;
 
-import static net.minecraft.util.text.TextFormatting.*;
-import static sciwhiz12.basedefense.Reference.Sounds;
-import static sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
-import static sciwhiz12.basedefense.Reference.Capabilities.KEY;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -46,6 +37,15 @@ import sciwhiz12.basedefense.tileentity.LockableTile;
 import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
 import sciwhiz12.basedefense.util.UnlockHelper;
 import sciwhiz12.basedefense.util.Util;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static net.minecraft.util.text.TextFormatting.*;
+import static sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
+import static sciwhiz12.basedefense.Reference.Capabilities.KEY;
+import static sciwhiz12.basedefense.Reference.Sounds;
 
 public class PadlockedDoorBlock extends Block {
     private static final Map<IRegistryDelegate<Block>, IRegistryDelegate<Block>> REPLACEMENT_MAP = new HashMap<>();
@@ -121,7 +121,7 @@ public class PadlockedDoorBlock extends Block {
                         if (!lockStack.isEmpty() && lockStack.hasDisplayName()) {
                             player.sendStatusMessage(
                                 new TranslationTextComponent(
-                                    "status.basedefense.door.info", lockStack.getDisplayName().func_230532_e_()
+                                        "status.basedefense.door.info", lockStack.getDisplayName().copyRaw()
                                         .func_240699_a_(WHITE)
                                 ).func_240701_a_(YELLOW, ITALIC), true
                             );
@@ -219,7 +219,7 @@ public class PadlockedDoorBlock extends Block {
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return this.field_235688_at_ ? state.getShape(worldIn, pos) : VoxelShapes.empty();
+        return this.canCollide ? state.getShape(worldIn, pos) : VoxelShapes.empty();
     }
 
     @Override
@@ -298,7 +298,7 @@ public class PadlockedDoorBlock extends Block {
         }
 
         @Override
-        public String func_176610_l() {
+        public String getString() {
             return name;
         }
 

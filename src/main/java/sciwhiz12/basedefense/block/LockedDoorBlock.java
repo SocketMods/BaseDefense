@@ -1,10 +1,5 @@
 package sciwhiz12.basedefense.block;
 
-import static net.minecraft.util.text.TextFormatting.*;
-import static net.minecraftforge.common.util.Constants.BlockFlags.DEFAULT_AND_RERENDER;
-import static sciwhiz12.basedefense.Reference.Sounds;
-import static sciwhiz12.basedefense.Reference.Capabilities.LOCK;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -37,6 +32,11 @@ import net.minecraftforge.common.util.Constants;
 import sciwhiz12.basedefense.item.LockedDoorBlockItem;
 import sciwhiz12.basedefense.tileentity.LockedDoorTile;
 import sciwhiz12.basedefense.util.UnlockHelper;
+
+import static net.minecraft.util.text.TextFormatting.*;
+import static net.minecraftforge.common.util.Constants.BlockFlags.DEFAULT_AND_RERENDER;
+import static sciwhiz12.basedefense.Reference.Capabilities.LOCK;
+import static sciwhiz12.basedefense.Reference.Sounds;
 
 public class LockedDoorBlock extends Block {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -110,9 +110,9 @@ public class LockedDoorBlock extends Block {
                             // LOCKED, NO KEY, SNEAKING => inform player of lock name
                             player.sendStatusMessage(
                                 new TranslationTextComponent(
-                                    "status.basedefense.door.info", lock.getDisplayName().func_230532_e_().func_240699_a_(
+                                        "status.basedefense.door.info", lock.getDisplayName().copyRaw().func_240699_a_(
                                         WHITE
-                                    )
+                                )
                                 ).func_240701_a_(YELLOW, ITALIC), true
                             );
                         } else { // LOCKED, NO KEY, NOT SNEAKING => inform player that door is locked
