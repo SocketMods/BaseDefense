@@ -39,7 +39,6 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
                 this.font, guiLeft + 91, guiTop + 28, 82, 12, new StringTextComponent("")
         );
         this.nameField.setCanLoseFocus(false);
-        this.nameField.setFocused2(true);
         this.nameField.setTextColor(-1);
         this.nameField.setDisabledTextColour(-1);
         this.nameField.setEnableBackgroundDrawing(false);
