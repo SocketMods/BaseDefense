@@ -1,12 +1,5 @@
 package sciwhiz12.basedefense.item;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
-
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -19,6 +12,12 @@ import net.minecraft.world.World;
 import sciwhiz12.basedefense.block.LockedDoorBlock;
 import sciwhiz12.basedefense.util.ItemHelper;
 
+import javax.annotation.Nullable;
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
+
 public class LockedDoorBlockItem extends BlockItem {
     public LockedDoorBlockItem(LockedDoorBlock blockIn) {
         super(blockIn, new Item.Properties().group(ITEM_GROUP).maxDamage(0));
@@ -28,7 +27,7 @@ public class LockedDoorBlockItem extends BlockItem {
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         if (hasLockStack(stack)) {
             tooltip.add(
-                new TranslationTextComponent("tooltip.basedefense.locked_door.has_lock").func_240699_a_(TextFormatting.GRAY)
+                new TranslationTextComponent("tooltip.basedefense.locked_door.has_lock").mergeStyle(TextFormatting.GRAY)
             );
             if (!flagIn.isAdvanced()) { return; }
             ItemStack lockStack = getLockStack(stack);

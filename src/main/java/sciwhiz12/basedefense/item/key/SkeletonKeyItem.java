@@ -1,13 +1,5 @@
 package sciwhiz12.basedefense.item.key;
 
-import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
-import static sciwhiz12.basedefense.Reference.Capabilities.KEY;
-import static sciwhiz12.basedefense.Reference.Capabilities.LOCK;
-
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -27,6 +19,13 @@ import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.api.capablities.ILock;
 import sciwhiz12.basedefense.capabilities.GenericCapabilityProvider;
 
+import javax.annotation.Nullable;
+import java.util.List;
+
+import static sciwhiz12.basedefense.Reference.Capabilities.KEY;
+import static sciwhiz12.basedefense.Reference.Capabilities.LOCK;
+import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
+
 public class SkeletonKeyItem extends Item {
     public SkeletonKeyItem() {
         super(new Item.Properties().maxDamage(0).rarity(Rarity.EPIC).group(ITEM_GROUP));
@@ -35,7 +34,7 @@ public class SkeletonKeyItem extends Item {
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         tooltip.add(
-            new TranslationTextComponent("tooltip.basedefense.skeleton_key").func_240699_a_(TextFormatting.DARK_RED)
+            new TranslationTextComponent("tooltip.basedefense.skeleton_key").mergeStyle(TextFormatting.DARK_RED)
         );
     }
 

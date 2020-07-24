@@ -57,8 +57,8 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
     }
 
     @Override
-    public void removed() {
-        super.removed();
+    public void onClose() {
+        super.onClose();
         this.container.removeListener(this);
         this.minecraft.keyboardListener.enableRepeatEvents(false);
     }
@@ -84,7 +84,7 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
 
     @Override
     @SuppressWarnings("deprecation")
-    protected void func_230450_a_(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+    protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.minecraft.getTextureManager().bindTexture(Textures.KEYSMITH_GUI);
         this.blit(stack, guiLeft, guiTop, 0, 0, xSize, ySize);

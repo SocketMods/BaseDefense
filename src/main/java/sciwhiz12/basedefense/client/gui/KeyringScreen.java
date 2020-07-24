@@ -13,7 +13,7 @@ public class KeyringScreen extends ContainerScreen<KeyringContainer> {
         super(container, inv, title);
         this.xSize = 176;
         this.ySize = 130;
-        this.field_238745_s_ = 37;
+        this.playerInventoryTitleY = 37;
     }
 
     @Override
@@ -25,7 +25,7 @@ public class KeyringScreen extends ContainerScreen<KeyringContainer> {
 
     @Override
     @SuppressWarnings("deprecation")
-    protected void func_230450_a_(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+    protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.minecraft.getTextureManager().bindTexture(Textures.KEYRING_GUI);
         this.blit(stack, guiLeft, guiTop, 0, 0, xSize, ySize);

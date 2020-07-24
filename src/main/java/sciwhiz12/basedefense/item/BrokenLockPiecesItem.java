@@ -1,11 +1,5 @@
 package sciwhiz12.basedefense.item;
 
-import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
-import static sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
-import static sciwhiz12.basedefense.Reference.Capabilities.CONTAINS_CODE;
-
-import java.util.List;
-
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -21,6 +15,12 @@ import sciwhiz12.basedefense.capabilities.CodedLock;
 import sciwhiz12.basedefense.capabilities.SerializableCapabilityProvider;
 import sciwhiz12.basedefense.util.ItemHelper;
 
+import java.util.List;
+
+import static sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
+import static sciwhiz12.basedefense.Reference.Capabilities.CONTAINS_CODE;
+import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
+
 public class BrokenLockPiecesItem extends Item implements IColorable {
     public BrokenLockPiecesItem() {
         super(new Item.Properties().maxDamage(0).group(ITEM_GROUP));
@@ -28,7 +28,7 @@ public class BrokenLockPiecesItem extends Item implements IColorable {
 
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        if (hasPreviousName(stack)) { tooltip.add(getPreviousName(stack).func_240699_a_(TextFormatting.ITALIC)); }
+        if (hasPreviousName(stack)) { tooltip.add(getPreviousName(stack).mergeStyle(TextFormatting.ITALIC)); }
         if (!flagIn.isAdvanced()) return;
         ItemHelper.addCodeInformation(stack, tooltip);
         ItemHelper.addColorInformation(stack, tooltip);

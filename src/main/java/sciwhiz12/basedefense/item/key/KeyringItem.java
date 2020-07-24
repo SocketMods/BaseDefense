@@ -1,12 +1,5 @@
 package sciwhiz12.basedefense.item.key;
 
-import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
-import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
-import static sciwhiz12.basedefense.Reference.Capabilities.KEY;
-import static sciwhiz12.basedefense.Reference.Capabilities.LOCK;
-
-import java.util.List;
-
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -37,6 +30,13 @@ import sciwhiz12.basedefense.client.render.KeyringRenderer;
 import sciwhiz12.basedefense.container.KeyringContainer;
 import sciwhiz12.basedefense.util.ItemHelper;
 
+import java.util.List;
+
+import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+import static sciwhiz12.basedefense.Reference.Capabilities.KEY;
+import static sciwhiz12.basedefense.Reference.Capabilities.LOCK;
+import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
+
 public class KeyringItem extends Item {
     public KeyringItem() {
         super(new Item.Properties().group(ITEM_GROUP).maxDamage(0).setISTER(() -> KeyringRenderer::new));
@@ -52,7 +52,7 @@ public class KeyringItem extends Item {
             }
             if (keys > 0) {
                 tooltip.add(
-                    new TranslationTextComponent("tooltip.basedefense.keyring.count", keys).func_240699_a_(
+                    new TranslationTextComponent("tooltip.basedefense.keyring.count", keys).mergeStyle(
                         TextFormatting.GRAY
                     )
                 );

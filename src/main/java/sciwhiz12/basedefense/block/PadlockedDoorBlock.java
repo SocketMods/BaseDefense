@@ -122,8 +122,8 @@ public class PadlockedDoorBlock extends Block {
                             player.sendStatusMessage(
                                 new TranslationTextComponent(
                                         "status.basedefense.door.info", lockStack.getDisplayName().copyRaw()
-                                        .func_240699_a_(WHITE)
-                                ).func_240701_a_(YELLOW, ITALIC), true
+                                        .mergeStyle(WHITE)
+                                ).mergeStyle(YELLOW, ITALIC), true
                             );
                         }
                     } else {
@@ -131,8 +131,8 @@ public class PadlockedDoorBlock extends Block {
                             new TranslationTextComponent(
                                 "status.basedefense.door.locked", new TranslationTextComponent(
                                     this.baseBlock.getTranslationKey()
-                                ).func_240699_a_(WHITE)
-                            ).func_240701_a_(GRAY, ITALIC), true
+                                ).mergeStyle(WHITE)
+                            ).mergeStyle(GRAY, ITALIC), true
                         );
                     }
                     worldIn.playSound(

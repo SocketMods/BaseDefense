@@ -110,18 +110,18 @@ public class LockedDoorBlock extends Block {
                             // LOCKED, NO KEY, SNEAKING => inform player of lock name
                             player.sendStatusMessage(
                                 new TranslationTextComponent(
-                                        "status.basedefense.door.info", lock.getDisplayName().copyRaw().func_240699_a_(
+                                        "status.basedefense.door.info", lock.getDisplayName().copyRaw().mergeStyle(
                                         WHITE
                                 )
-                                ).func_240701_a_(YELLOW, ITALIC), true
+                                ).mergeStyle(YELLOW, ITALIC), true
                             );
                         } else { // LOCKED, NO KEY, NOT SNEAKING => inform player that door is locked
                             player.sendStatusMessage(
                                 new TranslationTextComponent(
                                     "status.basedefense.door.locked", new TranslationTextComponent(
                                         this.baseBlock.getTranslationKey()
-                                    ).func_240699_a_(WHITE)
-                                ).func_240701_a_(GRAY, ITALIC), true
+                                    ).mergeStyle(WHITE)
+                                ).mergeStyle(GRAY, ITALIC), true
                             );
                         }
                         playSound(player, worldIn, pos, Sounds.LOCKED_DOOR_ATTEMPT);
@@ -287,9 +287,9 @@ public class LockedDoorBlock extends Block {
         BlockState rightState = world.getBlockState(rightPos);
         BlockPos rightAbovePos = abovePos.offset(rightFacing);
         BlockState rightAboveState = world.getBlockState(rightAbovePos);
-        int i = (leftState.func_235785_r_(world, leftPos) ? -1 : 0) + (leftAboveState.func_235785_r_(world, leftAbovePos)
+        int i = (leftState.hasOpaqueCollisionShape(world, leftPos) ? -1 : 0) + (leftAboveState.hasOpaqueCollisionShape(world, leftAbovePos)
                 ? -1
-                : 0) + (rightState.func_235785_r_(world, rightPos) ? 1 : 0) + (rightAboveState.func_235785_r_(
+                : 0) + (rightState.hasOpaqueCollisionShape(world, rightPos) ? 1 : 0) + (rightAboveState.hasOpaqueCollisionShape(
                     world, rightAbovePos
                 ) ? 1 : 0);
         boolean leftHasDoor = leftState.isIn(this) && leftState.get(HALF) == DoubleBlockHalf.LOWER;
