@@ -1,30 +1,30 @@
 {
-  "parent": "item/generated",
+  "parent": "minecraft:item/generated",
   "textures": {
     "layer0": "basedefense:item/padlock"
   },
   "overrides": [
     {
       "predicate": {
-        "colors": 0.0
+        "minecraft:colors": 0.0
       },
       "model": "basedefense:item/padlock"
     },
     {
       "predicate": {
-        "colors": 1.0
+        "minecraft:colors": 1.0
       },
       "model": "basedefense:item/padlock_color_1"
     },
     {
       "predicate": {
-        "colors": 2.0
+        "minecraft:colors": 2.0
       },
       "model": "basedefense:item/padlock_color_2"
     },
     {
       "predicate": {
-        "colors": 3.0
+        "minecraft:colors": 3.0
       },
       "model": "basedefense:item/padlock_color_3"
     }

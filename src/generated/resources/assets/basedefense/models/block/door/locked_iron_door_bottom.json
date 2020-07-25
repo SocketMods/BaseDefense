@@ -1,7 +1,7 @@
 {
   "parent": "basedefense:block/locked_door_bottom",
   "textures": {
-    "top": "block/iron_door_top",
-    "bottom": "block/iron_door_bottom"
+    "top": "minecraft:block/iron_door_top",
+    "bottom": "minecraft:block/iron_door_bottom"
   }
 }
