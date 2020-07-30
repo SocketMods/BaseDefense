@@ -1,7 +1,5 @@
 package sciwhiz12.basedefense.recipe;
 
-import static sciwhiz12.basedefense.Reference.Capabilities.LOCK;
-
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -12,6 +10,8 @@ import net.minecraft.util.ResourceLocation;
 import sciwhiz12.basedefense.Reference.RecipeSerializers;
 import sciwhiz12.basedefense.item.IColorable;
 import sciwhiz12.basedefense.util.ItemHelper;
+
+import static sciwhiz12.basedefense.Reference.Capabilities.LOCK;
 
 public class CopyCodedLockRecipe extends ShapedRecipe {
     public CopyCodedLockRecipe(ResourceLocation idIn, String groupIn, int recipeWidthIn, int recipeHeightIn,

@@ -1,13 +1,5 @@
 package sciwhiz12.basedefense;
 
-import static sciwhiz12.basedefense.BaseDefense.COMMON;
-import static sciwhiz12.basedefense.BaseDefense.LOG;
-import static sciwhiz12.basedefense.Reference.*;
-import static sciwhiz12.basedefense.Reference.Blocks.*;
-import static sciwhiz12.basedefense.util.Util.Null;
-
-import java.util.function.Supplier;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.inventory.container.ContainerType;
@@ -56,9 +48,17 @@ import sciwhiz12.basedefense.tileentity.LockedDoorTile;
 import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
 import sciwhiz12.basedefense.util.RecipeHelper;
 
+import java.util.function.Supplier;
+
+import static sciwhiz12.basedefense.BaseDefense.COMMON;
+import static sciwhiz12.basedefense.BaseDefense.LOG;
+import static sciwhiz12.basedefense.Reference.Blocks.*;
+import static sciwhiz12.basedefense.Reference.*;
+import static sciwhiz12.basedefense.util.Util.Null;
+
 /**
  * Main class for registering objects of this mod.
- * 
+ *
  * @author SciWhiz12
  */
 @Mod.EventBusSubscriber(bus = Bus.MOD, modid = MODID)
@@ -164,18 +164,11 @@ public final class Registration {
         final IForgeRegistry<TileEntityType<?>> reg = event.getRegistry();
 
         reg.register(makeType(LockableTile::new).setRegistryName("lockable_tile"));
-        reg.register(
-            makeType(
-                PadlockedDoorTile::new, PADLOCKED_IRON_DOOR, PADLOCKED_OAK_DOOR, PADLOCKED_BIRCH_DOOR, PADLOCKED_SPRUCE_DOOR,
-                PADLOCKED_JUNGLE_DOOR, PADLOCKED_ACACIA_DOOR, PADLOCKED_DARK_OAK_DOOR
-            ).setRegistryName("padlocked_door")
-        );
-        reg.register(
-            makeType(
-                LockedDoorTile::new, LOCKED_IRON_DOOR, LOCKED_OAK_DOOR, LOCKED_BIRCH_DOOR, LOCKED_SPRUCE_DOOR,
-                LOCKED_JUNGLE_DOOR, LOCKED_ACACIA_DOOR, LOCKED_DARK_OAK_DOOR
-            ).setRegistryName("locked_door")
-        );
+        reg.register(makeType(PadlockedDoorTile::new, PADLOCKED_IRON_DOOR, PADLOCKED_OAK_DOOR, PADLOCKED_BIRCH_DOOR,
+                PADLOCKED_SPRUCE_DOOR, PADLOCKED_JUNGLE_DOOR, PADLOCKED_ACACIA_DOOR, PADLOCKED_DARK_OAK_DOOR)
+                .setRegistryName("padlocked_door"));
+        reg.register(makeType(LockedDoorTile::new, LOCKED_IRON_DOOR, LOCKED_OAK_DOOR, LOCKED_BIRCH_DOOR, LOCKED_SPRUCE_DOOR,
+                LOCKED_JUNGLE_DOOR, LOCKED_ACACIA_DOOR, LOCKED_DARK_OAK_DOOR).setRegistryName("locked_door"));
     }
 
     private static <T extends TileEntity> TileEntityType<T> makeType(Supplier<T> factory, Block... validBlocks) {

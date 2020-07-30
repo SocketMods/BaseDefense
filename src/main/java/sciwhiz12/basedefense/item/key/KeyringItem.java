@@ -51,11 +51,8 @@ public class KeyringItem extends Item {
                 if (!key.isEmpty() && key.getItem() instanceof KeyItem) { keys++; }
             }
             if (keys > 0) {
-                tooltip.add(
-                    new TranslationTextComponent("tooltip.basedefense.keyring.count", keys).mergeStyle(
-                        TextFormatting.GRAY
-                    )
-                );
+                tooltip.add(new TranslationTextComponent("tooltip.basedefense.keyring.count", keys)
+                        .mergeStyle(TextFormatting.GRAY));
             }
         });
     }
@@ -73,11 +70,9 @@ public class KeyringItem extends Item {
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);
         if (!worldIn.isRemote && playerIn.isSneaking()) {
-            NetworkHooks.openGui(
-                (ServerPlayerEntity) playerIn, new SimpleNamedContainerProvider(
-                    (id, inv, player) -> new KeyringContainer(id, inv, stack), stack.getDisplayName()
-                ), buf -> buf.writeItemStack(stack)
-            );
+            NetworkHooks.openGui((ServerPlayerEntity) playerIn,
+                    new SimpleNamedContainerProvider((id, inv, player) -> new KeyringContainer(id, inv, stack),
+                            stack.getDisplayName()), buf -> buf.writeItemStack(stack));
             return ActionResult.resultSuccess(stack);
         }
         return ActionResult.resultPass(stack);

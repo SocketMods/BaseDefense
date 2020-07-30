@@ -70,18 +70,16 @@ public class ClientRegistration {
     @SubscribeEvent
     static void registerItemColors(ColorHandlerEvent.Item event) {
         LOG.debug(CLIENT, "Registering item colors");
-        event.getItemColors().register(
-            Colors.ITEM_COLOR, Items.KEY, Items.LOCK_CORE, Items.PADLOCK, Items.BROKEN_LOCK_PIECES
-        );
+        event.getItemColors()
+                .register(Colors.ITEM_COLOR, Items.KEY, Items.LOCK_CORE, Items.PADLOCK, Items.BROKEN_LOCK_PIECES);
     }
 
     @SubscribeEvent
     static void registerBlockColors(ColorHandlerEvent.Block event) {
         LOG.debug(CLIENT, "Registering block colors");
-        event.getBlockColors().register(
-            Colors.LOCKED_DOOR_COLOR, Blocks.LOCKED_IRON_DOOR, Blocks.LOCKED_OAK_DOOR, Blocks.LOCKED_BIRCH_DOOR,
-            Blocks.LOCKED_SPRUCE_DOOR, Blocks.LOCKED_JUNGLE_DOOR, Blocks.LOCKED_ACACIA_DOOR, Blocks.LOCKED_DARK_OAK_DOOR
-        );
+        event.getBlockColors().register(Colors.LOCKED_DOOR_COLOR, Blocks.LOCKED_IRON_DOOR, Blocks.LOCKED_OAK_DOOR,
+                Blocks.LOCKED_BIRCH_DOOR, Blocks.LOCKED_SPRUCE_DOOR, Blocks.LOCKED_JUNGLE_DOOR, Blocks.LOCKED_ACACIA_DOOR,
+                Blocks.LOCKED_DARK_OAK_DOOR);
     }
 
     static void registerScreenFactories() {

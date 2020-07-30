@@ -1,13 +1,5 @@
 package sciwhiz12.basedefense.container;
 
-import static sciwhiz12.basedefense.Reference.Blocks;
-import static sciwhiz12.basedefense.Reference.Containers;
-import static sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
-
-import java.util.Random;
-
-import org.apache.commons.lang3.StringUtils;
-
 import it.unimi.dsi.fastutil.longs.LongLists;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -19,11 +11,18 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.text.StringTextComponent;
+import org.apache.commons.lang3.StringUtils;
 import sciwhiz12.basedefense.ClientReference.Textures;
 import sciwhiz12.basedefense.Reference.Items;
 import sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import sciwhiz12.basedefense.item.IColorable;
 import sciwhiz12.basedefense.util.ContainerHelper;
+
+import java.util.Random;
+
+import static sciwhiz12.basedefense.Reference.Blocks;
+import static sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
+import static sciwhiz12.basedefense.Reference.Containers;
 
 public class KeysmithContainer extends Container {
     private static final Random RANDOM = new Random();
@@ -87,12 +86,9 @@ public class KeysmithContainer extends Container {
         if (blank.isEmpty()) {
             this.customName = null;
         } else {
-            out.getCapability(CODE_HOLDER).ifPresent(
-                outCode -> outCode.setCodes(
+            out.getCapability(CODE_HOLDER).ifPresent(outCode -> outCode.setCodes(
                     dupl.getCapability(CODE_HOLDER).filter(holder -> holder.getCodes().size() > 0).map(ICodeHolder::getCodes)
-                        .orElseGet(() -> LongLists.singleton(RANDOM.nextLong()))
-                )
-            );
+                            .orElseGet(() -> LongLists.singleton(RANDOM.nextLong()))));
             IColorable.copyColors(dupl, out);
             if (!StringUtils.isBlank(this.customName)) {
                 out.setDisplayName(new StringTextComponent(this.customName));

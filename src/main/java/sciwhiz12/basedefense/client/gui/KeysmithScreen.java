@@ -35,9 +35,7 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
     protected void init() {
         super.init();
         this.minecraft.keyboardListener.enableRepeatEvents(true);
-        this.nameField = new TextFieldWidget(
-                this.font, guiLeft + 91, guiTop + 28, 82, 12, new StringTextComponent("")
-        );
+        this.nameField = new TextFieldWidget(this.font, guiLeft + 91, guiTop + 28, 82, 12, new StringTextComponent(""));
         this.nameField.setCanLoseFocus(false);
         this.nameField.setTextColor(-1);
         this.nameField.setDisabledTextColour(-1);
@@ -69,9 +67,8 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
             minecraft.player.closeScreen();
         }
 
-        return this.nameField.keyPressed(key, scanCode, modifiers) || this.nameField.canWrite() || super.keyPressed(
-                key, scanCode, modifiers
-        );
+        return this.nameField.keyPressed(key, scanCode, modifiers) || this.nameField.canWrite() || super
+                .keyPressed(key, scanCode, modifiers);
     }
 
     @Override

@@ -1,7 +1,5 @@
 package sciwhiz12.basedefense.datagen;
 
-import static net.minecraft.state.properties.DoubleBlockHalf.LOWER;
-
 import net.minecraft.advancements.criterion.StatePropertiesPredicate;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
@@ -16,6 +14,8 @@ import sciwhiz12.basedefense.Reference.Blocks;
 import sciwhiz12.basedefense.Reference.Items;
 import sciwhiz12.basedefense.block.LockedDoorBlock;
 import sciwhiz12.basedefense.block.PadlockedDoorBlock;
+
+import static net.minecraft.state.properties.DoubleBlockHalf.LOWER;
 
 public class LootTables extends BaseLootTableProvider {
     public LootTables(DataGenerator dataGeneratorIn) {
@@ -45,9 +45,8 @@ public class LootTables extends BaseLootTableProvider {
     }
 
     void lockedDoor(LockedDoorBlock block) {
-        StatePropertiesPredicate.Builder predicate = StatePropertiesPredicate.Builder.newBuilder().withProp(
-            LockedDoorBlock.HALF, LOWER
-        );
+        StatePropertiesPredicate.Builder predicate = StatePropertiesPredicate.Builder.newBuilder()
+                .withProp(LockedDoorBlock.HALF, LOWER);
 
         LootPool.Builder builder = createStandardDrops(block.baseBlock);
         builder.acceptCondition(BlockStateProperty.builder(block).fromProperties(predicate));
@@ -56,9 +55,8 @@ public class LootTables extends BaseLootTableProvider {
     }
 
     void padlockedDoor(PadlockedDoorBlock block) {
-        StatePropertiesPredicate.Builder predicate = StatePropertiesPredicate.Builder.newBuilder().withProp(
-            PadlockedDoorBlock.HALF, LOWER
-        );
+        StatePropertiesPredicate.Builder predicate = StatePropertiesPredicate.Builder.newBuilder()
+                .withProp(PadlockedDoorBlock.HALF, LOWER);
 
         LootPool.Builder doorItem = createStandardDrops(block.baseBlock);
         doorItem.acceptCondition(BlockStateProperty.builder(block).fromProperties(predicate));
@@ -78,8 +76,7 @@ public class LootTables extends BaseLootTableProvider {
     }
 
     LootPool.Builder createStandardDrops(IItemProvider itemProvider) {
-        return LootPool.builder().rolls(ConstantRange.of(1)).acceptCondition(SurvivesExplosion.builder()).addEntry(
-            ItemLootEntry.builder(itemProvider)
-        );
+        return LootPool.builder().rolls(ConstantRange.of(1)).acceptCondition(SurvivesExplosion.builder())
+                .addEntry(ItemLootEntry.builder(itemProvider));
     }
 }

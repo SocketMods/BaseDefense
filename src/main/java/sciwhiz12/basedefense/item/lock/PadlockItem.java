@@ -101,8 +101,8 @@ public class PadlockItem extends Item implements IColorable {
                 copy.setCount(1);
                 stack.setCount(stack.getCount() - 1);
 
-                int flags = Constants.BlockFlags.BLOCK_UPDATE | Constants.BlockFlags.RERENDER_MAIN_THREAD
-                        | Constants.BlockFlags.UPDATE_NEIGHBORS | Constants.BlockFlags.NO_NEIGHBOR_DROPS;
+                int flags =
+                        Constants.BlockFlags.BLOCK_UPDATE | Constants.BlockFlags.RERENDER_MAIN_THREAD | Constants.BlockFlags.UPDATE_NEIGHBORS | Constants.BlockFlags.NO_NEIGHBOR_DROPS;
                 world.setBlockState(pos, newState, flags);
                 world.setBlockState(offPos, newOffState, flags);
                 TileEntity te = world.getTileEntity(isLower ? pos : offPos);

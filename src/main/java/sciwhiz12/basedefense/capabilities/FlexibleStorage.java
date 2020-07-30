@@ -11,7 +11,7 @@ import net.minecraftforge.common.util.INBTSerializable;
  * <p>
  * Checks if the given capability is a subclass of {@link INBTSerializable}, and
  * if so, passes the {@link INBT} to the instance.
- * 
+ *
  * @param <T> The capability type
  * @author SciWhiz12
  */

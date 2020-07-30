@@ -1,14 +1,7 @@
 package sciwhiz12.basedefense.util;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Map;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
@@ -20,6 +13,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Map;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Helper for recipe serializers.
  *
@@ -29,29 +28,25 @@ public class RecipeHelper {
     // Prevent instantiation
     private RecipeHelper() {}
 
-    public static final Method DESERIALIZE_KEY = ObfuscationReflectionHelper.findMethod(
-        ShapedRecipe.class, "func_192408_a", JsonObject.class
-    );
-    public static final Method SHRINK = ObfuscationReflectionHelper.findMethod(
-        ShapedRecipe.class, "func_194134_a", String[].class
-    );
-    public static final Method PATTERN_FROM_JSON = ObfuscationReflectionHelper.findMethod(
-        ShapedRecipe.class, "func_192407_a", JsonArray.class
-    );
-    public static final Method DESERIALIZE_INGREDIENTS = ObfuscationReflectionHelper.findMethod(
-        ShapedRecipe.class, "func_192402_a", String[].class, Map.class, int.class, int.class
-    );
+    public static final Method DESERIALIZE_KEY = ObfuscationReflectionHelper
+            .findMethod(ShapedRecipe.class, "func_192408_a", JsonObject.class);
+    public static final Method SHRINK = ObfuscationReflectionHelper
+            .findMethod(ShapedRecipe.class, "func_194134_a", String[].class);
+    public static final Method PATTERN_FROM_JSON = ObfuscationReflectionHelper
+            .findMethod(ShapedRecipe.class, "func_192407_a", JsonArray.class);
+    public static final Method DESERIALIZE_INGREDIENTS = ObfuscationReflectionHelper
+            .findMethod(ShapedRecipe.class, "func_192402_a", String[].class, Map.class, int.class, int.class);
 
     /**
      * A generic {@link IRecipeSerializer} for classes extending
      * {@link ShapedRecipe}. <br/>
      * Useful for recipes that behave like and extend {@code ShapedRecipe} to only
      * add additional custom logic.
-     * 
+     *
      * @param <S> The {@code ShapedRecipe} that this serializer supports
      */
-    public static class ShapedSerializer<S extends ShapedRecipe> extends ForgeRegistryEntry<IRecipeSerializer<?>> implements
-            IRecipeSerializer<S> {
+    public static class ShapedSerializer<S extends ShapedRecipe> extends ForgeRegistryEntry<IRecipeSerializer<?>>
+            implements IRecipeSerializer<S> {
         private final RecipeFactory<S> factory;
 
         public ShapedSerializer(RecipeFactory<S> factoryIn) {
@@ -63,17 +58,14 @@ public class RecipeHelper {
         public S read(ResourceLocation recipeId, JsonObject json) {
             try {
                 String group = JSONUtils.getString(json, "group", "");
-                Map<String, Ingredient> keyMap = (Map<String, Ingredient>) DESERIALIZE_KEY.invoke(
-                    null, JSONUtils.getJsonObject(json, "key")
-                );
-                String[] patterns = (String[]) SHRINK.invoke(
-                    null, PATTERN_FROM_JSON.invoke(null, JSONUtils.getJsonArray(json, "pattern"))
-                );
+                Map<String, Ingredient> keyMap = (Map<String, Ingredient>) DESERIALIZE_KEY
+                        .invoke(null, JSONUtils.getJsonObject(json, "key"));
+                String[] patterns = (String[]) SHRINK
+                        .invoke(null, PATTERN_FROM_JSON.invoke(null, JSONUtils.getJsonArray(json, "pattern")));
                 int width = patterns[0].length();
                 int height = patterns.length;
-                NonNullList<Ingredient> ingredients = (NonNullList<Ingredient>) DESERIALIZE_INGREDIENTS.invoke(
-                    null, patterns, keyMap, width, height
-                );
+                NonNullList<Ingredient> ingredients = (NonNullList<Ingredient>) DESERIALIZE_INGREDIENTS
+                        .invoke(null, patterns, keyMap, width, height);
                 ItemStack output = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
                 return factory.create(recipeId, group, width, height, ingredients, output);
             }
@@ -110,7 +102,7 @@ public class RecipeHelper {
     /**
      * Factory for creating {@link ShapedRecipe}. <br/>
      * Used to reference constructors in {@link RecipeHelper}.
-     * 
+     *
      * @param <R> The {@code ShapedRecipe} that this creates
      */
     @FunctionalInterface

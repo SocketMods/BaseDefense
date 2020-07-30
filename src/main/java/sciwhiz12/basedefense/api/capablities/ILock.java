@@ -1,15 +1,15 @@
 package sciwhiz12.basedefense.api.capablities;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.IWorldPosCallable;
 
+import javax.annotation.Nullable;
+
 /**
  * Represents a lock, which can be unlocked and removed by {@link IKey}s.
- * 
- * @see IKey
+ *
  * @author SciWhiz12
+ * @see IKey
  */
 public interface ILock {
     /**
@@ -23,14 +23,14 @@ public interface ILock {
      * could unlock this, under the given situation (for example, a powered door
      * checking if it still has power).
      * </p>
-     * 
+     *
      * @param key      The key to be checked
      * @param worldPos The world and position of the unlock action, or {@code null}
-     *                     if not applicable
+     *                 if not applicable
      * @param player   The player performing the unlock, or {@code null} if not
-     *                     applicable
+     *                 applicable
      * @return {@code true} if the given {@link IKey} could unlock this, otherwise
-     *         {@code false}
+     * {@code false}
      */
     boolean canUnlock(IKey key, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player);
 
@@ -44,14 +44,14 @@ public interface ILock {
      * unlock operation can happen, in a removal operation the {@code ILock}
      * decides. This allows, for example, doors with irremovable locks.
      * </p>
-     * 
+     *
      * @param key      The key to be checked
      * @param worldPos The world and position of the removal action, or {@code null}
-     *                     if not applicable
+     *                 if not applicable
      * @param player   The player performing the removal, or {@code null} if not
-     *                     applicable
+     *                 applicable
      * @return {@code true} if the given {@link IKey} could remove this, otherwise
-     *         {@code false}
+     * {@code false}
      */
     boolean canRemove(IKey key, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player);
 
@@ -59,12 +59,12 @@ public interface ILock {
      * <p>
      * Called when the unlock action is performed successfully.
      * </p>
-     * 
+     *
      * @param key      The key
      * @param worldPos The world and position of the unlock action, or {@code null}
-     *                     if not applicable
+     *                 if not applicable
      * @param player   The player performing the unlock, or {@code null} if not
-     *                     applicable
+     *                 applicable
      */
     void onUnlock(IKey key, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player);
 
@@ -72,12 +72,12 @@ public interface ILock {
      * <p>
      * Called when the removal action is performed successfully.
      * </p>
-     * 
+     *
      * @param key      The key
      * @param worldPos The world and position of the removal action, or {@code null}
-     *                     if not applicable
+     *                 if not applicable
      * @param player   The player performing the removal, or {@code null} if not
-     *                     applicable
+     *                 applicable
      */
     void onRemove(IKey key, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player);
 

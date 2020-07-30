@@ -1,8 +1,5 @@
 package sciwhiz12.basedefense;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static sciwhiz12.basedefense.util.Util.Null;
-
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -40,9 +37,12 @@ import sciwhiz12.basedefense.tileentity.LockedDoorTile;
 import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
 import sciwhiz12.basedefense.util.RecipeHelper;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static sciwhiz12.basedefense.util.Util.Null;
+
 /**
  * Holds references to constants and objects created and registered by this mod.
- * 
+ *
  * @author SciWhiz12
  */
 public final class Reference {
@@ -165,7 +165,7 @@ public final class Reference {
     /**
      * Creates a {@link ResourceLocation} with the namespace as
      * {@link Reference#MODID} and the specified path.
-     * 
+     *
      * @param path The specified path
      * @return A {@code ResourceLocation} with {@link Reference#MODID} and path
      */

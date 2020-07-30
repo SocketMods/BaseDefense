@@ -1,10 +1,5 @@
 package sciwhiz12.basedefense.datagen;
 
-import static sciwhiz12.basedefense.Reference.MODID;
-import static sciwhiz12.basedefense.Reference.modLoc;
-
-import java.util.function.Consumer;
-
 import net.minecraft.advancements.criterion.InventoryChangeTrigger;
 import net.minecraft.data.*;
 import net.minecraft.item.Items;
@@ -16,6 +11,11 @@ import sciwhiz12.basedefense.Reference;
 import sciwhiz12.basedefense.Reference.Blocks;
 import sciwhiz12.basedefense.Reference.RecipeSerializers;
 import sciwhiz12.basedefense.block.LockedDoorBlock;
+
+import java.util.function.Consumer;
+
+import static sciwhiz12.basedefense.Reference.MODID;
+import static sciwhiz12.basedefense.Reference.modLoc;
 
 public class Recipes extends RecipeProvider {
     public Recipes(DataGenerator gen) {

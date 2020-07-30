@@ -1,13 +1,13 @@
 package sciwhiz12.basedefense.datagen;
 
-import static sciwhiz12.basedefense.Reference.MODID;
-import static sciwhiz12.basedefense.util.Util.appendPath;
-
 import net.minecraft.data.DataGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.*;
 import sciwhiz12.basedefense.Reference.Items;
+
+import static sciwhiz12.basedefense.Reference.MODID;
+import static sciwhiz12.basedefense.util.Util.appendPath;
 
 public class ItemModels extends ItemModelProvider {
     public ItemModels(DataGenerator generator, ExistingFileHelper existingFileHelper) {

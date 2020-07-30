@@ -13,7 +13,7 @@ import net.minecraftforge.common.util.NonNullSupplier;
  * If a capability is requested, and that capability matches one of those passed
  * into the constructor, then this returns the casted {@link LazyOptional} of
  * the single capability instance.
- * 
+ *
  * @param <C> The capability type
  * @author SciWhiz12
  */

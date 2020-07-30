@@ -33,9 +33,7 @@ public class SkeletonKeyItem extends Item {
 
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(
-            new TranslationTextComponent("tooltip.basedefense.skeleton_key").mergeStyle(TextFormatting.DARK_RED)
-        );
+        tooltip.add(new TranslationTextComponent("tooltip.basedefense.skeleton_key").mergeStyle(TextFormatting.DARK_RED));
     }
 
     @Override

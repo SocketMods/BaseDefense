@@ -1,15 +1,15 @@
 package sciwhiz12.basedefense.api.capablities;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.IWorldPosCallable;
 
+import javax.annotation.Nullable;
+
 /**
  * Represents a key, which can unlock {@link ILock}s.
- * 
- * @see ILock
+ *
  * @author SciWhiz12
+ * @see ILock
  */
 public interface IKey {
     /**
@@ -21,14 +21,14 @@ public interface IKey {
      * This method being called does not indicate that an unlock action was
      * performed or successful.
      * </p>
-     * 
+     *
      * @param lock     The lock to be checked
      * @param worldPos The world and position of the unlock action, or {@code null}
-     *                     if not applicable
+     *                 if not applicable
      * @param player   The player performing the unlock, or {@code null} if not
-     *                     applicable
+     *                 applicable
      * @return {@code true} if the given {@link ILock} is unlockable, otherwise
-     *         {@code false}
+     * {@code false}
      */
     boolean canUnlock(ILock lock, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player);
 
@@ -36,12 +36,12 @@ public interface IKey {
      * <p>
      * Called when the unlock action is performed successfully.
      * </p>
-     * 
+     *
      * @param lock     The lock
      * @param worldPos The world and position of the unlock action, or {@code null}
-     *                     if not applicable
+     *                 if not applicable
      * @param player   The player performing the unlock, or {@code null} if not
-     *                     applicable
+     *                 applicable
      */
     void onUnlock(ILock lock, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player);
 }

@@ -1,11 +1,5 @@
 package sciwhiz12.basedefense.capabilities;
 
-import static sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
-import static sciwhiz12.basedefense.Reference.Capabilities.LOCK;
-
-import java.util.Collections;
-import java.util.List;
-
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -14,6 +8,12 @@ import net.minecraftforge.common.util.INBTSerializable;
 import sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.api.capablities.ILock;
+
+import java.util.Collections;
+import java.util.List;
+
+import static sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
+import static sciwhiz12.basedefense.Reference.Capabilities.LOCK;
 
 /**
  * An {@link ILock} and {@link ICodeHolder} that simply references the stored

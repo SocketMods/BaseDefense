@@ -2,7 +2,7 @@ package sciwhiz12.basedefense.api.capablities;
 
 /**
  * An object which may contain a {@link Long} code or codes.
- * 
+ *
  * @author SciWhiz12
  */
 public interface IContainsCode {

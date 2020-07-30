@@ -57,11 +57,8 @@ public class LockedDoorBlock extends Block {
     public LockedDoorBlock(Block block) {
         super(Block.Properties.from(block));
         this.baseBlock = block;
-        this.setDefaultState(
-            this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(HINGE, DoorHingeSide.LEFT).with(
-                HALF, DoubleBlockHalf.LOWER
-            ).with(OPEN, false).with(LOCKED, false)
-        );
+        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(HINGE, DoorHingeSide.LEFT)
+                .with(HALF, DoubleBlockHalf.LOWER).with(OPEN, false).with(LOCKED, false));
     }
 
     @Override
@@ -108,21 +105,12 @@ public class LockedDoorBlock extends Block {
                     if (handIn == Hand.OFF_HAND) {
                         if (player.isSneaking() && lock.hasDisplayName()) {
                             // LOCKED, NO KEY, SNEAKING => inform player of lock name
-                            player.sendStatusMessage(
-                                new TranslationTextComponent(
-                                        "status.basedefense.door.info", lock.getDisplayName().copyRaw().mergeStyle(
-                                        WHITE
-                                )
-                                ).mergeStyle(YELLOW, ITALIC), true
-                            );
+                            player.sendStatusMessage(new TranslationTextComponent("status.basedefense.door.info",
+                                    lock.getDisplayName().copyRaw().mergeStyle(WHITE)).mergeStyle(YELLOW, ITALIC), true);
                         } else { // LOCKED, NO KEY, NOT SNEAKING => inform player that door is locked
-                            player.sendStatusMessage(
-                                new TranslationTextComponent(
-                                    "status.basedefense.door.locked", new TranslationTextComponent(
-                                        this.baseBlock.getTranslationKey()
-                                    ).mergeStyle(WHITE)
-                                ).mergeStyle(GRAY, ITALIC), true
-                            );
+                            player.sendStatusMessage(new TranslationTextComponent("status.basedefense.door.locked",
+                                    new TranslationTextComponent(this.baseBlock.getTranslationKey()).mergeStyle(WHITE))
+                                    .mergeStyle(GRAY, ITALIC), true);
                         }
                         playSound(player, worldIn, pos, Sounds.LOCKED_DOOR_ATTEMPT);
                         return ActionResultType.SUCCESS;
@@ -189,13 +177,15 @@ public class LockedDoorBlock extends Block {
     }
 
     private int getCloseSound() {
-        return this.material == Material.IRON ? Constants.WorldEvents.IRON_DOOR_CLOSE_SOUND
-                : Constants.WorldEvents.WOODEN_DOOR_CLOSE_SOUND;
+        return this.material == Material.IRON ?
+                Constants.WorldEvents.IRON_DOOR_CLOSE_SOUND :
+                Constants.WorldEvents.WOODEN_DOOR_CLOSE_SOUND;
     }
 
     private int getOpenSound() {
-        return this.material == Material.IRON ? Constants.WorldEvents.IRON_DOOR_OPEN_SOUND
-                : Constants.WorldEvents.WOODEN_DOOR_OPEN_SOUND;
+        return this.material == Material.IRON ?
+                Constants.WorldEvents.IRON_DOOR_OPEN_SOUND :
+                Constants.WorldEvents.WOODEN_DOOR_OPEN_SOUND;
     }
 
     @Override
@@ -243,16 +233,14 @@ public class LockedDoorBlock extends Block {
         DoubleBlockHalf doubleblockhalf = stateIn.get(HALF);
         if (facing.getAxis() == Direction.Axis.Y && doubleblockhalf == DoubleBlockHalf.LOWER == (facing == Direction.UP)) {
             if (facingState.getBlock() == this && facingState.get(HALF) != doubleblockhalf) {
-                return stateIn.with(FACING, facingState.get(FACING)).with(OPEN, facingState.get(OPEN)).with(
-                    HINGE, facingState.get(HINGE)
-                ).with(LOCKED, facingState.get(LOCKED));
+                return stateIn.with(FACING, facingState.get(FACING)).with(OPEN, facingState.get(OPEN))
+                        .with(HINGE, facingState.get(HINGE)).with(LOCKED, facingState.get(LOCKED));
             } else {
                 return Blocks.AIR.getDefaultState();
             }
         } else {
-            if (doubleblockhalf == DoubleBlockHalf.LOWER && facing == Direction.DOWN && !stateIn.isValidPosition(
-                worldIn, currentPos
-            )) {
+            if (doubleblockhalf == DoubleBlockHalf.LOWER && facing == Direction.DOWN && !stateIn
+                    .isValidPosition(worldIn, currentPos)) {
                 return Blocks.AIR.getDefaultState();
             } else {
                 return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
@@ -264,9 +252,8 @@ public class LockedDoorBlock extends Block {
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         BlockPos blockpos = context.getPos();
         if (blockpos.getY() < 255 && context.getWorld().getBlockState(blockpos.up()).isReplaceable(context)) {
-            return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing()).with(
-                HINGE, this.getHingeSide(context)
-            ).with(HALF, DoubleBlockHalf.LOWER);
+            return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing())
+                    .with(HINGE, this.getHingeSide(context)).with(HALF, DoubleBlockHalf.LOWER);
         } else {
             return null;
         }
@@ -287,11 +274,10 @@ public class LockedDoorBlock extends Block {
         BlockState rightState = world.getBlockState(rightPos);
         BlockPos rightAbovePos = abovePos.offset(rightFacing);
         BlockState rightAboveState = world.getBlockState(rightAbovePos);
-        int i = (leftState.hasOpaqueCollisionShape(world, leftPos) ? -1 : 0) + (leftAboveState.hasOpaqueCollisionShape(world, leftAbovePos)
-                ? -1
-                : 0) + (rightState.hasOpaqueCollisionShape(world, rightPos) ? 1 : 0) + (rightAboveState.hasOpaqueCollisionShape(
-                    world, rightAbovePos
-                ) ? 1 : 0);
+        int i = (leftState.hasOpaqueCollisionShape(world, leftPos) ? -1 : 0) + (leftAboveState
+                .hasOpaqueCollisionShape(world, leftAbovePos) ? -1 : 0) + (rightState
+                .hasOpaqueCollisionShape(world, rightPos) ? 1 : 0) + (rightAboveState
+                .hasOpaqueCollisionShape(world, rightAbovePos) ? 1 : 0);
         boolean leftHasDoor = leftState.isIn(this) && leftState.get(HALF) == DoubleBlockHalf.LOWER;
         boolean rightHasDoor = rightState.isIn(this) && rightState.get(HALF) == DoubleBlockHalf.LOWER;
         if ((!leftHasDoor || rightHasDoor) && i <= 0) {
@@ -301,8 +287,9 @@ public class LockedDoorBlock extends Block {
                 Vector3d hitVec = context.getHitVec();
                 double d0 = hitVec.x - (double) blockPos.getX();
                 double d1 = hitVec.z - (double) blockPos.getZ();
-                return (xOffset >= 0 || !(d1 < 0.5D)) && (xOffset <= 0 || !(d1 > 0.5D)) && (yOffset >= 0 || !(d0 > 0.5D))
-                        && (yOffset <= 0 || !(d0 < 0.5D)) ? DoorHingeSide.LEFT : DoorHingeSide.RIGHT;
+                return (xOffset >= 0 || !(d1 < 0.5D)) && (xOffset <= 0 || !(d1 > 0.5D)) && (yOffset >= 0 || !(d0 > 0.5D)) && (yOffset <= 0 || !(d0 < 0.5D)) ?
+                        DoorHingeSide.LEFT :
+                        DoorHingeSide.RIGHT;
             } else {
                 return DoorHingeSide.LEFT;
             }

@@ -1,7 +1,5 @@
 package sciwhiz12.basedefense.container;
 
-import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
-
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -16,6 +14,8 @@ import sciwhiz12.basedefense.Reference.Containers;
 import sciwhiz12.basedefense.item.key.KeyringItem;
 import sciwhiz12.basedefense.util.ContainerHelper;
 
+import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+
 public class KeyringContainer extends Container {
     private final PlayerInventory playerInv;
     private final IItemHandlerModifiable itemHandler;
@@ -27,9 +27,8 @@ public class KeyringContainer extends Container {
     public KeyringContainer(int id, PlayerInventory inv, ItemStack stack) {
         super(Containers.KEYRING, id);
         this.playerInv = inv;
-        itemHandler = (IItemHandlerModifiable) stack.getCapability(ITEM_HANDLER_CAPABILITY).orElseThrow(
-            IllegalStateException::new
-        );
+        itemHandler = (IItemHandlerModifiable) stack.getCapability(ITEM_HANDLER_CAPABILITY)
+                .orElseThrow(IllegalStateException::new);
 
         for (int i = 0; i < 9; i++) {
             addSlot(new SlotItemHandler(itemHandler, i, 8 + i * 18, 18) {
@@ -38,9 +37,8 @@ public class KeyringContainer extends Container {
                     super.onSlotChanged();
                     if (KeyringContainer.this.playerInv.player instanceof ServerPlayerEntity) {
                         // SSetSlotPacket: windowId = -2 means player inventory
-                        ((ServerPlayerEntity) KeyringContainer.this.playerInv.player).connection.sendPacket(
-                            new SSetSlotPacket(-2, KeyringContainer.this.playerInv.currentItem, stack)
-                        );
+                        ((ServerPlayerEntity) KeyringContainer.this.playerInv.player).connection
+                                .sendPacket(new SSetSlotPacket(-2, KeyringContainer.this.playerInv.currentItem, stack));
                     }
                 }
             });

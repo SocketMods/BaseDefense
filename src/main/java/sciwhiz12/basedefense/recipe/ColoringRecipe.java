@@ -1,8 +1,5 @@
 package sciwhiz12.basedefense.recipe;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
@@ -12,6 +9,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import sciwhiz12.basedefense.Reference.RecipeSerializers;
 import sciwhiz12.basedefense.item.IColorable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ColoringRecipe extends SpecialRecipe {
     public ColoringRecipe(ResourceLocation idIn) {

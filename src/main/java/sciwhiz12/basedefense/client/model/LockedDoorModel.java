@@ -1,9 +1,5 @@
 package sciwhiz12.basedefense.client.model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -12,6 +8,10 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
 import net.minecraftforge.client.model.data.IModelData;
 import sciwhiz12.basedefense.tileentity.LockedDoorTile;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class LockedDoorModel implements IBakedModel {
     private final IBakedModel parentModel;

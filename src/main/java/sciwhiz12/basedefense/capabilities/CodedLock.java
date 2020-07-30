@@ -13,7 +13,7 @@ import sciwhiz12.basedefense.api.capablities.ILock;
  * <p>
  * Used as the default implementation of the {@code ILock} capability. Can be
  * used as a base class.
- * 
+ *
  * @author SciWhiz12
  */
 public class CodedLock extends CodeHolder implements ILock, INBTSerializable<LongArrayNBT> {

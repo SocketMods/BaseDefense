@@ -35,9 +35,7 @@ public final class ItemHelper {
         if (ids.size() != 0) {
             tooltip.add(new TranslationTextComponent("tooltip.basedefense.storedcodes").mergeStyle(TextFormatting.GRAY));
             for (long id : ids) {
-                tooltip.add(
-                    new StringTextComponent("  " + String.format("%016X", id)).mergeStyle(TextFormatting.DARK_GRAY)
-                );
+                tooltip.add(new StringTextComponent("  " + String.format("%016X", id)).mergeStyle(TextFormatting.DARK_GRAY));
             }
         }
     }
@@ -49,12 +47,9 @@ public final class ItemHelper {
         if (stack.hasTag() && tag != null && tag.contains("colors")) {
             int[] colors = tag.getIntArray("colors");
             for (int i = 0; i < colors.length; i++) {
-                tooltip.add(
-                    new TranslationTextComponent(
-                        "tooltip.basedefense.color", i + 1, new StringTextComponent(String.format("#%06X", colors[i]))
-                            .mergeStyle(TextFormatting.DARK_GRAY)
-                    ).mergeStyle(TextFormatting.GRAY)
-                );
+                tooltip.add(new TranslationTextComponent("tooltip.basedefense.color", i + 1,
+                        new StringTextComponent(String.format("#%06X", colors[i])).mergeStyle(TextFormatting.DARK_GRAY))
+                        .mergeStyle(TextFormatting.GRAY));
             }
         }
     }
@@ -91,10 +86,7 @@ public final class ItemHelper {
     public static void copyCodes(ItemStack fromStack, ItemStack toStack) {
         checkNotNull(fromStack);
         checkNotNull(toStack);
-        Util.consumeIfPresent(
-            fromStack.getCapability(CODE_HOLDER), toStack.getCapability(CODE_HOLDER), (from, to) -> to.setCodes(
-                from.getCodes()
-            )
-        );
+        Util.consumeIfPresent(fromStack.getCapability(CODE_HOLDER), toStack.getCapability(CODE_HOLDER),
+                (from, to) -> to.setCodes(from.getCodes()));
     }
 }
