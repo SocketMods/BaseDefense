@@ -9,13 +9,14 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import sciwhiz12.basedefense.api.ITooltipInfo;
 import sciwhiz12.basedefense.block.LockedDoorBlock;
-import sciwhiz12.basedefense.util.ItemHelper;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static sciwhiz12.basedefense.Reference.Capabilities.LOCK;
 import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
 
 public class LockedDoorBlockItem extends BlockItem {
@@ -26,20 +27,20 @@ public class LockedDoorBlockItem extends BlockItem {
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         if (hasLockStack(stack)) {
-            tooltip.add(
-                new TranslationTextComponent("tooltip.basedefense.locked_door.has_lock").mergeStyle(TextFormatting.GRAY)
-            );
-            if (!flagIn.isAdvanced()) { return; }
             ItemStack lockStack = getLockStack(stack);
-            ItemHelper.addCodeInformation(lockStack, tooltip);
-            ItemHelper.addColorInformation(lockStack, tooltip);
+            tooltip.add(new TranslationTextComponent("tooltip.basedefense.locked_door.has_lock")
+                    .mergeStyle(TextFormatting.GRAY));
+            lockStack.getCapability(LOCK).filter(ITooltipInfo.class::isInstance)
+                    .ifPresent(lock -> ((ITooltipInfo) lock).addInformation(tooltip, flagIn.isAdvanced()));
         }
     }
 
     @Override
     public ITextComponent getDisplayName(ItemStack stack) {
         ItemStack lock = getLockStack(stack);
-        if (!lock.isEmpty()) { return lock.getDisplayName(); }
+        if (hasLockStack(stack) && lock.hasDisplayName()) {
+            return lock.getDisplayName().deepCopy().mergeStyle(TextFormatting.ITALIC);
+        }
         return super.getDisplayName(stack);
     }
 

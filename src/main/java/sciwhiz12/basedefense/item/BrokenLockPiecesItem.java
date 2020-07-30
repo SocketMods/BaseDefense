@@ -11,6 +11,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.Constants;
+import sciwhiz12.basedefense.api.ITooltipInfo;
 import sciwhiz12.basedefense.capabilities.CodedLock;
 import sciwhiz12.basedefense.capabilities.SerializableCapabilityProvider;
 import sciwhiz12.basedefense.util.ItemHelper;
@@ -29,8 +30,9 @@ public class BrokenLockPiecesItem extends Item implements IColorable {
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         if (hasPreviousName(stack)) { tooltip.add(getPreviousName(stack).mergeStyle(TextFormatting.ITALIC)); }
+        stack.getCapability(CODE_HOLDER).filter(ITooltipInfo.class::isInstance)
+                .ifPresent(lock -> ((ITooltipInfo) lock).addInformation(tooltip, flagIn.isAdvanced()));
         if (!flagIn.isAdvanced()) return;
-        ItemHelper.addCodeInformation(stack, tooltip);
         ItemHelper.addColorInformation(stack, tooltip);
     }
 

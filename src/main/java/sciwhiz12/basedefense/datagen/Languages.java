@@ -1,11 +1,11 @@
 package sciwhiz12.basedefense.datagen;
 
-import static sciwhiz12.basedefense.Reference.MODID;
-
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.LanguageProvider;
 import sciwhiz12.basedefense.Reference.Blocks;
 import sciwhiz12.basedefense.Reference.Items;
+
+import static sciwhiz12.basedefense.Reference.MODID;
 
 public class Languages extends LanguageProvider {
     public Languages(DataGenerator gen) {
@@ -56,11 +56,16 @@ public class Languages extends LanguageProvider {
         add("container", "keysmith", "Keysmithing");
         add("container", "locksmith", "Locksmithing");
 
-        add("tooltip", "storedcodes", "Stored Codes:");
         add("tooltip", "skeleton_key", "for Server Operators!");
         add("tooltip", "color", "Color #%s: %s");
         add("tooltip", "keyring.count", "Contains %s key(s)");
         add("tooltip", "locked_door.has_lock", "Contains installed lock");
+
+        add("tooltip", "codes.header", "Stored Code(s):");
+        add("tooltip", "codes.line", "  #%s");
+        add("tooltip", "codes.count", "Contains %s codes");
+        add("tooltip", "codes.count.zero", "Contains no codes");
+        add("tooltip", "codes.count.one", "Contains %s code");
 
         add("status", "door.locked", "This %s is locked.");
         add("status", "door.info", "\"%s\"");

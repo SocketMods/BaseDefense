@@ -30,9 +30,13 @@
   "subtitle.basedefense.locked_door.attempt": "Door locked",
   "subtitle.basedefense.locked_door.relock": "Door relocks",
   "subtitle.basedefense.locked_door.unlock": "Door unlocks",
+  "tooltip.basedefense.codes.count": "Contains %s codes",
+  "tooltip.basedefense.codes.count.one": "Contains %s code",
+  "tooltip.basedefense.codes.count.zero": "Contains no codes",
+  "tooltip.basedefense.codes.header": "Stored Code(s):",
+  "tooltip.basedefense.codes.line": "  #%s",
   "tooltip.basedefense.color": "Color #%s: %s",
   "tooltip.basedefense.keyring.count": "Contains %s key(s)",
   "tooltip.basedefense.locked_door.has_lock": "Contains installed lock",
-  "tooltip.basedefense.skeleton_key": "for Server Operators!",
-  "tooltip.basedefense.storedcodes": "Stored Codes:"
+  "tooltip.basedefense.skeleton_key": "for Server Operators!"
 }

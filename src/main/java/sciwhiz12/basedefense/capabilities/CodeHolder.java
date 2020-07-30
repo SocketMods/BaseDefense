@@ -1,23 +1,28 @@
 package sciwhiz12.basedefense.capabilities;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.collect.ImmutableList;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
+import it.unimi.dsi.fastutil.longs.LongList;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import sciwhiz12.basedefense.api.ITooltipInfo;
+import sciwhiz12.basedefense.api.capablities.ICodeHolder;
+import sciwhiz12.basedefense.util.Util;
 
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-
-import it.unimi.dsi.fastutil.longs.LongArrayList;
-import it.unimi.dsi.fastutil.longs.LongList;
-import sciwhiz12.basedefense.api.capablities.ICodeHolder;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static net.minecraft.util.text.TextFormatting.DARK_GRAY;
+import static net.minecraft.util.text.TextFormatting.GRAY;
 
 /**
  * Default implementation of {@link ICodeHolder} and
  * {@link sciwhiz12.basedefense.api.capablities.IContainsCode}. Can be extended
  * by other classes as a base class.
- * 
+ *
  * @author SciWhiz12
  */
-public class CodeHolder implements ICodeHolder {
+public class CodeHolder implements ICodeHolder, ITooltipInfo {
     protected LongList storedCodes = new LongArrayList();
 
     @Override
@@ -45,5 +50,19 @@ public class CodeHolder implements ICodeHolder {
     @Override
     public void removeCode(Long code) {
         storedCodes.rem(code);
+    }
+
+    @Override
+    public void addInformation(List<ITextComponent> info, boolean verbose) {
+        if (!verbose || this.storedCodes.size() == 0) {
+            info.add(Util.createAmountTooltip("tooltip.basedefense.codes.count", this.storedCodes.size())
+                    .mergeStyle(GRAY));
+        } else {
+            info.add(new TranslationTextComponent("tooltip.basedefense.codes.header").mergeStyle(GRAY));
+            for (long id : this.storedCodes) {
+                info.add(new TranslationTextComponent("tooltip.basedefense.codes.line", String.format("%016X", id))
+                        .mergeStyle(DARK_GRAY));
+            }
+        }
     }
 }

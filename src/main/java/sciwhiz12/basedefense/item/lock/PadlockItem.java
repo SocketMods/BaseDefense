@@ -1,11 +1,5 @@
 package sciwhiz12.basedefense.item.lock;
 
-import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
-import static sciwhiz12.basedefense.Reference.Capabilities.*;
-import static sciwhiz12.basedefense.block.PadlockedDoorBlock.*;
-
-import java.util.List;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.client.util.ITooltipFlag;
@@ -26,6 +20,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.ItemHandlerHelper;
+import sciwhiz12.basedefense.api.ITooltipInfo;
 import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.block.PadlockedDoorBlock;
 import sciwhiz12.basedefense.capabilities.CodedLock;
@@ -35,6 +30,12 @@ import sciwhiz12.basedefense.tileentity.LockableTile;
 import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
 import sciwhiz12.basedefense.util.ItemHelper;
 
+import java.util.List;
+
+import static sciwhiz12.basedefense.Reference.Capabilities.*;
+import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
+import static sciwhiz12.basedefense.block.PadlockedDoorBlock.*;
+
 public class PadlockItem extends Item implements IColorable {
     public PadlockItem() {
         super(new Item.Properties().maxDamage(0).group(ITEM_GROUP));
@@ -42,8 +43,9 @@ public class PadlockItem extends Item implements IColorable {
 
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        stack.getCapability(LOCK).filter(ITooltipInfo.class::isInstance)
+                .ifPresent(lock -> ((ITooltipInfo) lock).addInformation(tooltip, flagIn.isAdvanced()));
         if (!flagIn.isAdvanced()) { return; }
-        ItemHelper.addCodeInformation(stack, tooltip);
         ItemHelper.addColorInformation(stack, tooltip);
     }
 
