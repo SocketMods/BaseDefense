@@ -22,6 +22,10 @@ import java.util.List;
 import static sciwhiz12.basedefense.Reference.Capabilities.*;
 
 public class LockCoreItem extends Item implements IColorable {
+    public LockCoreItem(Item.Properties props) {
+        super(props);
+    }
+
     public LockCoreItem() {
         super(new Item.Properties().maxDamage(0));
     }

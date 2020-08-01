@@ -43,11 +43,13 @@ public class Languages extends LanguageProvider {
     void addItems() {
         add(Items.BLANK_KEY, "Blank Key");
         add(Items.KEY, "Key");
-        add(Items.SKELETON_KEY, "Skeleton Key");
         add(Items.LOCK_CORE, "Lock Core");
         add(Items.PADLOCK, "Padlock");
         add(Items.KEYRING, "Keyring");
         add(Items.BROKEN_LOCK_PIECES, "Broken Lock Pieces");
+        add(Items.ADMIN_KEY, "Admin Key");
+        add(Items.ADMIN_LOCK_CORE, "Admin Lock Core");
+        add(Items.ADMIN_PADLOCK, "Admin Padlock");
     }
 
     void addOthers() {
@@ -56,7 +58,7 @@ public class Languages extends LanguageProvider {
         add("container", "keysmith", "Keysmithing");
         add("container", "locksmith", "Locksmithing");
 
-        add("tooltip", "skeleton_key", "for Server Operators!");
+        add("tooltip", "admin_only", "for Server Operators!");
         add("tooltip", "color", "Color #%s: %s");
         add("tooltip", "keyring.count", "Contains %s key(s)");
         add("tooltip", "locked_door.has_lock", "Contains installed lock");

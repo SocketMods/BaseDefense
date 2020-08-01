@@ -27,6 +27,9 @@ public class ItemModels extends ItemModelProvider {
         singleTextureItem(Items.LOCKED_DARK_OAK_DOOR);
         singleTextureItem(Items.LOCKED_IRON_DOOR);
 
+        singleTextureItem(Items.ADMIN_LOCK_CORE);
+        singleTextureItem(Items.ADMIN_PADLOCK);
+
         coloredItem(Items.PADLOCK);
         coloredItem(Items.LOCK_CORE);
         coloredItem(Items.BROKEN_LOCK_PIECES);
@@ -34,7 +37,7 @@ public class ItemModels extends ItemModelProvider {
         final ItemModelBuilder keyParent = getKeyDisplayParent();
         generatedModels.put(keyParent.getLocation(), keyParent);
         coloredKey(keyParent);
-        singleTextureItem(Items.SKELETON_KEY, keyParent);
+        singleTextureItem(Items.ADMIN_KEY, keyParent);
     }
 
     void coloredKey(ModelFile parent) {

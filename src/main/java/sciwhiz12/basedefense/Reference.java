@@ -24,9 +24,11 @@ import sciwhiz12.basedefense.container.KeyringContainer;
 import sciwhiz12.basedefense.container.KeysmithContainer;
 import sciwhiz12.basedefense.container.LocksmithContainer;
 import sciwhiz12.basedefense.item.BrokenLockPiecesItem;
+import sciwhiz12.basedefense.item.key.AdminKeyItem;
 import sciwhiz12.basedefense.item.key.KeyItem;
 import sciwhiz12.basedefense.item.key.KeyringItem;
-import sciwhiz12.basedefense.item.key.SkeletonKeyItem;
+import sciwhiz12.basedefense.item.lock.AdminLockCoreItem;
+import sciwhiz12.basedefense.item.lock.AdminPadlockItem;
 import sciwhiz12.basedefense.item.lock.LockCoreItem;
 import sciwhiz12.basedefense.item.lock.PadlockItem;
 import sciwhiz12.basedefense.recipe.ColoringRecipe;
@@ -98,11 +100,13 @@ public final class Reference {
     public static final class Items {
         public static final Item BLANK_KEY = Null();
         public static final KeyItem KEY = Null();
-        public static final SkeletonKeyItem SKELETON_KEY = Null();
         public static final LockCoreItem LOCK_CORE = Null();
         public static final PadlockItem PADLOCK = Null();
         public static final KeyringItem KEYRING = Null();
         public static final BrokenLockPiecesItem BROKEN_LOCK_PIECES = Null();
+        public static final AdminKeyItem ADMIN_KEY = Null();
+        public static final AdminLockCoreItem ADMIN_LOCK_CORE = Null();
+        public static final AdminPadlockItem ADMIN_PADLOCK = Null();
 
         public static final BlockItem KEYSMITH_TABLE = Null();
         public static final BlockItem LOCKSMITH_TABLE = Null();

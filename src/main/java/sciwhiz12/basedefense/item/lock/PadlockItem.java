@@ -37,6 +37,10 @@ import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
 import static sciwhiz12.basedefense.block.PadlockedDoorBlock.*;
 
 public class PadlockItem extends Item implements IColorable {
+    public PadlockItem(Item.Properties properties) {
+        super(properties);
+    }
+
     public PadlockItem() {
         super(new Item.Properties().maxDamage(0).group(ITEM_GROUP));
     }

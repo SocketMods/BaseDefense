@@ -35,9 +35,11 @@ import sciwhiz12.basedefense.container.KeysmithContainer;
 import sciwhiz12.basedefense.container.LocksmithContainer;
 import sciwhiz12.basedefense.item.BrokenLockPiecesItem;
 import sciwhiz12.basedefense.item.LockedDoorBlockItem;
+import sciwhiz12.basedefense.item.key.AdminKeyItem;
 import sciwhiz12.basedefense.item.key.KeyItem;
 import sciwhiz12.basedefense.item.key.KeyringItem;
-import sciwhiz12.basedefense.item.key.SkeletonKeyItem;
+import sciwhiz12.basedefense.item.lock.AdminLockCoreItem;
+import sciwhiz12.basedefense.item.lock.AdminPadlockItem;
 import sciwhiz12.basedefense.item.lock.LockCoreItem;
 import sciwhiz12.basedefense.item.lock.PadlockItem;
 import sciwhiz12.basedefense.recipe.ColoringRecipe;
@@ -120,11 +122,13 @@ public final class Registration {
 
         reg.register(new Item(defaultProps).setRegistryName("blank_key"));
         reg.register(new KeyItem().setRegistryName("key"));
-        reg.register(new SkeletonKeyItem().setRegistryName("skeleton_key"));
         reg.register(new LockCoreItem().setRegistryName("lock_core"));
         reg.register(new PadlockItem().setRegistryName("padlock"));
         reg.register(new KeyringItem().setRegistryName("keyring"));
         reg.register(new BrokenLockPiecesItem().setRegistryName("broken_lock_pieces"));
+        reg.register(new AdminKeyItem().setRegistryName("admin_key"));
+        reg.register(new AdminLockCoreItem().setRegistryName("admin_lock_core"));
+        reg.register(new AdminPadlockItem().setRegistryName("admin_padlock"));
 
         reg.register(new BlockItem(KEYSMITH_TABLE, defaultProps).setRegistryName("keysmith_table"));
         reg.register(new BlockItem(LOCKSMITH_TABLE, defaultProps).setRegistryName("locksmith_table"));
