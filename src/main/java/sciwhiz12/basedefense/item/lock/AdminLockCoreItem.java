@@ -11,7 +11,7 @@ import sciwhiz12.basedefense.capabilities.GenericCapabilityProvider;
 import static sciwhiz12.basedefense.Reference.Capabilities.LOCK;
 import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
 
-public class AdminLockCoreItem extends LockCoreItem {
+public class AdminLockCoreItem extends AbstractLockCoreItem {
     public AdminLockCoreItem() {
         super(new Item.Properties().maxDamage(0).rarity(Rarity.EPIC).group(ITEM_GROUP));
     }

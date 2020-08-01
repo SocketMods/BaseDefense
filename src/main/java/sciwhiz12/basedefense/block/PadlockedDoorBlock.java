@@ -32,7 +32,7 @@ import net.minecraftforge.registries.IRegistryDelegate;
 import sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import sciwhiz12.basedefense.item.BrokenLockPiecesItem;
 import sciwhiz12.basedefense.item.IColorable;
-import sciwhiz12.basedefense.item.lock.PadlockItem;
+import sciwhiz12.basedefense.item.lock.AbstractPadlockItem;
 import sciwhiz12.basedefense.tileentity.LockableTile;
 import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
 import sciwhiz12.basedefense.util.UnlockHelper;
@@ -157,7 +157,7 @@ public class PadlockedDoorBlock extends Block {
     }
 
     public boolean isValidLock(ItemStack stack) {
-        return stack.getItem() instanceof PadlockItem;
+        return stack.getItem() instanceof AbstractPadlockItem;
     }
 
     @SuppressWarnings("deprecation")

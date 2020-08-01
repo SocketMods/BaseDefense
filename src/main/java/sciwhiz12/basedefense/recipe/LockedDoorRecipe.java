@@ -10,7 +10,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import sciwhiz12.basedefense.Reference.RecipeSerializers;
 import sciwhiz12.basedefense.item.LockedDoorBlockItem;
-import sciwhiz12.basedefense.item.lock.LockCoreItem;
+import sciwhiz12.basedefense.item.lock.AbstractLockCoreItem;
 
 public class LockedDoorRecipe extends ShapedRecipe {
     public LockedDoorRecipe(ResourceLocation idIn, String groupIn, int recipeWidthIn, int recipeHeightIn,
@@ -24,7 +24,7 @@ public class LockedDoorRecipe extends ShapedRecipe {
         for (int row = 0; row < inv.getHeight(); row++) {
             for (int col = 0; col < inv.getWidth(); col++) {
                 ItemStack stack = inv.getStackInSlot(row + col * inv.getWidth());
-                if (!stack.isEmpty() && stack.getItem() instanceof LockCoreItem) {
+                if (!stack.isEmpty() && stack.getItem() instanceof AbstractLockCoreItem) {
                     if (output.getItem() instanceof LockedDoorBlockItem) {
                         ((LockedDoorBlockItem) output.getItem()).setLockStack(output, stack);
                     } else {

@@ -3,7 +3,6 @@ package sciwhiz12.basedefense.item.lock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
@@ -13,36 +12,25 @@ import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.items.ItemHandlerHelper;
 import sciwhiz12.basedefense.api.ITooltipInfo;
-import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.block.PadlockedDoorBlock;
-import sciwhiz12.basedefense.capabilities.CodedLock;
-import sciwhiz12.basedefense.capabilities.SerializableCapabilityProvider;
 import sciwhiz12.basedefense.item.IColorable;
-import sciwhiz12.basedefense.tileentity.LockableTile;
 import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
 import sciwhiz12.basedefense.util.ItemHelper;
 
 import java.util.List;
 
-import static sciwhiz12.basedefense.Reference.Capabilities.*;
-import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
+import static sciwhiz12.basedefense.Reference.Capabilities.LOCK;
 import static sciwhiz12.basedefense.block.PadlockedDoorBlock.*;
 
-public class PadlockItem extends Item implements IColorable {
-    public PadlockItem(Item.Properties properties) {
+public abstract class AbstractPadlockItem extends Item implements IColorable {
+    public AbstractPadlockItem(Item.Properties properties) {
         super(properties);
-    }
-
-    public PadlockItem() {
-        super(new Item.Properties().maxDamage(0).group(ITEM_GROUP));
     }
 
     @Override
@@ -54,31 +42,7 @@ public class PadlockItem extends Item implements IColorable {
     }
 
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT nbt) {
-        return new SerializableCapabilityProvider<>(() -> new CodedLock() {
-            @Override
-            public void onRemove(IKey key, IWorldPosCallable worldPos, PlayerEntity player) {
-                worldPos.consume((world, pos) -> {
-                    TileEntity te = world.getTileEntity(pos);
-                    if (te instanceof LockableTile) {
-                        LockableTile lockTile = (LockableTile) te;
-                        ItemHandlerHelper.giveItemToPlayer(player, lockTile.getLockStack());
-                        lockTile.setLockStack(ItemStack.EMPTY);
-                    }
-                });
-            }
-        }, CONTAINS_CODE, CODE_HOLDER, LOCK);
-    }
-
-    @Override
-    public CompoundNBT getShareTag(ItemStack stack) {
-        return ItemHelper.getItemShareTag(stack, CODE_HOLDER);
-    }
-
-    @Override
-    public void readShareTag(ItemStack stack, CompoundNBT nbt) {
-        ItemHelper.readItemShareTag(stack, nbt, CODE_HOLDER);
-    }
+    public abstract ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT nbt);
 
     @Override
     public ActionResultType onItemUseFirst(ItemStack stack, ItemUseContext context) {

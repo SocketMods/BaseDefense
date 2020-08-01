@@ -12,22 +12,16 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import sciwhiz12.basedefense.api.ITooltipInfo;
 import sciwhiz12.basedefense.block.LockedDoorBlock;
-import sciwhiz12.basedefense.capabilities.CodedLock;
-import sciwhiz12.basedefense.capabilities.SerializableCapabilityProvider;
 import sciwhiz12.basedefense.item.IColorable;
 import sciwhiz12.basedefense.util.ItemHelper;
 
 import java.util.List;
 
-import static sciwhiz12.basedefense.Reference.Capabilities.*;
+import static sciwhiz12.basedefense.Reference.Capabilities.LOCK;
 
-public class LockCoreItem extends Item implements IColorable {
-    public LockCoreItem(Item.Properties props) {
+public abstract class AbstractLockCoreItem extends Item implements IColorable {
+    public AbstractLockCoreItem(Item.Properties props) {
         super(props);
-    }
-
-    public LockCoreItem() {
-        super(new Item.Properties().maxDamage(0));
     }
 
     @Override
@@ -44,17 +38,5 @@ public class LockCoreItem extends Item implements IColorable {
     }
 
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT nbt) {
-        return new SerializableCapabilityProvider<>(CodedLock::new, CONTAINS_CODE, CODE_HOLDER, LOCK);
-    }
-
-    @Override
-    public CompoundNBT getShareTag(ItemStack stack) {
-        return ItemHelper.getItemShareTag(stack, CODE_HOLDER);
-    }
-
-    @Override
-    public void readShareTag(ItemStack stack, CompoundNBT nbt) {
-        ItemHelper.readItemShareTag(stack, nbt, CODE_HOLDER);
-    }
+    public abstract ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT nbt);
 }

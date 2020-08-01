@@ -29,8 +29,8 @@ import sciwhiz12.basedefense.item.key.KeyItem;
 import sciwhiz12.basedefense.item.key.KeyringItem;
 import sciwhiz12.basedefense.item.lock.AdminLockCoreItem;
 import sciwhiz12.basedefense.item.lock.AdminPadlockItem;
-import sciwhiz12.basedefense.item.lock.LockCoreItem;
-import sciwhiz12.basedefense.item.lock.PadlockItem;
+import sciwhiz12.basedefense.item.lock.CodedLockCoreItem;
+import sciwhiz12.basedefense.item.lock.CodedPadlockItem;
 import sciwhiz12.basedefense.recipe.ColoringRecipe;
 import sciwhiz12.basedefense.recipe.CopyCodedLockRecipe;
 import sciwhiz12.basedefense.recipe.LockedDoorRecipe;
@@ -100,8 +100,8 @@ public final class Reference {
     public static final class Items {
         public static final Item BLANK_KEY = Null();
         public static final KeyItem KEY = Null();
-        public static final LockCoreItem LOCK_CORE = Null();
-        public static final PadlockItem PADLOCK = Null();
+        public static final CodedLockCoreItem LOCK_CORE = Null();
+        public static final CodedPadlockItem PADLOCK = Null();
         public static final KeyringItem KEYRING = Null();
         public static final BrokenLockPiecesItem BROKEN_LOCK_PIECES = Null();
         public static final AdminKeyItem ADMIN_KEY = Null();
