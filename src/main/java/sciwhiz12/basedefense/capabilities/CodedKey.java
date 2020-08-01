@@ -13,6 +13,7 @@ import sciwhiz12.basedefense.api.capablities.IContainsCode;
 import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.api.capablities.ILock;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -31,7 +32,7 @@ public class CodedKey implements ICodeHolder, IKey, INBTSerializable<LongNBT>, I
     protected Long storedCode = null;
 
     @Override
-    public boolean canUnlock(ILock lock, IWorldPosCallable worldPos, PlayerEntity player) {
+    public boolean canUnlock(ILock lock, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
         if (lock instanceof IContainsCode) {
             IContainsCode codeLock = (IContainsCode) lock;
             return codeLock.containsCode(storedCode);
@@ -40,7 +41,7 @@ public class CodedKey implements ICodeHolder, IKey, INBTSerializable<LongNBT>, I
     }
 
     @Override
-    public void onUnlock(ILock lock, IWorldPosCallable worldPos, PlayerEntity player) {}
+    public void onUnlock(ILock lock, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {}
 
     @Override
     public boolean containsCode(Long code) {

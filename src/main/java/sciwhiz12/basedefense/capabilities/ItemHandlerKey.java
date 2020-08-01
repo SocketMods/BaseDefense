@@ -7,6 +7,8 @@ import net.minecraftforge.items.IItemHandler;
 import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.api.capablities.ILock;
 
+import javax.annotation.Nullable;
+
 import static sciwhiz12.basedefense.Reference.Capabilities.KEY;
 
 /**
@@ -23,7 +25,7 @@ public class ItemHandlerKey implements IKey {
     }
 
     @Override
-    public boolean canUnlock(ILock lock, IWorldPosCallable worldPos, PlayerEntity player) {
+    public boolean canUnlock(ILock lock, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
         for (int i = 0; i < itemHandler.getSlots(); i++) {
             ItemStack stack = itemHandler.getStackInSlot(i);
             if (stack.getCapability(KEY)
@@ -36,7 +38,7 @@ public class ItemHandlerKey implements IKey {
     }
 
     @Override
-    public void onUnlock(ILock lock, IWorldPosCallable worldPos, PlayerEntity player) {
+    public void onUnlock(ILock lock, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
         for (int i = 0; i < itemHandler.getSlots(); i++) {
             ItemStack stack = itemHandler.getStackInSlot(i);
             if (stack.getCapability(KEY).filter(key -> lock.canUnlock(key, worldPos, player)).map(key -> {

@@ -9,6 +9,7 @@ import sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.api.capablities.ILock;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,22 +34,22 @@ public class CodedItemStackLock implements ICodeHolder, ILock, INBTSerializable<
     }
 
     @Override
-    public boolean canRemove(IKey key, IWorldPosCallable worldPos, PlayerEntity player) {
+    public boolean canRemove(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
         return lockStack.getCapability(LOCK).map(lock -> lock.canRemove(key, worldPos, player)).orElse(false);
     }
 
     @Override
-    public boolean canUnlock(IKey key, IWorldPosCallable worldPos, PlayerEntity player) {
+    public boolean canUnlock(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
         return lockStack.getCapability(LOCK).map(lock -> lock.canUnlock(key, worldPos, player)).orElse(false);
     }
 
     @Override
-    public void onRemove(IKey key, IWorldPosCallable worldPos, PlayerEntity player) {
+    public void onRemove(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
         lockStack.getCapability(LOCK).ifPresent(lock -> lock.onRemove(key, worldPos, player));
     }
 
     @Override
-    public void onUnlock(IKey key, IWorldPosCallable worldPos, PlayerEntity player) {
+    public void onUnlock(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
         lockStack.getCapability(LOCK).ifPresent(lock -> lock.onUnlock(key, worldPos, player));
     }
 

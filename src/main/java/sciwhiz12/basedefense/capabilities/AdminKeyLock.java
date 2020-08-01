@@ -25,28 +25,28 @@ import java.util.List;
 public class AdminKeyLock implements IKey, ILock, ITooltipInfo {
 
     @Override
-    public boolean canUnlock(ILock lock, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
+    public boolean canUnlock(ILock lock, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
         return true;
     }
 
     @Override
-    public boolean canUnlock(IKey key, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
+    public boolean canUnlock(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
         return key instanceof AdminKeyLock;
     }
 
     @Override
-    public boolean canRemove(IKey key, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
+    public boolean canRemove(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
         return key instanceof AdminKeyLock;
     }
 
     @Override
-    public void onUnlock(ILock lock, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player) {}
+    public void onUnlock(ILock lock, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {}
 
     @Override
-    public void onUnlock(IKey key, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player) {}
+    public void onUnlock(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {}
 
     @Override
-    public void onRemove(IKey key, @Nullable IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
+    public void onRemove(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
         if (worldPos != null) {
             worldPos.consume((world, pos) -> {
                 world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F,
