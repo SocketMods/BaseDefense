@@ -29,7 +29,6 @@ public class ColoringRecipe extends SpecialRecipe {
             for (int col = 0; col < height; col++) {
                 ItemStack stack = inv.getStackInSlot(row * width + col);
                 if (stack.isEmpty()) { continue; }
-                System.out.println(stack.toString());
                 if (stack.getItem() instanceof IColorable) {
                     if (colorItem.isEmpty()) {
                         colorItem = stack;
