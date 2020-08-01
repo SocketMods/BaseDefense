@@ -24,7 +24,7 @@ public final class Util {
     private Util() {}
 
     /**
-     * A fix for IntelliJ IDEA's "Constant conditions" inspection. Used for
+     * >A fix for IntelliJ IDEA's "Constant conditions" inspection. Used for
      * {@link net.minecraftforge.registries.ObjectHolder} and
      * {@link net.minecraftforge.common.capabilities.CapabilityInject} fields.
      *
@@ -102,18 +102,18 @@ public final class Util {
     }
 
     /**
-     * Creates a {@link TranslationTextComponent} based on if the given amount is {@code 0}, {@code 1}, or more than
-     * {@code 1}.
-     * <p>
-     * This method uses the following logic for determining the translation key:
+     * <p>Creates a {@link TranslationTextComponent} based on if the given amount is {@code 0}, {@code 1}, or more than
+     * {@code 1}.</p>
+     *
+     * <p>This method uses the following logic for determining the translation key:
      * <ul>
      *     <li>If the amount is {@code 0}, then append "{@code .zero}" to the base translation key.</li>
      *     <li>If the amount is {@code 1}, then append "{@code .one}" to the base translation key.</li>
      *     <li>If the amount is greater than {@code 1}, then the base translation key is used.</li>
-     * </ul>
-     * <p>
-     * The parameters passed to the {@code TranslationTextComponent} construction are the selected translation key, the
-     * amount, and any additional objects supplied to the method.
+     * </ul></p>
+     *
+     * <p>The parameters passed to the {@code TranslationTextComponent} construction are the selected translation key, the
+     * amount, and any additional objects supplied to the method.</p>
      *
      * @param translationKeyBase The base translation key
      * @param amount             The amount to use for determining the translation key

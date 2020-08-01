@@ -24,8 +24,9 @@ public interface ICodeHolder extends IContainsCode {
     void setCodes(List<Long> codes);
 
     /**
-     * Adds the given code to this object's list. <br>
-     * A {@code null} parameter will result in a {@link NullPointerException}.
+     * <p>Adds the given code to this object's list.</p>
+     *
+     * <p>A {@code null} parameter will result in a {@link NullPointerException}.</p>
      *
      * @param code A code
      * @throws NullPointerException if the given code is {@code null}
@@ -33,8 +34,9 @@ public interface ICodeHolder extends IContainsCode {
     void addCode(Long code);
 
     /**
-     * Removes the given code to this object's list. <br>
-     * A {@code null} parameter will result in no action.
+     * <p>Removes the given code to this object's list. </p>
+     *
+     * <p>A {@code null} parameter will result in no action.</p>
      *
      * @param code A code
      */

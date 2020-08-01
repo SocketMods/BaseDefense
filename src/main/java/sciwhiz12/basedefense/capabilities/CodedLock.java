@@ -11,10 +11,10 @@ import sciwhiz12.basedefense.api.capablities.ILock;
 import javax.annotation.Nullable;
 
 /**
- * An implementation of {@link ILock} that extends {@link CodeHolder}.
- * <p>
- * Used as the default implementation of the {@code ILock} capability. Can be
- * used as a base class.
+ * <p>An implementation of {@link ILock} that extends {@link CodeHolder}.</p>
+ *
+ * <p>Used as the default implementation of the {@code ILock} capability. Can be
+ * used as a base class.</p>
  *
  * @author SciWhiz12
  */

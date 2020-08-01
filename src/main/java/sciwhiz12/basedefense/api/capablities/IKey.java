@@ -13,14 +13,12 @@ import javax.annotation.Nullable;
  */
 public interface IKey {
     /**
-     * <p>
-     * Returns {@code true} if this can unlock the given {@link ILock}.
-     * </p>
-     * This method should <strong>never</strong> change any state.
-     * <p>
-     * This method being called does not indicate that an unlock action was
-     * performed or successful.
-     * </p>
+     * <p>Returns {@code true} if this can unlock the given {@link ILock}.</p>
+     *
+     * <p>This method should <strong>never</strong> change any state.</p>
+     *
+     * <p>This method being called does not indicate that an unlock action was
+     * performed or successful.</p>
      *
      * @param lock     The lock to be checked
      * @param worldPos The world and position of the unlock action, if available
@@ -32,9 +30,7 @@ public interface IKey {
     boolean canUnlock(ILock lock, IWorldPosCallable worldPos, @Nullable PlayerEntity player);
 
     /**
-     * <p>
      * Called when the unlock action is performed successfully.
-     * </p>
      *
      * @param lock     The lock
      * @param worldPos The world and position of the unlock action, if available

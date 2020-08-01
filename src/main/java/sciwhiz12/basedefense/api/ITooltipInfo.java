@@ -11,10 +11,10 @@ import java.util.List;
  */
 public interface ITooltipInfo {
     /**
-     * Adds custom information in the form of {@link ITextComponent}s to the given {@link List}.
-     * <p>
-     * The verbose parameter specifies if the information should be verbose;
-     * for items, this will be {@code true} if advanced tooltips are enabled.
+     * <p>Adds custom information in the form of {@link ITextComponent}s to the given {@link List}.</p>
+     *
+     * <p>The verbose parameter specifies if the information should be verbose;
+     * for items, this will be {@code true} if advanced tooltips are enabled.</p>
      *
      * @param information The list of {@code ITextComponent}s
      * @param verbose     Whether the information should be verbose

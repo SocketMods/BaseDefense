@@ -15,10 +15,10 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Lock and key capability for server administrator items.
- * <p>
- * Acts as an {@link IKey} that can open any lock.
- * Acts as an {@link ILock} that can only be opened by {@link AdminKeyLock}.
+ * <p>Lock and key capability for server administrator items.</p>
+ *
+ * <p>Acts as an {@link IKey} that can open any lock.<br/>
+ * Acts as an {@link ILock} that can only be opened by {@link AdminKeyLock}.</p>
  *
  * @author SciWhiz12
  */

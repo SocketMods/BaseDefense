@@ -38,10 +38,10 @@ public class RecipeHelper {
             .findMethod(ShapedRecipe.class, "func_192402_a", String[].class, Map.class, int.class, int.class);
 
     /**
-     * A generic {@link IRecipeSerializer} for classes extending
-     * {@link ShapedRecipe}. <br/>
-     * Useful for recipes that behave like and extend {@code ShapedRecipe} to only
-     * add additional custom logic.
+     * <p>A generic {@link IRecipeSerializer} for classes extending {@link ShapedRecipe}.</p>
+     *
+     * <p>Useful for recipes that extend {@code ShapedRecipe} that does not add additional data,
+     * but only toadd additional custom logic.</p>
      *
      * @param <S> The {@code ShapedRecipe} that this serializer supports
      */
@@ -100,8 +100,9 @@ public class RecipeHelper {
     }
 
     /**
-     * Factory for creating {@link ShapedRecipe}. <br/>
-     * Used to reference constructors in {@link RecipeHelper}.
+     * <p>Factory for creating {@link ShapedRecipe}.</p>
+     *
+     * <p>Used to reference constructors in {@link RecipeHelper}.</p>
      *
      * @param <R> The {@code ShapedRecipe} that this creates
      */
