@@ -20,10 +20,11 @@ import sciwhiz12.basedefense.util.ItemHelper;
 import java.util.List;
 
 import static sciwhiz12.basedefense.Reference.Capabilities.*;
+import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
 
 public class KeyItem extends Item implements IColorable {
     public KeyItem() {
-        super(new Item.Properties().maxDamage(0));
+        super(new Item.Properties().maxDamage(0).group(ITEM_GROUP));
     }
 
     @Override

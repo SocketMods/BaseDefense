@@ -79,12 +79,12 @@ public class CodedKey implements ICodeHolder, IKey, INBTSerializable<LongNBT>, I
 
     @Override
     public LongNBT serializeNBT() {
-        return this.storedCode != null ? LongNBT.valueOf(this.storedCode) : null;
+        return this.storedCode != null ? LongNBT.valueOf(this.storedCode) : LongNBT.valueOf(0);
     }
 
     @Override
     public void deserializeNBT(LongNBT nbt) {
-        this.storedCode = nbt.getLong();
+        this.storedCode = nbt.getLong() != 0 ? nbt.getLong() : null;
     }
 
     @Override
