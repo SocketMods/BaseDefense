@@ -1,9 +1,0 @@
-{
-  "parent": "basedefense:item/key_display",
-  "textures": {
-    "layer0": "basedefense:item/key_body",
-    "layer1": "basedefense:item/key_overlay",
-    "layer2": "basedefense:item/key_color_1",
-    "layer3": "basedefense:item/key_color_2"
-  }
-}
