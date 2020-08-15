@@ -6,7 +6,13 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.state.properties.DoorHingeSide;
 import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.generators.*;
+import net.minecraftforge.client.model.generators.BlockModelBuilder;
+import net.minecraftforge.client.model.generators.BlockStateProvider;
+import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.minecraftforge.client.model.generators.ExistingFileHelper;
+import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraftforge.client.model.generators.ModelProvider;
+import net.minecraftforge.client.model.generators.VariantBlockStateBuilder;
 import sciwhiz12.basedefense.Reference.Blocks;
 import sciwhiz12.basedefense.block.LockedDoorBlock;
 import sciwhiz12.basedefense.block.PadlockedDoorBlock;
@@ -39,6 +45,8 @@ public class BlockStates extends BlockStateProvider {
         lockedDoor(Blocks.LOCKED_ACACIA_DOOR);
         lockedDoor(Blocks.LOCKED_DARK_OAK_DOOR);
         lockedDoor(Blocks.LOCKED_IRON_DOOR);
+
+        portableSafe();
     }
 
     void lockedDoor(LockedDoorBlock block) {
@@ -75,6 +83,13 @@ public class BlockStates extends BlockStateProvider {
                     (rh ? bottomRight : bottomLeft) :
                     (rh ? topRight : topLeft)).rotationY(yRot).build();
         }, PadlockedDoorBlock.SIDE);
+    }
+
+    void portableSafe() {
+        BlockModelBuilder particle = models().getBuilder("portable_safe").texture("particle", mcLoc("block/cauldron_inner"));
+        VariantBlockStateBuilder builder = getVariantBuilder(Blocks.PORTABLE_SAFE);
+        ConfiguredModel.Builder<?> model = ConfiguredModel.builder().modelFile(particle);
+        builder.setModels(builder.partialState(), model.buildLast());
     }
 
     void standardCubeAll(Block b) {

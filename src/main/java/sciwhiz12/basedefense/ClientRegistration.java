@@ -27,9 +27,11 @@ import sciwhiz12.basedefense.ClientReference.Textures;
 import sciwhiz12.basedefense.client.gui.KeyringScreen;
 import sciwhiz12.basedefense.client.gui.KeysmithScreen;
 import sciwhiz12.basedefense.client.gui.LocksmithScreen;
+import sciwhiz12.basedefense.client.gui.PortableSafeScreen;
 import sciwhiz12.basedefense.client.model.ISTERWrapper;
 import sciwhiz12.basedefense.client.model.LockedDoorModel;
 import sciwhiz12.basedefense.client.render.PadlockedDoorRenderer;
+import sciwhiz12.basedefense.client.render.PortableSafeRenderer;
 
 import java.util.function.Function;
 
@@ -87,11 +89,13 @@ public class ClientRegistration {
         ScreenManager.registerFactory(Containers.KEYSMITH_TABLE, KeysmithScreen::new);
         ScreenManager.registerFactory(Containers.LOCKSMITH_TABLE, LocksmithScreen::new);
         ScreenManager.registerFactory(Containers.KEYRING, KeyringScreen::new);
+        ScreenManager.registerFactory(Containers.PORTABLE_SAFE, PortableSafeScreen::new);
     }
 
     static void bindTileEntityRenderers() {
         LOG.debug(CLIENT, "Binding tile entity renderers");
         ClientRegistry.bindTileEntityRenderer(TileEntities.PADLOCKED_DOOR, PadlockedDoorRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(TileEntities.PORTABLE_SAFE, PortableSafeRenderer::new);
     }
 
     @SubscribeEvent
@@ -137,6 +141,7 @@ public class ClientRegistration {
         overrideBlockModel(event, Blocks.LOCKED_IRON_DOOR, LockedDoorModel::new);
 
         overrideItemModel(event, Items.KEYRING, ISTERWrapper::new);
+        overrideItemModel(event, Items.PORTABLE_SAFE, ISTERWrapper::new);
     }
 
     static void overrideBlockModel(ModelBakeEvent event, Block b, Function<IBakedModel, IBakedModel> transform) {

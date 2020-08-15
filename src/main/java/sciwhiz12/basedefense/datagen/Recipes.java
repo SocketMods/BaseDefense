@@ -1,11 +1,16 @@
 package sciwhiz12.basedefense.datagen;
 
 import net.minecraft.advancements.criterion.InventoryChangeTrigger;
-import net.minecraft.data.*;
+import net.minecraft.data.CustomRecipeBuilder;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.IFinishedRecipe;
+import net.minecraft.data.RecipeProvider;
+import net.minecraft.data.ShapedRecipeBuilder;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.SpecialRecipeSerializer;
+import net.minecraft.tags.ItemTags;
 import net.minecraftforge.common.Tags;
 import sciwhiz12.basedefense.Reference;
 import sciwhiz12.basedefense.Reference.Blocks;
@@ -45,6 +50,15 @@ public class Recipes extends RecipeProvider {
                 .key('C', Reference.Items.LOCK_CORE)
                 .addCriterion("has_lock_core", InventoryChangeTrigger.Instance.forItems(Reference.Items.LOCK_CORE))
                 .build(consumer, modLoc("padlock"));
+        ShapedRecipeBuilder.shapedRecipe(Reference.Items.PORTABLE_SAFE)
+                .patternLine("iii")
+                .patternLine("ici")
+                .patternLine("iPi")
+                .key('i', Tags.Items.INGOTS_IRON)
+                .key('c', Tags.Items.CHESTS_WOODEN)
+                .key('P', ItemTags.PLANKS)
+                .addCriterion("has_iron_ingot", InventoryChangeTrigger.Instance.forItems(Items.IRON_INGOT))
+                .build(consumer, modLoc("portable_safe"));
         // @formatter:on
         lockedDoorRecipe(consumer, Blocks.LOCKED_OAK_DOOR);
         lockedDoorRecipe(consumer, Blocks.LOCKED_BIRCH_DOOR);

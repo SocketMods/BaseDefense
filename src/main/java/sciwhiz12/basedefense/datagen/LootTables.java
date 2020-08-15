@@ -6,7 +6,9 @@ import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.LootTableProvider;
 import net.minecraft.loot.ConstantRange;
+import net.minecraft.loot.DynamicLootEntry;
 import net.minecraft.loot.ItemLootEntry;
+import net.minecraft.loot.LootFunction;
 import net.minecraft.loot.LootParameterSet;
 import net.minecraft.loot.LootParameterSets;
 import net.minecraft.loot.LootPool;
@@ -15,12 +17,15 @@ import net.minecraft.loot.LootTableManager;
 import net.minecraft.loot.ValidationTracker;
 import net.minecraft.loot.conditions.BlockStateProperty;
 import net.minecraft.loot.conditions.SurvivesExplosion;
+import net.minecraft.loot.functions.CopyName;
+import net.minecraft.loot.functions.SetContents;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import sciwhiz12.basedefense.Reference.Blocks;
 import sciwhiz12.basedefense.Reference.Items;
 import sciwhiz12.basedefense.block.LockedDoorBlock;
 import sciwhiz12.basedefense.block.PadlockedDoorBlock;
+import sciwhiz12.basedefense.block.PortableSafeBlock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +66,8 @@ public class LootTables extends LootTableProvider {
         padlockedDoor(Blocks.PADLOCKED_DARK_OAK_DOOR);
         padlockedDoor(Blocks.PADLOCKED_IRON_DOOR);
 
+        portableSafe();
+
         return tables;
     }
 
@@ -85,6 +92,17 @@ public class LootTables extends LootTableProvider {
         padlock.acceptCondition(BlockStateProperty.builder(block).fromProperties(predicate));
 
         blockTable(block, LootTable.builder().addLootPool(doorItem).addLootPool(padlock));
+    }
+
+    void portableSafe() {
+        LootFunction.Builder<?> copyNameFunc = CopyName.builder(CopyName.Source.BLOCK_ENTITY);
+        SetContents.Builder contentsFunc = SetContents.builderIn()
+                .addLootEntry(DynamicLootEntry.func_216162_a(PortableSafeBlock.CONTENTS));
+
+        LootPool.Builder safeItem = createStandardDrops(Blocks.PORTABLE_SAFE);
+        safeItem.acceptFunction(copyNameFunc).acceptFunction(contentsFunc);
+
+        blockTable(Blocks.PORTABLE_SAFE, LootTable.builder().addLootPool(safeItem));
     }
 
     void standardDropTable(Block b) {

@@ -15,8 +15,10 @@
   "block.basedefense.padlocked_jungle_door": "Padlocked Jungle Door",
   "block.basedefense.padlocked_oak_door": "Padlocked Oak Door",
   "block.basedefense.padlocked_spruce_door": "Padlocked Spruce Door",
+  "block.basedefense.portable_safe": "Portable Safe",
   "container.basedefense.keysmith": "Keysmithing",
   "container.basedefense.locksmith": "Locksmithing",
+  "container.basedefense.portable_safe": "Portable Safe",
   "item.basedefense.admin_key": "Admin Key",
   "item.basedefense.admin_lock_core": "Admin Lock Core",
   "item.basedefense.admin_padlock": "Admin Padlock",
@@ -39,6 +41,7 @@
   "tooltip.basedefense.codes.header": "Stored Code(s):",
   "tooltip.basedefense.codes.line": "  #%s",
   "tooltip.basedefense.color": "Color #%s: %s",
+  "tooltip.basedefense.contains_items": "Contains items",
   "tooltip.basedefense.keyring.count": "Contains %s key(s)",
   "tooltip.basedefense.locked_door.has_lock": "Contains installed lock"
 }

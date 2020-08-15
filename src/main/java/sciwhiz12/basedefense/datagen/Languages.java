@@ -38,6 +38,8 @@ public class Languages extends LanguageProvider {
         add(Blocks.LOCKED_ACACIA_DOOR, "Locked Acacia Door");
         add(Blocks.LOCKED_DARK_OAK_DOOR, "Locked Dark Oak Door");
         add(Blocks.LOCKED_IRON_DOOR, "Locked Iron Door");
+
+        add(Blocks.PORTABLE_SAFE, "Portable Safe");
     }
 
     void addItems() {
@@ -57,6 +59,7 @@ public class Languages extends LanguageProvider {
 
         add("container", "keysmith", "Keysmithing");
         add("container", "locksmith", "Locksmithing");
+        add("container", "portable_safe", "Portable Safe");
 
         add("tooltip", "admin_only", "for Server Operators!");
         add("tooltip", "color", "Color #%s: %s");
@@ -68,6 +71,8 @@ public class Languages extends LanguageProvider {
         add("tooltip", "codes.count", "Contains %s codes");
         add("tooltip", "codes.count.zero", "Contains no codes");
         add("tooltip", "codes.count.one", "Contains %s code");
+
+        add("tooltip", "contains_items", "Contains items");
 
         add("status", "door.locked", "This %s is locked.");
         add("status", "door.info", "\"%s\"");
