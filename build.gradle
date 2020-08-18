@@ -13,7 +13,7 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
-version = '0.0.1-DEV'
+version = "${mc_version}-${mod_version}"
 group = 'sciwhiz12.basedefense'
 archivesBaseName = 'basedefense'
 
@@ -24,14 +24,13 @@ sourceSets {
 }
 
 minecraft {
-    mappings channel: 'snapshot', version: '20200723-1.16.1'
+    mappings channel: 'snapshot', version: "${mappings_version}"
     
     runs {
         client {
             workingDirectory project.file('run/client')
 
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
+            property 'forge.logging.markers', "${logging_markers}"
             property 'forge.logging.console.level', 'debug'
 
             mods {
@@ -44,8 +43,7 @@ minecraft {
         server {
             workingDirectory project.file('run/server')
 
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
+            property 'forge.logging.markers', "${logging_markers}"
             property 'forge.logging.console.level', 'debug'
 
             mods {
@@ -58,8 +56,7 @@ minecraft {
         data {
             workingDirectory project.file('run/data')
 
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
+            property 'forge.logging.markers', "${logging_markers}"
             property 'forge.logging.console.level', 'debug'
 
             args '--mod', 'basedefense', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
@@ -74,7 +71,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.2-33.0.2'
+    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 }
 
 jar {
@@ -92,13 +89,7 @@ jar {
 }
 
 jar.finalizedBy('reobfJar')
-jar.finalizedBy('deobfJar') 
 jar.finalizedBy('sourcesJar')
-
-task deobfJar(type: Jar, dependsOn: 'jar') {
-    from sourceSets.main.output
-    classifier "dev"
-}
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
@@ -106,7 +97,6 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 }
 
 artifacts {
-    archives deobfJar
     archives sourcesJar
 }
 
@@ -114,9 +104,6 @@ publishing {
     publications {
         pub_reobfJar(MavenPublication) {
             artifact jar
-        }
-        pub_deobfJar(MavenPublication) {
-            artifact deobfJar
         }
         pub_sourcesJar(MavenPublication) {
             artifact sourcesJar
