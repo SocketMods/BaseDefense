@@ -16,6 +16,7 @@ public class Languages extends LanguageProvider {
     protected void addTranslations() {
         addBlocks();
         addItems();
+        addCommands();
         addOthers();
     }
 
@@ -52,6 +53,27 @@ public class Languages extends LanguageProvider {
         add(Items.ADMIN_PADLOCK, "Admin Padlock");
     }
 
+    void addCommands() {
+        add("command", "admin", "(Admin) ");
+        addCommand("chunk", "position", "[%s, %s]");
+
+        addCommandError("chunk.claim", "already_claimed", "Chunk at %s is already claimed");
+        addCommandSuccess("chunk.claim", "Chunk at %s has been successfully claimed");
+
+        addCommandError("chunk.unclaim", "not_claimed", "Chunk at %s is not claimed");
+        addCommandError("chunk.unclaim", "not_owner", "You do not own the chunk at %s");
+        addCommandSuccess("chunk.unclaim", "Chunk at %s has been successfully unclaimed");
+
+        addCommandError("chunk.unclaim_all", "failed", "Nothing changed. There is no claimed chunks to unclaim");
+        addCommandSuccess("chunk.unclaim_all", "Successfully unclaimed all chunks for %s");
+
+        addCommand("chunk", "info", "Chunk at %s is owned by %s");
+        addCommand("chunk.info", "owner.server", "the server");
+        addCommand("chunk.info", "owner.named", "%s");
+        addCommand("chunk.info", "owner.unknown", "an unknown entity");
+        addCommand("chunk.info", "owner.none", "nobody");
+    }
+
     void addOthers() {
         add("itemGroup." + MODID, "Base Defense");
 
@@ -75,6 +97,18 @@ public class Languages extends LanguageProvider {
         add("subtitle", "locked_door.attempt", "Door locked");
         add("subtitle", "locked_door.relock", "Door relocks");
         add("subtitle", "locked_door.unlock", "Door unlocks");
+    }
+
+    void addCommandError(final String command, final String identifier, final String value) {
+        addCommand(command, "error." + identifier, value);
+    }
+
+    void addCommandSuccess(final String command, final String value) {
+        addCommand(command, "success", value);
+    }
+
+    void addCommand(final String command, final String other, final String value) {
+        add("command", command + "." + other, value);
     }
 
     /**

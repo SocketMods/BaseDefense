@@ -2,6 +2,7 @@ package sciwhiz12.basedefense;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.command.Commands;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -12,10 +13,9 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.extensions.IForgeContainerType;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import sciwhiz12.basedefense.api.capablities.ICodeHolder;
@@ -30,6 +30,7 @@ import sciwhiz12.basedefense.capabilities.CodeHolder;
 import sciwhiz12.basedefense.capabilities.CodedKey;
 import sciwhiz12.basedefense.capabilities.CodedLock;
 import sciwhiz12.basedefense.capabilities.FlexibleStorage;
+import sciwhiz12.basedefense.command.ChunkProtectCommand;
 import sciwhiz12.basedefense.container.KeyringContainer;
 import sciwhiz12.basedefense.container.KeysmithContainer;
 import sciwhiz12.basedefense.container.LocksmithContainer;
@@ -52,10 +53,10 @@ import sciwhiz12.basedefense.util.RecipeHelper;
 
 import java.util.function.Supplier;
 
-import static sciwhiz12.basedefense.BaseDefense.COMMON;
-import static sciwhiz12.basedefense.BaseDefense.LOG;
+import static sciwhiz12.basedefense.BaseDefense.*;
 import static sciwhiz12.basedefense.Reference.Blocks.*;
-import static sciwhiz12.basedefense.Reference.*;
+import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
+import static sciwhiz12.basedefense.Reference.modLoc;
 import static sciwhiz12.basedefense.util.Util.Null;
 
 /**
@@ -63,12 +64,22 @@ import static sciwhiz12.basedefense.util.Util.Null;
  *
  * @author SciWhiz12
  */
-@Mod.EventBusSubscriber(bus = Bus.MOD, modid = MODID)
 public final class Registration {
     // Prevent instantiation
     private Registration() {}
 
-    @SubscribeEvent
+    static void registerListeners(IEventBus modBus, IEventBus forgeBus) {
+        LOG.debug(COMMON, "Registering event listeners");
+        modBus.addGenericListener(Block.class, Registration::registerBlocks);
+        modBus.addListener(Registration::registerCapabilities);
+        forgeBus.addListener(Registration::registerCommands);
+        modBus.addGenericListener(ContainerType.class, Registration::registerContainers);
+        modBus.addGenericListener(Item.class, Registration::registerItems);
+        modBus.addGenericListener(IRecipeSerializer.class, Registration::registerRecipeSerializers);
+        modBus.addGenericListener(SoundEvent.class, Registration::registerSoundEvents);
+        modBus.addGenericListener(TileEntityType.class, Registration::registerTileEntities);
+    }
+
     static void registerBlocks(RegistryEvent.Register<Block> event) {
         LOG.debug(COMMON, "Registering blocks");
         final IForgeRegistry<Block> reg = event.getRegistry();
@@ -94,7 +105,6 @@ public final class Registration {
         reg.register(new LockedDoorBlock(Blocks.IRON_DOOR).setRegistryName("locked_iron_door"));
     }
 
-    @SubscribeEvent
     static void registerCapabilities(FMLCommonSetupEvent event) {
         LOG.debug(COMMON, "Registering capabilities");
         CapabilityManager.INSTANCE.register(ILock.class, new FlexibleStorage<>(), CodedLock::new);
@@ -103,7 +113,16 @@ public final class Registration {
         CapabilityManager.INSTANCE.register(ICodeHolder.class, new FlexibleStorage<>(), CodeHolder::new);
     }
 
-    @SubscribeEvent
+    static void registerCommands(RegisterCommandsEvent event) {
+        LOG.debug(SERVER, "Registering commands");
+        // @formatter:off
+        event.getDispatcher().register(
+            Commands.literal("basedefense")
+                .then(ChunkProtectCommand.nodeBuilder())
+        );
+        // @formatter:on
+    }
+
     static void registerContainers(RegistryEvent.Register<ContainerType<?>> event) {
         LOG.debug(COMMON, "Registering containers");
         final IForgeRegistry<ContainerType<?>> reg = event.getRegistry();
@@ -113,7 +132,6 @@ public final class Registration {
         reg.register(IForgeContainerType.create(KeyringContainer::new).setRegistryName("keyring"));
     }
 
-    @SubscribeEvent
     static void registerItems(RegistryEvent.Register<Item> event) {
         LOG.debug(COMMON, "Registering items");
         final IForgeRegistry<Item> reg = event.getRegistry();
@@ -142,7 +160,6 @@ public final class Registration {
         reg.register(new LockedDoorBlockItem(LOCKED_IRON_DOOR).setRegistryName("locked_iron_door"));
     }
 
-    @SubscribeEvent
     static void registerRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> event) {
         LOG.debug(COMMON, "Registering recipe serializers");
         final IForgeRegistry<IRecipeSerializer<?>> reg = event.getRegistry();
@@ -152,7 +169,6 @@ public final class Registration {
         reg.register(new SpecialRecipeSerializer<>(ColoringRecipe::new).setRegistryName("coloring"));
     }
 
-    @SubscribeEvent
     static void registerSoundEvents(RegistryEvent.Register<SoundEvent> event) {
         LOG.debug(COMMON, "Registering sound events");
         final IForgeRegistry<SoundEvent> reg = event.getRegistry();
@@ -162,7 +178,6 @@ public final class Registration {
         reg.register(new SoundEvent(modLoc("locked_door.unlock")).setRegistryName("locked_door_unlock"));
     }
 
-    @SubscribeEvent
     static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
         LOG.debug(COMMON, "Registering tile entities");
         final IForgeRegistry<TileEntityType<?>> reg = event.getRegistry();

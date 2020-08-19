@@ -176,4 +176,6 @@ public final class Reference {
     public static ResourceLocation modLoc(String path) {
         return new ResourceLocation(MODID, checkNotNull(path));
     }
+
+    public static String modStr(String path) { return MODID + ":" + path; }
 }
