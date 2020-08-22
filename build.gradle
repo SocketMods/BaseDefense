@@ -70,8 +70,15 @@ minecraft {
     }
 }
 
+repositories {
+    maven { url = "https://maven.theillusivec4.top/" }
+}
+
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
+
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}:api")
 }
 
 jar {

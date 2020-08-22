@@ -50,6 +50,8 @@ import static sciwhiz12.basedefense.util.Util.Null;
 public final class Reference {
     public static final String MODID = "basedefense";
 
+    public static final String CURIOS_MODID = "curios";
+
     @ObjectHolder(MODID)
     public static final class Blocks {
         public static final KeysmithBlock KEYSMITH_TABLE = Null();
