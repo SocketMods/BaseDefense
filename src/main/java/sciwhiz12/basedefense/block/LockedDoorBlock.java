@@ -28,13 +28,14 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
 import sciwhiz12.basedefense.item.LockedDoorBlockItem;
 import sciwhiz12.basedefense.tileentity.LockedDoorTile;
 import sciwhiz12.basedefense.util.UnlockHelper;
 
 import static net.minecraft.util.text.TextFormatting.*;
+import static net.minecraftforge.common.util.Constants.BlockFlags;
 import static net.minecraftforge.common.util.Constants.BlockFlags.DEFAULT_AND_RERENDER;
+import static net.minecraftforge.common.util.Constants.WorldEvents;
 import static sciwhiz12.basedefense.Reference.Capabilities.LOCK;
 import static sciwhiz12.basedefense.Reference.Sounds;
 
@@ -177,15 +178,11 @@ public class LockedDoorBlock extends Block {
     }
 
     private int getCloseSound() {
-        return this.material == Material.IRON ?
-                Constants.WorldEvents.IRON_DOOR_CLOSE_SOUND :
-                Constants.WorldEvents.WOODEN_DOOR_CLOSE_SOUND;
+        return this.material == Material.IRON ? WorldEvents.IRON_DOOR_CLOSE_SOUND : WorldEvents.WOODEN_DOOR_CLOSE_SOUND;
     }
 
     private int getOpenSound() {
-        return this.material == Material.IRON ?
-                Constants.WorldEvents.IRON_DOOR_OPEN_SOUND :
-                Constants.WorldEvents.WOODEN_DOOR_OPEN_SOUND;
+        return this.material == Material.IRON ? WorldEvents.IRON_DOOR_OPEN_SOUND : WorldEvents.WOODEN_DOOR_OPEN_SOUND;
     }
 
     @Override
@@ -204,12 +201,6 @@ public class LockedDoorBlock extends Block {
             case NORTH:
                 return closed ? NORTH_AABB : (rightHinge ? WEST_AABB : EAST_AABB);
         }
-    }
-
-    @Override
-    public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, TileEntity te,
-            ItemStack stack) {
-        super.harvestBlock(worldIn, player, pos, Blocks.AIR.getDefaultState(), te, stack);
     }
 
     @Override
@@ -300,18 +291,17 @@ public class LockedDoorBlock extends Block {
 
     @Override
     public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        DoubleBlockHalf half = state.get(HALF);
-        BlockPos otherPos = (half == DoubleBlockHalf.LOWER) ? pos.up() : pos.down();
-        BlockState otherState = worldIn.getBlockState(otherPos);
-        if (otherState.getBlock() == this && otherState.get(HALF) != half) {
-            ItemStack heldItem = player.getHeldItemMainhand();
-            if (!worldIn.isRemote && !player.isCreative() && player.func_234569_d_(otherState)) {
-                BlockPos tePos = (half == DoubleBlockHalf.LOWER) ? pos : otherPos;
-                Block.spawnDrops(state, worldIn, pos, worldIn.getTileEntity(tePos), player, heldItem);
-                Block.spawnDrops(otherState, worldIn, otherPos, worldIn.getTileEntity(tePos), player, heldItem);
+        if (!worldIn.isRemote && player.isCreative()) {
+            // Coped from DoublePlantBlock.removeBottomHalf(worldIn, pos, state, player)
+            if (state.get(HALF) == DoubleBlockHalf.UPPER) {
+                BlockPos lowerPos = pos.down();
+                BlockState lowerState = worldIn.getBlockState(lowerPos);
+                if (lowerState.getBlock() == state.getBlock() && lowerState.get(HALF) == DoubleBlockHalf.LOWER) {
+                    worldIn.setBlockState(lowerPos, Blocks.AIR.getDefaultState(),
+                            BlockFlags.NO_NEIGHBOR_DROPS | BlockFlags.DEFAULT);
+                    worldIn.playEvent(player, WorldEvents.BREAK_BLOCK_EFFECTS, lowerPos, Block.getStateId(lowerState));
+                }
             }
-            worldIn.setBlockState(otherPos, Blocks.AIR.getDefaultState(), 35);
-            worldIn.playEvent(player, Constants.WorldEvents.BREAK_BLOCK_EFFECTS, otherPos, Block.getStateId(otherState));
         }
         super.onBlockHarvested(worldIn, pos, state, player);
     }
