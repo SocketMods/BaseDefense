@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static sciwhiz12.basedefense.Reference.Capabilities.LOCK;
 import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
 
-public class LockedDoorBlockItem extends BlockItem {
+public class LockedDoorBlockItem extends BlockItem implements IContainsLockItem {
     public LockedDoorBlockItem(LockedDoorBlock blockIn) {
         super(blockIn, new Item.Properties().group(ITEM_GROUP).maxDamage(0));
     }
