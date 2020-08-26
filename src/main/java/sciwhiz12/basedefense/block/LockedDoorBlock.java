@@ -86,7 +86,7 @@ public class LockedDoorBlock extends Block {
             if (te == null) { return ActionResultType.FAIL; }
             ItemStack heldStack = player.getHeldItem(handIn);
             if (state.get(LOCKED)) { // LOCKED
-                if (UnlockHelper.checkUnlock(heldStack, te, worldIn, lowerPos, player, true)) {
+                if (!heldStack.isEmpty() && UnlockHelper.checkUnlock(heldStack, te, worldIn, lowerPos, player, true)) {
                     // LOCKED, KEY
                     BlockState newState;
                     if (player.isSneaking()) { // LOCKED, KEY, SNEAKING => toggle locked state
