@@ -11,6 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.crafting.IIngredientSerializer;
 import net.minecraftforge.registries.ObjectHolder;
 import sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import sciwhiz12.basedefense.api.capablities.IContainsCode;
@@ -33,9 +34,7 @@ import sciwhiz12.basedefense.item.lock.AdminLockCoreItem;
 import sciwhiz12.basedefense.item.lock.AdminPadlockItem;
 import sciwhiz12.basedefense.item.lock.CodedLockCoreItem;
 import sciwhiz12.basedefense.item.lock.CodedPadlockItem;
-import sciwhiz12.basedefense.recipe.ColoringRecipe;
-import sciwhiz12.basedefense.recipe.CopyCodedLockRecipe;
-import sciwhiz12.basedefense.recipe.LockedDoorRecipe;
+import sciwhiz12.basedefense.recipe.*;
 import sciwhiz12.basedefense.tileentity.LockableTile;
 import sciwhiz12.basedefense.tileentity.LockedDoorTile;
 import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
@@ -143,12 +142,19 @@ public final class Reference {
 
     @ObjectHolder(MODID)
     public static final class RecipeSerializers {
-        public static final RecipeHelper.ShapedSerializer<CopyCodedLockRecipe> COPY_LOCK = Null();
-        public static final RecipeHelper.ShapedSerializer<LockedDoorRecipe> LOCKED_DOOR = Null();
+        public static final RecipeHelper.ShapedSerializer<LockedItemRecipe> LOCKED_ITEM = Null();
+        public static final RecipeHelper.ShapedSerializer<CodedLockRecipe> CODED_LOCK = Null();
         public static final SpecialRecipeSerializer<ColoringRecipe> COLORING = Null();
 
         // Prevent instantiation
         private RecipeSerializers() {}
+    }
+
+    public static final class IngredientSerializers {
+        public static IIngredientSerializer<LockedItemIngredient> LOCKED_ITEM = Null();
+
+        // Prevent instantiation
+        private IngredientSerializers() {}
     }
 
     @ObjectHolder(MODID)

@@ -1,5 +1,5 @@
 {
-  "type": "basedefense:locked_door",
+  "type": "basedefense:locked_item",
   "group": "locked_door",
   "pattern": [
     "IdC"
@@ -12,6 +12,8 @@
       "item": "minecraft:dark_oak_door"
     },
     "C": {
+      "type": "basedefense:locked_item",
+      "has_codes": true,
       "item": "basedefense:lock_core"
     }
   },

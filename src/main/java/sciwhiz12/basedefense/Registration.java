@@ -11,6 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -45,9 +46,10 @@ import sciwhiz12.basedefense.item.lock.AdminLockCoreItem;
 import sciwhiz12.basedefense.item.lock.AdminPadlockItem;
 import sciwhiz12.basedefense.item.lock.CodedLockCoreItem;
 import sciwhiz12.basedefense.item.lock.CodedPadlockItem;
+import sciwhiz12.basedefense.recipe.CodedLockRecipe;
 import sciwhiz12.basedefense.recipe.ColoringRecipe;
-import sciwhiz12.basedefense.recipe.CopyCodedLockRecipe;
-import sciwhiz12.basedefense.recipe.LockedDoorRecipe;
+import sciwhiz12.basedefense.recipe.LockedItemIngredient;
+import sciwhiz12.basedefense.recipe.LockedItemRecipe;
 import sciwhiz12.basedefense.tileentity.LockableTile;
 import sciwhiz12.basedefense.tileentity.LockedDoorTile;
 import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
@@ -154,12 +156,15 @@ public final class Registration {
 
     @SubscribeEvent
     static void registerRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> event) {
-        LOG.debug(COMMON, "Registering recipe serializers");
+        LOG.debug(COMMON, "Registering recipe and ingredient serializers");
         final IForgeRegistry<IRecipeSerializer<?>> reg = event.getRegistry();
 
-        reg.register(new RecipeHelper.ShapedSerializer<>(CopyCodedLockRecipe::new).setRegistryName("copy_lock"));
-        reg.register(new RecipeHelper.ShapedSerializer<>(LockedDoorRecipe::new).setRegistryName("locked_door"));
+        reg.register(new RecipeHelper.ShapedSerializer<>(LockedItemRecipe::new).setRegistryName("locked_item"));
+        reg.register(new RecipeHelper.ShapedSerializer<>(CodedLockRecipe::new).setRegistryName("coded_lock"));
         reg.register(new SpecialRecipeSerializer<>(ColoringRecipe::new).setRegistryName("coloring"));
+
+        IngredientSerializers.LOCKED_ITEM = CraftingHelper
+                .register(modLoc("locked_item"), new LockedItemIngredient.Serializer());
     }
 
     @SubscribeEvent

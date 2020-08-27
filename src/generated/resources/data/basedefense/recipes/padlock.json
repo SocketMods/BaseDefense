@@ -1,5 +1,5 @@
 {
-  "type": "basedefense:copy_lock",
+  "type": "basedefense:coded_lock",
   "pattern": [
     " i ",
     "ICI",
@@ -16,6 +16,8 @@
       "tag": "forge:ingots/gold"
     },
     "C": {
+      "type": "basedefense:locked_item",
+      "has_codes": true,
       "item": "basedefense:lock_core"
     }
   },
