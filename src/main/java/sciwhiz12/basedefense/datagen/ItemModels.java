@@ -1,13 +1,13 @@
 package sciwhiz12.basedefense.datagen;
 
-import static sciwhiz12.basedefense.Reference.MODID;
-import static sciwhiz12.basedefense.util.Util.appendPath;
-
 import net.minecraft.data.DataGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.*;
 import sciwhiz12.basedefense.Reference.Items;
+
+import static sciwhiz12.basedefense.Reference.MODID;
+import static sciwhiz12.basedefense.util.Util.appendPath;
 
 public class ItemModels extends ItemModelProvider {
     public ItemModels(DataGenerator generator, ExistingFileHelper existingFileHelper) {
@@ -27,6 +27,9 @@ public class ItemModels extends ItemModelProvider {
         singleTextureItem(Items.LOCKED_DARK_OAK_DOOR);
         singleTextureItem(Items.LOCKED_IRON_DOOR);
 
+        singleTextureItem(Items.ADMIN_LOCK_CORE);
+        singleTextureItem(Items.ADMIN_PADLOCK);
+
         coloredItem(Items.PADLOCK);
         coloredItem(Items.LOCK_CORE);
         coloredItem(Items.BROKEN_LOCK_PIECES);
@@ -34,7 +37,7 @@ public class ItemModels extends ItemModelProvider {
         final ItemModelBuilder keyParent = getKeyDisplayParent();
         generatedModels.put(keyParent.getLocation(), keyParent);
         coloredKey(keyParent);
-        singleTextureItem(Items.SKELETON_KEY, keyParent);
+        singleTextureItem(Items.ADMIN_KEY, keyParent);
     }
 
     void coloredKey(ModelFile parent) {

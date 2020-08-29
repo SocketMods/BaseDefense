@@ -1,8 +1,0 @@
-{
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "basedefense:item/padlock",
-    "layer1": "basedefense:item/padlock",
-    "layer2": "basedefense:item/padlock_color_1"
-  }
-}

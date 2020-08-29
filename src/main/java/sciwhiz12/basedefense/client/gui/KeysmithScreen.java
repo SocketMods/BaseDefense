@@ -35,11 +35,8 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
     protected void init() {
         super.init();
         this.minecraft.keyboardListener.enableRepeatEvents(true);
-        this.nameField = new TextFieldWidget(
-                this.font, guiLeft + 91, guiTop + 28, 82, 12, new StringTextComponent("")
-        );
+        this.nameField = new TextFieldWidget(this.font, guiLeft + 91, guiTop + 28, 82, 12, new StringTextComponent(""));
         this.nameField.setCanLoseFocus(false);
-        this.nameField.setFocused2(true);
         this.nameField.setTextColor(-1);
         this.nameField.setDisabledTextColour(-1);
         this.nameField.setEnableBackgroundDrawing(false);
@@ -58,8 +55,8 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
     }
 
     @Override
-    public void removed() {
-        super.removed();
+    public void onClose() {
+        super.onClose();
         this.container.removeListener(this);
         this.minecraft.keyboardListener.enableRepeatEvents(false);
     }
@@ -70,9 +67,8 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
             minecraft.player.closeScreen();
         }
 
-        return this.nameField.keyPressed(key, scanCode, modifiers) || this.nameField.canWrite() || super.keyPressed(
-                key, scanCode, modifiers
-        );
+        return this.nameField.keyPressed(key, scanCode, modifiers) || this.nameField.canWrite() || super
+                .keyPressed(key, scanCode, modifiers);
     }
 
     @Override
@@ -80,12 +76,12 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, partialTicks);
         this.nameField.render(stack, mouseX, mouseY, partialTicks);
-        this.func_230459_a_(stack, mouseX, mouseY);
+        this.renderHoveredTooltip(stack, mouseX, mouseY);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    protected void func_230450_a_(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+    protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.minecraft.getTextureManager().bindTexture(Textures.KEYSMITH_GUI);
         this.blit(stack, guiLeft, guiTop, 0, 0, xSize, ySize);

@@ -1,33 +1,38 @@
 package sciwhiz12.basedefense.capabilities;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.List;
-
 import com.google.common.collect.ImmutableList;
-
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.LongNBT;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.util.INBTSerializable;
+import sciwhiz12.basedefense.api.ITooltipInfo;
 import sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import sciwhiz12.basedefense.api.capablities.IContainsCode;
 import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.api.capablities.ILock;
 
+import javax.annotation.Nullable;
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static net.minecraft.util.text.TextFormatting.DARK_GRAY;
+import static net.minecraft.util.text.TextFormatting.GRAY;
+
 /**
- * An implementation of {@link IKey} and {@link ICodeHolder}.
- * <p>
- * Used as the default implementation of the {@code IKey} capability. Can be
- * used as a base class.
- * 
+ * <p>An implementation of {@link IKey} and {@link ICodeHolder}.</p>
+ *
+ * <p>Used as the default implementation of the {@code IKey} capability. Can be
+ * used as a base class.</p>
+ *
  * @author SciWhiz12
  */
-public class CodedKey implements ICodeHolder, IKey, INBTSerializable<LongNBT> {
+public class CodedKey implements ICodeHolder, IKey, INBTSerializable<LongNBT>, ITooltipInfo {
     protected Long storedCode = null;
 
     @Override
-    public boolean canUnlock(ILock lock, IWorldPosCallable worldPos, PlayerEntity player) {
+    public boolean canUnlock(ILock lock, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
         if (lock instanceof IContainsCode) {
             IContainsCode codeLock = (IContainsCode) lock;
             return codeLock.containsCode(storedCode);
@@ -36,7 +41,7 @@ public class CodedKey implements ICodeHolder, IKey, INBTSerializable<LongNBT> {
     }
 
     @Override
-    public void onUnlock(ILock lock, IWorldPosCallable worldPos, PlayerEntity player) {}
+    public void onUnlock(ILock lock, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {}
 
     @Override
     public boolean containsCode(Long code) {
@@ -74,11 +79,26 @@ public class CodedKey implements ICodeHolder, IKey, INBTSerializable<LongNBT> {
 
     @Override
     public LongNBT serializeNBT() {
-        return this.storedCode != null ? LongNBT.valueOf(this.storedCode) : null;
+        return this.storedCode != null ? LongNBT.valueOf(this.storedCode) : LongNBT.valueOf(0);
     }
 
     @Override
     public void deserializeNBT(LongNBT nbt) {
-        this.storedCode = nbt.getLong();
+        this.storedCode = nbt.getLong() != 0 ? nbt.getLong() : null;
+    }
+
+    @Override
+    public void addInformation(List<ITextComponent> info, boolean verbose) {
+        if (verbose && this.storedCode != null) {
+            info.add(new TranslationTextComponent("tooltip.basedefense.codes.header").mergeStyle(GRAY));
+            info.add(new TranslationTextComponent("tooltip.basedefense.codes.line", String.format("%016X", storedCode))
+                    .mergeStyle(DARK_GRAY));
+        } else {
+            if (this.storedCode != null) {
+                info.add(new TranslationTextComponent("tooltip.basedefense.codes.count.one", 1).mergeStyle(GRAY));
+            } else {
+                info.add(new TranslationTextComponent("tooltip.basedefense.codes.count.zero", 0).mergeStyle(GRAY));
+            }
+        }
     }
 }

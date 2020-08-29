@@ -8,30 +8,32 @@ import net.minecraftforge.common.util.INBTSerializable;
 import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.api.capablities.ILock;
 
+import javax.annotation.Nullable;
+
 /**
- * An implementation of {@link ILock} that extends {@link CodeHolder}.
- * <p>
- * Used as the default implementation of the {@code ILock} capability. Can be
- * used as a base class.
- * 
+ * <p>An implementation of {@link ILock} that extends {@link CodeHolder}.</p>
+ *
+ * <p>Used as the default implementation of the {@code ILock} capability. Can be
+ * used as a base class.</p>
+ *
  * @author SciWhiz12
  */
 public class CodedLock extends CodeHolder implements ILock, INBTSerializable<LongArrayNBT> {
     @Override
-    public boolean canRemove(IKey key, IWorldPosCallable worldPos, PlayerEntity player) {
+    public boolean canRemove(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
         return key.canUnlock(this, worldPos, player) && this.canUnlock(key, worldPos, player);
     }
 
     @Override
-    public boolean canUnlock(IKey key, IWorldPosCallable worldPos, PlayerEntity player) {
+    public boolean canUnlock(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
         return true;
     }
 
     @Override
-    public void onRemove(IKey key, IWorldPosCallable worldPos, PlayerEntity player) {}
+    public void onRemove(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {}
 
     @Override
-    public void onUnlock(IKey key, IWorldPosCallable worldPos, PlayerEntity player) {}
+    public void onUnlock(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {}
 
     @Override
     public LongArrayNBT serializeNBT() {

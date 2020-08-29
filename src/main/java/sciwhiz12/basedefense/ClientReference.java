@@ -1,10 +1,5 @@
 package sciwhiz12.basedefense;
 
-import static sciwhiz12.basedefense.Reference.modLoc;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.inventory.container.PlayerContainer;
@@ -15,6 +10,11 @@ import net.minecraft.util.ResourceLocation;
 import sciwhiz12.basedefense.block.LockedDoorBlock;
 import sciwhiz12.basedefense.item.IColorable;
 import sciwhiz12.basedefense.tileentity.LockedDoorTile;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static sciwhiz12.basedefense.Reference.modLoc;
 
 /**
  * Holds references to <strong>client-side only</strong> constants and objects

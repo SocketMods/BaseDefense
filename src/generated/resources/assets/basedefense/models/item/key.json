@@ -7,25 +7,25 @@
   "overrides": [
     {
       "predicate": {
-        "colors": 0.0
+        "minecraft:colors": 0.0
       },
       "model": "basedefense:item/key"
     },
     {
       "predicate": {
-        "colors": 1.0
+        "minecraft:colors": 1.0
       },
       "model": "basedefense:item/key_color_1"
     },
     {
       "predicate": {
-        "colors": 2.0
+        "minecraft:colors": 2.0
       },
       "model": "basedefense:item/key_color_2"
     },
     {
       "predicate": {
-        "colors": 3.0
+        "minecraft:colors": 3.0
       },
       "model": "basedefense:item/key_color_3"
     }

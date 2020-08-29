@@ -1,7 +1,6 @@
 package sciwhiz12.basedefense.client.render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -37,12 +36,12 @@ public class PadlockedDoorRenderer extends TileEntityRenderer<PadlockedDoorTile>
         matrixStack.translate(dir.getXOffset() * -0.51D + 0.5D, 1D, dir.getZOffset() * -0.51D + 0.5D);
         matrixStack.rotate(Vector3f.YP.rotationDegrees(dir.getHorizontalAngle()));
         matrixStack.translate(mult * 0.275D, 0D, 0D);
-        if (state.get(PadlockedDoorBlock.SIDE) == DoorSide.INSIDE) { matrixStack.translate(0D, 0D, dir.getAxis() == Direction.Axis.X ? -0.205D : 0.205D); }
+        if (state.get(PadlockedDoorBlock.SIDE) == DoorSide.INSIDE) {
+            matrixStack.translate(0D, 0D, dir.getAxis() == Direction.Axis.X ? -0.205D : 0.205D);
+        }
         matrixStack.scale(0.5F, 0.5F, 0.5F);
-        this.itemRenderer.renderItem(
-            null, itemstack, ItemCameraTransforms.TransformType.FIXED, false, matrixStack, buffer, tileEntity.getWorld(),
-            combinedLightIn, combinedOverlayIn
-        );
+        this.itemRenderer.renderItem(null, itemstack, ItemCameraTransforms.TransformType.FIXED, false, matrixStack, buffer,
+                tileEntity.getWorld(), combinedLightIn, combinedOverlayIn);
         matrixStack.pop();
     }
 }

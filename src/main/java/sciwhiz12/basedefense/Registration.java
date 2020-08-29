@@ -1,13 +1,5 @@
 package sciwhiz12.basedefense;
 
-import static sciwhiz12.basedefense.BaseDefense.COMMON;
-import static sciwhiz12.basedefense.BaseDefense.LOG;
-import static sciwhiz12.basedefense.Reference.*;
-import static sciwhiz12.basedefense.Reference.Blocks.*;
-import static sciwhiz12.basedefense.util.Util.Null;
-
-import java.util.function.Supplier;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
@@ -22,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -44,23 +37,33 @@ import sciwhiz12.basedefense.container.LocksmithContainer;
 import sciwhiz12.basedefense.entity.PTZCameraEntity;
 import sciwhiz12.basedefense.item.BrokenLockPiecesItem;
 import sciwhiz12.basedefense.item.LockedDoorBlockItem;
+import sciwhiz12.basedefense.item.key.AdminKeyItem;
 import sciwhiz12.basedefense.item.key.KeyItem;
 import sciwhiz12.basedefense.item.key.KeyringItem;
-import sciwhiz12.basedefense.item.key.SkeletonKeyItem;
-import sciwhiz12.basedefense.item.lock.LockCoreItem;
-import sciwhiz12.basedefense.item.lock.PadlockItem;
+import sciwhiz12.basedefense.item.lock.AdminLockCoreItem;
+import sciwhiz12.basedefense.item.lock.AdminPadlockItem;
+import sciwhiz12.basedefense.item.lock.CodedLockCoreItem;
+import sciwhiz12.basedefense.item.lock.CodedPadlockItem;
+import sciwhiz12.basedefense.recipe.CodedLockRecipe;
 import sciwhiz12.basedefense.recipe.ColoringRecipe;
-import sciwhiz12.basedefense.recipe.CopyCodedLockRecipe;
-import sciwhiz12.basedefense.recipe.LockedDoorRecipe;
+import sciwhiz12.basedefense.recipe.LockedItemIngredient;
+import sciwhiz12.basedefense.recipe.LockedItemRecipe;
 import sciwhiz12.basedefense.tileentity.LockableTile;
 import sciwhiz12.basedefense.tileentity.LockedDoorTile;
-import sciwhiz12.basedefense.tileentity.PTZCameraTile;
 import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
 import sciwhiz12.basedefense.util.RecipeHelper;
 
+import java.util.function.Supplier;
+
+import static sciwhiz12.basedefense.BaseDefense.COMMON;
+import static sciwhiz12.basedefense.BaseDefense.LOG;
+import static sciwhiz12.basedefense.Reference.Blocks.*;
+import static sciwhiz12.basedefense.Reference.*;
+import static sciwhiz12.basedefense.util.Util.Null;
+
 /**
  * Main class for registering objects of this mod.
- * 
+ *
  * @author SciWhiz12
  */
 @Mod.EventBusSubscriber(bus = Bus.MOD, modid = MODID)
@@ -124,11 +127,13 @@ public final class Registration {
 
         reg.register(new Item(defaultProps).setRegistryName("blank_key"));
         reg.register(new KeyItem().setRegistryName("key"));
-        reg.register(new SkeletonKeyItem().setRegistryName("skeleton_key"));
-        reg.register(new LockCoreItem().setRegistryName("lock_core"));
-        reg.register(new PadlockItem().setRegistryName("padlock"));
+        reg.register(new CodedLockCoreItem().setRegistryName("lock_core"));
+        reg.register(new CodedPadlockItem().setRegistryName("padlock"));
         reg.register(new KeyringItem().setRegistryName("keyring"));
         reg.register(new BrokenLockPiecesItem().setRegistryName("broken_lock_pieces"));
+        reg.register(new AdminKeyItem().setRegistryName("admin_key"));
+        reg.register(new AdminLockCoreItem().setRegistryName("admin_lock_core"));
+        reg.register(new AdminPadlockItem().setRegistryName("admin_padlock"));
 
         reg.register(new BlockItem(KEYSMITH_TABLE, defaultProps).setRegistryName("keysmith_table"));
         reg.register(new BlockItem(LOCKSMITH_TABLE, defaultProps).setRegistryName("locksmith_table"));
@@ -154,12 +159,15 @@ public final class Registration {
 
     @SubscribeEvent
     static void registerRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> event) {
-        LOG.debug(COMMON, "Registering recipe serializers");
+        LOG.debug(COMMON, "Registering recipe and ingredient serializers");
         final IForgeRegistry<IRecipeSerializer<?>> reg = event.getRegistry();
 
-        reg.register(new RecipeHelper.ShapedSerializer<>(CopyCodedLockRecipe::new).setRegistryName("copy_lock"));
-        reg.register(new RecipeHelper.ShapedSerializer<>(LockedDoorRecipe::new).setRegistryName("locked_door"));
+        reg.register(new RecipeHelper.ShapedSerializer<>(LockedItemRecipe::new).setRegistryName("locked_item"));
+        reg.register(new RecipeHelper.ShapedSerializer<>(CodedLockRecipe::new).setRegistryName("coded_lock"));
         reg.register(new SpecialRecipeSerializer<>(ColoringRecipe::new).setRegistryName("coloring"));
+
+        IngredientSerializers.LOCKED_ITEM = CraftingHelper
+                .register(modLoc("locked_item"), new LockedItemIngredient.Serializer());
     }
 
     @SubscribeEvent
@@ -178,19 +186,11 @@ public final class Registration {
         final IForgeRegistry<TileEntityType<?>> reg = event.getRegistry();
 
         reg.register(makeType(LockableTile::new).setRegistryName("lockable_tile"));
-        reg.register(
-            makeType(
-                PadlockedDoorTile::new, PADLOCKED_IRON_DOOR, PADLOCKED_OAK_DOOR, PADLOCKED_BIRCH_DOOR, PADLOCKED_SPRUCE_DOOR,
-                PADLOCKED_JUNGLE_DOOR, PADLOCKED_ACACIA_DOOR, PADLOCKED_DARK_OAK_DOOR
-            ).setRegistryName("padlocked_door")
-        );
-        reg.register(
-            makeType(
-                LockedDoorTile::new, LOCKED_IRON_DOOR, LOCKED_OAK_DOOR, LOCKED_BIRCH_DOOR, LOCKED_SPRUCE_DOOR,
-                LOCKED_JUNGLE_DOOR, LOCKED_ACACIA_DOOR, LOCKED_DARK_OAK_DOOR
-            ).setRegistryName("locked_door")
-        );
-        reg.register(makeType(PTZCameraTile::new, PTZ_CAMERA).setRegistryName("ptz_camera"));
+        reg.register(makeType(PadlockedDoorTile::new, PADLOCKED_IRON_DOOR, PADLOCKED_OAK_DOOR, PADLOCKED_BIRCH_DOOR,
+                PADLOCKED_SPRUCE_DOOR, PADLOCKED_JUNGLE_DOOR, PADLOCKED_ACACIA_DOOR, PADLOCKED_DARK_OAK_DOOR)
+                .setRegistryName("padlocked_door"));
+        reg.register(makeType(LockedDoorTile::new, LOCKED_IRON_DOOR, LOCKED_OAK_DOOR, LOCKED_BIRCH_DOOR, LOCKED_SPRUCE_DOOR,
+                LOCKED_JUNGLE_DOOR, LOCKED_ACACIA_DOOR, LOCKED_DARK_OAK_DOOR).setRegistryName("locked_door"));
     }
 
     private static <T extends TileEntity> TileEntityType<T> makeType(Supplier<T> factory, Block... validBlocks) {

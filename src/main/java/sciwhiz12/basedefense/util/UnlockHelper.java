@@ -1,14 +1,5 @@
 package sciwhiz12.basedefense.util;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static sciwhiz12.basedefense.Reference.Capabilities.KEY;
-import static sciwhiz12.basedefense.Reference.Capabilities.LOCK;
-import static sciwhiz12.basedefense.util.Util.mapIfBothPresent;
-
-import java.util.function.BiConsumer;
-
-import javax.annotation.Nullable;
-
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
@@ -18,9 +9,17 @@ import net.minecraftforge.common.util.LazyOptional;
 import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.api.capablities.ILock;
 
+import javax.annotation.Nullable;
+import java.util.function.BiConsumer;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static sciwhiz12.basedefense.Reference.Capabilities.KEY;
+import static sciwhiz12.basedefense.Reference.Capabilities.LOCK;
+import static sciwhiz12.basedefense.util.Util.mapIfBothPresent;
+
 /**
  * Helper methods for unlocking and removing {@link ILock}s using {@link IKey}s.
- * 
+ *
  * @author SciWhiz12
  */
 public final class UnlockHelper {

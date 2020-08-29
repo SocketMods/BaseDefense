@@ -32,7 +32,7 @@ import net.minecraftforge.registries.IRegistryDelegate;
 import sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import sciwhiz12.basedefense.item.BrokenLockPiecesItem;
 import sciwhiz12.basedefense.item.IColorable;
-import sciwhiz12.basedefense.item.lock.PadlockItem;
+import sciwhiz12.basedefense.item.lock.AbstractPadlockItem;
 import sciwhiz12.basedefense.tileentity.LockableTile;
 import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
 import sciwhiz12.basedefense.util.UnlockHelper;
@@ -77,11 +77,8 @@ public class PadlockedDoorBlock extends Block {
         super(Block.Properties.from(blockIn));
         this.baseBlock = blockIn;
         REPLACEMENT_MAP.put(blockIn.delegate, this.delegate);
-        this.setDefaultState(
-            this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(SIDE, DoorSide.OUTSIDE).with(
-                HINGE, DoorHingeSide.LEFT
-            ).with(HALF, DoubleBlockHalf.LOWER)
-        );
+        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(SIDE, DoorSide.OUTSIDE)
+                .with(HINGE, DoorHingeSide.LEFT).with(HALF, DoubleBlockHalf.LOWER));
     }
 
     @Override
@@ -104,7 +101,7 @@ public class PadlockedDoorBlock extends Block {
         if (worldIn.isBlockPresent(pos) && state.getBlock() == this) {
             ItemStack keyStack = player.getHeldItem(handIn);
             TileEntity te = worldIn.getTileEntity(pos);
-            if (te instanceof PadlockedDoorTile) {
+            if (!keyStack.isEmpty() && te instanceof PadlockedDoorTile) {
                 PadlockedDoorTile doorTile = (PadlockedDoorTile) te;
                 if (keyStack.getCapability(KEY).isPresent()) {
                     if (allowOpen(state.get(SIDE), state.get(FACING), rayTrace.getFace())) {
@@ -119,26 +116,18 @@ public class PadlockedDoorBlock extends Block {
                     if (player.isSneaking() && allowOpen(state.get(SIDE), state.get(FACING), rayTrace.getFace())) {
                         ItemStack lockStack = doorTile.getLockStack();
                         if (!lockStack.isEmpty() && lockStack.hasDisplayName()) {
-                            player.sendStatusMessage(
-                                new TranslationTextComponent(
-                                        "status.basedefense.door.info", lockStack.getDisplayName().copyRaw()
-                                        .func_240699_a_(WHITE)
-                                ).func_240701_a_(YELLOW, ITALIC), true
-                            );
+                            player.sendStatusMessage(new TranslationTextComponent("status.basedefense.door.info",
+                                            lockStack.getDisplayName().copyRaw().mergeStyle(WHITE)).mergeStyle(YELLOW,
+                                    ITALIC),
+                                    true);
                         }
                     } else {
-                        player.sendStatusMessage(
-                            new TranslationTextComponent(
-                                "status.basedefense.door.locked", new TranslationTextComponent(
-                                    this.baseBlock.getTranslationKey()
-                                ).func_240699_a_(WHITE)
-                            ).func_240701_a_(GRAY, ITALIC), true
-                        );
+                        player.sendStatusMessage(new TranslationTextComponent("status.basedefense.door.locked",
+                                new TranslationTextComponent(this.baseBlock.getTranslationKey()).mergeStyle(WHITE))
+                                .mergeStyle(GRAY, ITALIC), true);
                     }
-                    worldIn.playSound(
-                        player, pos, Sounds.LOCKED_DOOR_ATTEMPT, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F
-                                + 0.9F
-                    );
+                    worldIn.playSound(player, pos, Sounds.LOCKED_DOOR_ATTEMPT, SoundCategory.BLOCKS, 1.0F,
+                            worldIn.rand.nextFloat() * 0.1F + 0.9F);
                 }
             }
         }
@@ -156,9 +145,8 @@ public class PadlockedDoorBlock extends Block {
 
         final Direction facing = state.get(FACING);
         final DoorHingeSide hinge = state.get(HINGE);
-        final BlockState defState = this.baseBlock.getDefaultState().with(DoorBlock.HINGE, hinge).with(
-            DoorBlock.FACING, facing
-        ).with(DoorBlock.OPEN, false);
+        final BlockState defState = this.baseBlock.getDefaultState().with(DoorBlock.HINGE, hinge)
+                .with(DoorBlock.FACING, facing).with(DoorBlock.OPEN, false);
 
         final BlockState newState = defState.with(DoorBlock.HALF, state.get(HALF));
         final BlockState newOffState = defState.with(DoorBlock.HALF, offState.get(HALF));
@@ -169,7 +157,7 @@ public class PadlockedDoorBlock extends Block {
     }
 
     public boolean isValidLock(ItemStack stack) {
-        return stack.getItem() instanceof PadlockItem;
+        return stack.getItem() instanceof AbstractPadlockItem;
     }
 
     @SuppressWarnings("deprecation")
@@ -181,9 +169,8 @@ public class PadlockedDoorBlock extends Block {
             for (ItemStack stack : drops) {
                 LazyOptional<ICodeHolder> codeCap = stack.getCapability(CODE_HOLDER);
                 if (!stack.isEmpty() && codeCap.isPresent()) {
-                    te.getCapability(CODE_HOLDER).ifPresent(
-                        teCode -> codeCap.ifPresent(stackCode -> stackCode.setCodes(teCode.getCodes()))
-                    );
+                    te.getCapability(CODE_HOLDER)
+                            .ifPresent(teCode -> codeCap.ifPresent(stackCode -> stackCode.setCodes(teCode.getCodes())));
                     if (te instanceof LockableTile) {
                         ItemStack lockStack = ((LockableTile) te).getLockStack();
                         if (stack.getItem() instanceof IColorable && lockStack.getItem() instanceof IColorable) {

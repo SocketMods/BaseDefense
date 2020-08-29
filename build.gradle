@@ -1,32 +1,53 @@
 buildscript {
     repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven {
+            name = "MinecraftForge"
+            url = 'https://files.minecraftforge.net/maven'
+        }
         jcenter()
         mavenCentral()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'org.ajoberstar.grgit', name: 'grgit-gradle', 'version': '4.0.2'
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.ajoberstar.grgit'
 apply plugin: 'eclipse'
+apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
-version = '0.0.1-DEV'
+def mod_version = grgit.describe(commit: grgit.head(), longDescr: false, tags: true)
+if (mod_version == null) mod_version = "unknown"
+version = "${mc_version}-${mod_version}"
 group = 'sciwhiz12.basedefense'
 archivesBaseName = 'basedefense'
+
+println("Mod version: ${mod_version}")
+println('Java: ' + System.getProperty('java.version') + '; JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + '); Arch: ' + System.getProperty('os.arch'))
+
+repositories {
+    maven {
+        name = 'gigaherz\' maven'
+        url = 'https://www.dogforce-games.com/maven/'
+    }
+}
+
+sourceSets {
+    main.resources.srcDirs += 'src/generated/resources/'
+}
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
-    mappings channel: 'snapshot', version: '20200707-1.16.1'
-    
+    mappings channel: 'snapshot', version: "${mappings_version}"
+
     runs {
         client {
-            workingDirectory project.file('run/client')
+            workingDirectory file('run/client')
 
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
+            property 'forge.logging.markers', "${logging_markers}"
             property 'forge.logging.console.level', 'debug'
 
             mods {
@@ -37,10 +58,9 @@ minecraft {
         }
 
         server {
-            workingDirectory project.file('run/server')
+            workingDirectory file('run/server')
 
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
+            property 'forge.logging.markers', "${logging_markers}"
             property 'forge.logging.console.level', 'debug'
 
             mods {
@@ -51,10 +71,9 @@ minecraft {
         }
 
         data {
-            workingDirectory project.file('run/data')
+            workingDirectory file('run/data')
 
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
+            property 'forge.logging.markers', "${logging_markers}"
             property 'forge.logging.console.level', 'debug'
 
             args '--mod', 'basedefense', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
@@ -69,31 +88,27 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.1-32.0.57'
+    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 }
 
+def git_timestamp = grgit.head().dateTime.toLocalDateTime().toString() + grgit.head().dateTime.getOffset().toString().replace(':', '')
 jar {
     manifest {
         attributes([
-            "Specification-Title": "basedefense",
-            "Specification-Vendor": "sciwhiz12",
-            "Specification-Version": "1",
-            "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"sciwhiz12",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+                "Specification-Title"   : "basedefense",
+                "Specification-Vendor"  : "sciwhiz12",
+                "Implementation-Title"  : project.name,
+                "Implementation-Version": "${mod_version}",
+                "Implementation-Vendor" : "sciwhiz12",
+                "Build-Timestamp"       : new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                "Git-Commit"            : grgit.head().id,
+                "Git-Commit-Timestamp"  : git_timestamp
         ])
     }
 }
 
 jar.finalizedBy('reobfJar')
-jar.finalizedBy('deobfJar') 
 jar.finalizedBy('sourcesJar')
-
-task deobfJar(type: Jar, dependsOn: 'jar') {
-    from sourceSets.main.output
-    classifier "dev"
-}
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
@@ -101,26 +116,21 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 }
 
 artifacts {
-    archives deobfJar
     archives sourcesJar
 }
 
 publishing {
     publications {
-        pub_reobfJar(MavenPublication) {
+        rebofJar(MavenPublication) {
+            artifactId = archivesBaseName
             artifact jar
         }
-        pub_deobfJar(MavenPublication) {
-            artifact deobfJar
-        }
-        pub_sourcesJar(MavenPublication) {
+        srcJar(MavenPublication) {
+            artifactId = archivesBaseName
             artifact sourcesJar
         }
     }
     repositories {
         mavenLocal()
-        maven {
-            url "file:///${project.projectDir}/mcmodsrepo"
-        }
     }
 }

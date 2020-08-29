@@ -1,8 +1,5 @@
 package sciwhiz12.basedefense.datagen;
 
-import static sciwhiz12.basedefense.Reference.MODID;
-import static sciwhiz12.basedefense.util.Util.appendPath;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.data.DataGenerator;
@@ -13,6 +10,9 @@ import net.minecraftforge.client.model.generators.*;
 import sciwhiz12.basedefense.Reference.Blocks;
 import sciwhiz12.basedefense.block.LockedDoorBlock;
 import sciwhiz12.basedefense.block.PadlockedDoorBlock;
+
+import static sciwhiz12.basedefense.Reference.MODID;
+import static sciwhiz12.basedefense.util.Util.appendPath;
 
 public class BlockStates extends BlockStateProvider {
     public BlockStates(DataGenerator gen, ExistingFileHelper exFileHelper) {
@@ -55,10 +55,9 @@ public class BlockStates extends BlockStateProvider {
             if (open) { yRot += 90; }
             if (rh && open) { yRot += 180; }
             yRot %= 360;
-            return ConfiguredModel.builder().modelFile(
-                state.get(LockedDoorBlock.HALF) == DoubleBlockHalf.LOWER ? (right ? bottomRight : bottomLeft)
-                        : (right ? topRight : topLeft)
-            ).rotationY(yRot).build();
+            return ConfiguredModel.builder().modelFile(state.get(LockedDoorBlock.HALF) == DoubleBlockHalf.LOWER ?
+                    (right ? bottomRight : bottomLeft) :
+                    (right ? topRight : topLeft)).rotationY(yRot).build();
         }, LockedDoorBlock.LOCKED);
     }
 
@@ -72,10 +71,9 @@ public class BlockStates extends BlockStateProvider {
         getVariantBuilder(block).forAllStatesExcept(state -> {
             int yRot = (int) (state.get(PadlockedDoorBlock.FACING).getHorizontalAngle() + 90) % 360;
             boolean rh = state.get(PadlockedDoorBlock.HINGE) == DoorHingeSide.RIGHT;
-            return ConfiguredModel.builder().modelFile(
-                state.get(DoorBlock.HALF) == DoubleBlockHalf.LOWER ? (rh ? bottomRight : bottomLeft)
-                        : (rh ? topRight : topLeft)
-            ).rotationY(yRot).build();
+            return ConfiguredModel.builder().modelFile(state.get(DoorBlock.HALF) == DoubleBlockHalf.LOWER ?
+                    (rh ? bottomRight : bottomLeft) :
+                    (rh ? topRight : topLeft)).rotationY(yRot).build();
         }, PadlockedDoorBlock.SIDE);
     }
 

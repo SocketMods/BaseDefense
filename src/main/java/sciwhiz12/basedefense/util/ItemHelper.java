@@ -1,14 +1,5 @@
 package sciwhiz12.basedefense.util;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -19,6 +10,14 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import sciwhiz12.basedefense.api.capablities.ICodeHolder;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
 
 /**
  * Helper methods for {@link ItemStack}s and codes.
@@ -34,11 +33,9 @@ public final class ItemHelper {
         tooltip = tooltip != null ? tooltip : new ArrayList<>();
         List<Long> ids = stack.getCapability(CODE_HOLDER).map(ICodeHolder::getCodes).orElse(Collections.emptyList());
         if (ids.size() != 0) {
-            tooltip.add(new TranslationTextComponent("tooltip.basedefense.storedcodes").func_240699_a_(TextFormatting.GRAY));
+            tooltip.add(new TranslationTextComponent("tooltip.basedefense.storedcodes").mergeStyle(TextFormatting.GRAY));
             for (long id : ids) {
-                tooltip.add(
-                    new StringTextComponent("  " + String.format("%016X", id)).func_240699_a_(TextFormatting.DARK_GRAY)
-                );
+                tooltip.add(new StringTextComponent("  " + String.format("%016X", id)).mergeStyle(TextFormatting.DARK_GRAY));
             }
         }
     }
@@ -50,12 +47,9 @@ public final class ItemHelper {
         if (stack.hasTag() && tag != null && tag.contains("colors")) {
             int[] colors = tag.getIntArray("colors");
             for (int i = 0; i < colors.length; i++) {
-                tooltip.add(
-                    new TranslationTextComponent(
-                        "tooltip.basedefense.color", i + 1, new StringTextComponent(String.format("#%06X", colors[i]))
-                            .func_240699_a_(TextFormatting.DARK_GRAY)
-                    ).func_240699_a_(TextFormatting.GRAY)
-                );
+                tooltip.add(new TranslationTextComponent("tooltip.basedefense.color", i + 1,
+                        new StringTextComponent(String.format("#%06X", colors[i])).mergeStyle(TextFormatting.DARK_GRAY))
+                        .mergeStyle(TextFormatting.GRAY));
             }
         }
     }
@@ -92,10 +86,7 @@ public final class ItemHelper {
     public static void copyCodes(ItemStack fromStack, ItemStack toStack) {
         checkNotNull(fromStack);
         checkNotNull(toStack);
-        Util.consumeIfPresent(
-            fromStack.getCapability(CODE_HOLDER), toStack.getCapability(CODE_HOLDER), (from, to) -> to.setCodes(
-                from.getCodes()
-            )
-        );
+        Util.consumeIfPresent(fromStack.getCapability(CODE_HOLDER), toStack.getCapability(CODE_HOLDER),
+                (from, to) -> to.setCodes(from.getCodes()));
     }
 }

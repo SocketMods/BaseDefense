@@ -1,18 +1,18 @@
 package sciwhiz12.basedefense.util;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.function.Consumer;
-
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
+import java.util.function.Consumer;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Helper methods for {@link net.minecraft.inventory.container.Container}s.
- * 
+ *
  * @author SciWhiz12
  */
 public final class ContainerHelper {

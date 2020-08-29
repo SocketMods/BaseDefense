@@ -1,8 +1,5 @@
 package sciwhiz12.basedefense;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static sciwhiz12.basedefense.util.Util.Null;
-
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
@@ -15,6 +12,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.crafting.IIngredientSerializer;
 import net.minecraftforge.registries.ObjectHolder;
 import sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import sciwhiz12.basedefense.api.capablities.IContainsCode;
@@ -26,23 +24,29 @@ import sciwhiz12.basedefense.container.KeysmithContainer;
 import sciwhiz12.basedefense.container.LocksmithContainer;
 import sciwhiz12.basedefense.entity.PTZCameraEntity;
 import sciwhiz12.basedefense.item.BrokenLockPiecesItem;
+import sciwhiz12.basedefense.item.key.AdminKeyItem;
 import sciwhiz12.basedefense.item.key.KeyItem;
 import sciwhiz12.basedefense.item.key.KeyringItem;
-import sciwhiz12.basedefense.item.key.SkeletonKeyItem;
-import sciwhiz12.basedefense.item.lock.LockCoreItem;
-import sciwhiz12.basedefense.item.lock.PadlockItem;
+import sciwhiz12.basedefense.item.lock.AdminLockCoreItem;
+import sciwhiz12.basedefense.item.lock.AdminPadlockItem;
+import sciwhiz12.basedefense.item.lock.CodedLockCoreItem;
+import sciwhiz12.basedefense.item.lock.CodedPadlockItem;
+import sciwhiz12.basedefense.recipe.CodedLockRecipe;
 import sciwhiz12.basedefense.recipe.ColoringRecipe;
-import sciwhiz12.basedefense.recipe.CopyCodedLockRecipe;
-import sciwhiz12.basedefense.recipe.LockedDoorRecipe;
+import sciwhiz12.basedefense.recipe.LockedItemIngredient;
+import sciwhiz12.basedefense.recipe.LockedItemRecipe;
 import sciwhiz12.basedefense.tileentity.LockableTile;
 import sciwhiz12.basedefense.tileentity.LockedDoorTile;
 import sciwhiz12.basedefense.tileentity.PTZCameraTile;
 import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
 import sciwhiz12.basedefense.util.RecipeHelper;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static sciwhiz12.basedefense.util.Util.Null;
+
 /**
  * Holds references to constants and objects created and registered by this mod.
- * 
+ *
  * @author SciWhiz12
  */
 public final class Reference {
@@ -100,11 +104,13 @@ public final class Reference {
     public static final class Items {
         public static final Item BLANK_KEY = Null();
         public static final KeyItem KEY = Null();
-        public static final SkeletonKeyItem SKELETON_KEY = Null();
-        public static final LockCoreItem LOCK_CORE = Null();
-        public static final PadlockItem PADLOCK = Null();
+        public static final CodedLockCoreItem LOCK_CORE = Null();
+        public static final CodedPadlockItem PADLOCK = Null();
         public static final KeyringItem KEYRING = Null();
         public static final BrokenLockPiecesItem BROKEN_LOCK_PIECES = Null();
+        public static final AdminKeyItem ADMIN_KEY = Null();
+        public static final AdminLockCoreItem ADMIN_LOCK_CORE = Null();
+        public static final AdminPadlockItem ADMIN_PADLOCK = Null();
 
         public static final BlockItem KEYSMITH_TABLE = Null();
         public static final BlockItem LOCKSMITH_TABLE = Null();
@@ -143,12 +149,19 @@ public final class Reference {
 
     @ObjectHolder(MODID)
     public static final class RecipeSerializers {
-        public static final RecipeHelper.ShapedSerializer<CopyCodedLockRecipe> COPY_LOCK = Null();
-        public static final RecipeHelper.ShapedSerializer<LockedDoorRecipe> LOCKED_DOOR = Null();
+        public static final RecipeHelper.ShapedSerializer<LockedItemRecipe> LOCKED_ITEM = Null();
+        public static final RecipeHelper.ShapedSerializer<CodedLockRecipe> CODED_LOCK = Null();
         public static final SpecialRecipeSerializer<ColoringRecipe> COLORING = Null();
 
         // Prevent instantiation
         private RecipeSerializers() {}
+    }
+
+    public static final class IngredientSerializers {
+        public static IIngredientSerializer<LockedItemIngredient> LOCKED_ITEM = Null();
+
+        // Prevent instantiation
+        private IngredientSerializers() {}
     }
 
     @ObjectHolder(MODID)
@@ -178,7 +191,7 @@ public final class Reference {
     /**
      * Creates a {@link ResourceLocation} with the namespace as
      * {@link Reference#MODID} and the specified path.
-     * 
+     *
      * @param path The specified path
      * @return A {@code ResourceLocation} with {@link Reference#MODID} and path
      */

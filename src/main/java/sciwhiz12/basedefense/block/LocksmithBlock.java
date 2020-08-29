@@ -35,10 +35,8 @@ public class LocksmithBlock extends Block {
     @Override
     public INamedContainerProvider getContainer(BlockState state, World world, BlockPos pos) {
         return new SimpleNamedContainerProvider(
-            (windowId, playerInventory, playerEntity) -> new LocksmithContainer(
-                windowId, playerInventory, IWorldPosCallable.of(world, pos)
-            ), new TranslationTextComponent("container.basedefense.locksmith")
-        );
+                (windowId, playerInventory, playerEntity) -> new LocksmithContainer(windowId, playerInventory,
+                        IWorldPosCallable.of(world, pos)), new TranslationTextComponent("container.basedefense.locksmith"));
     }
 
     @Override

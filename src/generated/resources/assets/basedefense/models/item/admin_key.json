@@ -1,0 +1,6 @@
+{
+  "parent": "basedefense:item/key_display",
+  "textures": {
+    "layer0": "basedefense:item/admin_key"
+  }
+}

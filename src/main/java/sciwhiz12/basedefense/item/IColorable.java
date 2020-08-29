@@ -1,12 +1,12 @@
 package sciwhiz12.basedefense.item;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 
 import java.util.Arrays;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Interface for colorable items.
@@ -29,7 +29,7 @@ public interface IColorable {
 
     /**
      * Sets the color of the stack at the index to the given color.
-     * 
+     *
      * @param stack The {@code ItemStack} to modify
      * @param index The color index to change
      * @param color The color to change to
@@ -48,7 +48,7 @@ public interface IColorable {
 
     /**
      * Sets the colors of the given stack to the given array.
-     * 
+     *
      * @param stack  The {@code ItemStack} to modify
      * @param colors The array of new colors
      */

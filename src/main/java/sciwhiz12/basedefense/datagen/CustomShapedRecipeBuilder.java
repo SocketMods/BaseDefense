@@ -1,21 +1,10 @@
 package sciwhiz12.basedefense.datagen;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkState;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Consumer;
-
-import javax.annotation.Nullable;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.ICriterionInstance;
@@ -31,6 +20,15 @@ import net.minecraft.tags.ITag;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Consumer;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
 
 /**
  * Copy of {@link net.minecraft.data.ShapedRecipeBuilder} that allows a custom
@@ -96,10 +94,8 @@ public class CustomShapedRecipeBuilder {
      * Adds a new entry to the patterns for this recipe.
      */
     public CustomShapedRecipeBuilder patternLine(String patternIn) {
-        checkArgument(
-            pattern.isEmpty() || patternIn.length() == pattern.get(0).length(),
-            "Pattern must be the same width on every line!"
-        );
+        checkArgument(pattern.isEmpty() || patternIn.length() == pattern.get(0).length(),
+                "Pattern must be the same width on every line!");
         this.pattern.add(patternIn);
         return this;
     }
@@ -130,9 +126,8 @@ public class CustomShapedRecipeBuilder {
      */
     public void build(Consumer<IFinishedRecipe> consumerIn, String save) {
         ResourceLocation resultLoc = ForgeRegistries.ITEMS.getKey(this.result);
-        checkState(
-            !new ResourceLocation(save).equals(resultLoc), "Shaped recipe %s should remove its 'save' argument", save
-        );
+        checkState(!new ResourceLocation(save).equals(resultLoc), "Shaped recipe %s should remove its 'save' argument",
+                save);
         this.build(consumerIn, new ResourceLocation(save));
     }
 
@@ -141,15 +136,12 @@ public class CustomShapedRecipeBuilder {
      */
     public void build(Consumer<IFinishedRecipe> consumerIn, ResourceLocation id) {
         this.validate(id);
-        this.advancementBuilder.withParentId(new ResourceLocation("recipes/root")).withCriterion(
-            "has_the_recipe", new RecipeUnlockedTrigger.Instance(EntityPredicate.AndPredicate.field_234582_a_, id)
-        ).withRewards(AdvancementRewards.Builder.recipe(id)).withRequirementsStrategy(IRequirementsStrategy.OR);
-        consumerIn.accept(
-            new Result(
-                id, serializer, result, count, group == null ? "" : group, pattern, key, advancementBuilder,
-                new ResourceLocation(id.getNamespace(), "recipes/" + result.getGroup().getPath() + "/" + id.getPath())
-            )
-        );
+        this.advancementBuilder.withParentId(new ResourceLocation("recipes/root")).withCriterion("has_the_recipe",
+                new RecipeUnlockedTrigger.Instance(EntityPredicate.AndPredicate.ANY_AND, id))
+                .withRewards(AdvancementRewards.Builder.recipe(id)).withRequirementsStrategy(IRequirementsStrategy.OR);
+        consumerIn.accept(new Result(id, serializer, result, count, group == null ? "" : group, pattern, key,
+                advancementBuilder,
+                new ResourceLocation(id.getNamespace(), "recipes/" + result.getGroup().getPath() + "/" + id.getPath())));
     }
 
     /**
@@ -169,10 +161,8 @@ public class CustomShapedRecipeBuilder {
         }
 
         checkState(set.isEmpty(), "Ingredients are defined but not used in pattern for recipe %s", id);
-        checkState(
-            pattern.size() != 1 || pattern.get(0).length() != 1,
-            "Shaped recipe %s only takes in a single item - should be a shapeless recipe", id
-        );
+        checkState(pattern.size() != 1 || pattern.get(0).length() != 1,
+                "Shaped recipe %s only takes in a single item - should be a shapeless recipe", id);
         checkState(!advancementBuilder.getCriteria().isEmpty(), "No way of obtaining recipe %s", id);
     }
 
