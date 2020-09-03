@@ -26,6 +26,8 @@ public class ItemModels extends ItemModelProvider {
         singleTextureItem(Items.LOCKED_JUNGLE_DOOR);
         singleTextureItem(Items.LOCKED_ACACIA_DOOR);
         singleTextureItem(Items.LOCKED_DARK_OAK_DOOR);
+        singleTextureItem(Items.LOCKED_CRIMSON_DOOR);
+        singleTextureItem(Items.LOCKED_WARPED_DOOR);
         singleTextureItem(Items.LOCKED_IRON_DOOR);
 
         singleTextureItem(Items.ADMIN_LOCK_CORE);

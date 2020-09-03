@@ -29,6 +29,8 @@ public class Languages extends LanguageProvider {
         add(Blocks.PADLOCKED_JUNGLE_DOOR, "Padlocked Jungle Door");
         add(Blocks.PADLOCKED_ACACIA_DOOR, "Padlocked Acacia Door");
         add(Blocks.PADLOCKED_DARK_OAK_DOOR, "Padlocked Dark Oak Door");
+        add(Blocks.PADLOCKED_CRIMSON_DOOR, "Padlocked Crimson Door");
+        add(Blocks.PADLOCKED_WARPED_DOOR, "Padlocked Warped Door");
         add(Blocks.PADLOCKED_IRON_DOOR, "Padlocked Iron Door");
 
         add(Blocks.LOCKED_OAK_DOOR, "Locked Oak Door");
@@ -37,6 +39,8 @@ public class Languages extends LanguageProvider {
         add(Blocks.LOCKED_JUNGLE_DOOR, "Locked Jungle Door");
         add(Blocks.LOCKED_ACACIA_DOOR, "Locked Acacia Door");
         add(Blocks.LOCKED_DARK_OAK_DOOR, "Locked Dark Oak Door");
+        add(Blocks.LOCKED_CRIMSON_DOOR, "Locked Crimson Door");
+        add(Blocks.LOCKED_WARPED_DOOR, "Locked Warped Door");
         add(Blocks.LOCKED_IRON_DOOR, "Locked Iron Door");
     }
 

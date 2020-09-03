@@ -51,6 +51,8 @@ public class LootTables extends LootTableProvider {
         lockedDoor(Blocks.LOCKED_JUNGLE_DOOR);
         lockedDoor(Blocks.LOCKED_ACACIA_DOOR);
         lockedDoor(Blocks.LOCKED_DARK_OAK_DOOR);
+        lockedDoor(Blocks.LOCKED_CRIMSON_DOOR);
+        lockedDoor(Blocks.LOCKED_WARPED_DOOR);
         lockedDoor(Blocks.LOCKED_IRON_DOOR);
 
         padlockedDoor(Blocks.PADLOCKED_OAK_DOOR);
@@ -59,6 +61,8 @@ public class LootTables extends LootTableProvider {
         padlockedDoor(Blocks.PADLOCKED_JUNGLE_DOOR);
         padlockedDoor(Blocks.PADLOCKED_ACACIA_DOOR);
         padlockedDoor(Blocks.PADLOCKED_DARK_OAK_DOOR);
+        padlockedDoor(Blocks.PADLOCKED_CRIMSON_DOOR);
+        padlockedDoor(Blocks.PADLOCKED_WARPED_DOOR);
         padlockedDoor(Blocks.PADLOCKED_IRON_DOOR);
 
         return tables;

@@ -1,0 +1,23 @@
+{
+  "type": "basedefense:locked_item",
+  "group": "locked_door",
+  "pattern": [
+    "IdC"
+  ],
+  "key": {
+    "I": {
+      "tag": "forge:ingots/iron"
+    },
+    "d": {
+      "item": "minecraft:crimson_door"
+    },
+    "C": {
+      "type": "basedefense:locked_item",
+      "has_codes": true,
+      "item": "basedefense:lock_core"
+    }
+  },
+  "result": {
+    "item": "basedefense:locked_crimson_door"
+  }
+}

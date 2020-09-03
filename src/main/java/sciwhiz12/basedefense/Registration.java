@@ -85,6 +85,8 @@ public final class Registration {
         reg.register(new PadlockedDoorBlock(Blocks.JUNGLE_DOOR).setRegistryName("padlocked_jungle_door"));
         reg.register(new PadlockedDoorBlock(Blocks.ACACIA_DOOR).setRegistryName("padlocked_acacia_door"));
         reg.register(new PadlockedDoorBlock(Blocks.DARK_OAK_DOOR).setRegistryName("padlocked_dark_oak_door"));
+        reg.register(new PadlockedDoorBlock(Blocks.CRIMSON_DOOR).setRegistryName("padlocked_crimson_door"));
+        reg.register(new PadlockedDoorBlock(Blocks.WARPED_DOOR).setRegistryName("padlocked_warped_door"));
         reg.register(new PadlockedDoorBlock(Blocks.IRON_DOOR).setRegistryName("padlocked_iron_door"));
 
         reg.register(new LockedDoorBlock(Blocks.OAK_DOOR).setRegistryName("locked_oak_door"));
@@ -93,6 +95,8 @@ public final class Registration {
         reg.register(new LockedDoorBlock(Blocks.JUNGLE_DOOR).setRegistryName("locked_jungle_door"));
         reg.register(new LockedDoorBlock(Blocks.ACACIA_DOOR).setRegistryName("locked_acacia_door"));
         reg.register(new LockedDoorBlock(Blocks.DARK_OAK_DOOR).setRegistryName("locked_dark_oak_door"));
+        reg.register(new LockedDoorBlock(Blocks.CRIMSON_DOOR).setRegistryName("locked_crimson_door"));
+        reg.register(new LockedDoorBlock(Blocks.WARPED_DOOR).setRegistryName("locked_warped_door"));
         reg.register(new LockedDoorBlock(Blocks.IRON_DOOR).setRegistryName("locked_iron_door"));
     }
 
@@ -141,6 +145,8 @@ public final class Registration {
         reg.register(new LockedDoorBlockItem(LOCKED_JUNGLE_DOOR).setRegistryName("locked_jungle_door"));
         reg.register(new LockedDoorBlockItem(LOCKED_ACACIA_DOOR).setRegistryName("locked_acacia_door"));
         reg.register(new LockedDoorBlockItem(LOCKED_DARK_OAK_DOOR).setRegistryName("locked_dark_oak_door"));
+        reg.register(new LockedDoorBlockItem(LOCKED_CRIMSON_DOOR).setRegistryName("locked_crimson_door"));
+        reg.register(new LockedDoorBlockItem(LOCKED_WARPED_DOOR).setRegistryName("locked_warped_door"));
         reg.register(new LockedDoorBlockItem(LOCKED_IRON_DOOR).setRegistryName("locked_iron_door"));
     }
 
@@ -174,10 +180,12 @@ public final class Registration {
 
         reg.register(makeType(LockableTile::new).setRegistryName("lockable_tile"));
         reg.register(makeType(PadlockedDoorTile::new, PADLOCKED_IRON_DOOR, PADLOCKED_OAK_DOOR, PADLOCKED_BIRCH_DOOR,
-                PADLOCKED_SPRUCE_DOOR, PADLOCKED_JUNGLE_DOOR, PADLOCKED_ACACIA_DOOR, PADLOCKED_DARK_OAK_DOOR)
+                PADLOCKED_SPRUCE_DOOR, PADLOCKED_JUNGLE_DOOR, PADLOCKED_ACACIA_DOOR, PADLOCKED_DARK_OAK_DOOR,
+                PADLOCKED_CRIMSON_DOOR, PADLOCKED_WARPED_DOOR)
                 .setRegistryName("padlocked_door"));
         reg.register(makeType(LockedDoorTile::new, LOCKED_IRON_DOOR, LOCKED_OAK_DOOR, LOCKED_BIRCH_DOOR, LOCKED_SPRUCE_DOOR,
-                LOCKED_JUNGLE_DOOR, LOCKED_ACACIA_DOOR, LOCKED_DARK_OAK_DOOR).setRegistryName("locked_door"));
+                LOCKED_JUNGLE_DOOR, LOCKED_ACACIA_DOOR, LOCKED_DARK_OAK_DOOR, LOCKED_CRIMSON_DOOR, LOCKED_WARPED_DOOR)
+                .setRegistryName("locked_door"));
     }
 
     private static <T extends TileEntity> TileEntityType<T> makeType(Supplier<T> factory, Block... validBlocks) {
