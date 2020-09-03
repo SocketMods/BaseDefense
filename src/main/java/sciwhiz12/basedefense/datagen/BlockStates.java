@@ -7,6 +7,7 @@ import net.minecraft.state.properties.DoorHingeSide;
 import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.*;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import sciwhiz12.basedefense.Reference.Blocks;
 import sciwhiz12.basedefense.block.LockedDoorBlock;
 import sciwhiz12.basedefense.block.PadlockedDoorBlock;

@@ -4,6 +4,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.*;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import sciwhiz12.basedefense.Reference.Items;
 
 import static sciwhiz12.basedefense.Reference.MODID;

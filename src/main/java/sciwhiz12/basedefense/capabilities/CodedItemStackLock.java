@@ -1,8 +1,6 @@
 package sciwhiz12.basedefense.capabilities;
 
-import net.minecraft.item.ItemStack;
 import sciwhiz12.basedefense.api.capablities.ICodeHolder;
-import sciwhiz12.basedefense.api.capablities.ILock;
 
 import java.util.Collections;
 import java.util.List;
@@ -11,8 +9,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
 
 /**
- * An {@link ILock} and {@link ICodeHolder} that simply references the stored
- * {@link ItemStack}'s capabilities, if present.
+ * An {@link sciwhiz12.basedefense.api.capablities.ILock ILock} and {@link ICodeHolder}
+ * that simply references the stored {@link net.minecraft.item.ItemStack ItemStack's} capabilities, if present.
  *
  * @author SciWhiz12
  */
