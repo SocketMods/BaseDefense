@@ -54,8 +54,8 @@ public class ClientRegistration {
         LOG.debug(CLIENT, "Setting up on client");
         bindTileEntityRenderers();
         setupRenderLayer();
-        registerPropertyOverrides();
-        DeferredWorkQueue.runLater(ClientRegistration::registerScreenFactories);
+        event.enqueueWork(ClientRegistration::registerPropertyOverrides);
+        event.enqueueWork(ClientRegistration::registerScreenFactories);
     }
 
     static void registerPropertyOverrides() {
