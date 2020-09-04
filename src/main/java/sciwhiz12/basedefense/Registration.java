@@ -23,19 +23,18 @@ import sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import sciwhiz12.basedefense.api.capablities.IContainsCode;
 import sciwhiz12.basedefense.api.capablities.IKey;
 import sciwhiz12.basedefense.api.capablities.ILock;
-import sciwhiz12.basedefense.block.KeysmithBlock;
-import sciwhiz12.basedefense.block.LockedDoorBlock;
-import sciwhiz12.basedefense.block.LocksmithBlock;
-import sciwhiz12.basedefense.block.PadlockedDoorBlock;
+import sciwhiz12.basedefense.block.*;
 import sciwhiz12.basedefense.capabilities.CodeHolder;
 import sciwhiz12.basedefense.capabilities.CodedKey;
 import sciwhiz12.basedefense.capabilities.CodedLock;
 import sciwhiz12.basedefense.capabilities.FlexibleStorage;
+import sciwhiz12.basedefense.client.render.PortableSafeItemStackRenderer;
 import sciwhiz12.basedefense.container.KeyringContainer;
 import sciwhiz12.basedefense.container.KeysmithContainer;
 import sciwhiz12.basedefense.container.LocksmithContainer;
+import sciwhiz12.basedefense.container.PortableSafeContainer;
 import sciwhiz12.basedefense.item.BrokenLockPiecesItem;
-import sciwhiz12.basedefense.item.LockedDoorBlockItem;
+import sciwhiz12.basedefense.item.LockedBlockItem;
 import sciwhiz12.basedefense.item.key.AdminKeyItem;
 import sciwhiz12.basedefense.item.key.KeyItem;
 import sciwhiz12.basedefense.item.key.KeyringItem;
@@ -50,6 +49,7 @@ import sciwhiz12.basedefense.recipe.LockedItemRecipe;
 import sciwhiz12.basedefense.tileentity.LockableTile;
 import sciwhiz12.basedefense.tileentity.LockedDoorTile;
 import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
+import sciwhiz12.basedefense.tileentity.PortableSafeTileEntity;
 import sciwhiz12.basedefense.util.RecipeHelper;
 
 import java.util.function.Supplier;
@@ -98,6 +98,8 @@ public final class Registration {
         reg.register(new LockedDoorBlock(Blocks.CRIMSON_DOOR).setRegistryName("locked_crimson_door"));
         reg.register(new LockedDoorBlock(Blocks.WARPED_DOOR).setRegistryName("locked_warped_door"));
         reg.register(new LockedDoorBlock(Blocks.IRON_DOOR).setRegistryName("locked_iron_door"));
+
+        reg.register(new PortableSafeBlock().setRegistryName("portable_safe"));
     }
 
     @SubscribeEvent
@@ -117,6 +119,7 @@ public final class Registration {
         reg.register(new ContainerType<>(KeysmithContainer::new).setRegistryName("keysmith_table"));
         reg.register(new ContainerType<>(LocksmithContainer::new).setRegistryName("locksmith_table"));
         reg.register(IForgeContainerType.create(KeyringContainer::new).setRegistryName("keyring"));
+        reg.register(new ContainerType<>(PortableSafeContainer::new).setRegistryName("portable_safe"));
     }
 
     @SubscribeEvent
@@ -139,15 +142,18 @@ public final class Registration {
         reg.register(new BlockItem(KEYSMITH_TABLE, defaultProps).setRegistryName("keysmith_table"));
         reg.register(new BlockItem(LOCKSMITH_TABLE, defaultProps).setRegistryName("locksmith_table"));
 
-        reg.register(new LockedDoorBlockItem(LOCKED_OAK_DOOR).setRegistryName("locked_oak_door"));
-        reg.register(new LockedDoorBlockItem(LOCKED_BIRCH_DOOR).setRegistryName("locked_birch_door"));
-        reg.register(new LockedDoorBlockItem(LOCKED_SPRUCE_DOOR).setRegistryName("locked_spruce_door"));
-        reg.register(new LockedDoorBlockItem(LOCKED_JUNGLE_DOOR).setRegistryName("locked_jungle_door"));
-        reg.register(new LockedDoorBlockItem(LOCKED_ACACIA_DOOR).setRegistryName("locked_acacia_door"));
-        reg.register(new LockedDoorBlockItem(LOCKED_DARK_OAK_DOOR).setRegistryName("locked_dark_oak_door"));
-        reg.register(new LockedDoorBlockItem(LOCKED_CRIMSON_DOOR).setRegistryName("locked_crimson_door"));
-        reg.register(new LockedDoorBlockItem(LOCKED_WARPED_DOOR).setRegistryName("locked_warped_door"));
-        reg.register(new LockedDoorBlockItem(LOCKED_IRON_DOOR).setRegistryName("locked_iron_door"));
+        reg.register(new LockedBlockItem(LOCKED_OAK_DOOR).setRegistryName("locked_oak_door"));
+        reg.register(new LockedBlockItem(LOCKED_BIRCH_DOOR).setRegistryName("locked_birch_door"));
+        reg.register(new LockedBlockItem(LOCKED_SPRUCE_DOOR).setRegistryName("locked_spruce_door"));
+        reg.register(new LockedBlockItem(LOCKED_JUNGLE_DOOR).setRegistryName("locked_jungle_door"));
+        reg.register(new LockedBlockItem(LOCKED_ACACIA_DOOR).setRegistryName("locked_acacia_door"));
+        reg.register(new LockedBlockItem(LOCKED_DARK_OAK_DOOR).setRegistryName("locked_dark_oak_door"));
+        reg.register(new LockedBlockItem(LOCKED_CRIMSON_DOOR).setRegistryName("locked_crimson_door"));
+        reg.register(new LockedBlockItem(LOCKED_WARPED_DOOR).setRegistryName("locked_warped_door"));
+        reg.register(new LockedBlockItem(LOCKED_IRON_DOOR).setRegistryName("locked_iron_door"));
+
+        reg.register(new LockedBlockItem(PORTABLE_SAFE, new Item.Properties().group(ITEM_GROUP).maxDamage(0)
+                .setISTER(() -> PortableSafeItemStackRenderer::create)).setRegistryName("portable_safe"));
     }
 
     @SubscribeEvent
@@ -186,6 +192,7 @@ public final class Registration {
         reg.register(makeType(LockedDoorTile::new, LOCKED_IRON_DOOR, LOCKED_OAK_DOOR, LOCKED_BIRCH_DOOR, LOCKED_SPRUCE_DOOR,
                 LOCKED_JUNGLE_DOOR, LOCKED_ACACIA_DOOR, LOCKED_DARK_OAK_DOOR, LOCKED_CRIMSON_DOOR, LOCKED_WARPED_DOOR)
                 .setRegistryName("locked_door"));
+        reg.register(makeType(PortableSafeTileEntity::new, PORTABLE_SAFE).setRegistryName("portable_safe"));
     }
 
     private static <T extends TileEntity> TileEntityType<T> makeType(Supplier<T> factory, Block... validBlocks) {

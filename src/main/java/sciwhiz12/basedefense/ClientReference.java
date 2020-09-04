@@ -70,9 +70,12 @@ public final class ClientReference {
         public static final ResourceLocation SLOT_LOCK_CORE = addSprite("item/slot_lock_core");
         public static final ResourceLocation SLOT_INGOT_OUTLINE = addSprite("item/slot_ingot_outline");
 
+        public static final ResourceLocation PORTABLE_SAFE_MODEL = modLoc("textures/model/portable_safe.png");
+
         public static final ResourceLocation KEYRING_GUI = modLoc("textures/gui/keyring_gui.png");
         public static final ResourceLocation KEYSMITH_GUI = modLoc("textures/gui/keysmith_gui.png");
         public static final ResourceLocation LOCKSMITH_GUI = modLoc("textures/gui/locksmith_gui.png");
+        public static final ResourceLocation PORTABLE_SAFE_GUI = modLoc("textures/gui/portable_safe_gui.png");
 
         static ResourceLocation addSprite(String location) {
             ResourceLocation loc = modLoc(location);

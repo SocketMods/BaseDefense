@@ -44,6 +44,8 @@ public class BlockStates extends BlockStateProvider {
         lockedDoor(Blocks.LOCKED_CRIMSON_DOOR);
         lockedDoor(Blocks.LOCKED_WARPED_DOOR);
         lockedDoor(Blocks.LOCKED_IRON_DOOR);
+
+        portableSafe();
     }
 
     void lockedDoor(LockedDoorBlock block) {
@@ -80,6 +82,13 @@ public class BlockStates extends BlockStateProvider {
                     (rh ? bottomRight : bottomLeft) :
                     (rh ? topRight : topLeft)).rotationY(yRot).build();
         }, PadlockedDoorBlock.SIDE);
+    }
+
+    void portableSafe() {
+        BlockModelBuilder particle = models().getBuilder("portable_safe").texture("particle", mcLoc("block/cauldron_inner"));
+        VariantBlockStateBuilder builder = getVariantBuilder(Blocks.PORTABLE_SAFE);
+        ConfiguredModel.Builder<?> model = ConfiguredModel.builder().modelFile(particle);
+        builder.setModels(builder.partialState(), model.buildLast());
     }
 
     void standardCubeAll(Block b) {
