@@ -43,10 +43,12 @@ public class PortableSafeContainer extends Container {
         ContainerHelper.layoutPlayerInventorySlots(this::addSlot, playerInv, 8, 68);
     }
 
+    @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
         return isWithinUsableDistance(worldPos, playerIn, Reference.Blocks.PORTABLE_SAFE);
     }
 
+    @Override
     public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
@@ -71,6 +73,7 @@ public class PortableSafeContainer extends Container {
         return itemstack;
     }
 
+    @Override
     public void onContainerClosed(PlayerEntity playerIn) {
         super.onContainerClosed(playerIn);
         worldPos.consume((world, pos) -> {

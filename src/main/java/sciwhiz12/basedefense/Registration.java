@@ -38,7 +38,7 @@ import sciwhiz12.basedefense.container.KeysmithContainer;
 import sciwhiz12.basedefense.container.LocksmithContainer;
 import sciwhiz12.basedefense.container.PortableSafeContainer;
 import sciwhiz12.basedefense.item.BrokenLockPiecesItem;
-import sciwhiz12.basedefense.item.LockedDoorBlockItem;
+import sciwhiz12.basedefense.item.LockedBlockItem;
 import sciwhiz12.basedefense.item.key.AdminKeyItem;
 import sciwhiz12.basedefense.item.key.KeyItem;
 import sciwhiz12.basedefense.item.key.KeyringItem;
@@ -142,15 +142,15 @@ public final class Registration {
         reg.register(new BlockItem(KEYSMITH_TABLE, defaultProps).setRegistryName("keysmith_table"));
         reg.register(new BlockItem(LOCKSMITH_TABLE, defaultProps).setRegistryName("locksmith_table"));
 
-        reg.register(new LockedDoorBlockItem(LOCKED_OAK_DOOR).setRegistryName("locked_oak_door"));
-        reg.register(new LockedDoorBlockItem(LOCKED_BIRCH_DOOR).setRegistryName("locked_birch_door"));
-        reg.register(new LockedDoorBlockItem(LOCKED_SPRUCE_DOOR).setRegistryName("locked_spruce_door"));
-        reg.register(new LockedDoorBlockItem(LOCKED_JUNGLE_DOOR).setRegistryName("locked_jungle_door"));
-        reg.register(new LockedDoorBlockItem(LOCKED_ACACIA_DOOR).setRegistryName("locked_acacia_door"));
-        reg.register(new LockedDoorBlockItem(LOCKED_DARK_OAK_DOOR).setRegistryName("locked_dark_oak_door"));
-        reg.register(new LockedDoorBlockItem(LOCKED_IRON_DOOR).setRegistryName("locked_iron_door"));
+        reg.register(new LockedBlockItem(LOCKED_OAK_DOOR).setRegistryName("locked_oak_door"));
+        reg.register(new LockedBlockItem(LOCKED_BIRCH_DOOR).setRegistryName("locked_birch_door"));
+        reg.register(new LockedBlockItem(LOCKED_SPRUCE_DOOR).setRegistryName("locked_spruce_door"));
+        reg.register(new LockedBlockItem(LOCKED_JUNGLE_DOOR).setRegistryName("locked_jungle_door"));
+        reg.register(new LockedBlockItem(LOCKED_ACACIA_DOOR).setRegistryName("locked_acacia_door"));
+        reg.register(new LockedBlockItem(LOCKED_DARK_OAK_DOOR).setRegistryName("locked_dark_oak_door"));
+        reg.register(new LockedBlockItem(LOCKED_IRON_DOOR).setRegistryName("locked_iron_door"));
 
-        reg.register(new BlockItem(PORTABLE_SAFE, new Item.Properties().group(ITEM_GROUP).maxStackSize(1)
+        reg.register(new LockedBlockItem(PORTABLE_SAFE, new Item.Properties().group(ITEM_GROUP).maxDamage(0)
                 .setISTER(() -> PortableSafeItemStackRenderer::create)).setRegistryName("portable_safe"));
     }
 

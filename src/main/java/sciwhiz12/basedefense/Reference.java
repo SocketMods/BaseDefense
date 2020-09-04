@@ -27,6 +27,7 @@ import sciwhiz12.basedefense.container.KeysmithContainer;
 import sciwhiz12.basedefense.container.LocksmithContainer;
 import sciwhiz12.basedefense.container.PortableSafeContainer;
 import sciwhiz12.basedefense.item.BrokenLockPiecesItem;
+import sciwhiz12.basedefense.item.LockedBlockItem;
 import sciwhiz12.basedefense.item.key.AdminKeyItem;
 import sciwhiz12.basedefense.item.key.KeyItem;
 import sciwhiz12.basedefense.item.key.KeyringItem;
@@ -115,15 +116,15 @@ public final class Reference {
         public static final BlockItem KEYSMITH_TABLE = Null();
         public static final BlockItem LOCKSMITH_TABLE = Null();
 
-        public static final BlockItem LOCKED_IRON_DOOR = Null();
-        public static final BlockItem LOCKED_OAK_DOOR = Null();
-        public static final BlockItem LOCKED_BIRCH_DOOR = Null();
-        public static final BlockItem LOCKED_SPRUCE_DOOR = Null();
-        public static final BlockItem LOCKED_JUNGLE_DOOR = Null();
-        public static final BlockItem LOCKED_ACACIA_DOOR = Null();
-        public static final BlockItem LOCKED_DARK_OAK_DOOR = Null();
+        public static final LockedBlockItem LOCKED_IRON_DOOR = Null();
+        public static final LockedBlockItem LOCKED_OAK_DOOR = Null();
+        public static final LockedBlockItem LOCKED_BIRCH_DOOR = Null();
+        public static final LockedBlockItem LOCKED_SPRUCE_DOOR = Null();
+        public static final LockedBlockItem LOCKED_JUNGLE_DOOR = Null();
+        public static final LockedBlockItem LOCKED_ACACIA_DOOR = Null();
+        public static final LockedBlockItem LOCKED_DARK_OAK_DOOR = Null();
 
-        public static final BlockItem PORTABLE_SAFE = Null();
+        public static final LockedBlockItem PORTABLE_SAFE = Null();
 
         // Prevent instantiation
         private Items() {}

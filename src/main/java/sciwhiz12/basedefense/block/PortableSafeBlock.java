@@ -1,10 +1,6 @@
 package sciwhiz12.basedefense.block;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.IWaterLoggable;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.client.util.ITooltipFlag;
@@ -22,14 +18,10 @@ import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Rotation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
@@ -41,7 +33,10 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
+import sciwhiz12.basedefense.item.IContainsLockItem;
+import sciwhiz12.basedefense.item.LockedBlockItem;
 import sciwhiz12.basedefense.tileentity.PortableSafeTileEntity;
+import sciwhiz12.basedefense.util.UnlockHelper;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -92,7 +87,8 @@ public class PortableSafeBlock extends Block implements IWaterLoggable {
         if (te instanceof PortableSafeTileEntity) {
             PortableSafeTileEntity safe = (PortableSafeTileEntity) te;
             if (!worldIn.isRemote && player.isCreative() && !safe.isEmpty()) {
-                ItemStack stack = new ItemStack(this, 1);
+                ItemStack stack = this.getItem(worldIn, pos, state);
+
                 CompoundNBT compoundnbt = safe.writeData(new CompoundNBT());
                 if (!compoundnbt.isEmpty()) {
                     stack.setTagInfo("BlockEntityTag", compoundnbt);
@@ -100,6 +96,10 @@ public class PortableSafeBlock extends Block implements IWaterLoggable {
                 if (safe.hasCustomName()) {
                     stack.setDisplayName(safe.getCustomName());
                 }
+                if (stack.getItem() instanceof IContainsLockItem) {
+                    ((IContainsLockItem) stack.getItem()).setLockStack(stack, safe.getLockStack());
+                }
+
                 ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D,
                         (double) pos.getZ() + 0.5D, stack);
                 itementity.setDefaultPickupDelay();
@@ -112,25 +112,29 @@ public class PortableSafeBlock extends Block implements IWaterLoggable {
     @SuppressWarnings("deprecation")
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        TileEntity te = builder.get(LootParameters.BLOCK_ENTITY);
-        if (te instanceof PortableSafeTileEntity) {
-            PortableSafeTileEntity safe = (PortableSafeTileEntity) te;
-            builder = builder.withDynamicDrop(CONTENTS, (context, stackConsumer) -> {
+        builder = builder.withDynamicDrop(CONTENTS, (context, stackConsumer) -> {
+            TileEntity te = context.get(LootParameters.BLOCK_ENTITY);
+            if (te instanceof PortableSafeTileEntity) {
+                PortableSafeTileEntity safe = (PortableSafeTileEntity) te;
                 IItemHandler inv = safe.getInventory();
                 for (int i = 0; i < inv.getSlots(); i++) {
                     stackConsumer.accept(inv.getStackInSlot(i));
                 }
-            });
-        }
+            }
+        });
         return super.getDrops(state, builder);
     }
 
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        if (stack.hasDisplayName()) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
-            if (tileentity instanceof PortableSafeTileEntity) {
-                ((PortableSafeTileEntity) tileentity).setCustomName(stack.getDisplayName());
+        if (!stack.isEmpty() && stack.getItem() instanceof LockedBlockItem) {
+            LockedBlockItem item = (LockedBlockItem) stack.getItem();
+            TileEntity te = worldIn.getTileEntity(pos);
+            if (item.hasLockStack(stack) && te instanceof PortableSafeTileEntity) {
+                PortableSafeTileEntity safeTE = (PortableSafeTileEntity) te;
+                ItemStack lockStack = item.getLockStack(stack);
+                safeTE.setCustomName(lockStack.getDisplayName());
+                safeTE.setLockStack(lockStack);
             }
         }
     }
@@ -149,10 +153,15 @@ public class PortableSafeBlock extends Block implements IWaterLoggable {
             return ActionResultType.SUCCESS;
         } else {
             INamedContainerProvider provider = this.getContainer(state, worldIn, pos);
-            if (provider != null) {
-                player.openContainer(provider);
+            TileEntity te = worldIn.getTileEntity(pos);
+            if (provider != null && te instanceof PortableSafeTileEntity) {
+                PortableSafeTileEntity safeTE = (PortableSafeTileEntity) te;
+                ItemStack heldItem = player.getHeldItem(handIn);
+                if (safeTE.getNumPlayersUsing() > 0 || (!heldItem.isEmpty() && UnlockHelper
+                        .checkUnlock(heldItem, safeTE, worldIn, pos, player, true))) {
+                    player.openContainer(provider);
+                }
             }
-
             return ActionResultType.CONSUME;
         }
     }
@@ -168,12 +177,8 @@ public class PortableSafeBlock extends Block implements IWaterLoggable {
     @Nullable
     @Override
     public INamedContainerProvider getContainer(BlockState state, World world, BlockPos pos) {
-        TileEntity tileentity = world.getTileEntity(pos);
-        if (tileentity instanceof PortableSafeTileEntity) {
-            return (PortableSafeTileEntity) tileentity;
-        } else {
-            return null;
-        }
+        TileEntity te = world.getTileEntity(pos);
+        return te instanceof PortableSafeTileEntity ? (PortableSafeTileEntity) te : null;
     }
 
     @Override
@@ -186,6 +191,24 @@ public class PortableSafeBlock extends Block implements IWaterLoggable {
                 tooltip.add(new TranslationTextComponent("tooltip.basedefense.contains_items").mergeStyle(GRAY));
             }
         }
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
+            PlayerEntity player) {
+        ItemStack stack = super.getPickBlock(state, target, world, pos, player);
+        PortableSafeTileEntity te = (PortableSafeTileEntity) world.getTileEntity(pos);
+        if (te != null) {
+            CompoundNBT compoundnbt = te.writeData(new CompoundNBT(), false);
+            if (!compoundnbt.isEmpty()) {
+                stack.setTagInfo("BlockEntityTag", compoundnbt);
+            }
+            if (stack.getItem() instanceof IContainsLockItem) {
+                ((IContainsLockItem) stack.getItem()).setLockStack(stack, te.getLockStack());
+            }
+        }
+        return stack;
     }
 
     @Override
@@ -238,19 +261,5 @@ public class PortableSafeBlock extends Block implements IWaterLoggable {
     @Override
     public PushReaction getPushReaction(BlockState state) {
         return PushReaction.BLOCK;
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public ItemStack getItem(IBlockReader worldIn, BlockPos pos, BlockState state) {
-        ItemStack stack = super.getItem(worldIn, pos, state);
-        PortableSafeTileEntity te = (PortableSafeTileEntity) worldIn.getTileEntity(pos);
-        if (te != null) {
-            CompoundNBT compoundnbt = te.writeData(new CompoundNBT());
-            if (!compoundnbt.isEmpty()) {
-                stack.setTagInfo("BlockEntityTag", compoundnbt);
-            }
-        }
-        return stack;
     }
 }

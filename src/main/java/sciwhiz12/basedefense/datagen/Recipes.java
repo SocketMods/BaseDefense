@@ -44,14 +44,15 @@ public class Recipes extends RecipeProvider {
                 .key('C', new LockedItemIngredient(Reference.Items.LOCK_CORE, true))
                 .addCriterion("has_lock_core", InventoryChangeTrigger.Instance.forItems(Reference.Items.LOCK_CORE))
                 .build(consumer, modLoc("padlock"));
-        ShapedRecipeBuilder.shapedRecipe(Reference.Items.PORTABLE_SAFE)
-                .patternLine("iii")
+        CustomShapedRecipeBuilder.shapedRecipe(RecipeSerializers.LOCKED_ITEM, Reference.Items.PORTABLE_SAFE)
+                .patternLine("iLi")
                 .patternLine("ici")
                 .patternLine("iPi")
                 .key('i', Tags.Items.INGOTS_IRON)
                 .key('c', Tags.Items.CHESTS_WOODEN)
                 .key('P', ItemTags.PLANKS)
-                .addCriterion("has_iron_ingot", InventoryChangeTrigger.Instance.forItems(Items.IRON_INGOT))
+                .key('L', new LockedItemIngredient(Reference.Items.LOCK_CORE, false))
+                .addCriterion("has_lock_core", InventoryChangeTrigger.Instance.forItems(Reference.Items.LOCK_CORE))
                 .build(consumer, modLoc("portable_safe"));
         // @formatter:on
         lockedDoorRecipe(consumer, Blocks.LOCKED_OAK_DOOR);

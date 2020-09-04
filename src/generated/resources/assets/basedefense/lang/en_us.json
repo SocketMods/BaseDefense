@@ -43,5 +43,6 @@
   "tooltip.basedefense.color": "Color #%s: %s",
   "tooltip.basedefense.contains_items": "Contains items",
   "tooltip.basedefense.keyring.count": "Contains %s key(s)",
-  "tooltip.basedefense.locked_door.has_lock": "Contains installed lock"
+  "tooltip.basedefense.locked_block_item.has_lock": "Contains installed lock",
+  "tooltip.basedefense.locked_block_item.no_lock": "Contains no lock"
 }

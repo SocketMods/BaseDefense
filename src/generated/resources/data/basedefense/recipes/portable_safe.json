@@ -1,7 +1,7 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "basedefense:locked_item",
   "pattern": [
-    "iii",
+    "iLi",
     "ici",
     "iPi"
   ],
@@ -14,6 +14,11 @@
     },
     "P": {
       "tag": "minecraft:planks"
+    },
+    "L": {
+      "type": "basedefense:locked_item",
+      "has_codes": false,
+      "item": "basedefense:lock_core"
     }
   },
   "result": {

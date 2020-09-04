@@ -64,7 +64,8 @@ public class Languages extends LanguageProvider {
         add("tooltip", "admin_only", "for Server Operators!");
         add("tooltip", "color", "Color #%s: %s");
         add("tooltip", "keyring.count", "Contains %s key(s)");
-        add("tooltip", "locked_door.has_lock", "Contains installed lock");
+        add("tooltip", "locked_block_item.has_lock", "Contains installed lock");
+        add("tooltip", "locked_block_item.no_lock", "Contains no lock");
 
         add("tooltip", "codes.header", "Stored Code(s):");
         add("tooltip", "codes.line", "  #%s");

@@ -6,12 +6,12 @@
     ]
   },
   "criteria": {
-    "has_iron_ingot": {
+    "has_lock_core": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "minecraft:iron_ingot"
+            "item": "basedefense:lock_core"
           }
         ]
       }
@@ -25,7 +25,7 @@
   },
   "requirements": [
     [
-      "has_iron_ingot",
+      "has_lock_core",
       "has_the_recipe"
     ]
   ]

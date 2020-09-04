@@ -17,10 +17,10 @@ import sciwhiz12.basedefense.capabilities.CodedItemStackLock;
 import static sciwhiz12.basedefense.Reference.Capabilities.*;
 
 public class LockableTile extends TileEntity {
-    public static final String TAG_LOCK = "Lock";
+    public static final String TAG_LOCK_ITEM = "LockItem";
 
-    private final LazyOptional<CodedItemStackLock> lockCap = LazyOptional.of(() -> this.lock);
-    private final CodedItemStackLock lock = new CodedItemStackLock();
+    protected LazyOptional<CodedItemStackLock> lockCap;
+    protected final CodedItemStackLock lock = new CodedItemStackLock();
 
     public LockableTile() {
         super(TileEntities.LOCKABLE_TILE);
@@ -32,20 +32,25 @@ public class LockableTile extends TileEntity {
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (cap == CONTAINS_CODE || cap == CODE_HOLDER || cap == LOCK) { return lockCap.cast(); }
+        if (cap == CONTAINS_CODE || cap == CODE_HOLDER || cap == LOCK) {
+            if (lockCap == null) {
+                lockCap = LazyOptional.of(() -> this.lock);
+            }
+            return lockCap.cast();
+        }
         return super.getCapability(cap, side);
     }
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
         CompoundNBT tag = new CompoundNBT();
-        tag.put(TAG_LOCK, lock.getStack().write(new CompoundNBT()));
+        tag.put(TAG_LOCK_ITEM, lock.getStack().write(new CompoundNBT()));
         return new SUpdateTileEntityPacket(pos, 0, getUpdateTag());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.lock.setStack(ItemStack.read(pkt.getNbtCompound().getCompound(TAG_LOCK)));
+        this.lock.setStack(ItemStack.read(pkt.getNbtCompound().getCompound(TAG_LOCK_ITEM)));
     }
 
     @Override
@@ -56,20 +61,32 @@ public class LockableTile extends TileEntity {
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
-        lock.setStack(ItemStack.read(compound.getCompound(TAG_LOCK)));
+        readData(compound);
+    }
+
+    public void readData(CompoundNBT compound) {
+        lock.setStack(ItemStack.read(compound.getCompound(TAG_LOCK_ITEM)));
     }
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
-        compound.put(TAG_LOCK, lock.getStack().write(new CompoundNBT()));
+        compound = super.write(compound);
+        compound = writeData(compound);
+        return compound;
+    }
+
+    public CompoundNBT writeData(CompoundNBT compound) {
+        compound.put(TAG_LOCK_ITEM, lock.getStack().write(new CompoundNBT()));
         return compound;
     }
 
     @Override
     public void remove() {
         super.remove();
-        lockCap.invalidate();
+        if (lockCap != null) {
+            lockCap.invalidate();
+            lockCap = null;
+        }
     }
 
     public void setLockStack(ItemStack stack) {
@@ -78,6 +95,10 @@ public class LockableTile extends TileEntity {
             this.world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.DEFAULT);
         }
         this.markDirty();
+        if (lockCap != null) {
+            lockCap.invalidate();
+            lockCap = null;
+        }
     }
 
     public ItemStack getLockStack() {

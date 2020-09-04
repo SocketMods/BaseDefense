@@ -1,7 +1,6 @@
 package sciwhiz12.basedefense.tileentity;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -11,18 +10,11 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.INameable;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
@@ -38,7 +30,7 @@ import javax.annotation.Nullable;
 
 import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
 
-public class PortableSafeTileEntity extends TileEntity implements ITickableTileEntity, INamedContainerProvider, INameable {
+public class PortableSafeTileEntity extends LockableTile implements ITickableTileEntity, INamedContainerProvider, INameable {
     protected float doorAngle;
     protected float prevDoorAngle;
     protected int numPlayersUsing;
@@ -104,8 +96,8 @@ public class PortableSafeTileEntity extends TileEntity implements ITickableTileE
         int playerCount = 0;
 
         for (PlayerEntity player : worldIn.getEntitiesWithinAABB(PlayerEntity.class,
-                new AxisAlignedBB(((float) posX - 5.0F), (double) ((float) posY - 5.0F), (double) ((float) posZ - 5.0F),
-                        ((float) (posX + 1) + 5.0F), ((float) (posY + 1) + 5.0F), ((float) (posZ + 1) + 5.0F)))) {
+                new AxisAlignedBB((float) posX - 5.0F, (float) posY - 5.0F, (float) posZ - 5.0F, (float) (posX + 1) + 5.0F,
+                        (float) (posY + 1) + 5.0F, (float) (posZ + 1) + 5.0F))) {
             if (player.openContainer instanceof PortableSafeContainer) {
                 IWorldPosCallable worldPos = ((PortableSafeContainer) player.openContainer).getWorldPos();
                 if (worldPos.applyOrElse((world, pos) -> world.getTileEntity(pos) == tileEntity, false)) {
@@ -166,15 +158,8 @@ public class PortableSafeTileEntity extends TileEntity implements ITickableTileE
         return MathHelper.lerp(partialTicks, this.prevDoorAngle, this.doorAngle);
     }
 
-    public static int getPlayersUsing(IBlockReader reader, BlockPos posIn) {
-        BlockState blockstate = reader.getBlockState(posIn);
-        if (blockstate.hasTileEntity()) {
-            TileEntity te = reader.getTileEntity(posIn);
-            if (te instanceof PortableSafeTileEntity) {
-                return ((PortableSafeTileEntity) te).numPlayersUsing;
-            }
-        }
-        return 0;
+    public int getNumPlayersUsing() {
+        return numPlayersUsing;
     }
 
     @Override
@@ -188,7 +173,7 @@ public class PortableSafeTileEntity extends TileEntity implements ITickableTileE
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (!this.removed && cap == ITEM_HANDLER_CAPABILITY) {
+        if (cap == ITEM_HANDLER_CAPABILITY) {
             if (this.invHandler == null) {
                 this.invHandler = LazyOptional.of(() -> inv);
             }
@@ -220,12 +205,8 @@ public class PortableSafeTileEntity extends TileEntity implements ITickableTileE
     }
 
     @Override
-    public void read(BlockState stateIn, CompoundNBT compound) {
-        super.read(stateIn, compound);
-        readData(compound);
-    }
-
     public void readData(CompoundNBT compound) {
+        super.readData(compound);
         if (compound.contains("Items", Constants.NBT.TAG_LIST)) {
             inv.deserializeNBT(compound);
         }
@@ -235,12 +216,14 @@ public class PortableSafeTileEntity extends TileEntity implements ITickableTileE
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
-        return writeData(compound);
+    public CompoundNBT writeData(CompoundNBT compound) {
+        return writeData(compound, true);
     }
 
-    public CompoundNBT writeData(CompoundNBT compound) {
+    public CompoundNBT writeData(CompoundNBT compound, boolean includingLock) {
+        if (includingLock) {
+            compound = super.writeData(compound);
+        }
         compound.merge(inv.serializeNBT());
         if (this.customName != null) {
             compound.putString("CustomName", ITextComponent.Serializer.toJson(this.customName));
