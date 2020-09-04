@@ -87,6 +87,7 @@ public class PortableSafeBlock extends Block implements IWaterLoggable {
         if (te instanceof PortableSafeTileEntity) {
             PortableSafeTileEntity safe = (PortableSafeTileEntity) te;
             if (!worldIn.isRemote && player.isCreative() && !safe.isEmpty()) {
+                @SuppressWarnings("deprecation")
                 ItemStack stack = this.getItem(worldIn, pos, state);
 
                 CompoundNBT compoundnbt = safe.writeData(new CompoundNBT());
