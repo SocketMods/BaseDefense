@@ -16,7 +16,6 @@ import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
@@ -50,14 +49,13 @@ public class ClientRegistration {
     // Prevent instantiation
     private ClientRegistration() {}
 
-    @SuppressWarnings("deprecation")
     @SubscribeEvent
     static void onClientSetup(FMLClientSetupEvent event) {
         LOG.debug(CLIENT, "Setting up on client");
         bindTileEntityRenderers();
         setupRenderLayer();
-        registerPropertyOverrides();
-        DeferredWorkQueue.runLater(ClientRegistration::registerScreenFactories);
+        event.enqueueWork(ClientRegistration::registerPropertyOverrides);
+        event.enqueueWork(ClientRegistration::registerScreenFactories);
     }
 
     static void registerPropertyOverrides() {

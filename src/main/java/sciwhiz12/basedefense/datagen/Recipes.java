@@ -62,6 +62,8 @@ public class Recipes extends RecipeProvider {
         lockedDoorRecipe(consumer, Blocks.LOCKED_ACACIA_DOOR);
         lockedDoorRecipe(consumer, Blocks.LOCKED_DARK_OAK_DOOR);
         lockedDoorRecipe(consumer, Blocks.LOCKED_IRON_DOOR);
+        lockedDoorRecipe(consumer, Blocks.LOCKED_CRIMSON_DOOR);
+        lockedDoorRecipe(consumer, Blocks.LOCKED_WARPED_DOOR);
     }
 
     void lockedDoorRecipe(Consumer<IFinishedRecipe> consumer, LockedDoorBlock block) {

@@ -34,7 +34,7 @@
           "ops": [
             {
               "source": "LockItem",
-              "target": "LockItem",
+              "target": "BlockEntityTag.LockItem",
               "op": "replace"
             }
           ]

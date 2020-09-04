@@ -193,7 +193,6 @@ public class PortableSafeBlock extends Block implements IWaterLoggable {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
             PlayerEntity player) {

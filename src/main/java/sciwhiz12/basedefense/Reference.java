@@ -65,6 +65,8 @@ public final class Reference {
         public static final PadlockedDoorBlock PADLOCKED_JUNGLE_DOOR = Null();
         public static final PadlockedDoorBlock PADLOCKED_ACACIA_DOOR = Null();
         public static final PadlockedDoorBlock PADLOCKED_DARK_OAK_DOOR = Null();
+        public static final PadlockedDoorBlock PADLOCKED_CRIMSON_DOOR = Null();
+        public static final PadlockedDoorBlock PADLOCKED_WARPED_DOOR = Null();
 
         public static final LockedDoorBlock LOCKED_IRON_DOOR = Null();
         public static final LockedDoorBlock LOCKED_OAK_DOOR = Null();
@@ -73,6 +75,8 @@ public final class Reference {
         public static final LockedDoorBlock LOCKED_JUNGLE_DOOR = Null();
         public static final LockedDoorBlock LOCKED_ACACIA_DOOR = Null();
         public static final LockedDoorBlock LOCKED_DARK_OAK_DOOR = Null();
+        public static final LockedDoorBlock LOCKED_CRIMSON_DOOR = Null();
+        public static final LockedDoorBlock LOCKED_WARPED_DOOR = Null();
 
         public static final PortableSafeBlock PORTABLE_SAFE = Null();
 
@@ -122,6 +126,8 @@ public final class Reference {
         public static final LockedBlockItem LOCKED_SPRUCE_DOOR = Null();
         public static final LockedBlockItem LOCKED_JUNGLE_DOOR = Null();
         public static final LockedBlockItem LOCKED_ACACIA_DOOR = Null();
+        public static final LockedBlockItem LOCKED_CRIMSON_DOOR = Null();
+        public static final LockedBlockItem LOCKED_WARPED_DOOR = Null();
         public static final LockedBlockItem LOCKED_DARK_OAK_DOOR = Null();
 
         public static final LockedBlockItem PORTABLE_SAFE = Null();
