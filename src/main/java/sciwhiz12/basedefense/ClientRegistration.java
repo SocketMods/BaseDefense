@@ -2,10 +2,12 @@ package sciwhiz12.basedefense;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -29,9 +31,11 @@ import sciwhiz12.basedefense.client.gui.LocksmithScreen;
 import sciwhiz12.basedefense.client.gui.PortableSafeScreen;
 import sciwhiz12.basedefense.client.model.ISTERWrapper;
 import sciwhiz12.basedefense.client.model.LockedDoorModel;
+import sciwhiz12.basedefense.client.render.KeyringLayer;
 import sciwhiz12.basedefense.client.render.PadlockedDoorRenderer;
 import sciwhiz12.basedefense.client.render.PortableSafeRenderer;
 
+import java.util.Map;
 import java.util.function.Function;
 
 import static sciwhiz12.basedefense.BaseDefense.CLIENT;
@@ -54,6 +58,7 @@ public class ClientRegistration {
         LOG.debug(CLIENT, "Setting up on client");
         bindTileEntityRenderers();
         setupRenderLayer();
+        event.enqueueWork(ClientRegistration::addCustomLayerRenderers);
         event.enqueueWork(ClientRegistration::registerPropertyOverrides);
         event.enqueueWork(ClientRegistration::registerScreenFactories);
     }
@@ -80,6 +85,15 @@ public class ClientRegistration {
         event.getBlockColors().register(Colors.LOCKED_DOOR_COLOR, Blocks.LOCKED_IRON_DOOR, Blocks.LOCKED_OAK_DOOR,
                 Blocks.LOCKED_BIRCH_DOOR, Blocks.LOCKED_SPRUCE_DOOR, Blocks.LOCKED_JUNGLE_DOOR, Blocks.LOCKED_ACACIA_DOOR,
                 Blocks.LOCKED_DARK_OAK_DOOR);
+    }
+
+    static void addCustomLayerRenderers() {
+        LOG.debug(CLIENT, "Adding custom player layer renderers");
+        final Map<String, PlayerRenderer> skinMap = Minecraft.getInstance().getRenderManager().getSkinMap();
+        final PlayerRenderer defaultRenderer = skinMap.get("default");
+        defaultRenderer.addLayer(new KeyringLayer<>(defaultRenderer));
+        final PlayerRenderer slimRenderer = skinMap.get("slim");
+        slimRenderer.addLayer(new KeyringLayer<>(slimRenderer));
     }
 
     static void registerScreenFactories() {
