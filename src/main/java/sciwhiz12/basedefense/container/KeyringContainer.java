@@ -19,6 +19,7 @@ import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABI
 public class KeyringContainer extends Container {
     private final PlayerInventory playerInv;
     private final IItemHandlerModifiable itemHandler;
+    private final ItemStack stack;
 
     public KeyringContainer(int windowId, PlayerInventory inv, PacketBuffer data) {
         this(windowId, inv, data.readItemStack());
@@ -27,6 +28,7 @@ public class KeyringContainer extends Container {
     public KeyringContainer(int id, PlayerInventory inv, ItemStack stack) {
         super(Containers.KEYRING, id);
         this.playerInv = inv;
+        this.stack = stack;
         itemHandler = (IItemHandlerModifiable) stack.getCapability(ITEM_HANDLER_CAPABILITY)
                 .orElseThrow(IllegalStateException::new);
 
@@ -49,7 +51,8 @@ public class KeyringContainer extends Container {
 
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
-        return playerIn.getHeldItem(playerIn.getActiveHand()).getItem() instanceof KeyringItem;
+        ItemStack heldStack = playerIn.getHeldItem(playerIn.getActiveHand());
+        return heldStack.getItem() instanceof KeyringItem && ItemStack.areItemStackTagsEqual(heldStack, stack);
     }
 
     public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
