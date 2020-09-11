@@ -36,8 +36,8 @@ public final class ClientReference {
                 TileEntity tile = world.getTileEntity(pos);
                 if (tile instanceof LockedDoorTile && ((LockedDoorTile) tile).hasColors()) {
                     int[] colors = ((LockedDoorTile) tile).getColors();
-                    // 0 : NONE, 1 : ind. 0 ; 2 : inds. 1, 2 ;
-                    if (colors.length - 1 >= tintIndex) { return colors[tintIndex]; }
+                    // offset by 1 since index 0 is reserved for particle color
+                    if (tintIndex != 0 && colors.length > tintIndex - 1) { return colors[tintIndex - 1]; }
                 }
             }
             return -1;
@@ -70,9 +70,12 @@ public final class ClientReference {
         public static final ResourceLocation SLOT_LOCK_CORE = addSprite("item/slot_lock_core");
         public static final ResourceLocation SLOT_INGOT_OUTLINE = addSprite("item/slot_ingot_outline");
 
+        public static final ResourceLocation PORTABLE_SAFE_MODEL = modLoc("textures/model/portable_safe.png");
+
         public static final ResourceLocation KEYRING_GUI = modLoc("textures/gui/keyring_gui.png");
         public static final ResourceLocation KEYSMITH_GUI = modLoc("textures/gui/keysmith_gui.png");
         public static final ResourceLocation LOCKSMITH_GUI = modLoc("textures/gui/locksmith_gui.png");
+        public static final ResourceLocation PORTABLE_SAFE_GUI = modLoc("textures/gui/portable_safe_gui.png");
 
         static ResourceLocation addSprite(String location) {
             ResourceLocation loc = modLoc(location);

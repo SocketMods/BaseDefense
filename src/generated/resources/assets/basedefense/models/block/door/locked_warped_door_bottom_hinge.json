@@ -1,0 +1,7 @@
+{
+  "parent": "basedefense:block/locked_door_bottom_hinge",
+  "textures": {
+    "top": "minecraft:block/warped_door_top",
+    "bottom": "minecraft:block/warped_door_bottom"
+  }
+}

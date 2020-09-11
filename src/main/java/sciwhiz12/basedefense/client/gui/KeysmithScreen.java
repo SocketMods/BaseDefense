@@ -76,7 +76,7 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, partialTicks);
         this.nameField.render(stack, mouseX, mouseY, partialTicks);
-        this.func_230459_a_(stack, mouseX, mouseY);
+        this.renderHoveredTooltip(stack, mouseX, mouseY);
     }
 
     @Override

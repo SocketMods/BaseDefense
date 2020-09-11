@@ -30,6 +30,8 @@ public class Languages extends LanguageProvider {
         add(Blocks.PADLOCKED_JUNGLE_DOOR, "Padlocked Jungle Door");
         add(Blocks.PADLOCKED_ACACIA_DOOR, "Padlocked Acacia Door");
         add(Blocks.PADLOCKED_DARK_OAK_DOOR, "Padlocked Dark Oak Door");
+        add(Blocks.PADLOCKED_CRIMSON_DOOR, "Padlocked Crimson Door");
+        add(Blocks.PADLOCKED_WARPED_DOOR, "Padlocked Warped Door");
         add(Blocks.PADLOCKED_IRON_DOOR, "Padlocked Iron Door");
 
         add(Blocks.LOCKED_OAK_DOOR, "Locked Oak Door");
@@ -38,7 +40,11 @@ public class Languages extends LanguageProvider {
         add(Blocks.LOCKED_JUNGLE_DOOR, "Locked Jungle Door");
         add(Blocks.LOCKED_ACACIA_DOOR, "Locked Acacia Door");
         add(Blocks.LOCKED_DARK_OAK_DOOR, "Locked Dark Oak Door");
+        add(Blocks.LOCKED_CRIMSON_DOOR, "Locked Crimson Door");
+        add(Blocks.LOCKED_WARPED_DOOR, "Locked Warped Door");
         add(Blocks.LOCKED_IRON_DOOR, "Locked Iron Door");
+
+        add(Blocks.PORTABLE_SAFE, "Portable Safe");
     }
 
     void addItems() {
@@ -79,17 +85,21 @@ public class Languages extends LanguageProvider {
 
         add("container", "keysmith", "Keysmithing");
         add("container", "locksmith", "Locksmithing");
+        add("container", "portable_safe", "Portable Safe");
 
         add("tooltip", "admin_only", "for Server Operators!");
         add("tooltip", "color", "Color #%s: %s");
         add("tooltip", "keyring.count", "Contains %s key(s)");
-        add("tooltip", "locked_door.has_lock", "Contains installed lock");
+        add("tooltip", "locked_block_item.has_lock", "Contains installed lock");
+        add("tooltip", "locked_block_item.no_lock", "Contains no lock");
 
         add("tooltip", "codes.header", "Stored Code(s):");
         add("tooltip", "codes.line", "  #%s");
         add("tooltip", "codes.count", "Contains %s codes");
         add("tooltip", "codes.count.zero", "Contains no codes");
         add("tooltip", "codes.count.one", "Contains %s code");
+
+        add("tooltip", "contains_items", "Contains items");
 
         add("status", "door.locked", "This %s is locked.");
         add("status", "door.info", "\"%s\"");

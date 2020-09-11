@@ -103,7 +103,7 @@ public class PadlockedDoorBlock extends Block {
             TileEntity te = worldIn.getTileEntity(pos);
             if (te instanceof PadlockedDoorTile) {
                 PadlockedDoorTile doorTile = (PadlockedDoorTile) te;
-                if (keyStack.getCapability(KEY).isPresent()) {
+                if (!keyStack.isEmpty() && keyStack.getCapability(KEY).isPresent()) {
                     if (allowOpen(state.get(SIDE), state.get(FACING), rayTrace.getFace())) {
                         IWorldPosCallable worldPos = Util.getOrDummy(worldIn, pos);
                         if (UnlockHelper.checkRemove(keyStack, doorTile, worldPos, player, true)) {
