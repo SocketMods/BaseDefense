@@ -211,7 +211,7 @@ public class PortableSafeTileEntity extends LockableTile implements ITickableTil
             inv.deserializeNBT(compound);
         }
         if (compound.contains("CustomName", Constants.NBT.TAG_STRING)) {
-            this.customName = ITextComponent.Serializer.func_240643_a_(compound.getString("CustomName"));
+            this.customName = ITextComponent.Serializer.getComponentFromJson(compound.getString("CustomName"));
         }
     }
 

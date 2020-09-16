@@ -42,7 +42,7 @@ public class BrokenLockPiecesItem extends Item implements IColorable {
 
     public IFormattableTextComponent getPreviousName(ItemStack stack) {
         return hasPreviousName(stack) ?
-                ITextComponent.Serializer.func_240643_a_(stack.getTag().getString("BrokenLockName")) :
+                ITextComponent.Serializer.getComponentFromJson(stack.getTag().getString("BrokenLockName")) :
                 new StringTextComponent("");
     }
 

@@ -51,8 +51,8 @@ public class LockedDoorModel implements IBakedModel {
     }
 
     @Override
-    public boolean func_230044_c_() {
-        return parentModel.func_230044_c_();
+    public boolean isSideLit() {
+        return parentModel.isSideLit();
     }
 
     @Override

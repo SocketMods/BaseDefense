@@ -66,10 +66,10 @@ public class ClientRegistration {
     static void registerPropertyOverrides() {
         LOG.debug(CLIENT, "Registering item property overrides");
 
-        ItemModelsProperties.func_239418_a_(Items.KEY, COLORS, PropertyOverrides.COLORS_GETTER);
-        ItemModelsProperties.func_239418_a_(Items.LOCK_CORE, COLORS, PropertyOverrides.COLORS_GETTER);
-        ItemModelsProperties.func_239418_a_(Items.PADLOCK, COLORS, PropertyOverrides.COLORS_GETTER);
-        ItemModelsProperties.func_239418_a_(Items.BROKEN_LOCK_PIECES, COLORS, PropertyOverrides.COLORS_GETTER);
+        ItemModelsProperties.registerProperty(Items.KEY, COLORS, PropertyOverrides.COLORS_GETTER);
+        ItemModelsProperties.registerProperty(Items.LOCK_CORE, COLORS, PropertyOverrides.COLORS_GETTER);
+        ItemModelsProperties.registerProperty(Items.PADLOCK, COLORS, PropertyOverrides.COLORS_GETTER);
+        ItemModelsProperties.registerProperty(Items.BROKEN_LOCK_PIECES, COLORS, PropertyOverrides.COLORS_GETTER);
     }
 
     @SubscribeEvent
