@@ -35,7 +35,10 @@ repositories {
 }
 
 sourceSets {
-    main.resources.srcDirs += 'src/generated/resources/'
+    main.resources {
+        srcDirs += data.resources.srcDirs
+        exclude '.cache/' // Prevents the .cache file from being included in the jars
+    }
 }
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
@@ -76,19 +79,29 @@ minecraft {
             property 'forge.logging.markers', "${logging_markers}"
             property 'forge.logging.console.level', 'debug'
 
-            args '--mod', 'basedefense', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            args '--mod', 'basedefense', '--all'
+            args '--output', sourceSets.data.resources.srcDirs[0].toString()
+            args '--existing', sourceSets.main.resources.srcDirs[0].toString()
 
+            ideaModule "${project.name}.data"
             mods {
                 basedefense {
-                    source sourceSets.main
+                    sources sourceSets.main, sourceSets.data
                 }
             }
         }
     }
 }
 
+configurations {
+    dataImplementation.extendsFrom implementation
+}
+
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
+
+    dataImplementation sourceSets.main.output
+    dataCompileClasspath sourceSets.main.compileClasspath
 }
 
 def git_timestamp = grgit.head().dateTime.toLocalDateTime().toString() + grgit.head().dateTime.getOffset().toString().replace(':', '')
@@ -105,6 +118,7 @@ jar {
                 "Git-Commit-Timestamp"  : git_timestamp
         ])
     }
+    includeEmptyDirs false
 }
 
 jar.finalizedBy('reobfJar')
