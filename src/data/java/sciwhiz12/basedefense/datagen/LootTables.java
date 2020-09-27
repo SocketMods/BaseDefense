@@ -42,6 +42,7 @@ public class LootTables extends LootTableProvider {
 
         standardDropTable(Blocks.LOCKSMITH_TABLE);
         standardDropTable(Blocks.KEYSMITH_TABLE);
+        standardDropTable(Blocks.PTZ_CAMERA);
 
         lockedDoor(Blocks.LOCKED_OAK_DOOR);
         lockedDoor(Blocks.LOCKED_BIRCH_DOOR);

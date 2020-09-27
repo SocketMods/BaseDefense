@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " ii",
+    "big"
+  ],
+  "key": {
+    "g": {
+      "tag": "forge:glass/black"
+    },
+    "i": {
+      "tag": "forge:ingots/iron"
+    },
+    "b": {
+      "item": "minecraft:black_concrete"
+    }
+  },
+  "result": {
+    "item": "basedefense:ptz_camera"
+  }
+}

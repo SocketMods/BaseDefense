@@ -34,6 +34,14 @@ public class Recipes extends RecipeProvider {
                 .key('n', Tags.Items.NUGGETS_IRON)
                 .addCriterion("has_ingots", InventoryChangeTrigger.Instance.forItems(Items.GOLD_INGOT, Items.IRON_INGOT))
                 .build(consumer, modLoc("blank_key"));
+        ShapedRecipeBuilder.shapedRecipe(Reference.Items.PTZ_CAMERA)
+                .patternLine(" ii")
+                .patternLine("big")
+                .key('g', Tags.Items.GLASS_BLACK)
+                .key('i', Tags.Items.INGOTS_IRON)
+                .key('b', Items.BLACK_CONCRETE)
+                .addCriterion("has_ingots", InventoryChangeTrigger.Instance.forItems(Items.IRON_INGOT))
+                .build(consumer, modLoc("ptz_camera"));
         CustomShapedRecipeBuilder.shapedRecipe(RecipeSerializers.CODED_LOCK, Reference.Items.PADLOCK)
                 .patternLine(" i ")
                 .patternLine("ICI")

@@ -46,6 +46,7 @@ public class BlockStates extends BlockStateProvider {
         lockedDoor(Blocks.LOCKED_IRON_DOOR);
 
         portableSafe();
+        ptzCamera();
     }
 
     void lockedDoor(LockedDoorBlock block) {
@@ -89,6 +90,12 @@ public class BlockStates extends BlockStateProvider {
         VariantBlockStateBuilder builder = getVariantBuilder(Blocks.PORTABLE_SAFE);
         ConfiguredModel.Builder<?> model = ConfiguredModel.builder().modelFile(particle);
         builder.setModels(builder.partialState(), model.buildLast());
+    }
+
+    void ptzCamera() {
+        final BlockModelBuilder model = models().getBuilder("ptz_camera").texture("particle", "minecraft:block/iron_block");
+        simpleBlock(Blocks.PTZ_CAMERA, model);
+        simpleBlockItem(Blocks.PTZ_CAMERA, model);
     }
 
     void standardCubeAll(Block b) {
