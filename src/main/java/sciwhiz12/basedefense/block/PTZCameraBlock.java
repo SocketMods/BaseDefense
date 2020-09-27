@@ -1,9 +1,5 @@
 package sciwhiz12.basedefense.block;
 
-import static sciwhiz12.basedefense.util.ShapeUtil.rotateCuboidShape;
-
-import javax.annotation.Nullable;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -26,6 +22,10 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import sciwhiz12.basedefense.tileentity.PTZCameraTile;
+
+import javax.annotation.Nullable;
+
+import static sciwhiz12.basedefense.util.ShapeUtil.rotateCuboidShape;
 
 public class PTZCameraBlock extends Block {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -93,10 +93,9 @@ public class PTZCameraBlock extends Block {
     public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
             BlockPos currentPos, BlockPos facingPos) {
         return facing.getOpposite() == stateIn.get(FACING) && !stateIn.isValidPosition(worldIn, currentPos) ? Blocks.AIR
-            .getDefaultState() : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+                .getDefaultState() : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
-    @SuppressWarnings("deprecation")
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
@@ -121,6 +120,7 @@ public class PTZCameraBlock extends Block {
         return state.with(FACING, rot.rotate(state.get(FACING)));
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.toRotation(state.get(FACING)));

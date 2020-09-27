@@ -1,7 +1,5 @@
 package sciwhiz12.basedefense.tileentity;
 
-import static sciwhiz12.basedefense.block.PTZCameraBlock.FACING;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.DoubleNBT;
@@ -15,6 +13,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.Constants;
 import sciwhiz12.basedefense.Reference.TileEntities;
+
+import static sciwhiz12.basedefense.block.PTZCameraBlock.FACING;
 
 public class PTZCameraTile extends TileEntity implements ITickableTileEntity {
     private int firstTick = 0;
@@ -122,8 +122,8 @@ public class PTZCameraTile extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public void func_230337_a_(BlockState state, CompoundNBT compound) {
-        super.func_230337_a_(state, compound);
+    public void read(BlockState state, CompoundNBT compound) {
+        super.read(state, compound);
         this.read(compound);
     }
 

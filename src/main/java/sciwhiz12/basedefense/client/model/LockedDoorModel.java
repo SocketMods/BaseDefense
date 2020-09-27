@@ -32,7 +32,7 @@ public class LockedDoorModel implements IBakedModel {
         for (BakedQuad quad : this.getQuads(state, side, rand)) {
             if (quad.hasTintIndex()) {
                 Integer colors = data.getData(LockedDoorTile.COLOR_PROPERTY);
-                if (colors != null && colors - 1 >= quad.getTintIndex()) { list.add(quad); }
+                if (colors != null && colors - 1 >= quad.getTintIndex() - 1) { list.add(quad); }
             } else {
                 list.add(quad);
             }
@@ -51,8 +51,8 @@ public class LockedDoorModel implements IBakedModel {
     }
 
     @Override
-    public boolean func_230044_c_() {
-        return parentModel.func_230044_c_();
+    public boolean isSideLit() {
+        return parentModel.isSideLit();
     }
 
     @Override

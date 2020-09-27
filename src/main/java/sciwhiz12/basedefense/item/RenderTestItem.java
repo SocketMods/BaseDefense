@@ -20,10 +20,10 @@ public class RenderTestItem extends Item {
 
     /*
      * CAMERA TESTING ITEM
-     * 
+     *
      * Right click an entity to change the renderViewEntity to that entity. Right
      * click any block to revert the renderViewEntity to the player.
-     * 
+     *
      * See CameraPOVManager and ChangePOVPacket for how the renderViewEntity is
      * changed
      */
@@ -35,7 +35,7 @@ public class RenderTestItem extends Item {
         if (target instanceof PlayerEntity) return ActionResultType.PASS;
 
         NetworkHandler.CHANNEL.send(
-            PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerIn), new ChangePOVPacket(target)
+                PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerIn), new ChangePOVPacket(target)
         );
 
         return ActionResultType.PASS;

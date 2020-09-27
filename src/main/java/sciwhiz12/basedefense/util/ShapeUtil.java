@@ -18,8 +18,8 @@ public final class ShapeUtil {
      * Rotates the given {@link VoxelShape} along the horizontal plane according to
      * the given rotation direction.
      *
-     * Assumes the given shape is within the bounds of 1 unit on each axis.
-     * 
+     * <p>Assumes the given shape is within the bounds of 1 unit on each axis. </p>
+     *
      * @param shape       The shape to rotate
      * @param rotationDir The rotation direction
      * @return The rotated shape

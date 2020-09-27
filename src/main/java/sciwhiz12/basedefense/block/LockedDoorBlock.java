@@ -28,7 +28,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import sciwhiz12.basedefense.item.LockedDoorBlockItem;
+import sciwhiz12.basedefense.item.LockedBlockItem;
 import sciwhiz12.basedefense.tileentity.LockedDoorTile;
 import sciwhiz12.basedefense.util.UnlockHelper;
 
@@ -206,10 +206,10 @@ public class LockedDoorBlock extends Block {
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         boolean locked = false;
-        if (!stack.isEmpty() && stack.getItem() instanceof LockedDoorBlockItem) {
+        if (!stack.isEmpty() && stack.getItem() instanceof LockedBlockItem) {
             TileEntity te = worldIn.getTileEntity(pos);
             if (te instanceof LockedDoorTile) {
-                ((LockedDoorTile) te).setLockStack(((LockedDoorBlockItem) stack.getItem()).getLockStack(stack));
+                ((LockedDoorTile) te).setLockStack(((LockedBlockItem) stack.getItem()).getLockStack(stack));
                 locked = true;
                 worldIn.setBlockState(pos, state.with(LOCKED, locked), DEFAULT_AND_RERENDER);
             }

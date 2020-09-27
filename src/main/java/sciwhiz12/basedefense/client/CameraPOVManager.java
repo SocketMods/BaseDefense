@@ -1,14 +1,10 @@
 package sciwhiz12.basedefense.client;
 
-import static sciwhiz12.basedefense.BaseDefense.CLIENT;
-import static sciwhiz12.basedefense.BaseDefense.LOG;
-import static sciwhiz12.basedefense.Reference.MODID;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
@@ -26,6 +22,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
+import static sciwhiz12.basedefense.BaseDefense.CLIENT;
+import static sciwhiz12.basedefense.BaseDefense.LOG;
+import static sciwhiz12.basedefense.Reference.MODID;
+
 @EventBusSubscriber(value = Dist.CLIENT, bus = Bus.FORGE, modid = MODID)
 public class CameraPOVManager {
     public static CameraPOVManager INSTANCE = null;
@@ -39,7 +39,7 @@ public class CameraPOVManager {
     private final Minecraft mc;
     private Entity prevViewEntity;
     private boolean prevHideGUI;
-    private int prevThirdPerson;
+    private PointOfView prevThirdPerson;
     private volatile int viewEntityID = -1;
     private volatile boolean renderingCamera = false;
 
@@ -77,15 +77,15 @@ public class CameraPOVManager {
             prevViewEntity = mc.getRenderViewEntity();
             mc.setRenderViewEntity(entity);
             prevHideGUI = mc.gameSettings.hideGUI;
-            prevThirdPerson = mc.gameSettings.thirdPersonView;
+            prevThirdPerson = mc.gameSettings.getPointOfView();
             mc.gameSettings.hideGUI = true;
-            mc.gameSettings.thirdPersonView = 0;
+            mc.gameSettings.setPointOfView(PointOfView.FIRST_PERSON);
             renderingCamera = true;
         } else if (event.phase == Phase.END && renderingCamera) {
             mc.setRenderViewEntity(prevViewEntity);
             prevViewEntity = null;
             mc.gameSettings.hideGUI = prevHideGUI;
-            mc.gameSettings.thirdPersonView = prevThirdPerson;
+            mc.gameSettings.setPointOfView(prevThirdPerson);
             renderingCamera = false;
         }
     }
@@ -104,9 +104,8 @@ public class CameraPOVManager {
             float yaw = MathHelper.lerp(partialTicks, mc.player.prevRotationYaw, mc.player.rotationYaw);
             MatrixStack stack = event.getMatrixStack();
             stack.push();
-            manager.renderEntityStatic(
-                player, x - projView.x, y - projView.y, z - projView.z, yaw, partialTicks, stack, mc.getRenderTypeBuffers()
-                    .getBufferSource(), manager.getPackedLight(player, partialTicks)
+            manager.renderEntityStatic(player, x - projView.x, y - projView.y, z - projView.z, yaw, partialTicks, stack,
+                    mc.getRenderTypeBuffers().getBufferSource(), manager.getPackedLight(player, partialTicks)
             );
             stack.pop();
         }

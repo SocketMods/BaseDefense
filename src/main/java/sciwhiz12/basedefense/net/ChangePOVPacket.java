@@ -1,11 +1,11 @@
 package sciwhiz12.basedefense.net;
 
-import java.util.function.Supplier;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import sciwhiz12.basedefense.client.CameraPOVManager;
+
+import java.util.function.Supplier;
 
 public class ChangePOVPacket {
     public final int entityId;

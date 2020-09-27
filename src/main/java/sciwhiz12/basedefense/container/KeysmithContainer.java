@@ -72,7 +72,9 @@ public class KeysmithContainer extends Container {
             @Override
             public ItemStack onTake(PlayerEntity player, ItemStack stack) {
                 KeysmithContainer.this.inputSlots.decrStackSize(0, 1);
-                KeysmithContainer.this.setOutputName(null);
+                if (KeysmithContainer.this.inputSlots.getStackInSlot(0).isEmpty()) {
+                    KeysmithContainer.this.setOutputName(null);
+                }
                 return stack;
             }
         }.setBackground(Textures.ATLAS_BLOCKS_TEXTURE, Textures.SLOT_KEY));
@@ -122,10 +124,12 @@ public class KeysmithContainer extends Container {
         if (slot != null && slot.getHasStack()) {
             ItemStack slotStack = slot.getStack();
             if (index == 2) {
-                if (!this.mergeItemStack(slotStack, 3, 40, true)) { return ItemStack.EMPTY; }
+                if (!this.mergeItemStack(slotStack, 3, 39, true)) { return ItemStack.EMPTY; }
             } else if (index != 0 && index != 1) {
-                if (index < 39 && !this.mergeItemStack(slotStack, 0, 2, false)) { return ItemStack.EMPTY; }
-            } else if (!this.mergeItemStack(slotStack, 3, 40, false)) { return ItemStack.EMPTY; }
+                if (index < 39 && !this.mergeItemStack(slotStack, 0, 2, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!this.mergeItemStack(slotStack, 3, 39, false)) { return ItemStack.EMPTY; }
 
             if (slotStack.isEmpty()) {
                 slot.putStack(ItemStack.EMPTY);

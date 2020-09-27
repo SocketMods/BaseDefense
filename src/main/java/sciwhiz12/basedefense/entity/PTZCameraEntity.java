@@ -15,9 +15,9 @@ import sciwhiz12.basedefense.Reference.Entities;
 public class PTZCameraEntity extends Entity {
     public static final Rotations DEFAULT_ROTATION = new Rotations(0F, 0F, 0F);
     private static final DataParameter<Rotations> ROTATION_DATA = EntityDataManager.createKey(
-        PTZCameraEntity.class, DataSerializers.ROTATIONS
+            PTZCameraEntity.class, DataSerializers.ROTATIONS
     );
-    private Rotations ROTATION = DEFAULT_ROTATION;
+    private final Rotations ROTATION = DEFAULT_ROTATION;
 
     public PTZCameraEntity(EntityType<?> type, World worldIn) {
         super(type, worldIn);
