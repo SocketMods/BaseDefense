@@ -39,6 +39,7 @@ import sciwhiz12.basedefense.container.PortableSafeContainer;
 import sciwhiz12.basedefense.entity.PTZCameraEntity;
 import sciwhiz12.basedefense.item.BrokenLockPiecesItem;
 import sciwhiz12.basedefense.item.LockedBlockItem;
+import sciwhiz12.basedefense.item.RenderTestItem;
 import sciwhiz12.basedefense.item.key.AdminKeyItem;
 import sciwhiz12.basedefense.item.key.KeyItem;
 import sciwhiz12.basedefense.item.key.KeyringItem;
@@ -161,6 +162,7 @@ public final class Registration {
                 .setISTER(() -> PortableSafeItemStackRenderer::create)).setRegistryName("portable_safe"));
 
         reg.register(new BlockItem(PTZ_CAMERA, defaultProps).setRegistryName("ptz_camera"));
+        reg.register(new RenderTestItem(new Item.Properties().group(ITEM_GROUP)).setRegistryName("render_tester"));
     }
 
     @SubscribeEvent

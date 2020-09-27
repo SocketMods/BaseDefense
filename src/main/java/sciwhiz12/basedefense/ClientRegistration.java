@@ -26,6 +26,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import sciwhiz12.basedefense.ClientReference.Colors;
 import sciwhiz12.basedefense.ClientReference.PropertyOverrides;
 import sciwhiz12.basedefense.ClientReference.Textures;
+import sciwhiz12.basedefense.client.CameraPOVManager;
 import sciwhiz12.basedefense.client.gui.KeyringScreen;
 import sciwhiz12.basedefense.client.gui.KeysmithScreen;
 import sciwhiz12.basedefense.client.gui.LocksmithScreen;
@@ -62,6 +63,7 @@ public class ClientRegistration {
         bindTileEntityRenderers();
         registerEntityRenderers();
         setupRenderLayer();
+        CameraPOVManager.register();
         event.enqueueWork(ClientRegistration::addCustomLayerRenderers);
         event.enqueueWork(ClientRegistration::registerPropertyOverrides);
         event.enqueueWork(ClientRegistration::registerScreenFactories);

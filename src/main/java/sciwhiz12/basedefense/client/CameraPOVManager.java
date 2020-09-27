@@ -3,6 +3,7 @@ package sciwhiz12.basedefense.client;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.Entity;
@@ -104,9 +105,11 @@ public class CameraPOVManager {
             float yaw = MathHelper.lerp(partialTicks, mc.player.prevRotationYaw, mc.player.rotationYaw);
             MatrixStack stack = event.getMatrixStack();
             stack.push();
+            final IRenderTypeBuffer.Impl buffers = mc.getRenderTypeBuffers().getBufferSource();
             manager.renderEntityStatic(player, x - projView.x, y - projView.y, z - projView.z, yaw, partialTicks, stack,
-                    mc.getRenderTypeBuffers().getBufferSource(), manager.getPackedLight(player, partialTicks)
+                    buffers, manager.getPackedLight(player, partialTicks)
             );
+            buffers.finish();
             stack.pop();
         }
     }
