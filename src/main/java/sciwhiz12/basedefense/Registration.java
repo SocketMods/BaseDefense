@@ -51,10 +51,7 @@ import sciwhiz12.basedefense.recipe.CodedLockRecipe;
 import sciwhiz12.basedefense.recipe.ColoringRecipe;
 import sciwhiz12.basedefense.recipe.LockedItemIngredient;
 import sciwhiz12.basedefense.recipe.LockedItemRecipe;
-import sciwhiz12.basedefense.tileentity.LockableTile;
-import sciwhiz12.basedefense.tileentity.LockedDoorTile;
-import sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
-import sciwhiz12.basedefense.tileentity.PortableSafeTileEntity;
+import sciwhiz12.basedefense.tileentity.*;
 import sciwhiz12.basedefense.util.RecipeHelper;
 
 import java.util.function.Supplier;
@@ -210,6 +207,7 @@ public final class Registration {
                 LOCKED_JUNGLE_DOOR, LOCKED_ACACIA_DOOR, LOCKED_DARK_OAK_DOOR, LOCKED_CRIMSON_DOOR, LOCKED_WARPED_DOOR)
                 .setRegistryName("locked_door"));
         reg.register(makeType(PortableSafeTileEntity::new, PORTABLE_SAFE).setRegistryName("portable_safe"));
+        reg.register(makeType(PTZCameraTile::new, PTZ_CAMERA).setRegistryName("ptz_camera"));
     }
 
     private static <T extends TileEntity> TileEntityType<T> makeType(Supplier<T> factory, Block... validBlocks) {
