@@ -53,7 +53,7 @@ import static sciwhiz12.basedefense.Reference.*;
  * @author SciWhiz12
  */
 @EventBusSubscriber(value = Dist.CLIENT, bus = Bus.MOD, modid = MODID)
-public class ClientRegistration {
+public final class ClientRegistration {
     // Prevent instantiation
     private ClientRegistration() {}
 
