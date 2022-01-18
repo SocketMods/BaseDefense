@@ -1,21 +1,21 @@
 package tk.sciwhiz12.basedefense.item;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import tk.sciwhiz12.basedefense.Reference;
 import tk.sciwhiz12.basedefense.api.ITooltipInfo;
 import tk.sciwhiz12.basedefense.capabilities.CodedLock;
 import tk.sciwhiz12.basedefense.capabilities.SerializableCapabilityProvider;
 import tk.sciwhiz12.basedefense.util.ItemHelper;
-import tk.sciwhiz12.basedefense.Reference;
 
 import java.util.List;
 

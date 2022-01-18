@@ -1,11 +1,11 @@
 package tk.sciwhiz12.basedefense.capabilities;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.nbt.LongTag;
-import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraftforge.common.util.INBTSerializable;
 import tk.sciwhiz12.basedefense.api.ITooltipInfo;
 import tk.sciwhiz12.basedefense.api.capablities.ICodeHolder;

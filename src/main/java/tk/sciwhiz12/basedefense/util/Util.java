@@ -1,9 +1,9 @@
 package tk.sciwhiz12.basedefense.util;
 
-import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 

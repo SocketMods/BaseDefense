@@ -1,8 +1,8 @@
 package tk.sciwhiz12.basedefense.net;
 
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 import tk.sciwhiz12.basedefense.container.KeysmithContainer;
 

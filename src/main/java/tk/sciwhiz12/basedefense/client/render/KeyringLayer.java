@@ -1,19 +1,19 @@
 package tk.sciwhiz12.basedefense.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.entity.HumanoidArm;
-import com.mojang.math.Vector3f;
 import tk.sciwhiz12.basedefense.item.key.KeyringItem;
 
 public class KeyringLayer<Entity extends Player, Model extends HumanoidModel<Entity>>

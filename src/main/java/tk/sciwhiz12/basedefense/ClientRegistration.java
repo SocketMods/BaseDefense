@@ -1,18 +1,17 @@
 package tk.sciwhiz12.basedefense;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.renderer.block.BlockModelShaper;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.world.item.Item;
-import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -33,10 +32,13 @@ import tk.sciwhiz12.basedefense.client.render.KeyringLayer;
 import tk.sciwhiz12.basedefense.client.render.PadlockedDoorRenderer;
 import tk.sciwhiz12.basedefense.client.render.PortableSafeRenderer;
 
-import java.util.Map;
 import java.util.function.Function;
 
-import static tk.sciwhiz12.basedefense.Reference.*;
+import static tk.sciwhiz12.basedefense.Reference.Blocks;
+import static tk.sciwhiz12.basedefense.Reference.Containers;
+import static tk.sciwhiz12.basedefense.Reference.Items;
+import static tk.sciwhiz12.basedefense.Reference.MODID;
+import static tk.sciwhiz12.basedefense.Reference.TileEntities;
 
 /**
  * Class for registering <strong>client-side only</strong> objects of this mod.

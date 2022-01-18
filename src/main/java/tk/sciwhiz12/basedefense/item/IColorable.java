@@ -1,7 +1,7 @@
 package tk.sciwhiz12.basedefense.item;
 
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.Arrays;
 

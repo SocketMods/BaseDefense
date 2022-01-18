@@ -7,8 +7,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import tk.sciwhiz12.basedefense.api.ITooltipInfo;
 import tk.sciwhiz12.basedefense.api.capablities.ICodeHolder;
-import tk.sciwhiz12.basedefense.util.Util;
 import tk.sciwhiz12.basedefense.api.capablities.IContainsCode;
+import tk.sciwhiz12.basedefense.util.Util;
 
 import java.util.List;
 

@@ -1,13 +1,15 @@
 package tk.sciwhiz12.basedefense.item.lock;
 
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import tk.sciwhiz12.basedefense.capabilities.CodedLock;
 import tk.sciwhiz12.basedefense.capabilities.SerializableCapabilityProvider;
 import tk.sciwhiz12.basedefense.util.ItemHelper;
 
-import static tk.sciwhiz12.basedefense.Reference.Capabilities.*;
+import static tk.sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
+import static tk.sciwhiz12.basedefense.Reference.Capabilities.CONTAINS_CODE;
+import static tk.sciwhiz12.basedefense.Reference.Capabilities.LOCK;
 
 public class CodedLockCoreItem extends AbstractLockCoreItem {
     public CodedLockCoreItem(Properties props) {

@@ -1,10 +1,10 @@
 package tk.sciwhiz12.basedefense.item.lock;
 
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.ItemHandlerHelper;
 import tk.sciwhiz12.basedefense.api.capablities.IKey;
@@ -13,7 +13,9 @@ import tk.sciwhiz12.basedefense.capabilities.SerializableCapabilityProvider;
 import tk.sciwhiz12.basedefense.tileentity.LockableTile;
 import tk.sciwhiz12.basedefense.util.ItemHelper;
 
-import static tk.sciwhiz12.basedefense.Reference.Capabilities.*;
+import static tk.sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
+import static tk.sciwhiz12.basedefense.Reference.Capabilities.CONTAINS_CODE;
+import static tk.sciwhiz12.basedefense.Reference.Capabilities.LOCK;
 import static tk.sciwhiz12.basedefense.Reference.ITEM_GROUP;
 
 public class CodedPadlockItem extends AbstractPadlockItem {

@@ -1,8 +1,8 @@
 package tk.sciwhiz12.basedefense.capabilities;
 
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.EndTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.INBTSerializable;

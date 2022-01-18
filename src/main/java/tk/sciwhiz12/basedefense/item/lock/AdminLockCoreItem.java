@@ -1,9 +1,9 @@
 package tk.sciwhiz12.basedefense.item.lock;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import tk.sciwhiz12.basedefense.capabilities.AdminKeyLock;
 import tk.sciwhiz12.basedefense.capabilities.GenericCapabilityProvider;

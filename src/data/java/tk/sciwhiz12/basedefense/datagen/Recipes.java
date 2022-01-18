@@ -1,9 +1,13 @@
 package tk.sciwhiz12.basedefense.datagen;
 
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.data.*;
-import net.minecraft.world.item.Items;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.SpecialRecipeBuilder;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.common.Tags;
 import tk.sciwhiz12.basedefense.Reference;
 import tk.sciwhiz12.basedefense.Reference.Blocks;
@@ -15,11 +19,6 @@ import java.util.function.Consumer;
 
 import static tk.sciwhiz12.basedefense.Reference.MODID;
 import static tk.sciwhiz12.basedefense.Reference.modLoc;
-
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.data.recipes.SpecialRecipeBuilder;
 
 public class Recipes extends RecipeProvider {
     public Recipes(DataGenerator gen) {

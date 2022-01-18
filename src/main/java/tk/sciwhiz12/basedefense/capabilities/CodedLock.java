@@ -1,8 +1,8 @@
 package tk.sciwhiz12.basedefense.capabilities;
 
 import it.unimi.dsi.fastutil.longs.LongArrayList;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.nbt.LongArrayTag;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraftforge.common.util.INBTSerializable;
 import tk.sciwhiz12.basedefense.api.capablities.IKey;

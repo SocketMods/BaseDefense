@@ -1,15 +1,15 @@
 package tk.sciwhiz12.basedefense;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.extensions.IForgeMenuType;
@@ -22,6 +22,11 @@ import tk.sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import tk.sciwhiz12.basedefense.api.capablities.IContainsCode;
 import tk.sciwhiz12.basedefense.api.capablities.IKey;
 import tk.sciwhiz12.basedefense.api.capablities.ILock;
+import tk.sciwhiz12.basedefense.block.KeysmithBlock;
+import tk.sciwhiz12.basedefense.block.LockedDoorBlock;
+import tk.sciwhiz12.basedefense.block.LocksmithBlock;
+import tk.sciwhiz12.basedefense.block.PadlockedDoorBlock;
+import tk.sciwhiz12.basedefense.block.PortableSafeBlock;
 import tk.sciwhiz12.basedefense.container.KeyringContainer;
 import tk.sciwhiz12.basedefense.container.KeysmithContainer;
 import tk.sciwhiz12.basedefense.container.LocksmithContainer;
@@ -45,14 +50,7 @@ import tk.sciwhiz12.basedefense.tileentity.LockedDoorTile;
 import tk.sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
 import tk.sciwhiz12.basedefense.tileentity.PortableSafeTileEntity;
 import tk.sciwhiz12.basedefense.util.RecipeHelper;
-import tk.sciwhiz12.basedefense.block.KeysmithBlock;
-import tk.sciwhiz12.basedefense.block.LockedDoorBlock;
-import tk.sciwhiz12.basedefense.block.LocksmithBlock;
-import tk.sciwhiz12.basedefense.block.PadlockedDoorBlock;
-import tk.sciwhiz12.basedefense.block.PortableSafeBlock;
 import tk.sciwhiz12.basedefense.util.Util;
-
-import java.util.function.Supplier;
 
 /**
  * Main class for registering objects of this mod.

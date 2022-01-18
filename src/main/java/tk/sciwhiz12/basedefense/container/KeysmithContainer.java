@@ -1,18 +1,20 @@
 package tk.sciwhiz12.basedefense.container;
 
 import it.unimi.dsi.fastutil.longs.LongLists;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.network.chat.TextComponent;
 import org.apache.commons.lang3.StringUtils;
 import tk.sciwhiz12.basedefense.ClientReference.Textures;
+import tk.sciwhiz12.basedefense.Reference.Blocks;
+import tk.sciwhiz12.basedefense.Reference.Containers;
 import tk.sciwhiz12.basedefense.Reference.Items;
 import tk.sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import tk.sciwhiz12.basedefense.item.IColorable;
@@ -20,12 +22,7 @@ import tk.sciwhiz12.basedefense.util.ContainerHelper;
 
 import java.util.Random;
 
-import static tk.sciwhiz12.basedefense.Reference.Blocks;
 import static tk.sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
-import static tk.sciwhiz12.basedefense.Reference.Containers;
-
-import tk.sciwhiz12.basedefense.Reference.Blocks;
-import tk.sciwhiz12.basedefense.Reference.Containers;
 
 public class KeysmithContainer extends AbstractContainerMenu {
     private static final Random RANDOM = new Random();
