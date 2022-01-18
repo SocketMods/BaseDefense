@@ -34,8 +34,7 @@ public class CodedKey implements ICodeHolder, IKey, INBTSerializable<LongTag>, I
 
     @Override
     public boolean canUnlock(ILock lock, ContainerLevelAccess worldPos, @Nullable Player player) {
-        if (lock instanceof IContainsCode) {
-            IContainsCode codeLock = (IContainsCode) lock;
+        if (lock instanceof IContainsCode codeLock) {
             return codeLock.containsCode(storedCode);
         }
         return false;

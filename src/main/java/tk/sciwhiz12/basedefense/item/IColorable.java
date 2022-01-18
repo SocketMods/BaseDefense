@@ -118,9 +118,7 @@ public interface IColorable {
         if (from.isEmpty() || to.isEmpty()) {
             return;
         }
-        if (from.getItem() instanceof IColorable && to.getItem() instanceof IColorable) {
-            IColorable fromItem = (IColorable) from.getItem();
-            IColorable toItem = (IColorable) to.getItem();
+        if (from.getItem() instanceof IColorable fromItem && to.getItem() instanceof IColorable toItem) {
             toItem.setColors(to, fromItem.getColors(from));
         }
     }

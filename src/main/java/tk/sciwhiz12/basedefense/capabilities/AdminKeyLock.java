@@ -49,10 +49,8 @@ public class AdminKeyLock implements IKey, ILock, ITooltipInfo {
 
     @Override
     public void onRemove(IKey key, ContainerLevelAccess worldPos, @Nullable Player player) {
-        worldPos.execute((world, pos) -> {
-            world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1.0F,
-                world.random.nextFloat() * 0.1F + 0.9F);
-        });
+        worldPos.execute((world, pos) -> world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS,
+            1.0F, world.random.nextFloat() * 0.1F + 0.9F));
     }
 
     @Override

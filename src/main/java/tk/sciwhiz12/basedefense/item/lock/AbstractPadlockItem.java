@@ -53,7 +53,7 @@ public abstract class AbstractPadlockItem extends Item implements IColorable {
         final BlockPos pos = context.getClickedPos();
         final BlockState state = world.getBlockState(pos);
         if (state.getBlock() instanceof DoorBlock && !state.getValue(DoorBlock.OPEN) && !state.getValue(DoorBlock.POWERED)) {
-            final PadlockedDoorBlock block = PadlockedDoorBlock.getReplacement(state.getBlock());
+            @Nullable final PadlockedDoorBlock block = PadlockedDoorBlock.getReplacement(state.getBlock());
             if (block == null || !block.isValidLock(stack)) {
                 return InteractionResult.PASS;
             }
@@ -78,9 +78,8 @@ public abstract class AbstractPadlockItem extends Item implements IColorable {
                     Block.UPDATE_CLIENTS | Block.UPDATE_IMMEDIATE | Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_SUPPRESS_DROPS;
                 world.setBlock(pos, newState, flags);
                 world.setBlock(offPos, newOffState, flags);
-                @Nullable BlockEntity te = world.getBlockEntity(isLower ? pos : offPos);
-                if (te instanceof PadlockedDoorTile) {
-                    ((PadlockedDoorTile) te).setLockStack(copy);
+                if (world.getBlockEntity(isLower ? pos : offPos) instanceof PadlockedDoorTile te) {
+                    te.setLockStack(copy);
                 }
             }
             return InteractionResult.SUCCESS;

@@ -90,10 +90,10 @@ public class ColoringRecipe extends CustomRecipe {
             return ItemStack.EMPTY;
         }
         ItemStack output = colorItem.copy();
-        IColorable color = (IColorable) output.getItem();
-
-        for (int idx = 0; idx < colors.size(); idx++) {
-            color.setColor(output, idx, colors.get(idx).getTextColor());
+        if (output.getItem() instanceof IColorable color) {
+            for (int idx = 0; idx < colors.size(); idx++) {
+                color.setColor(output, idx, colors.get(idx).getTextColor());
+            }
         }
         return output;
     }

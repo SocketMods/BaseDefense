@@ -53,7 +53,7 @@ public class PortableSafeContainer extends AbstractContainerMenu {
     public ItemStack quickMoveStack(Player playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
-        if (slot != null && slot.hasItem()) {
+        if (slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
             if (index < this.inventory.getSlots()) {
@@ -78,9 +78,8 @@ public class PortableSafeContainer extends AbstractContainerMenu {
     public void removed(Player playerIn) {
         super.removed(playerIn);
         worldPos.execute((world, pos) -> {
-            @Nullable BlockEntity te = world.getBlockEntity(pos);
-            if (te instanceof PortableSafeTileEntity) {
-                ((PortableSafeTileEntity) te).closeInventory(playerIn);
+            if (world.getBlockEntity(pos) instanceof PortableSafeTileEntity te) {
+                te.closeInventory(playerIn);
             }
         });
     }

@@ -28,17 +28,16 @@ import static tk.sciwhiz12.basedefense.Reference.modLoc;
 public final class ClientReference {
     public static final class Colors {
         public static final ItemColor ITEM_COLOR = (stack, tintIndex) -> {
-            if (stack.getItem() instanceof IColorable && tintIndex >= 2) {
-                return ((IColorable) stack.getItem()).getColor(stack, tintIndex - 2);
+            if (stack.getItem() instanceof IColorable color && tintIndex >= 2) {
+                return color.getColor(stack, tintIndex - 2);
             }
             return -1;
         };
 
         public static final BlockColor LOCKED_DOOR_COLOR = (state, world, pos, tintIndex) -> {
             if (world != null && pos != null && state.getBlock() instanceof LockedDoorBlock) {
-                @Nullable BlockEntity tile = world.getBlockEntity(pos);
-                if (tile instanceof LockedDoorTile && ((LockedDoorTile) tile).hasColors()) {
-                    int[] colors = ((LockedDoorTile) tile).getColors();
+                if (world.getBlockEntity(pos) instanceof LockedDoorTile tile && tile.hasColors()) {
+                    int[] colors = tile.getColors();
                     // offset by 1 since index 0 is reserved for particle color
                     if (tintIndex != 0 && colors.length > tintIndex - 1) {
                         return colors[tintIndex - 1];

@@ -66,8 +66,10 @@ public class PadlockedDoorBlock extends Block implements EntityBlock {
         REPLACEMENT_MAP.clear();
     }
 
+    @Nullable
     public static PadlockedDoorBlock getReplacement(Block blockIn) {
-        return (PadlockedDoorBlock) REPLACEMENT_MAP.get(blockIn.delegate).get();
+        final IRegistryDelegate<Block> replacement = REPLACEMENT_MAP.get(blockIn.delegate);
+        return replacement != null ? (PadlockedDoorBlock) replacement.get() : null;
     }
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -109,13 +111,11 @@ public class PadlockedDoorBlock extends Block implements EntityBlock {
         }
         if (worldIn.isLoaded(pos) && state.getBlock() == this) {
             ItemStack keyStack = player.getItemInHand(handIn);
-            @Nullable BlockEntity te = worldIn.getBlockEntity(pos);
-            if (te instanceof PadlockedDoorTile) {
-                PadlockedDoorTile doorTile = (PadlockedDoorTile) te;
+            if (worldIn.getBlockEntity(pos) instanceof PadlockedDoorTile blockEntity) {
                 if (!keyStack.isEmpty() && keyStack.getCapability(KEY).isPresent()) {
                     if (allowOpen(state.getValue(SIDE), state.getValue(FACING), rayTrace.getDirection())) {
                         ContainerLevelAccess worldPos = Util.getOrDummy(worldIn, pos);
-                        if (UnlockHelper.checkRemove(keyStack, doorTile, worldPos, player, true)) {
+                        if (UnlockHelper.checkRemove(keyStack, blockEntity, worldPos, player, true)) {
                             replaceDoor(worldIn, pos);
                         }
                         player.swing(handIn);
@@ -123,7 +123,7 @@ public class PadlockedDoorBlock extends Block implements EntityBlock {
                     }
                 } else if (handIn == InteractionHand.OFF_HAND) {
                     if (player.isShiftKeyDown() && allowOpen(state.getValue(SIDE), state.getValue(FACING), rayTrace.getDirection())) {
-                        ItemStack lockStack = doorTile.getLockStack();
+                        ItemStack lockStack = blockEntity.getLockStack();
                         if (!lockStack.isEmpty() && lockStack.hasCustomHoverName()) {
                             player.displayClientMessage(new TranslatableComponent("status.basedefense.door.info",
                                     lockStack.getHoverName().plainCopy().withStyle(WHITE)).withStyle(YELLOW,
@@ -182,9 +182,7 @@ public class PadlockedDoorBlock extends Block implements EntityBlock {
                         .ifPresent(teCode -> codeCap.ifPresent(stackCode -> stackCode.setCodes(teCode.getCodes())));
                     if (te instanceof LockableTile) {
                         ItemStack lockStack = ((LockableTile) te).getLockStack();
-                        if (stack.getItem() instanceof IColorable && lockStack.getItem() instanceof IColorable) {
-                            IColorable from = (IColorable) lockStack.getItem();
-                            IColorable to = (IColorable) stack.getItem();
+                        if (stack.getItem() instanceof IColorable to && lockStack.getItem() instanceof IColorable from) {
                             to.setColors(stack, from.getColors(lockStack));
                         }
                         if (stack.getItem() instanceof BrokenLockPiecesItem) {
@@ -203,17 +201,13 @@ public class PadlockedDoorBlock extends Block implements EntityBlock {
     @SuppressWarnings("deprecation")
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        switch (state.getValue(FACING)) {
-            case EAST:
-            default:
-                return EAST_AABB;
-            case WEST:
-                return WEST_AABB;
-            case NORTH:
-                return NORTH_AABB;
-            case SOUTH:
-                return SOUTH_AABB;
-        }
+        return switch (state.getValue(FACING)) {
+            case EAST -> EAST_AABB;
+            case WEST -> WEST_AABB;
+            case NORTH -> NORTH_AABB;
+            case SOUTH -> SOUTH_AABB;
+            default -> throw new IllegalArgumentException("Unknown direction: " + state.getValue(FACING));
+        };
     }
 
     @SuppressWarnings("deprecation")

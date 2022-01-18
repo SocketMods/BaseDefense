@@ -57,7 +57,7 @@ public class KeyringContainer extends AbstractContainerMenu {
 
     public ItemStack quickMoveStack(Player playerIn, int index) {
         Slot slot = this.slots.get(index);
-        if (slot != null && slot.hasItem()) {
+        if (slot.hasItem()) {
             ItemStack slotStack = slot.getItem();
             if (index > 8) {
                 if (index < 45 && !this.moveItemStackTo(slotStack, 0, 9, false)) {

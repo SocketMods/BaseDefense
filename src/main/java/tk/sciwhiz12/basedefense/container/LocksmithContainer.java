@@ -176,7 +176,7 @@ public class LocksmithContainer extends AbstractContainerMenu {
 
     public ItemStack quickMoveStack(Player playerIn, int index) {
         Slot slot = this.slots.get(index);
-        if (slot != null && slot.hasItem()) {
+        if (slot.hasItem()) {
             ItemStack slotStack = slot.getItem();
             if (index == 7) {
                 if (!this.moveItemStackTo(slotStack, 10, 46, true)) {

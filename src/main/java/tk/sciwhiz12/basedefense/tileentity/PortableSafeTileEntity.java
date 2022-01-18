@@ -19,7 +19,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -107,8 +106,8 @@ public class PortableSafeTileEntity extends LockableTile implements MenuProvider
         for (Player player : worldIn.getEntitiesOfClass(Player.class,
             new AABB((float) posX - 5.0F, (float) posY - 5.0F, (float) posZ - 5.0F, (float) (posX + 1) + 5.0F,
                 (float) (posY + 1) + 5.0F, (float) (posZ + 1) + 5.0F))) {
-            if (player.containerMenu instanceof PortableSafeContainer) {
-                ContainerLevelAccess worldPos = ((PortableSafeContainer) player.containerMenu).getWorldPos();
+            if (player.containerMenu instanceof PortableSafeContainer safe) {
+                ContainerLevelAccess worldPos = safe.getWorldPos();
                 if (worldPos.evaluate((world, pos) -> world.getBlockEntity(pos) == tileEntity, false)) {
                     playerCount++;
                 }
@@ -156,8 +155,7 @@ public class PortableSafeTileEntity extends LockableTile implements MenuProvider
     }
 
     protected void onOpenOrClose() {
-        Block block = this.getBlockState().getBlock();
-        if (block instanceof PortableSafeBlock) {
+        if (this.getBlockState().getBlock() instanceof PortableSafeBlock block) {
             assert level != null;
             this.level.blockEvent(this.worldPosition, block, 1, this.numPlayersUsing);
             this.level.updateNeighborsAt(this.worldPosition, block);

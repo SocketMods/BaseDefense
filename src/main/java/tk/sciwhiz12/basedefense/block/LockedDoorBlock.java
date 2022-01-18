@@ -201,26 +201,21 @@ public class LockedDoorBlock extends Block implements EntityBlock {
         Direction direction = state.getValue(FACING);
         boolean closed = !state.getValue(OPEN);
         boolean rightHinge = state.getValue(HINGE) == DoorHingeSide.RIGHT;
-        switch (direction) {
-            case EAST:
-            default:
-                return closed ? EAST_AABB : (rightHinge ? NORTH_AABB : SOUTH_AABB);
-            case SOUTH:
-                return closed ? SOUTH_AABB : (rightHinge ? EAST_AABB : WEST_AABB);
-            case WEST:
-                return closed ? WEST_AABB : (rightHinge ? SOUTH_AABB : NORTH_AABB);
-            case NORTH:
-                return closed ? NORTH_AABB : (rightHinge ? WEST_AABB : EAST_AABB);
-        }
+        return switch (direction) {
+            case EAST -> closed ? EAST_AABB : (rightHinge ? NORTH_AABB : SOUTH_AABB);
+            case SOUTH -> closed ? SOUTH_AABB : (rightHinge ? EAST_AABB : WEST_AABB);
+            case WEST -> closed ? WEST_AABB : (rightHinge ? SOUTH_AABB : NORTH_AABB);
+            case NORTH -> closed ? NORTH_AABB : (rightHinge ? WEST_AABB : EAST_AABB);
+            default -> throw new IllegalArgumentException("Unknown direction: " + direction);
+        };
     }
 
     @Override
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         boolean locked = false;
         if (!stack.isEmpty() && stack.getItem() instanceof LockedBlockItem) {
-            @Nullable BlockEntity te = worldIn.getBlockEntity(pos);
-            if (te instanceof LockedDoorTile) {
-                ((LockedDoorTile) te).setLockStack(((LockedBlockItem) stack.getItem()).getLockStack(stack));
+            if (worldIn.getBlockEntity(pos) instanceof LockedDoorTile blockEntity) {
+                blockEntity.setLockStack(((LockedBlockItem) stack.getItem()).getLockStack(stack));
                 locked = true;
                 worldIn.setBlock(pos, state.setValue(LOCKED, locked), UPDATE_ALL_IMMEDIATE);
             }
@@ -320,14 +315,10 @@ public class LockedDoorBlock extends Block implements EntityBlock {
     @SuppressWarnings("deprecation")
     @Override
     public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
-        switch (type) {
-            case AIR:
-            case LAND:
-                return state.getValue(OPEN);
-            case WATER:
-            default:
-                return false;
-        }
+        return switch (type) {
+            case AIR, LAND -> state.getValue(OPEN);
+            default -> false; // case WATER
+        };
     }
 
     @SuppressWarnings("deprecation")

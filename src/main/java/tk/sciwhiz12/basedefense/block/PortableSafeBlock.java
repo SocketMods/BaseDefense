@@ -78,17 +78,13 @@ public class PortableSafeBlock extends Block implements SimpleWaterloggedBlock, 
     @SuppressWarnings("deprecation")
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        switch (state.getValue(FACING)) {
-            default:
-            case NORTH:
-                return NORTH_SHAPE;
-            case EAST:
-                return EAST_SHAPE;
-            case SOUTH:
-                return SOUTH_SHAPE;
-            case WEST:
-                return WEST_SHAPE;
-        }
+        return switch (state.getValue(FACING)) {
+            case NORTH -> NORTH_SHAPE;
+            case EAST -> EAST_SHAPE;
+            case SOUTH -> SOUTH_SHAPE;
+            case WEST -> WEST_SHAPE;
+            default -> throw new IllegalArgumentException("Unknown direction: " + state.getValue(FACING));
+        };
     }
 
     @Override
@@ -98,9 +94,7 @@ public class PortableSafeBlock extends Block implements SimpleWaterloggedBlock, 
 
     @Override
     public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
-        @Nullable BlockEntity te = worldIn.getBlockEntity(pos);
-        if (te instanceof PortableSafeTileEntity) {
-            PortableSafeTileEntity safe = (PortableSafeTileEntity) te;
+        if (worldIn.getBlockEntity(pos) instanceof PortableSafeTileEntity safe) {
             if (!worldIn.isClientSide && player.isCreative() && !safe.isEmpty()) {
                 @SuppressWarnings("deprecation")
                 ItemStack stack = this.getCloneItemStack(worldIn, pos, state);
@@ -130,9 +124,7 @@ public class PortableSafeBlock extends Block implements SimpleWaterloggedBlock, 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         builder = builder.withDynamicDrop(CONTENTS, (context, stackConsumer) -> {
-            @Nullable BlockEntity te = context.getParamOrNull(LootContextParams.BLOCK_ENTITY);
-            if (te instanceof PortableSafeTileEntity) {
-                PortableSafeTileEntity safe = (PortableSafeTileEntity) te;
+            if (context.getParamOrNull(LootContextParams.BLOCK_ENTITY) instanceof PortableSafeTileEntity safe) {
                 IItemHandler inv = safe.getInventory();
                 for (int i = 0; i < inv.getSlots(); i++) {
                     stackConsumer.accept(inv.getStackInSlot(i));
@@ -144,15 +136,11 @@ public class PortableSafeBlock extends Block implements SimpleWaterloggedBlock, 
 
     @Override
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        if (!stack.isEmpty() && stack.getItem() instanceof LockedBlockItem) {
-            LockedBlockItem item = (LockedBlockItem) stack.getItem();
-            @Nullable BlockEntity te = worldIn.getBlockEntity(pos);
-            if (item.hasLockStack(stack) && te instanceof PortableSafeTileEntity) {
-                PortableSafeTileEntity safeTE = (PortableSafeTileEntity) te;
-                ItemStack lockStack = item.getLockStack(stack);
-                safeTE.setCustomName(lockStack.getHoverName());
-                safeTE.setLockStack(lockStack);
-            }
+        if (!stack.isEmpty() && stack.getItem() instanceof LockedBlockItem item && item.hasLockStack(stack)
+            && worldIn.getBlockEntity(pos) instanceof PortableSafeTileEntity safe) {
+            ItemStack lockStack = item.getLockStack(stack);
+            safe.setCustomName(lockStack.getHoverName());
+            safe.setLockStack(lockStack);
         }
     }
 
@@ -171,12 +159,10 @@ public class PortableSafeBlock extends Block implements SimpleWaterloggedBlock, 
             return InteractionResult.SUCCESS;
         } else {
             @Nullable MenuProvider provider = this.getMenuProvider(state, worldIn, pos);
-            @Nullable BlockEntity te = worldIn.getBlockEntity(pos);
-            if (provider != null && te instanceof PortableSafeTileEntity) {
-                PortableSafeTileEntity safeTE = (PortableSafeTileEntity) te;
+            if (provider != null && worldIn.getBlockEntity(pos) instanceof PortableSafeTileEntity safe) {
                 ItemStack heldItem = player.getItemInHand(handIn);
-                if (safeTE.getNumPlayersUsing() > 0 || (!heldItem.isEmpty() && UnlockHelper
-                    .checkUnlock(heldItem, safeTE, worldIn, pos, player, true))) {
+                if (safe.getNumPlayersUsing() > 0 || (!heldItem.isEmpty() && UnlockHelper
+                    .checkUnlock(heldItem, safe, worldIn, pos, player, true))) {
                     player.openMenu(provider);
                 }
             }

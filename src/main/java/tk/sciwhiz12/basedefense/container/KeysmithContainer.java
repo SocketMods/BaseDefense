@@ -125,7 +125,7 @@ public class KeysmithContainer extends AbstractContainerMenu {
 
     public ItemStack quickMoveStack(Player playerIn, int index) {
         Slot slot = this.slots.get(index);
-        if (slot != null && slot.hasItem()) {
+        if (slot.hasItem()) {
             ItemStack slotStack = slot.getItem();
             if (index == 2) {
                 if (!this.moveItemStackTo(slotStack, 3, 39, true)) {

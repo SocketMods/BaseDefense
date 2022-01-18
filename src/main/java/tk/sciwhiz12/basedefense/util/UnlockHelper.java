@@ -52,12 +52,10 @@ public final class UnlockHelper {
         checkNotNull(lockProv);
         checkNotNull(worldPos);
         return mapIfBothPresent(lockProv.getCapability(LOCK), keyProv.getCapability(KEY), false, (lock, key) -> {
-            boolean success;
-            if (success = key.canUnlock(lock, worldPos, player) && lock.canUnlock(key, worldPos, player)) {
-                if (onUnlock) {
-                    key.onUnlock(lock, worldPos, player);
-                    lock.onUnlock(key, worldPos, player);
-                }
+            boolean success = key.canUnlock(lock, worldPos, player) && lock.canUnlock(key, worldPos, player);
+            if (success && onUnlock) {
+                key.onUnlock(lock, worldPos, player);
+                lock.onUnlock(key, worldPos, player);
             }
             return success;
         });
@@ -75,11 +73,9 @@ public final class UnlockHelper {
         checkNotNull(lockProv);
         checkNotNull(worldPos);
         return mapIfBothPresent(lockProv.getCapability(LOCK), keyProv.getCapability(KEY), false, (lock, key) -> {
-            boolean success;
-            if (success = lock.canRemove(key, worldPos, player)) {
-                if (onUnlock) {
-                    lock.onRemove(key, worldPos, player);
-                }
+            boolean success = lock.canRemove(key, worldPos, player);
+            if (success && onUnlock) {
+                lock.onRemove(key, worldPos, player);
             }
             return success;
         });

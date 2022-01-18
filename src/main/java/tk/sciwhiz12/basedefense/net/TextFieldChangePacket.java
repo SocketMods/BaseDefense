@@ -2,7 +2,6 @@ package tk.sciwhiz12.basedefense.net;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.network.NetworkEvent;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.container.KeysmithContainer;
@@ -28,9 +27,8 @@ public class TextFieldChangePacket {
         ctx.get().enqueueWork(() -> {
             @Nullable ServerPlayer sender = ctx.get().getSender();
             if (sender != null) {
-                AbstractContainerMenu cont = sender.containerMenu;
-                if (cont instanceof KeysmithContainer) {
-                    ((KeysmithContainer) cont).setOutputName(pkt.text);
+                if (sender.containerMenu instanceof KeysmithContainer cont) {
+                    cont.setOutputName(pkt.text);
                 }
             }
         });

@@ -6,7 +6,6 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -35,9 +34,7 @@ public class AdminPadlockItem extends AbstractPadlockItem {
             public void onRemove(IKey key, ContainerLevelAccess worldPos, @Nullable Player player) {
                 super.onRemove(key, worldPos, player);
                 worldPos.execute((world, pos) -> {
-                    @Nullable BlockEntity te = world.getBlockEntity(pos);
-                    if (te instanceof LockableTile) {
-                        LockableTile lockTile = (LockableTile) te;
+                    if (world.getBlockEntity(pos) instanceof LockableTile lockTile) {
                         ItemHandlerHelper.giveItemToPlayer(player, lockTile.getLockStack());
                         lockTile.setLockStack(ItemStack.EMPTY);
                     }
