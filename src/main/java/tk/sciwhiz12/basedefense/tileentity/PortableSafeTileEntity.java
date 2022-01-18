@@ -89,7 +89,7 @@ public class PortableSafeTileEntity extends LockableTile implements MenuProvider
     }
 
     public static int calculatePlayersUsingSync(Level worldIn, BlockEntity tileEntityIn, int ticksSinceSync, int posX,
-            int posY, int posZ, int numPlayersUsing) {
+                                                int posY, int posZ, int numPlayersUsing) {
         if (!worldIn.isClientSide && numPlayersUsing != 0 && (ticksSinceSync + posX + posY + posZ) % 200 == 0) {
             numPlayersUsing = calculatePlayersUsing(worldIn, tileEntityIn, posX, posY, posZ);
         }
@@ -101,8 +101,8 @@ public class PortableSafeTileEntity extends LockableTile implements MenuProvider
         int playerCount = 0;
 
         for (Player player : worldIn.getEntitiesOfClass(Player.class,
-                new AABB((float) posX - 5.0F, (float) posY - 5.0F, (float) posZ - 5.0F, (float) (posX + 1) + 5.0F,
-                        (float) (posY + 1) + 5.0F, (float) (posZ + 1) + 5.0F))) {
+            new AABB((float) posX - 5.0F, (float) posY - 5.0F, (float) posZ - 5.0F, (float) (posX + 1) + 5.0F,
+                (float) (posY + 1) + 5.0F, (float) (posZ + 1) + 5.0F))) {
             if (player.containerMenu instanceof PortableSafeContainer) {
                 ContainerLevelAccess worldPos = ((PortableSafeContainer) player.containerMenu).getWorldPos();
                 if (worldPos.evaluate((world, pos) -> world.getBlockEntity(pos) == tileEntity, false)) {
@@ -120,7 +120,7 @@ public class PortableSafeTileEntity extends LockableTile implements MenuProvider
         double d2 = (double) this.worldPosition.getZ() + 0.5D;
 
         this.level
-                .playSound(null, d0, d1, d2, soundIn, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F);
+            .playSound(null, d0, d1, d2, soundIn, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F);
     }
 
     @Override

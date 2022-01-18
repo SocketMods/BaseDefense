@@ -23,7 +23,9 @@ public class LockedDoorTile extends LockableTile {
 
     public int[] getColors() {
         ItemStack lock = this.getLockStack();
-        if (lock.getItem() instanceof IColorable) { return ((IColorable) lock.getItem()).getColors(lock); }
+        if (lock.getItem() instanceof IColorable) {
+            return ((IColorable) lock.getItem()).getColors(lock);
+        }
         return new int[0];
     }
 

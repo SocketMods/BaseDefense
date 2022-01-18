@@ -27,10 +27,10 @@ public class PortableSafeRenderer implements BlockEntityRenderer<PortableSafeTil
     }
 
     public void render(PortableSafeTileEntity tileEntityIn, float partialTicks, PoseStack matrixStackIn,
-            MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
+                       MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         final BlockState blockstate = tileEntityIn.getLevel() != null ?
-                tileEntityIn.getBlockState() :
-                Blocks.PORTABLE_SAFE.defaultBlockState().setValue(ChestBlock.FACING, Direction.SOUTH);
+            tileEntityIn.getBlockState() :
+            Blocks.PORTABLE_SAFE.defaultBlockState().setValue(ChestBlock.FACING, Direction.SOUTH);
         if (blockstate.getBlock() instanceof PortableSafeBlock) {
             matrixStackIn.pushPose();
             matrixStackIn.translate(0.5D, 0.5D, 0.5D);

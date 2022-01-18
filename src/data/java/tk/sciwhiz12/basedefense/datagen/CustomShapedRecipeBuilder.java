@@ -45,7 +45,7 @@ public class CustomShapedRecipeBuilder {
     private String group;
 
     public CustomShapedRecipeBuilder(RecipeSerializer<? extends ShapedRecipe> serializerIn, ItemLike resultIn,
-            int countIn) {
+                                     int countIn) {
         this.serializer = serializerIn;
         this.result = resultIn.asItem();
         this.count = countIn;
@@ -96,7 +96,7 @@ public class CustomShapedRecipeBuilder {
      */
     public CustomShapedRecipeBuilder pattern(String patternIn) {
         checkArgument(pattern.isEmpty() || patternIn.length() == pattern.get(0).length(),
-                "Pattern must be the same width on every line!");
+            "Pattern must be the same width on every line!");
         this.pattern.add(patternIn);
         return this;
     }
@@ -128,7 +128,7 @@ public class CustomShapedRecipeBuilder {
     public void save(Consumer<FinishedRecipe> consumerIn, String save) {
         ResourceLocation resultLoc = ForgeRegistries.ITEMS.getKey(this.result);
         checkState(!new ResourceLocation(save).equals(resultLoc), "Shaped recipe %s should remove its 'save' argument",
-                save);
+            save);
         this.save(consumerIn, new ResourceLocation(save));
     }
 
@@ -139,10 +139,10 @@ public class CustomShapedRecipeBuilder {
         this.ensureValid(id);
         this.advancementBuilder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe",
                 new RecipeUnlockedTrigger.TriggerInstance(EntityPredicate.Composite.ANY, id))
-                .rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
+            .rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
         consumerIn.accept(new Result(id, serializer, result, count, group == null ? "" : group, pattern, key,
-                advancementBuilder,
-                new ResourceLocation(id.getNamespace(), "recipes/" + result.getItemCategory().getRecipeFolderName() + "/" + id.getPath())));
+            advancementBuilder,
+            new ResourceLocation(id.getNamespace(), "recipes/" + result.getItemCategory().getRecipeFolderName() + "/" + id.getPath())));
     }
 
     /**
@@ -163,7 +163,7 @@ public class CustomShapedRecipeBuilder {
 
         checkState(set.isEmpty(), "Ingredients are defined but not used in pattern for recipe %s", id);
         checkState(pattern.size() != 1 || pattern.get(0).length() != 1,
-                "Shaped recipe %s only takes in a single item - should be a shapeless recipe", id);
+            "Shaped recipe %s only takes in a single item - should be a shapeless recipe", id);
         checkState(!advancementBuilder.getCriteria().isEmpty(), "No way of obtaining recipe %s", id);
     }
 
@@ -179,8 +179,8 @@ public class CustomShapedRecipeBuilder {
         private final ResourceLocation advancementId;
 
         public Result(ResourceLocation idIn, RecipeSerializer<? extends ShapedRecipe> serializerIn, Item resultIn,
-                int countIn, String groupIn, List<String> patternIn, Map<Character, Ingredient> keyIn,
-                Advancement.Builder advancementBuilderIn, ResourceLocation advancementIdIn) {
+                      int countIn, String groupIn, List<String> patternIn, Map<Character, Ingredient> keyIn,
+                      Advancement.Builder advancementBuilderIn, ResourceLocation advancementIdIn) {
             this.id = idIn;
             this.serializer = serializerIn;
             this.result = resultIn;
@@ -194,11 +194,15 @@ public class CustomShapedRecipeBuilder {
 
         @Override
         public void serializeRecipeData(JsonObject json) {
-            if (!this.group.isEmpty()) { json.addProperty("group", this.group); }
+            if (!this.group.isEmpty()) {
+                json.addProperty("group", this.group);
+            }
 
             JsonArray patternArr = new JsonArray();
 
-            for (String s : this.pattern) { patternArr.add(s); }
+            for (String s : this.pattern) {
+                patternArr.add(s);
+            }
 
             json.add("pattern", patternArr);
             JsonObject keysObj = new JsonObject();
@@ -210,7 +214,9 @@ public class CustomShapedRecipeBuilder {
             json.add("key", keysObj);
             JsonObject resultObj = new JsonObject();
             resultObj.addProperty("item", ForgeRegistries.ITEMS.getKey(this.result).toString());
-            if (this.count > 1) { resultObj.addProperty("count", this.count); }
+            if (this.count > 1) {
+                resultObj.addProperty("count", this.count);
+            }
 
             json.add("result", resultObj);
         }

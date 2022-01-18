@@ -60,11 +60,13 @@ public class KeyringItem extends Item {
             int keys = 0;
             for (int i = 0; i < handler.getSlots(); i++) {
                 ItemStack key = handler.getStackInSlot(i);
-                if (!key.isEmpty() && key.getItem() instanceof KeyItem) { keys++; }
+                if (!key.isEmpty() && key.getItem() instanceof KeyItem) {
+                    keys++;
+                }
             }
             if (keys > 0) {
                 tooltip.add(new TranslatableComponent("tooltip.basedefense.keyring.count", keys)
-                        .withStyle(ChatFormatting.GRAY));
+                    .withStyle(ChatFormatting.GRAY));
             }
         });
     }
@@ -83,8 +85,8 @@ public class KeyringItem extends Item {
         ItemStack stack = playerIn.getItemInHand(handIn);
         if (!worldIn.isClientSide && playerIn.isShiftKeyDown()) {
             NetworkHooks.openGui((ServerPlayer) playerIn,
-                    new SimpleMenuProvider((id, inv, player) -> new KeyringContainer(id, inv, stack),
-                            stack.getHoverName()), buf -> buf.writeItem(stack));
+                new SimpleMenuProvider((id, inv, player) -> new KeyringContainer(id, inv, stack),
+                    stack.getHoverName()), buf -> buf.writeItem(stack));
             return InteractionResultHolder.success(stack);
         }
         return InteractionResultHolder.pass(stack);
@@ -113,8 +115,12 @@ public class KeyringItem extends Item {
 
         @Override
         public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-            if (cap == ITEM_HANDLER_CAPABILITY) { return itemCap.cast(); }
-            if (cap == KEY) { return key.cast(); }
+            if (cap == ITEM_HANDLER_CAPABILITY) {
+                return itemCap.cast();
+            }
+            if (cap == KEY) {
+                return key.cast();
+            }
             return LazyOptional.empty();
         }
 

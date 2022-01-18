@@ -27,16 +27,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class RecipeHelper {
     // Prevent instantiation
-    private RecipeHelper() {}
+    private RecipeHelper() {
+    }
 
     public static final Method DESERIALIZE_KEY = ObfuscationReflectionHelper
-            .findMethod(ShapedRecipe.class, "m_44210" + "_", JsonObject.class);
+        .findMethod(ShapedRecipe.class, "m_44210" + "_", JsonObject.class);
     public static final Method SHRINK = ObfuscationReflectionHelper
-            .findMethod(ShapedRecipe.class, "m_44186" + "_", String[].class);
+        .findMethod(ShapedRecipe.class, "m_44186" + "_", String[].class);
     public static final Method PATTERN_FROM_JSON = ObfuscationReflectionHelper
-            .findMethod(ShapedRecipe.class, "m_44196" + "_", JsonArray.class);
+        .findMethod(ShapedRecipe.class, "m_44196" + "_", JsonArray.class);
     public static final Method DESERIALIZE_INGREDIENTS = ObfuscationReflectionHelper
-            .findMethod(ShapedRecipe.class, "m_44202" + "_", String[].class, Map.class, int.class, int.class);
+        .findMethod(ShapedRecipe.class, "m_44202" + "_", String[].class, Map.class, int.class, int.class);
 
     /**
      * <p>A generic {@link RecipeSerializer} for classes extending {@link ShapedRecipe}.</p>
@@ -47,7 +48,7 @@ public class RecipeHelper {
      * @param <S> The {@code ShapedRecipe} that this serializer supports
      */
     public static class ShapedSerializer<S extends ShapedRecipe> extends ForgeRegistryEntry<RecipeSerializer<?>>
-            implements RecipeSerializer<S> {
+        implements RecipeSerializer<S> {
         private final RecipeFactory<S> factory;
 
         public ShapedSerializer(RecipeFactory<S> factoryIn) {
@@ -60,17 +61,16 @@ public class RecipeHelper {
             try {
                 String group = GsonHelper.getAsString(json, "group", "");
                 Map<String, Ingredient> keyMap = (Map<String, Ingredient>) DESERIALIZE_KEY
-                        .invoke(null, GsonHelper.getAsJsonObject(json, "key"));
+                    .invoke(null, GsonHelper.getAsJsonObject(json, "key"));
                 String[] patterns = (String[]) SHRINK
-                        .invoke(null, PATTERN_FROM_JSON.invoke(null, GsonHelper.getAsJsonArray(json, "pattern")));
+                    .invoke(null, PATTERN_FROM_JSON.invoke(null, GsonHelper.getAsJsonArray(json, "pattern")));
                 int width = patterns[0].length();
                 int height = patterns.length;
                 NonNullList<Ingredient> ingredients = (NonNullList<Ingredient>) DESERIALIZE_INGREDIENTS
-                        .invoke(null, patterns, keyMap, width, height);
+                    .invoke(null, patterns, keyMap, width, height);
                 ItemStack output = CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(json, "result"), true);
                 return factory.create(recipeId, group, width, height, ingredients, output);
-            }
-            catch (InvocationTargetException | IllegalAccessException | IllegalArgumentException e) {
+            } catch (InvocationTargetException | IllegalAccessException | IllegalArgumentException e) {
                 throw new RuntimeException("Error during deserialization!", e);
             }
         }
@@ -82,7 +82,9 @@ public class RecipeHelper {
             String group = buffer.readUtf(32767);
             NonNullList<Ingredient> ingredients = NonNullList.withSize(width * height, Ingredient.EMPTY);
 
-            for (int i = 0; i < ingredients.size(); ++i) { ingredients.set(i, Ingredient.fromNetwork(buffer)); }
+            for (int i = 0; i < ingredients.size(); ++i) {
+                ingredients.set(i, Ingredient.fromNetwork(buffer));
+            }
 
             ItemStack output = buffer.readItem();
             return factory.create(recipeId, group, width, height, ingredients, output);
@@ -94,7 +96,9 @@ public class RecipeHelper {
             buffer.writeVarInt(recipe.getRecipeHeight());
             buffer.writeUtf(recipe.getGroup());
 
-            for (Ingredient ingredient : recipe.getIngredients()) { ingredient.toNetwork(buffer); }
+            for (Ingredient ingredient : recipe.getIngredients()) {
+                ingredient.toNetwork(buffer);
+            }
 
             buffer.writeItem(recipe.getResultItem());
         }
@@ -110,6 +114,6 @@ public class RecipeHelper {
     @FunctionalInterface
     public interface RecipeFactory<R extends ShapedRecipe> {
         R create(ResourceLocation idIn, String groupIn, int recipeWidthIn, int recipeHeightIn,
-                NonNullList<Ingredient> recipeItemsIn, ItemStack recipeOutputIn);
+                 NonNullList<Ingredient> recipeItemsIn, ItemStack recipeOutputIn);
     }
 }

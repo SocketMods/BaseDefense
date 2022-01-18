@@ -17,7 +17,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public final class ContainerHelper {
     // Prevent instantiation
-    private ContainerHelper() {}
+    private ContainerHelper() {
+    }
 
     public static int addSlotRange(Consumer<Slot> adder, IItemHandler handler, int index, int x, int y, int amount, int dx) {
         checkNotNull(adder);
@@ -31,7 +32,7 @@ public final class ContainerHelper {
     }
 
     public static int addSlotBox(Consumer<Slot> adder, IItemHandler handler, int index, int x, int y, int horAmount, int dx,
-            int verAmount, int dy) {
+                                 int verAmount, int dy) {
         checkNotNull(adder);
         checkNotNull(handler);
         for (int j = 0; j < verAmount; j++) {

@@ -26,7 +26,7 @@ public class PortableSafeItemStackRenderer extends BlockEntityWithoutLevelRender
 
     @Override
     public void renderByItem(ItemStack stack, ItemTransforms.TransformType transforms, PoseStack matrixStack,
-            MultiBufferSource buffer, int light, int overlay) {
+                             MultiBufferSource buffer, int light, int overlay) {
         dispatcher.renderItem(te.get(), matrixStack, buffer, light, overlay);
     }
 

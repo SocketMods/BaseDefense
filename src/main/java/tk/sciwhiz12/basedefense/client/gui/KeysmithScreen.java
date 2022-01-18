@@ -68,7 +68,7 @@ public class KeysmithScreen extends AbstractContainerScreen<KeysmithContainer> i
         }
 
         return this.nameField.keyPressed(key, scanCode, modifiers) || this.nameField.canConsumeInput() || super
-                .keyPressed(key, scanCode, modifiers);
+            .keyPressed(key, scanCode, modifiers);
     }
 
     @Override
@@ -96,7 +96,9 @@ public class KeysmithScreen extends AbstractContainerScreen<KeysmithContainer> i
     private void onTextChange(String newText) {
         boolean flag1 = newText.equals(I18n.get(Reference.Items.KEY.getDescriptionId()));
         boolean flag2 = StringUtils.isBlank(newText);
-        if (flag1 || flag2) { newText = ""; }
+        if (flag1 || flag2) {
+            newText = "";
+        }
         menu.setOutputName(newText);
         NetworkHandler.CHANNEL.sendToServer(new TextFieldChangePacket(newText));
     }
@@ -120,10 +122,13 @@ public class KeysmithScreen extends AbstractContainerScreen<KeysmithContainer> i
             }
             this.minecraft.submitAsync(() -> this.nameField.setEditable(isEnabledText));
         } else if (slotInd == 1) {
-            if (!stack.isEmpty() && isEnabledText) { nameField.setValue(stack.getHoverName().getString()); }
+            if (!stack.isEmpty() && isEnabledText) {
+                nameField.setValue(stack.getHoverName().getString());
+            }
         }
     }
 
     @Override
-    public void dataChanged(AbstractContainerMenu containerIn, int varToUpdate, int newValue) {}
+    public void dataChanged(AbstractContainerMenu containerIn, int varToUpdate, int newValue) {
+    }
 }

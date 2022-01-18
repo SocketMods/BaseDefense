@@ -18,7 +18,7 @@ import net.minecraftforge.common.util.NonNullSupplier;
  * @author SciWhiz12
  */
 public class SerializableCapabilityProvider<C extends INBTSerializable<N>, N extends Tag>
-        implements ICapabilitySerializable<N> {
+    implements ICapabilitySerializable<N> {
     private final Capability<?>[] capObjs;
     private final LazyOptional<C> capInst;
 
@@ -29,7 +29,11 @@ public class SerializableCapabilityProvider<C extends INBTSerializable<N>, N ext
 
     @Override
     public <X> LazyOptional<X> getCapability(Capability<X> cap, Direction side) {
-        for (Capability<?> capO : capObjs) { if (capO == cap) { return capInst.cast(); } }
+        for (Capability<?> capO : capObjs) {
+            if (capO == cap) {
+                return capInst.cast();
+            }
+        }
         return LazyOptional.empty();
     }
 
@@ -41,6 +45,8 @@ public class SerializableCapabilityProvider<C extends INBTSerializable<N>, N ext
 
     @Override
     public void deserializeNBT(N nbt) {
-        if (!(nbt instanceof EndTag)) { capInst.ifPresent((inst) -> inst.deserializeNBT(nbt)); }
+        if (!(nbt instanceof EndTag)) {
+            capInst.ifPresent((inst) -> inst.deserializeNBT(nbt));
+        }
     }
 }

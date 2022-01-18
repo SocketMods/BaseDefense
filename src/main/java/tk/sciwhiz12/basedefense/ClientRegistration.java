@@ -48,7 +48,8 @@ import static tk.sciwhiz12.basedefense.Reference.TileEntities;
 @EventBusSubscriber(value = Dist.CLIENT, bus = Bus.MOD, modid = MODID)
 public final class ClientRegistration {
     // Prevent instantiation
-    private ClientRegistration() {}
+    private ClientRegistration() {
+    }
 
     @SubscribeEvent
     static void onClientSetup(FMLClientSetupEvent event) {
@@ -71,15 +72,15 @@ public final class ClientRegistration {
     static void registerItemColors(ColorHandlerEvent.Item event) {
         BaseDefense.LOG.debug(BaseDefense.CLIENT, "Registering item colors");
         event.getItemColors()
-                .register(ClientReference.Colors.ITEM_COLOR, Items.KEY, Items.LOCK_CORE, Items.PADLOCK, Items.BROKEN_LOCK_PIECES);
+            .register(ClientReference.Colors.ITEM_COLOR, Items.KEY, Items.LOCK_CORE, Items.PADLOCK, Items.BROKEN_LOCK_PIECES);
     }
 
     @SubscribeEvent
     static void registerBlockColors(ColorHandlerEvent.Block event) {
         BaseDefense.LOG.debug(BaseDefense.CLIENT, "Registering block colors");
         event.getBlockColors().register(ClientReference.Colors.LOCKED_DOOR_COLOR, Blocks.LOCKED_IRON_DOOR, Blocks.LOCKED_OAK_DOOR,
-                Blocks.LOCKED_BIRCH_DOOR, Blocks.LOCKED_SPRUCE_DOOR, Blocks.LOCKED_JUNGLE_DOOR, Blocks.LOCKED_ACACIA_DOOR,
-                Blocks.LOCKED_DARK_OAK_DOOR);
+            Blocks.LOCKED_BIRCH_DOOR, Blocks.LOCKED_SPRUCE_DOOR, Blocks.LOCKED_JUNGLE_DOOR, Blocks.LOCKED_ACACIA_DOOR,
+            Blocks.LOCKED_DARK_OAK_DOOR);
     }
 
     @SubscribeEvent
@@ -111,7 +112,9 @@ public final class ClientRegistration {
         ResourceLocation mapLoc = event.getAtlas().location();
         if (mapLoc.equals(ClientReference.Textures.ATLAS_BLOCKS_TEXTURE)) {
             BaseDefense.LOG.debug(BaseDefense.CLIENT, "Adding sprites to atlas: {}", mapLoc);
-            for (ResourceLocation spriteLoc : ClientReference.Textures.SPRITE_LIST) { event.addSprite(spriteLoc); }
+            for (ResourceLocation spriteLoc : ClientReference.Textures.SPRITE_LIST) {
+                event.addSprite(spriteLoc);
+            }
         }
     }
 
@@ -169,7 +172,7 @@ public final class ClientRegistration {
     }
 
     static void overrideModel(ModelBakeEvent event, ModelResourceLocation mrl,
-            Function<BakedModel, BakedModel> transform) {
+                              Function<BakedModel, BakedModel> transform) {
         BakedModel existingModel = event.getModelRegistry().get(mrl);
         if (existingModel != null) {
             BakedModel transformedModel = transform.apply(existingModel);

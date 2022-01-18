@@ -24,25 +24,30 @@ import static tk.sciwhiz12.basedefense.util.Util.mapIfBothPresent;
  */
 public final class UnlockHelper {
     // Prevent instantiation
-    private UnlockHelper() {}
+    private UnlockHelper() {
+    }
 
     public static void consumeIfPresent(@Nullable ICapabilityProvider keyProvider,
-            @Nullable ICapabilityProvider lockProvider, BiConsumer<IKey, ILock> consumer) {
-        if (keyProvider == null) { return; }
-        if (lockProvider == null) { return; }
+                                        @Nullable ICapabilityProvider lockProvider, BiConsumer<IKey, ILock> consumer) {
+        if (keyProvider == null) {
+            return;
+        }
+        if (lockProvider == null) {
+            return;
+        }
         final LazyOptional<ILock> lockCap = lockProvider.getCapability(LOCK);
         final LazyOptional<IKey> keyCap = keyProvider.getCapability(KEY);
         Util.consumeIfPresent(keyCap, lockCap, consumer);
     }
 
     public static boolean checkUnlock(final ICapabilityProvider keyProv, final ICapabilityProvider lockProv,
-            final @Nullable Level world, final @Nullable BlockPos pos, final @Nullable Player player,
-            final boolean onUnlock) {
+                                      final @Nullable Level world, final @Nullable BlockPos pos, final @Nullable Player player,
+                                      final boolean onUnlock) {
         return checkUnlock(keyProv, lockProv, Util.getOrDummy(world, pos), player, onUnlock);
     }
 
     public static boolean checkUnlock(final ICapabilityProvider keyProv, final ICapabilityProvider lockProv,
-            final ContainerLevelAccess worldPos, final @Nullable Player player, final boolean onUnlock) {
+                                      final ContainerLevelAccess worldPos, final @Nullable Player player, final boolean onUnlock) {
         checkNotNull(keyProv);
         checkNotNull(lockProv);
         checkNotNull(worldPos);
@@ -59,19 +64,23 @@ public final class UnlockHelper {
     }
 
     public static boolean checkRemove(final ICapabilityProvider keyProv, final ICapabilityProvider lockProv,
-            final @Nullable Level world, final @Nullable BlockPos pos, final @Nullable Player player,
-            final boolean onUnlock) {
+                                      final @Nullable Level world, final @Nullable BlockPos pos, final @Nullable Player player,
+                                      final boolean onUnlock) {
         return checkRemove(keyProv, lockProv, Util.getOrDummy(world, pos), player, onUnlock);
     }
 
     public static boolean checkRemove(final ICapabilityProvider keyProv, final ICapabilityProvider lockProv,
-            final ContainerLevelAccess worldPos, final @Nullable Player player, final boolean onUnlock) {
+                                      final ContainerLevelAccess worldPos, final @Nullable Player player, final boolean onUnlock) {
         checkNotNull(keyProv);
         checkNotNull(lockProv);
         checkNotNull(worldPos);
         return mapIfBothPresent(lockProv.getCapability(LOCK), keyProv.getCapability(KEY), false, (lock, key) -> {
             boolean success;
-            if (success = lock.canRemove(key, worldPos, player)) { if (onUnlock) { lock.onRemove(key, worldPos, player); } }
+            if (success = lock.canRemove(key, worldPos, player)) {
+                if (onUnlock) {
+                    lock.onRemove(key, worldPos, player);
+                }
+            }
             return success;
         });
     }

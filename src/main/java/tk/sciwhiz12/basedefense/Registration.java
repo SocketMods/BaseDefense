@@ -60,7 +60,8 @@ import tk.sciwhiz12.basedefense.util.Util;
 @Mod.EventBusSubscriber(bus = Bus.MOD, modid = Reference.MODID)
 public final class Registration {
     // Prevent instantiation
-    private Registration() {}
+    private Registration() {
+    }
 
     @SubscribeEvent
     static void registerBlocks(RegistryEvent.Register<Block> event) {
@@ -145,7 +146,7 @@ public final class Registration {
         reg.register(new LockedBlockItem(Reference.Blocks.LOCKED_IRON_DOOR).setRegistryName("locked_iron_door"));
 
         reg.register(new PortableSafeBlockItem(Reference.Blocks.PORTABLE_SAFE, new Item.Properties().tab(Reference.ITEM_GROUP).durability(0))
-                .setRegistryName("portable_safe"));
+            .setRegistryName("portable_safe"));
     }
 
     @SubscribeEvent
@@ -158,7 +159,7 @@ public final class Registration {
         reg.register(new SimpleRecipeSerializer<>(ColoringRecipe::new).setRegistryName("coloring"));
 
         Reference.IngredientSerializers.LOCKED_ITEM = CraftingHelper
-                .register(Reference.modLoc("locked_item"), new LockedItemIngredient.Serializer());
+            .register(Reference.modLoc("locked_item"), new LockedItemIngredient.Serializer());
     }
 
     @SubscribeEvent
@@ -178,12 +179,12 @@ public final class Registration {
 
         reg.register(makeType(LockableTile::new).setRegistryName("lockable_tile"));
         reg.register(makeType(PadlockedDoorTile::new, Reference.Blocks.PADLOCKED_IRON_DOOR, Reference.Blocks.PADLOCKED_OAK_DOOR, Reference.Blocks.PADLOCKED_BIRCH_DOOR,
-                Reference.Blocks.PADLOCKED_SPRUCE_DOOR, Reference.Blocks.PADLOCKED_JUNGLE_DOOR, Reference.Blocks.PADLOCKED_ACACIA_DOOR, Reference.Blocks.PADLOCKED_DARK_OAK_DOOR,
-                Reference.Blocks.PADLOCKED_CRIMSON_DOOR, Reference.Blocks.PADLOCKED_WARPED_DOOR)
-                .setRegistryName("padlocked_door"));
+            Reference.Blocks.PADLOCKED_SPRUCE_DOOR, Reference.Blocks.PADLOCKED_JUNGLE_DOOR, Reference.Blocks.PADLOCKED_ACACIA_DOOR, Reference.Blocks.PADLOCKED_DARK_OAK_DOOR,
+            Reference.Blocks.PADLOCKED_CRIMSON_DOOR, Reference.Blocks.PADLOCKED_WARPED_DOOR)
+            .setRegistryName("padlocked_door"));
         reg.register(makeType(LockedDoorTile::new, Reference.Blocks.LOCKED_IRON_DOOR, Reference.Blocks.LOCKED_OAK_DOOR, Reference.Blocks.LOCKED_BIRCH_DOOR, Reference.Blocks.LOCKED_SPRUCE_DOOR,
-                Reference.Blocks.LOCKED_JUNGLE_DOOR, Reference.Blocks.LOCKED_ACACIA_DOOR, Reference.Blocks.LOCKED_DARK_OAK_DOOR, Reference.Blocks.LOCKED_CRIMSON_DOOR, Reference.Blocks.LOCKED_WARPED_DOOR)
-                .setRegistryName("locked_door"));
+            Reference.Blocks.LOCKED_JUNGLE_DOOR, Reference.Blocks.LOCKED_ACACIA_DOOR, Reference.Blocks.LOCKED_DARK_OAK_DOOR, Reference.Blocks.LOCKED_CRIMSON_DOOR, Reference.Blocks.LOCKED_WARPED_DOOR)
+            .setRegistryName("locked_door"));
         reg.register(makeType(PortableSafeTileEntity::new, Reference.Blocks.PORTABLE_SAFE).setRegistryName("portable_safe"));
     }
 

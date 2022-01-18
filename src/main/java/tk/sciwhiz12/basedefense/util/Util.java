@@ -21,7 +21,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public final class Util {
     // Prevent instantiation
-    private Util() {}
+    private Util() {
+    }
 
     /**
      * A fix for IntelliJ IDEA's "Constant conditions" inspection. Used for
@@ -43,7 +44,9 @@ public final class Util {
      * @return an {@link ContainerLevelAccess}, or {@link ContainerLevelAccess#NULL}
      */
     public static ContainerLevelAccess getOrDummy(@Nullable Level world, @Nullable BlockPos pos) {
-        if (world != null && pos != null) { return ContainerLevelAccess.create(world, pos); }
+        if (world != null && pos != null) {
+            return ContainerLevelAccess.create(world, pos);
+        }
         return ContainerLevelAccess.NULL;
     }
 
@@ -63,7 +66,7 @@ public final class Util {
      * are present, otherwise the default return value
      */
     public static <F, S, U> U mapIfBothPresent(LazyOptional<F> first, LazyOptional<S> second, U defaultValue,
-            BiFunction<F, S, U> func) {
+                                               BiFunction<F, S, U> func) {
         checkNotNull(first);
         checkNotNull(second);
         checkNotNull(func);
@@ -120,7 +123,7 @@ public final class Util {
      * @return The resulting {@code TranslationTextComponent}
      */
     public static TranslatableComponent createAmountTooltip(String translationKeyBase, int amount,
-            Object... additionalInfo) {
+                                                            Object... additionalInfo) {
         if (amount == 0) {
             return new TranslatableComponent(translationKeyBase + ".zero", amount, additionalInfo);
         } else if (amount == 1) {

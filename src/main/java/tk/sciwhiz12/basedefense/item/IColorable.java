@@ -22,7 +22,9 @@ public interface IColorable {
         checkNotNull(stack);
         if (!stack.isEmpty() && stack.getItem() == this) {
             CompoundTag display = stack.getTagElement("display");
-            if (display != null) { return display.getIntArray("colors").length > 0; }
+            if (display != null) {
+                return display.getIntArray("colors").length > 0;
+            }
         }
         return false;
     }
@@ -40,7 +42,9 @@ public interface IColorable {
         if (!stack.isEmpty() && stack.getItem() == this) {
             CompoundTag display = stack.getOrCreateTagElement("display");
             int[] colors = display.getIntArray("colors");
-            if (colors.length <= index) { colors = Arrays.copyOf(colors, index + 1); }
+            if (colors.length <= index) {
+                colors = Arrays.copyOf(colors, index + 1);
+            }
             colors[index] = color;
             display.putIntArray("colors", colors);
         }
@@ -71,7 +75,9 @@ public interface IColorable {
         checkNotNull(stack);
         if (!stack.isEmpty() && stack.getItem() == this && stack.hasTag()) {
             CompoundTag display = stack.getTagElement("display");
-            if (display != null) { return display.getIntArray("colors"); }
+            if (display != null) {
+                return display.getIntArray("colors");
+            }
         }
         return new int[0];
     }
@@ -90,7 +96,9 @@ public interface IColorable {
             CompoundTag display = stack.getTagElement("display");
             if (display != null) {
                 int[] colors = display.getIntArray("colors");
-                if (colors.length - index > 0) { return colors[index]; }
+                if (colors.length - index > 0) {
+                    return colors[index];
+                }
             }
         }
         return 0;
@@ -106,7 +114,9 @@ public interface IColorable {
     static void copyColors(ItemStack from, ItemStack to) {
         checkNotNull(from);
         checkNotNull(to);
-        if (from.isEmpty() || to.isEmpty()) { return; }
+        if (from.isEmpty() || to.isEmpty()) {
+            return;
+        }
         if (from.getItem() instanceof IColorable && to.getItem() instanceof IColorable) {
             IColorable fromItem = (IColorable) from.getItem();
             IColorable toItem = (IColorable) to.getItem();

@@ -27,16 +27,18 @@ public class KeysmithBlock extends Block {
 
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player playerEntity,
-            InteractionHand hand, BlockHitResult result) {
-        if (!world.isClientSide) { NetworkHooks.openGui((ServerPlayer) playerEntity, getMenuProvider(state, world, pos)); }
+                                 InteractionHand hand, BlockHitResult result) {
+        if (!world.isClientSide) {
+            NetworkHooks.openGui((ServerPlayer) playerEntity, getMenuProvider(state, world, pos));
+        }
         return InteractionResult.SUCCESS;
     }
 
     @Override
     public MenuProvider getMenuProvider(BlockState state, Level world, BlockPos pos) {
         return new SimpleMenuProvider(
-                (windowId, playerInventory, playerEntity) -> new KeysmithContainer(windowId, playerInventory,
-                        ContainerLevelAccess.create(world, pos)), new TranslatableComponent("container.basedefense.keysmith"));
+            (windowId, playerInventory, playerEntity) -> new KeysmithContainer(windowId, playerInventory,
+                ContainerLevelAccess.create(world, pos)), new TranslatableComponent("container.basedefense.keysmith"));
     }
 
     @Override

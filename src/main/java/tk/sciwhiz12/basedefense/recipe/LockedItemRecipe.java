@@ -15,12 +15,12 @@ import static tk.sciwhiz12.basedefense.Reference.Capabilities.LOCK;
 
 public class LockedItemRecipe extends ShapedRecipe {
     public LockedItemRecipe(ResourceLocation id, String group, int width, int height, NonNullList<Ingredient> inputs,
-            ItemStack output) {
+                            ItemStack output) {
         super(id, group, width, height, inputs, output);
         final long lockCount = inputs.stream().filter(LockedItemIngredient.class::isInstance).count();
         checkArgument(lockCount == 1, "Expected 1 locked item ingredient, got %s: %s", lockCount, id);
         checkArgument(output.getItem() instanceof IContainsLockItem, "Recipe output (%s) cannot contain a lock item: %s",
-                output.getItem().getRegistryName(), id);
+            output.getItem().getRegistryName(), id);
     }
 
     @Override

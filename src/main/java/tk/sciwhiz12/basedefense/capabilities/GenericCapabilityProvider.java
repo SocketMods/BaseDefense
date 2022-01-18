@@ -29,7 +29,11 @@ public class GenericCapabilityProvider<C> implements ICapabilityProvider {
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        for (Capability<C> capO : capObjs) { if (capO == cap) { return capInst.cast(); } }
+        for (Capability<C> capO : capObjs) {
+            if (capO == cap) {
+                return capInst.cast();
+            }
+        }
         return LazyOptional.empty();
     }
 }

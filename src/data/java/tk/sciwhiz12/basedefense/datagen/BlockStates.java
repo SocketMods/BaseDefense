@@ -64,12 +64,16 @@ public class BlockStates extends BlockStateProvider {
             boolean rh = state.getValue(LockedDoorBlock.HINGE) == DoorHingeSide.RIGHT;
             boolean open = state.getValue(LockedDoorBlock.OPEN);
             boolean right = rh ^ open;
-            if (open) { yRot += 90; }
-            if (rh && open) { yRot += 180; }
+            if (open) {
+                yRot += 90;
+            }
+            if (rh && open) {
+                yRot += 180;
+            }
             yRot %= 360;
             return ConfiguredModel.builder().modelFile(state.getValue(LockedDoorBlock.HALF) == DoubleBlockHalf.LOWER ?
-                    (right ? bottomRight : bottomLeft) :
-                    (right ? topRight : topLeft)).rotationY(yRot).build();
+                (right ? bottomRight : bottomLeft) :
+                (right ? topRight : topLeft)).rotationY(yRot).build();
         }, LockedDoorBlock.LOCKED);
     }
 
@@ -84,8 +88,8 @@ public class BlockStates extends BlockStateProvider {
             int yRot = (int) (state.getValue(PadlockedDoorBlock.FACING).toYRot() + 90) % 360;
             boolean rh = state.getValue(PadlockedDoorBlock.HINGE) == DoorHingeSide.RIGHT;
             return ConfiguredModel.builder().modelFile(state.getValue(DoorBlock.HALF) == DoubleBlockHalf.LOWER ?
-                    (rh ? bottomRight : bottomLeft) :
-                    (rh ? topRight : topLeft)).rotationY(yRot).build();
+                (rh ? bottomRight : bottomLeft) :
+                (rh ? topRight : topLeft)).rotationY(yRot).build();
         }, PadlockedDoorBlock.SIDE);
     }
 

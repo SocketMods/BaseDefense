@@ -37,35 +37,35 @@ public class PortableSafeModel extends Model {
         PartDefinition part = mesh.getRoot();
 
         part.addOrReplaceChild("feet", CubeListBuilder.create()
-            .texOffs(42, 0).addBox(-6.0F, 7.0F, -6.0F, 2.0F, 1.0F, 2.0F, false)
-            .texOffs(42, 3).addBox(4.0F, 7.0F, -6.0F, 2.0F, 1.0F, 2.0F, false)
-            .texOffs(42, 6).addBox(-6.0F, 7.0F, 4.0F, 2.0F, 1.0F, 2.0F, false)
-            .texOffs(42, 9).addBox(4.0F, 7.0F, 4.0F, 2.0F, 1.0F, 2.0F, false),
+                .texOffs(42, 0).addBox(-6.0F, 7.0F, -6.0F, 2.0F, 1.0F, 2.0F, false)
+                .texOffs(42, 3).addBox(4.0F, 7.0F, -6.0F, 2.0F, 1.0F, 2.0F, false)
+                .texOffs(42, 6).addBox(-6.0F, 7.0F, 4.0F, 2.0F, 1.0F, 2.0F, false)
+                .texOffs(42, 9).addBox(4.0F, 7.0F, 4.0F, 2.0F, 1.0F, 2.0F, false),
             PartPose.ZERO);
 
         part.addOrReplaceChild("walls", CubeListBuilder.create()
-            .texOffs(0, 0).addBox(-7.0F, -7.0F, -7.0F, 14.0F, 2.0F, 14.0F, false)
-            .texOffs(0, 0).addBox(-7.0F, 5.0F, -7.0F, 14.0F, 2.0F, 14.0F, true)
-            .texOffs(32, 16).addBox(-7.0F, -5.0F, -7.0F, 2.0F, 10.0F, 14.0F, false)
-            .texOffs(0, 16).addBox(5.0F, -5.0F, -7.0F, 2.0F, 10.0F, 14.0F, false)
-            .texOffs(18, 16).addBox(-5.0F, -5.0F, 5.0F, 10.0F, 10.0F, 2.0F, false),
+                .texOffs(0, 0).addBox(-7.0F, -7.0F, -7.0F, 14.0F, 2.0F, 14.0F, false)
+                .texOffs(0, 0).addBox(-7.0F, 5.0F, -7.0F, 14.0F, 2.0F, 14.0F, true)
+                .texOffs(32, 16).addBox(-7.0F, -5.0F, -7.0F, 2.0F, 10.0F, 14.0F, false)
+                .texOffs(0, 16).addBox(5.0F, -5.0F, -7.0F, 2.0F, 10.0F, 14.0F, false)
+                .texOffs(18, 16).addBox(-5.0F, -5.0F, 5.0F, 10.0F, 10.0F, 2.0F, false),
             PartPose.ZERO);
 
         part.addOrReplaceChild("door", CubeListBuilder.create()
-            .texOffs(18, 16).addBox(-9.0F, -5.0F, -0.5F, 10.0F, 10.0F, 2.0F, false)
-            .texOffs(0, 0).addBox(-8.0F, -2.0F, -1.5F, 2.0F, 4.0F, 1.0F, false),
+                .texOffs(18, 16).addBox(-9.0F, -5.0F, -0.5F, 10.0F, 10.0F, 2.0F, false)
+                .texOffs(0, 0).addBox(-8.0F, -2.0F, -1.5F, 2.0F, 4.0F, 1.0F, false),
             PartPose.offset(4.0F, 0.0F, -6.0F));
 
         part.addOrReplaceChild("top", CubeListBuilder.create()
-            .texOffs(0, 5).addBox(-5.0F, -1.0F, -1.0F, 1.0F, 2.0F, 1.0F, true),
+                .texOffs(0, 5).addBox(-5.0F, -1.0F, -1.0F, 1.0F, 2.0F, 1.0F, true),
             PartPose.offset(4.0F, 0.0F, -6.0F));
 
         part.addOrReplaceChild("middle", CubeListBuilder.create()
-            .texOffs(0, 8).addBox(-3.5F, -1.0F, -1.0F, 1.0F, 2.0F, 1.0F,  false),
+                .texOffs(0, 8).addBox(-3.5F, -1.0F, -1.0F, 1.0F, 2.0F, 1.0F, false),
             PartPose.offset(4.0F, 0.0F, -6.0F));
 
         part.addOrReplaceChild("bottom", CubeListBuilder.create()
-            .texOffs(0, 11).addBox(-2.0F, -1.0F, -1.0F, 1.0F, 2.0F, 1.0F, false),
+                .texOffs(0, 11).addBox(-2.0F, -1.0F, -1.0F, 1.0F, 2.0F, 1.0F, false),
             PartPose.offset(4.0F, 0.0F, -6.0F));
 
         return LayerDefinition.create(mesh, 64, 64);
@@ -73,16 +73,16 @@ public class PortableSafeModel extends Model {
 
     @Override
     public void renderToBuffer(PoseStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red,
-            float green, float blue, float alpha) {
+                               float green, float blue, float alpha) {
         matrixStack.pushPose();
         feet.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
         walls.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
         door.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
         top.render(matrixStack, buffer, packedLight, packedOverlay, topColor[0], topColor[1], topColor[2], alpha);
         middle.render(matrixStack, buffer, packedLight, packedOverlay, middleColor[0], middleColor[1], middleColor[2],
-                alpha);
+            alpha);
         bottom.render(matrixStack, buffer, packedLight, packedOverlay, bottomColor[0], bottomColor[1], bottomColor[2],
-                alpha);
+            alpha);
         matrixStack.popPose();
     }
 

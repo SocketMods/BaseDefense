@@ -24,11 +24,15 @@ public class ColoringRecipe extends CustomRecipe {
         final int height = inv.getHeight();
         int colors = 0;
         ItemStack colorItem = ItemStack.EMPTY;
-        if (inv.isEmpty()) { return false; }
+        if (inv.isEmpty()) {
+            return false;
+        }
         for (int row = 0; row < width; row++) {
             for (int col = 0; col < height; col++) {
                 ItemStack stack = inv.getItem(row * width + col);
-                if (stack.isEmpty()) { continue; }
+                if (stack.isEmpty()) {
+                    continue;
+                }
                 if (stack.getItem() instanceof IColorable) {
                     if (colorItem.isEmpty()) {
                         colorItem = stack;
@@ -38,8 +42,12 @@ public class ColoringRecipe extends CustomRecipe {
                     }
                 }
                 DyeColor color = DyeColor.getColor(stack);
-                if (color != null) { colors++; }
-                if (colors > 3) { return false; }
+                if (color != null) {
+                    colors++;
+                }
+                if (colors > 3) {
+                    return false;
+                }
             }
         }
         return colors > 0 && !colorItem.isEmpty();
@@ -54,7 +62,9 @@ public class ColoringRecipe extends CustomRecipe {
         for (int row = 0; row < width; row++) {
             for (int col = 0; col < height; col++) {
                 ItemStack stack = inv.getItem(row * width + col);
-                if (stack.isEmpty()) { continue; }
+                if (stack.isEmpty()) {
+                    continue;
+                }
                 if (stack.getItem() instanceof IColorable) {
                     if (colorItem.isEmpty()) {
                         colorItem = stack;
@@ -64,16 +74,26 @@ public class ColoringRecipe extends CustomRecipe {
                     }
                 }
                 DyeColor color = DyeColor.getColor(stack);
-                if (color != null) { colors.add(color); }
-                if (colors.size() > 3) { return ItemStack.EMPTY; }
+                if (color != null) {
+                    colors.add(color);
+                }
+                if (colors.size() > 3) {
+                    return ItemStack.EMPTY;
+                }
             }
         }
-        if (colors.size() == 0) { return ItemStack.EMPTY; }
-        if (colorItem.isEmpty()) { return ItemStack.EMPTY; }
+        if (colors.size() == 0) {
+            return ItemStack.EMPTY;
+        }
+        if (colorItem.isEmpty()) {
+            return ItemStack.EMPTY;
+        }
         ItemStack output = colorItem.copy();
         IColorable color = (IColorable) output.getItem();
 
-        for (int idx = 0; idx < colors.size(); idx++) { color.setColor(output, idx, colors.get(idx).getTextColor()); }
+        for (int idx = 0; idx < colors.size(); idx++) {
+            color.setColor(output, idx, colors.get(idx).getTextColor());
+        }
         return output;
     }
 

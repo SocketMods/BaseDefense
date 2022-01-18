@@ -41,7 +41,7 @@ public class LockedItemIngredient extends Ingredient {
         final boolean itemAndDamage = this.stack.getItem() == input.getItem() && this.stack.getDamageValue() == input.getDamageValue();
         final boolean hasLock = input.getCapability(LOCK).isPresent();
         final boolean hasCode = (!requiresCode || input.getCapability(CODE_HOLDER)
-                .map(holder -> holder.getCodes().size() > 0).orElse(false));
+            .map(holder -> holder.getCodes().size() > 0).orElse(false));
         return itemAndDamage && hasLock && hasCode;
     }
 
@@ -68,7 +68,7 @@ public class LockedItemIngredient extends Ingredient {
         @Override
         public LockedItemIngredient parse(JsonObject json) {
             return new LockedItemIngredient(CraftingHelper.getItemStack(json, true),
-                    GsonHelper.getAsBoolean(json, "has_codes"));
+                GsonHelper.getAsBoolean(json, "has_codes"));
         }
 
         @Override

@@ -34,7 +34,8 @@ import static tk.sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
  */
 public final class ItemHelper {
     // Prevent instantiation
-    private ItemHelper() {}
+    private ItemHelper() {
+    }
 
     public static void addCodeInformation(ItemStack stack, @Nullable List<Component> tooltip) {
         checkNotNull(stack);
@@ -56,8 +57,8 @@ public final class ItemHelper {
             int[] colors = tag.getIntArray("colors");
             for (int i = 0; i < colors.length; i++) {
                 tooltip.add(new TranslatableComponent("tooltip.basedefense.color", i + 1,
-                        new TextComponent(String.format("#%06X", colors[i])).withStyle(ChatFormatting.DARK_GRAY))
-                        .withStyle(ChatFormatting.GRAY));
+                    new TextComponent(String.format("#%06X", colors[i])).withStyle(ChatFormatting.DARK_GRAY))
+                    .withStyle(ChatFormatting.GRAY));
             }
         }
     }
@@ -67,11 +68,15 @@ public final class ItemHelper {
         checkNotNull(stack);
         checkNotNull(caps);
         CompoundTag shareTag = new CompoundTag();
-        if (stack.hasTag()) { shareTag.put("Tag", stack.getTag()); }
+        if (stack.hasTag()) {
+            shareTag.put("Tag", stack.getTag());
+        }
         for (CapabilitySerializer<?, ?> cap : caps) {
             accept(stack, cap, (serializer, inst) -> {
                 final Tag nbt = serializer.serializer.apply(inst);
-                if (nbt != null) { shareTag.put(serializer.capability().getName(), nbt); }
+                if (nbt != null) {
+                    shareTag.put(serializer.capability().getName(), nbt);
+                }
             });
         }
         return !shareTag.isEmpty() ? shareTag : null;
@@ -80,8 +85,12 @@ public final class ItemHelper {
     public static void readItemShareTag(ItemStack stack, @Nullable CompoundTag nbt, CapabilitySerializer<?, ?>... caps) {
         checkNotNull(stack);
         checkNotNull(caps);
-        if (nbt == null) { return; }
-        if (nbt.contains("Tag", Tag.TAG_COMPOUND)) { stack.setTag(nbt.getCompound("Tag")); }
+        if (nbt == null) {
+            return;
+        }
+        if (nbt.contains("Tag", Tag.TAG_COMPOUND)) {
+            stack.setTag(nbt.getCompound("Tag"));
+        }
         for (CapabilitySerializer<?, ?> cap : caps) {
             final Tag tag = nbt.get(cap.capability().getName());
             if (tag != null && cap.tagClass().isAssignableFrom(tag.getClass())) {
@@ -112,7 +121,7 @@ public final class ItemHelper {
         checkNotNull(fromStack);
         checkNotNull(toStack);
         Util.consumeIfPresent(fromStack.getCapability(CODE_HOLDER), toStack.getCapability(CODE_HOLDER),
-                (from, to) -> to.setCodes(from.getCodes()));
+            (from, to) -> to.setCodes(from.getCodes()));
     }
 
     public record CapabilitySerializer<C, T extends Tag>(Class<C> capabilityInstanceClass,

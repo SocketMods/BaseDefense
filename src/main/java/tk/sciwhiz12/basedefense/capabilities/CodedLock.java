@@ -30,10 +30,12 @@ public class CodedLock extends CodeHolder implements ILock, INBTSerializable<Lon
     }
 
     @Override
-    public void onRemove(IKey key, ContainerLevelAccess worldPos, @Nullable Player player) {}
+    public void onRemove(IKey key, ContainerLevelAccess worldPos, @Nullable Player player) {
+    }
 
     @Override
-    public void onUnlock(IKey key, ContainerLevelAccess worldPos, @Nullable Player player) {}
+    public void onUnlock(IKey key, ContainerLevelAccess worldPos, @Nullable Player player) {
+    }
 
     @Override
     public LongArrayTag serializeNBT() {

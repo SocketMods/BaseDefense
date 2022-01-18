@@ -20,7 +20,7 @@ public class CodedItemStackLock extends ItemStackLock implements ICodeHolder {
     @Override
     public boolean containsCode(Long code) {
         return !lockStack.isEmpty() && lockStack.getCapability(CODE_HOLDER).map(holder -> holder.containsCode(code))
-                .orElse(false);
+            .orElse(false);
     }
 
     @Override
@@ -32,8 +32,8 @@ public class CodedItemStackLock extends ItemStackLock implements ICodeHolder {
     @Override
     public List<Long> getCodes() {
         return !lockStack.isEmpty() ?
-                lockStack.getCapability(CODE_HOLDER).map(ICodeHolder::getCodes).orElseGet(Collections::emptyList) :
-                Collections.emptyList();
+            lockStack.getCapability(CODE_HOLDER).map(ICodeHolder::getCodes).orElseGet(Collections::emptyList) :
+            Collections.emptyList();
     }
 
     @Override

@@ -30,7 +30,7 @@ public class KeyringContainer extends AbstractContainerMenu {
         this.playerInv = inv;
         this.stack = stack;
         itemHandler = (IItemHandlerModifiable) stack.getCapability(ITEM_HANDLER_CAPABILITY)
-                .orElseThrow(IllegalStateException::new);
+            .orElseThrow(IllegalStateException::new);
 
         for (int i = 0; i < 9; i++) {
             addSlot(new SlotItemHandler(itemHandler, i, 8 + i * 18, 18) {
@@ -40,7 +40,7 @@ public class KeyringContainer extends AbstractContainerMenu {
                     if (KeyringContainer.this.playerInv.player instanceof ServerPlayer) {
                         // ClientboundContainerSetSlotPacket: windowId = -2 means player inventory
                         ((ServerPlayer) KeyringContainer.this.playerInv.player).connection
-                                .send(new ClientboundContainerSetSlotPacket(-2, 0, KeyringContainer.this.playerInv.selected, stack));
+                            .send(new ClientboundContainerSetSlotPacket(-2, 0, KeyringContainer.this.playerInv.selected, stack));
                     }
                 }
             });
@@ -60,8 +60,12 @@ public class KeyringContainer extends AbstractContainerMenu {
         if (slot != null && slot.hasItem()) {
             ItemStack slotStack = slot.getItem();
             if (index > 8) {
-                if (index < 45 && !this.moveItemStackTo(slotStack, 0, 9, false)) { return ItemStack.EMPTY; }
-            } else if (!this.moveItemStackTo(slotStack, 9, 46, false)) { return ItemStack.EMPTY; }
+                if (index < 45 && !this.moveItemStackTo(slotStack, 0, 9, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!this.moveItemStackTo(slotStack, 9, 46, false)) {
+                return ItemStack.EMPTY;
+            }
 
             if (slotStack.isEmpty()) {
                 slot.set(ItemStack.EMPTY);

@@ -90,7 +90,7 @@ public class PadlockedDoorBlock extends Block implements EntityBlock {
         this.baseBlock = blockIn;
         REPLACEMENT_MAP.put(blockIn.delegate, this.delegate);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(SIDE, DoorSide.OUTSIDE)
-                .setValue(HINGE, DoorHingeSide.LEFT).setValue(HALF, DoubleBlockHalf.LOWER));
+            .setValue(HINGE, DoorHingeSide.LEFT).setValue(HALF, DoubleBlockHalf.LOWER));
     }
 
     @Nullable
@@ -101,7 +101,7 @@ public class PadlockedDoorBlock extends Block implements EntityBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-            BlockHitResult rayTrace) {
+                                 BlockHitResult rayTrace) {
         if (state.getValue(HALF) == DoubleBlockHalf.UPPER) {
             pos = pos.relative(Direction.DOWN);
             state = worldIn.getBlockState(pos);
@@ -125,17 +125,17 @@ public class PadlockedDoorBlock extends Block implements EntityBlock {
                         ItemStack lockStack = doorTile.getLockStack();
                         if (!lockStack.isEmpty() && lockStack.hasCustomHoverName()) {
                             player.displayClientMessage(new TranslatableComponent("status.basedefense.door.info",
-                                            lockStack.getHoverName().plainCopy().withStyle(WHITE)).withStyle(YELLOW,
+                                    lockStack.getHoverName().plainCopy().withStyle(WHITE)).withStyle(YELLOW,
                                     ITALIC),
-                                    true);
+                                true);
                         }
                     } else {
                         player.displayClientMessage(new TranslatableComponent("status.basedefense.door.locked",
-                                new TranslatableComponent(this.baseBlock.getDescriptionId()).withStyle(WHITE))
-                                .withStyle(GRAY, ITALIC), true);
+                            new TranslatableComponent(this.baseBlock.getDescriptionId()).withStyle(WHITE))
+                            .withStyle(GRAY, ITALIC), true);
                     }
                     worldIn.playSound(player, pos, Sounds.LOCKED_DOOR_ATTEMPT, SoundSource.BLOCKS, 1.0F,
-                            worldIn.random.nextFloat() * 0.1F + 0.9F);
+                        worldIn.random.nextFloat() * 0.1F + 0.9F);
                 }
             }
         }
@@ -154,7 +154,7 @@ public class PadlockedDoorBlock extends Block implements EntityBlock {
         final Direction facing = state.getValue(FACING);
         final DoorHingeSide hinge = state.getValue(HINGE);
         final BlockState defState = this.baseBlock.defaultBlockState().setValue(DoorBlock.HINGE, hinge)
-                .setValue(DoorBlock.FACING, facing).setValue(DoorBlock.OPEN, false);
+            .setValue(DoorBlock.FACING, facing).setValue(DoorBlock.OPEN, false);
 
         final BlockState newState = defState.setValue(DoorBlock.HALF, state.getValue(HALF));
         final BlockState newOffState = defState.setValue(DoorBlock.HALF, offState.getValue(HALF));
@@ -178,7 +178,7 @@ public class PadlockedDoorBlock extends Block implements EntityBlock {
                 LazyOptional<ICodeHolder> codeCap = stack.getCapability(CODE_HOLDER);
                 if (!stack.isEmpty() && codeCap.isPresent()) {
                     te.getCapability(CODE_HOLDER)
-                            .ifPresent(teCode -> codeCap.ifPresent(stackCode -> stackCode.setCodes(teCode.getCodes())));
+                        .ifPresent(teCode -> codeCap.ifPresent(stackCode -> stackCode.setCodes(teCode.getCodes())));
                     if (te instanceof LockableTile) {
                         ItemStack lockStack = ((LockableTile) te).getLockStack();
                         if (stack.getItem() instanceof IColorable && lockStack.getItem() instanceof IColorable) {
@@ -188,7 +188,9 @@ public class PadlockedDoorBlock extends Block implements EntityBlock {
                         }
                         if (stack.getItem() instanceof BrokenLockPiecesItem) {
                             ((BrokenLockPiecesItem) stack.getItem()).setPreviousName(stack, lockStack.getHoverName());
-                        } else if (lockStack.hasCustomHoverName()) { stack.setHoverName(lockStack.getHoverName()); }
+                        } else if (lockStack.hasCustomHoverName()) {
+                            stack.setHoverName(lockStack.getHoverName());
+                        }
                     }
                     break;
                 }
@@ -229,7 +231,7 @@ public class PadlockedDoorBlock extends Block implements EntityBlock {
 
     @Override
     public void playerDestroy(Level worldIn, Player player, BlockPos pos, BlockState state, BlockEntity te,
-            ItemStack stack) {
+                              ItemStack stack) {
         super.playerDestroy(worldIn, player, pos, Blocks.AIR.defaultBlockState(), te, stack);
     }
 

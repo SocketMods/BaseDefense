@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import tk.sciwhiz12.basedefense.item.key.KeyringItem;
 
 public class KeyringLayer<Entity extends Player, Model extends HumanoidModel<Entity>>
-        extends RenderLayer<Entity, Model> {
+    extends RenderLayer<Entity, Model> {
     public KeyringLayer(RenderLayerParent<Entity, Model> entityRendererIn) {
         super(entityRendererIn);
     }
@@ -34,7 +34,9 @@ public class KeyringLayer<Entity extends Player, Model extends HumanoidModel<Ent
      */
     public static ItemStack getKeyring(Player player) {
         Inventory inv = player.getInventory();
-        if (inv.getSelected().getItem() instanceof KeyringItem) { return inv.getSelected(); }
+        if (inv.getSelected().getItem() instanceof KeyringItem) {
+            return inv.getSelected();
+        }
         ItemStack primaryHeld = player.getMainHandItem();
         ItemStack offHeld = player.getOffhandItem();
         for (ItemStack stack : inv.items) {
@@ -47,8 +49,8 @@ public class KeyringLayer<Entity extends Player, Model extends HumanoidModel<Ent
 
     @Override
     public void render(PoseStack matrixStack, MultiBufferSource buffer, int light, Entity player,
-            float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw,
-            float headPitch) {
+                       float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw,
+                       float headPitch) {
         ItemStack stack = getKeyring(player);
         if (!stack.isEmpty()) {
             final ItemInHandRenderer fpRenderer = Minecraft.getInstance().getItemInHandRenderer();
@@ -66,7 +68,7 @@ public class KeyringLayer<Entity extends Player, Model extends HumanoidModel<Ent
 
                 // TODO: fix the renderer being early of the crouching
                 fpRenderer.renderItem(player, stack, ItemTransforms.TransformType.HEAD, leftHand, matrixStack,
-                        buffer, light);
+                    buffer, light);
                 matrixStack.popPose();
             }
         }

@@ -88,12 +88,14 @@ public class KeysmithContainer extends AbstractContainerMenu {
             this.customName = null;
         } else {
             out.getCapability(CODE_HOLDER).ifPresent(outCode -> outCode.setCodes(
-                    dupl.getCapability(CODE_HOLDER).filter(holder -> holder.getCodes().size() > 0).map(ICodeHolder::getCodes)
-                            .orElseGet(() -> LongLists.singleton(RANDOM.nextLong()))));
+                dupl.getCapability(CODE_HOLDER).filter(holder -> holder.getCodes().size() > 0).map(ICodeHolder::getCodes)
+                    .orElseGet(() -> LongLists.singleton(RANDOM.nextLong()))));
             IColorable.copyColors(dupl, out);
             if (!StringUtils.isBlank(this.customName)) {
                 out.setHoverName(new TextComponent(this.customName));
-            } else if (out.hasCustomHoverName()) { out.resetHoverName(); }
+            } else if (out.hasCustomHoverName()) {
+                out.resetHoverName();
+            }
         }
         this.outputSlot.setItem(0, out);
         this.broadcastChanges();
@@ -123,12 +125,16 @@ public class KeysmithContainer extends AbstractContainerMenu {
         if (slot != null && slot.hasItem()) {
             ItemStack slotStack = slot.getItem();
             if (index == 2) {
-                if (!this.moveItemStackTo(slotStack, 3, 39, true)) { return ItemStack.EMPTY; }
+                if (!this.moveItemStackTo(slotStack, 3, 39, true)) {
+                    return ItemStack.EMPTY;
+                }
             } else if (index != 0 && index != 1) {
                 if (index < 39 && !this.moveItemStackTo(slotStack, 0, 2, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.moveItemStackTo(slotStack, 3, 39, false)) { return ItemStack.EMPTY; }
+            } else if (!this.moveItemStackTo(slotStack, 3, 39, false)) {
+                return ItemStack.EMPTY;
+            }
 
             if (slotStack.isEmpty()) {
                 slot.set(ItemStack.EMPTY);

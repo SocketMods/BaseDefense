@@ -104,8 +104,12 @@ public class LocksmithContainer extends AbstractContainerMenu {
 
     public void slotsChanged(Container inv) {
         super.slotsChanged(inv);
-        if (inv == this.inputSlots || inv == this.outputSlot) { this.updateOutputs(); }
-        if (inv == this.testingSlots) { this.updateTestingState(); }
+        if (inv == this.inputSlots || inv == this.outputSlot) {
+            this.updateOutputs();
+        }
+        if (inv == this.testingSlots) {
+            this.updateTestingState();
+        }
     }
 
     private void updateOutputs() {
@@ -128,9 +132,15 @@ public class LocksmithContainer extends AbstractContainerMenu {
             if (!keyCodes.isEmpty()) {
                 out = new ItemStack(Reference.Items.LOCK_CORE, 1);
                 ItemStack lastKey = lastKeyRef.get();
-                out.getCapability(CODE_HOLDER).ifPresent(holder -> { for (long code : keyCodes) { holder.addCode(code); } });
+                out.getCapability(CODE_HOLDER).ifPresent(holder -> {
+                    for (long code : keyCodes) {
+                        holder.addCode(code);
+                    }
+                });
                 IColorable.copyColors(lastKey, out);
-                if (lastKey.hasCustomHoverName()) { out.setHoverName(lastKey.getHoverName()); }
+                if (lastKey.hasCustomHoverName()) {
+                    out.setHoverName(lastKey.getHoverName());
+                }
             }
             this.outputSlot.setItem(0, out);
         }
@@ -143,7 +153,9 @@ public class LocksmithContainer extends AbstractContainerMenu {
         ItemStack keyStack = this.testingSlots.getItem(0);
         ItemStack lockStack = this.testingSlots.getItem(1);
         if (!keyStack.isEmpty() && !lockStack.isEmpty()) {
-            if (UnlockHelper.checkUnlock(keyStack, lockStack, ContainerLevelAccess.NULL, null, false)) { flag = 1; }
+            if (UnlockHelper.checkUnlock(keyStack, lockStack, ContainerLevelAccess.NULL, null, false)) {
+                flag = 1;
+            }
         }
         this.testingState.set(flag);
         this.broadcastChanges();
@@ -167,10 +179,16 @@ public class LocksmithContainer extends AbstractContainerMenu {
         if (slot != null && slot.hasItem()) {
             ItemStack slotStack = slot.getItem();
             if (index == 7) {
-                if (!this.moveItemStackTo(slotStack, 10, 46, true)) { return ItemStack.EMPTY; }
+                if (!this.moveItemStackTo(slotStack, 10, 46, true)) {
+                    return ItemStack.EMPTY;
+                }
             } else if (index > 6) {
-                if (index >= 10 && index < 47 && !this.moveItemStackTo(slotStack, 0, 8, false)) { return ItemStack.EMPTY; }
-            } else if (!this.moveItemStackTo(slotStack, 10, 47, false)) { return ItemStack.EMPTY; }
+                if (index >= 10 && index < 47 && !this.moveItemStackTo(slotStack, 0, 8, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!this.moveItemStackTo(slotStack, 10, 47, false)) {
+                return ItemStack.EMPTY;
+            }
 
             if (slotStack.isEmpty()) {
                 slot.set(ItemStack.EMPTY);

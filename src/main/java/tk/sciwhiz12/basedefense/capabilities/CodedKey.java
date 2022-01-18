@@ -41,7 +41,8 @@ public class CodedKey implements ICodeHolder, IKey, INBTSerializable<LongTag>, I
     }
 
     @Override
-    public void onUnlock(ILock lock, ContainerLevelAccess worldPos, @Nullable Player player) {}
+    public void onUnlock(ILock lock, ContainerLevelAccess worldPos, @Nullable Player player) {
+    }
 
     @Override
     public boolean containsCode(Long code) {
@@ -74,7 +75,9 @@ public class CodedKey implements ICodeHolder, IKey, INBTSerializable<LongTag>, I
 
     @Override
     public void removeCode(Long code) {
-        if (this.storedCode.longValue() == checkNotNull(code).longValue()) { this.storedCode = null; }
+        if (this.storedCode.longValue() == checkNotNull(code).longValue()) {
+            this.storedCode = null;
+        }
     }
 
     @Override
@@ -92,7 +95,7 @@ public class CodedKey implements ICodeHolder, IKey, INBTSerializable<LongTag>, I
         if (verbose && this.storedCode != null) {
             info.add(new TranslatableComponent("tooltip.basedefense.codes.header").withStyle(GRAY));
             info.add(new TranslatableComponent("tooltip.basedefense.codes.line", String.format("%016X", storedCode))
-                    .withStyle(DARK_GRAY));
+                .withStyle(DARK_GRAY));
         } else {
             if (this.storedCode != null) {
                 info.add(new TranslatableComponent("tooltip.basedefense.codes.count.one", 1).withStyle(GRAY));

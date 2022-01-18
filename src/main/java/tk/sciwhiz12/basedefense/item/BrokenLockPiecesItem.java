@@ -26,9 +26,11 @@ public class BrokenLockPiecesItem extends Item implements IColorable {
 
     @Override
     public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        if (hasPreviousName(stack)) { tooltip.add(getPreviousName(stack).withStyle(ChatFormatting.ITALIC)); }
+        if (hasPreviousName(stack)) {
+            tooltip.add(getPreviousName(stack).withStyle(ChatFormatting.ITALIC));
+        }
         stack.getCapability(Reference.Capabilities.CODE_HOLDER).filter(ITooltipInfo.class::isInstance)
-                .ifPresent(lock -> ((ITooltipInfo) lock).addInformation(tooltip, flagIn.isAdvanced()));
+            .ifPresent(lock -> ((ITooltipInfo) lock).addInformation(tooltip, flagIn.isAdvanced()));
         if (!flagIn.isAdvanced()) return;
         ItemHelper.addColorInformation(stack, tooltip);
     }
@@ -39,8 +41,8 @@ public class BrokenLockPiecesItem extends Item implements IColorable {
 
     public MutableComponent getPreviousName(ItemStack stack) {
         return hasPreviousName(stack) ?
-                Component.Serializer.fromJson(stack.getTag().getString("BrokenLockName")) :
-                new TextComponent("");
+            Component.Serializer.fromJson(stack.getTag().getString("BrokenLockName")) :
+            new TextComponent("");
     }
 
     public void setPreviousName(ItemStack stack, Component name) {

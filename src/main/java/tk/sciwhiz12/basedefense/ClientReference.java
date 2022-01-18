@@ -38,14 +38,17 @@ public final class ClientReference {
                 if (tile instanceof LockedDoorTile && ((LockedDoorTile) tile).hasColors()) {
                     int[] colors = ((LockedDoorTile) tile).getColors();
                     // offset by 1 since index 0 is reserved for particle color
-                    if (tintIndex != 0 && colors.length > tintIndex - 1) { return colors[tintIndex - 1]; }
+                    if (tintIndex != 0 && colors.length > tintIndex - 1) {
+                        return colors[tintIndex - 1];
+                    }
                 }
             }
             return -1;
         };
 
         // Prevent instantiation
-        private Colors() {}
+        private Colors() {
+        }
     }
 
     public static final class ModelLayers {
@@ -53,7 +56,8 @@ public final class ClientReference {
             new ModelLayerLocation(Reference.Blocks.PORTABLE_SAFE.getRegistryName(), "portable_safe");
 
         // Prevent instantiation
-        private ModelLayers() {}
+        private ModelLayers() {
+        }
     }
 
     public static final class PropertyOverrides {
@@ -61,12 +65,15 @@ public final class ClientReference {
 
         public static final ItemPropertyFunction COLORS_GETTER = (stack, world, livingEntity, seed) -> {
             CompoundTag tag = stack.getTagElement("display");
-            if (tag != null && tag.contains("colors")) { return (float) tag.getIntArray("colors").length; }
+            if (tag != null && tag.contains("colors")) {
+                return (float) tag.getIntArray("colors").length;
+            }
             return 0.0F;
         };
 
         // Prevent instantiation
-        private PropertyOverrides() {}
+        private PropertyOverrides() {
+        }
     }
 
     public static final class Textures {
@@ -93,9 +100,11 @@ public final class ClientReference {
         }
 
         // Prevent instantiation
-        private Textures() {}
+        private Textures() {
+        }
     }
 
     // Prevent instantiation
-    private ClientReference() {}
+    private ClientReference() {
+    }
 }

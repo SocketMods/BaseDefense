@@ -116,7 +116,7 @@ public class PortableSafeBlock extends Block implements SimpleWaterloggedBlock, 
                 }
 
                 ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D,
-                        (double) pos.getZ() + 0.5D, stack);
+                    (double) pos.getZ() + 0.5D, stack);
                 itementity.setDefaultPickUpDelay();
                 worldIn.addFreshEntity(itementity);
             }
@@ -163,7 +163,7 @@ public class PortableSafeBlock extends Block implements SimpleWaterloggedBlock, 
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-            BlockHitResult hit) {
+                                 BlockHitResult hit) {
         if (worldIn.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
@@ -173,7 +173,7 @@ public class PortableSafeBlock extends Block implements SimpleWaterloggedBlock, 
                 PortableSafeTileEntity safeTE = (PortableSafeTileEntity) te;
                 ItemStack heldItem = player.getItemInHand(handIn);
                 if (safeTE.getNumPlayersUsing() > 0 || (!heldItem.isEmpty() && UnlockHelper
-                        .checkUnlock(heldItem, safeTE, worldIn, pos, player, true))) {
+                    .checkUnlock(heldItem, safeTE, worldIn, pos, player, true))) {
                     player.openMenu(provider);
                 }
             }
@@ -198,7 +198,7 @@ public class PortableSafeBlock extends Block implements SimpleWaterloggedBlock, 
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip,
-            TooltipFlag flagIn) {
+                                TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         CompoundTag nbt = stack.getTagElement("BlockEntityTag");
         if (nbt != null && nbt.contains("Items", Tag.TAG_LIST)) {
@@ -210,7 +210,7 @@ public class PortableSafeBlock extends Block implements SimpleWaterloggedBlock, 
 
     @Override
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
-            Player player) {
+                                       Player player) {
         ItemStack stack = super.getCloneItemStack(state, target, world, pos, player);
         PortableSafeTileEntity te = (PortableSafeTileEntity) world.getBlockEntity(pos);
         if (te != null) {
@@ -254,7 +254,7 @@ public class PortableSafeBlock extends Block implements SimpleWaterloggedBlock, 
         BlockEntity te = worldIn.getBlockEntity(pos);
         if (te != null) {
             return ItemHandlerHelper.calcRedstoneFromInventory(
-                    te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseGet(ItemStackHandler::new));
+                te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseGet(ItemStackHandler::new));
         }
         return 0;
     }

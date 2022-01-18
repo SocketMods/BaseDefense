@@ -85,7 +85,8 @@ public final class Reference {
         public static final PortableSafeBlock PORTABLE_SAFE = Util.Null();
 
         // Prevent instantiation
-        private Blocks() {}
+        private Blocks() {
+        }
     }
 
     public static final class Capabilities {
@@ -99,7 +100,8 @@ public final class Reference {
         });
 
         // Prevent instantiation
-        private Capabilities() {}
+        private Capabilities() {
+        }
     }
 
     public static final CreativeModeTab ITEM_GROUP = new CreativeModeTab(MODID) {
@@ -137,7 +139,8 @@ public final class Reference {
         public static final LockedBlockItem PORTABLE_SAFE = Util.Null();
 
         // Prevent instantiation
-        private Items() {}
+        private Items() {
+        }
     }
 
     @ObjectHolder(MODID)
@@ -148,7 +151,8 @@ public final class Reference {
         public static final MenuType<PortableSafeContainer> PORTABLE_SAFE = Util.Null();
 
         // Prevent instantiation
-        private Containers() {}
+        private Containers() {
+        }
     }
 
     @ObjectHolder(MODID)
@@ -158,14 +162,16 @@ public final class Reference {
         public static final SimpleRecipeSerializer<ColoringRecipe> COLORING = Util.Null();
 
         // Prevent instantiation
-        private RecipeSerializers() {}
+        private RecipeSerializers() {
+        }
     }
 
     public static final class IngredientSerializers {
         public static IIngredientSerializer<LockedItemIngredient> LOCKED_ITEM = Util.Null();
 
         // Prevent instantiation
-        private IngredientSerializers() {}
+        private IngredientSerializers() {
+        }
     }
 
     @ObjectHolder(MODID)
@@ -175,7 +181,8 @@ public final class Reference {
         public static final SoundEvent LOCKED_DOOR_UNLOCK = Util.Null();
 
         // Prevent instantiation
-        private Sounds() {}
+        private Sounds() {
+        }
     }
 
     @ObjectHolder(MODID)
@@ -186,11 +193,13 @@ public final class Reference {
         public static final BlockEntityType<PortableSafeTileEntity> PORTABLE_SAFE = Util.Null();
 
         // Prevent instantiation
-        private TileEntities() {}
+        private TileEntities() {
+        }
     }
 
     // Prevent instantiation
-    private Reference() {}
+    private Reference() {
+    }
 
     /**
      * Creates a {@link ResourceLocation} with the namespace as

@@ -61,7 +61,7 @@ public class CodeHolder implements ICodeHolder, ITooltipInfo {
             info.add(new TranslatableComponent("tooltip.basedefense.codes.header").withStyle(GRAY));
             for (long id : this.storedCodes) {
                 info.add(new TranslatableComponent("tooltip.basedefense.codes.line", String.format("%016X", id))
-                        .withStyle(DARK_GRAY));
+                    .withStyle(DARK_GRAY));
             }
         }
     }

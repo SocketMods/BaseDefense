@@ -34,13 +34,13 @@ public class LockedBlockItem extends BlockItem implements IContainsLockItem {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if (hasLockStack(stack)) {
             tooltip.add(new TranslatableComponent("tooltip.basedefense.locked_block_item.has_lock")
-                    .withStyle(ChatFormatting.GRAY));
+                .withStyle(ChatFormatting.GRAY));
             ItemStack lockStack = getLockStack(stack);
             lockStack.getCapability(Reference.Capabilities.LOCK).filter(ITooltipInfo.class::isInstance)
-                    .ifPresent(lock -> ((ITooltipInfo) lock).addInformation(tooltip, flagIn.isAdvanced()));
+                .ifPresent(lock -> ((ITooltipInfo) lock).addInformation(tooltip, flagIn.isAdvanced()));
         } else {
             tooltip.add(new TranslatableComponent("tooltip.basedefense.locked_block_item.no_lock")
-                    .withStyle(ChatFormatting.GRAY));
+                .withStyle(ChatFormatting.GRAY));
         }
     }
 
@@ -62,7 +62,9 @@ public class LockedBlockItem extends BlockItem implements IContainsLockItem {
     public ItemStack getLockStack(ItemStack stack) {
         checkNotNull(stack);
         CompoundTag nbt = stack.getTagElement(TAG_LOCK_ITEM);
-        if (nbt != null) { return ItemStack.of(nbt); }
+        if (nbt != null) {
+            return ItemStack.of(nbt);
+        }
         return ItemStack.EMPTY;
     }
 

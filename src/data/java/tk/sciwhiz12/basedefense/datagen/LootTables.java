@@ -80,7 +80,7 @@ public class LootTables extends LootTableProvider {
 
     void lockedDoor(LockedDoorBlock block) {
         StatePropertiesPredicate.Builder predicate = StatePropertiesPredicate.Builder.properties()
-                .hasProperty(LockedDoorBlock.HALF, LOWER);
+            .hasProperty(LockedDoorBlock.HALF, LOWER);
 
         LootPool.Builder builder = createStandardDrops(block.baseBlock);
         builder.when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(predicate));
@@ -90,7 +90,7 @@ public class LootTables extends LootTableProvider {
 
     void padlockedDoor(PadlockedDoorBlock block) {
         StatePropertiesPredicate.Builder predicate = StatePropertiesPredicate.Builder.properties()
-                .hasProperty(PadlockedDoorBlock.HALF, LOWER);
+            .hasProperty(PadlockedDoorBlock.HALF, LOWER);
 
         LootPool.Builder doorItem = createStandardDrops(block.baseBlock);
         doorItem.when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(predicate));
@@ -104,7 +104,7 @@ public class LootTables extends LootTableProvider {
     void portableSafe() {
         LootItemConditionalFunction.Builder<?> copyNameFunc = CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY);
         SetContainerContents.Builder contentsFunc = SetContainerContents.setContents(Reference.TileEntities.PORTABLE_SAFE)
-                .withEntry(DynamicLoot.dynamicEntry(PortableSafeBlock.CONTENTS));
+            .withEntry(DynamicLoot.dynamicEntry(PortableSafeBlock.CONTENTS));
         CopyNbtFunction.Builder copyLockFunc = createCopyLockFunc(PortableSafeTileEntity.TAG_LOCK_ITEM);
 
         LootPool.Builder safeItem = createStandardDrops(Blocks.PORTABLE_SAFE);
@@ -115,7 +115,7 @@ public class LootTables extends LootTableProvider {
 
     CopyNbtFunction.Builder createCopyLockFunc(String tag) {
         return CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
-                .copy(tag, "BlockEntityTag." + tag, CopyNbtFunction.MergeStrategy.REPLACE);
+            .copy(tag, "BlockEntityTag." + tag, CopyNbtFunction.MergeStrategy.REPLACE);
     }
 
     void standardDropTable(Block b) {
@@ -132,7 +132,7 @@ public class LootTables extends LootTableProvider {
 
     LootPool.Builder createStandardDrops(ItemLike itemProvider) {
         return LootPool.lootPool().setRolls(ConstantValue.exactly(1)).when(ExplosionCondition.survivesExplosion())
-                .add(LootItem.lootTableItem(itemProvider));
+            .add(LootItem.lootTableItem(itemProvider));
     }
 
     @Override

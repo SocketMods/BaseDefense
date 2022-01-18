@@ -76,7 +76,7 @@ public class ItemModels extends ItemModelProvider {
     }
 
     void coloredItem(final ResourceLocation baseLoc, final ModelFile parent, final ItemModelBuilder defaultModel,
-            final ResourceLocation baseTexture, final ResourceLocation overlayTexture) {
+                     final ResourceLocation baseTexture, final ResourceLocation overlayTexture) {
         final ResourceLocation color1 = appendPath(baseLoc, "_color_1");
         final ResourceLocation color2 = appendPath(baseLoc, "_color_2");
         final ResourceLocation color3 = appendPath(baseLoc, "_color_3");
@@ -85,7 +85,7 @@ public class ItemModels extends ItemModelProvider {
         final ItemModelBuilder overlay2 = factory.apply(color2);
         final ItemModelBuilder overlay3 = factory.apply(color3);
 
-        final ItemModelBuilder[] overlays = { overlay1, overlay2, overlay3 };
+        final ItemModelBuilder[] overlays = {overlay1, overlay2, overlay3};
         for (ItemModelBuilder builder : overlays) {
             builder.parent(parent);
             builder.texture("layer0", baseTexture);
@@ -102,34 +102,36 @@ public class ItemModels extends ItemModelProvider {
         defaultModel.override().predicate(new ResourceLocation("colors"), 3).model(overlay3).end();
 
         generatedModels.put(baseLoc, defaultModel);
-        for (ItemModelBuilder builder : overlays) { generatedModels.put(builder.getLocation(), builder); }
+        for (ItemModelBuilder builder : overlays) {
+            generatedModels.put(builder.getLocation(), builder);
+        }
     }
 
     ItemModelBuilder getKeyDisplayParent() {
         final ItemModelBuilder keyParent = withExistingParent("key_display", mcLoc("item/generated"));
         // @formatter:off
         keyParent.transforms()
-                .transform(ModelBuilder.Perspective.GROUND)
-                    .rotation(0, 0, 0)
-                    .translation(0, 2, 0)
-                    .scale(0.5F, 0.5F, 0.5F)
-                .end()
-                .transform(ModelBuilder.Perspective.HEAD)
-                    .rotation(0, 180, 0)
-                    .translation(0, 13, 7)
-                    .scale(1, 1, 1)
-                .end()
-                .transform(ModelBuilder.Perspective.THIRDPERSON_RIGHT)
-                    .rotation(180, 0, 0)
-                    .translation(0, 3, 1)
-                    .scale(0.55F, 0.55F, 0.55F)
-                .end()
-                .transform(ModelBuilder.Perspective.FIRSTPERSON_RIGHT)
-                    .rotation(180, -90, 25)
-                    .translation(1.13F, 5F, 1.13F)
-                    .scale(0.68F, 0.68F, 0.68F)
-                .end()
-        .end();
+            .transform(ModelBuilder.Perspective.GROUND)
+            .rotation(0, 0, 0)
+            .translation(0, 2, 0)
+            .scale(0.5F, 0.5F, 0.5F)
+            .end()
+            .transform(ModelBuilder.Perspective.HEAD)
+            .rotation(0, 180, 0)
+            .translation(0, 13, 7)
+            .scale(1, 1, 1)
+            .end()
+            .transform(ModelBuilder.Perspective.THIRDPERSON_RIGHT)
+            .rotation(180, 0, 0)
+            .translation(0, 3, 1)
+            .scale(0.55F, 0.55F, 0.55F)
+            .end()
+            .transform(ModelBuilder.Perspective.FIRSTPERSON_RIGHT)
+            .rotation(180, -90, 25)
+            .translation(1.13F, 5F, 1.13F)
+            .scale(0.68F, 0.68F, 0.68F)
+            .end()
+            .end();
         // @formatter:on
         return keyParent;
     }

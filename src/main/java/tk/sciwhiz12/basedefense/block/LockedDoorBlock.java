@@ -69,7 +69,7 @@ public class LockedDoorBlock extends Block implements EntityBlock {
         super(Block.Properties.copy(block));
         this.baseBlock = block;
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(HINGE, DoorHingeSide.LEFT)
-                .setValue(HALF, DoubleBlockHalf.LOWER).setValue(OPEN, false).setValue(LOCKED, false));
+            .setValue(HALF, DoubleBlockHalf.LOWER).setValue(OPEN, false).setValue(LOCKED, false));
     }
 
     @Nullable
@@ -80,7 +80,7 @@ public class LockedDoorBlock extends Block implements EntityBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-            BlockHitResult rayTrace) {
+                                 BlockHitResult rayTrace) {
         if (worldIn.isLoaded(pos) && state.getBlock() == this) { // verify that block is loaded
             DoubleBlockHalf half = state.getValue(HALF);
             BlockPos otherPos = half == DoubleBlockHalf.LOWER ? pos.above() : pos.below();
@@ -89,7 +89,9 @@ public class LockedDoorBlock extends Block implements EntityBlock {
             }
             BlockPos lowerPos = half == DoubleBlockHalf.LOWER ? pos : pos.below();
             LockedDoorTile te = (LockedDoorTile) worldIn.getBlockEntity(lowerPos);
-            if (te == null) { return InteractionResult.FAIL; }
+            if (te == null) {
+                return InteractionResult.FAIL;
+            }
             ItemStack heldStack = player.getItemInHand(handIn);
             if (state.getValue(LOCKED)) { // LOCKED
                 if (!heldStack.isEmpty() && UnlockHelper.checkUnlock(heldStack, te, worldIn, lowerPos, player, true)) {
@@ -113,11 +115,11 @@ public class LockedDoorBlock extends Block implements EntityBlock {
                         if (player.isShiftKeyDown() && lock.hasCustomHoverName()) {
                             // LOCKED, NO KEY, SNEAKING => inform player of lock name
                             player.displayClientMessage(new TranslatableComponent("status.basedefense.door.info",
-                                    lock.getHoverName().plainCopy().withStyle(WHITE)).withStyle(YELLOW, ITALIC), true);
+                                lock.getHoverName().plainCopy().withStyle(WHITE)).withStyle(YELLOW, ITALIC), true);
                         } else { // LOCKED, NO KEY, NOT SNEAKING => inform player that door is locked
                             player.displayClientMessage(new TranslatableComponent("status.basedefense.door.locked",
-                                    new TranslatableComponent(this.baseBlock.getDescriptionId()).withStyle(WHITE))
-                                    .withStyle(GRAY, ITALIC), true);
+                                new TranslatableComponent(this.baseBlock.getDescriptionId()).withStyle(WHITE))
+                                .withStyle(GRAY, ITALIC), true);
                         }
                         playSound(player, worldIn, pos, Sounds.LOCKED_DOOR_ATTEMPT);
                         return InteractionResult.SUCCESS;
@@ -131,7 +133,9 @@ public class LockedDoorBlock extends Block implements EntityBlock {
                         boolean wasOpen = state.getValue(OPEN);
                         setAndNotify(state.setValue(LOCKED, true).setValue(OPEN, false), pos, worldIn);
                         playSound(player, worldIn, pos, Sounds.LOCKED_DOOR_RELOCK);
-                        if (wasOpen) { this.playDoorSound(player, worldIn, pos, false); }
+                        if (wasOpen) {
+                            this.playDoorSound(player, worldIn, pos, false);
+                        }
                     } else { // UNLOCKED, SNEAKING, NO LOCK
                         if (!heldStack.isEmpty() && heldStack.getCapability(LOCK).isPresent()) {
                             // UNLOCKED, SNEAKING, NO LOCK, HOLDING LOCK => set held lock to current lock,
@@ -167,7 +171,7 @@ public class LockedDoorBlock extends Block implements EntityBlock {
     @SuppressWarnings("deprecation")
     @Override
     public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block fromBlockIn, BlockPos fromPos,
-            boolean isMoving) {
+                                boolean isMoving) {
         super.neighborChanged(state, worldIn, pos, fromBlockIn, fromPos, isMoving);
         if (fromBlockIn != this) return;
         BlockState otherState = worldIn.getBlockState(fromPos);
@@ -226,18 +230,18 @@ public class LockedDoorBlock extends Block implements EntityBlock {
     @SuppressWarnings("deprecation")
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn,
-            BlockPos currentPos, BlockPos facingPos) {
+                                  BlockPos currentPos, BlockPos facingPos) {
         DoubleBlockHalf doubleblockhalf = stateIn.getValue(HALF);
         if (facing.getAxis() == Direction.Axis.Y && doubleblockhalf == DoubleBlockHalf.LOWER == (facing == Direction.UP)) {
             if (facingState.getBlock() == this && facingState.getValue(HALF) != doubleblockhalf) {
                 return stateIn.setValue(FACING, facingState.getValue(FACING)).setValue(OPEN, facingState.getValue(OPEN))
-                        .setValue(HINGE, facingState.getValue(HINGE)).setValue(LOCKED, facingState.getValue(LOCKED));
+                    .setValue(HINGE, facingState.getValue(HINGE)).setValue(LOCKED, facingState.getValue(LOCKED));
             } else {
                 return Blocks.AIR.defaultBlockState();
             }
         } else {
             if (doubleblockhalf == DoubleBlockHalf.LOWER && facing == Direction.DOWN && !stateIn
-                    .canSurvive(worldIn, currentPos)) {
+                .canSurvive(worldIn, currentPos)) {
                 return Blocks.AIR.defaultBlockState();
             } else {
                 return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
@@ -250,7 +254,7 @@ public class LockedDoorBlock extends Block implements EntityBlock {
         BlockPos blockpos = context.getClickedPos();
         if (blockpos.getY() < 255 && context.getLevel().getBlockState(blockpos.above()).canBeReplaced(context)) {
             return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection())
-                    .setValue(HINGE, this.getHingeSide(context)).setValue(HALF, DoubleBlockHalf.LOWER);
+                .setValue(HINGE, this.getHingeSide(context)).setValue(HALF, DoubleBlockHalf.LOWER);
         } else {
             return null;
         }
@@ -272,9 +276,9 @@ public class LockedDoorBlock extends Block implements EntityBlock {
         BlockPos rightAbovePos = abovePos.relative(rightFacing);
         BlockState rightAboveState = world.getBlockState(rightAbovePos);
         int i = (leftState.isCollisionShapeFullBlock(world, leftPos) ? -1 : 0) + (leftAboveState
-                .isCollisionShapeFullBlock(world, leftAbovePos) ? -1 : 0) + (rightState
-                .isCollisionShapeFullBlock(world, rightPos) ? 1 : 0) + (rightAboveState
-                .isCollisionShapeFullBlock(world, rightAbovePos) ? 1 : 0);
+            .isCollisionShapeFullBlock(world, leftAbovePos) ? -1 : 0) + (rightState
+            .isCollisionShapeFullBlock(world, rightPos) ? 1 : 0) + (rightAboveState
+            .isCollisionShapeFullBlock(world, rightAbovePos) ? 1 : 0);
         boolean leftHasDoor = leftState.is(this) && leftState.getValue(HALF) == DoubleBlockHalf.LOWER;
         boolean rightHasDoor = rightState.is(this) && rightState.getValue(HALF) == DoubleBlockHalf.LOWER;
         if ((!leftHasDoor || rightHasDoor) && i <= 0) {
@@ -285,8 +289,8 @@ public class LockedDoorBlock extends Block implements EntityBlock {
                 double d0 = hitVec.x - (double) blockPos.getX();
                 double d1 = hitVec.z - (double) blockPos.getZ();
                 return (xOffset >= 0 || !(d1 < 0.5D)) && (xOffset <= 0 || !(d1 > 0.5D)) && (yOffset >= 0 || !(d0 > 0.5D)) && (yOffset <= 0 || !(d0 < 0.5D)) ?
-                        DoorHingeSide.LEFT :
-                        DoorHingeSide.RIGHT;
+                    DoorHingeSide.LEFT :
+                    DoorHingeSide.RIGHT;
             } else {
                 return DoorHingeSide.LEFT;
             }
@@ -304,7 +308,7 @@ public class LockedDoorBlock extends Block implements EntityBlock {
                 BlockState lowerState = worldIn.getBlockState(lowerPos);
                 if (lowerState.getBlock() == state.getBlock() && lowerState.getValue(HALF) == DoubleBlockHalf.LOWER) {
                     worldIn.setBlock(lowerPos, Blocks.AIR.defaultBlockState(),
-                            UPDATE_SUPPRESS_DROPS | UPDATE_ALL);
+                        UPDATE_SUPPRESS_DROPS | UPDATE_ALL);
                     worldIn.levelEvent(player, LevelEvent.PARTICLES_DESTROY_BLOCK, lowerPos, Block.getId(lowerState));
                 }
             }

@@ -29,8 +29,8 @@ public class ItemHandlerKey implements IKey {
         for (int i = 0; i < itemHandler.getSlots(); i++) {
             ItemStack stack = itemHandler.getStackInSlot(i);
             if (stack.getCapability(KEY)
-                    .map(key -> key.canUnlock(lock, worldPos, player) && lock.canUnlock(key, worldPos, player))
-                    .orElse(false)) {
+                .map(key -> key.canUnlock(lock, worldPos, player) && lock.canUnlock(key, worldPos, player))
+                .orElse(false)) {
                 return true;
             }
         }
@@ -44,7 +44,9 @@ public class ItemHandlerKey implements IKey {
             if (stack.getCapability(KEY).filter(key -> lock.canUnlock(key, worldPos, player)).map(key -> {
                 key.onUnlock(lock, worldPos, player);
                 return true;
-            }).orElse(false)) { return; }
+            }).orElse(false)) {
+                return;
+            }
         }
     }
 }

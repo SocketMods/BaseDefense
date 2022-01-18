@@ -24,7 +24,7 @@ public class PadlockedDoorRenderer implements BlockEntityRenderer<PadlockedDoorT
 
     @Override
     public void render(PadlockedDoorTile tileEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
-            int combinedLightIn, int combinedOverlayIn) {
+                       int combinedLightIn, int combinedOverlayIn) {
         matrixStack.pushPose();
         BlockState state = tileEntity.getBlockState();
         ItemStack itemstack = tileEntity.getLockStack();
@@ -39,7 +39,7 @@ public class PadlockedDoorRenderer implements BlockEntityRenderer<PadlockedDoorT
         }
         matrixStack.scale(0.5F, 0.5F, 0.5F);
         this.itemRenderer.renderStatic(null, itemstack, ItemTransforms.TransformType.FIXED, false,
-                matrixStack, buffer,tileEntity.getLevel(), combinedLightIn, combinedOverlayIn, 0);
+            matrixStack, buffer, tileEntity.getLevel(), combinedLightIn, combinedOverlayIn, 0);
         matrixStack.popPose();
     }
 }

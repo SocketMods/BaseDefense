@@ -32,7 +32,9 @@ public class LockedDoorModel implements BakedModel {
         for (BakedQuad quad : this.getQuads(state, side, rand)) {
             if (quad.isTinted()) {
                 Integer colors = data.getData(LockedDoorTile.COLOR_PROPERTY);
-                if (colors != null && colors - 1 >= quad.getTintIndex() - 1) { list.add(quad); }
+                if (colors != null && colors - 1 >= quad.getTintIndex() - 1) {
+                    list.add(quad);
+                }
             } else {
                 list.add(quad);
             }

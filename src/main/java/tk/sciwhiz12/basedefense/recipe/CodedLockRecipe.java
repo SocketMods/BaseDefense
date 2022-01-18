@@ -17,15 +17,15 @@ import static tk.sciwhiz12.basedefense.Reference.Capabilities.LOCK;
 
 public class CodedLockRecipe extends ShapedRecipe {
     public CodedLockRecipe(ResourceLocation idIn, String groupIn, int recipeWidthIn, int recipeHeightIn,
-            NonNullList<Ingredient> recipeItemsIn, ItemStack recipeOutputIn) {
+                           NonNullList<Ingredient> recipeItemsIn, ItemStack recipeOutputIn) {
         super(idIn, groupIn, recipeWidthIn, recipeHeightIn, recipeItemsIn, recipeOutputIn);
         final long lockCount = recipeItemsIn.stream().filter(LockedItemIngredient.class::isInstance)
-                .map(LockedItemIngredient.class::cast).filter(LockedItemIngredient::requiresCode).count();
+            .map(LockedItemIngredient.class::cast).filter(LockedItemIngredient::requiresCode).count();
         checkArgument(lockCount == 1, "Expected 1 coded locked item ingredient, got %s: %s", lockCount, idIn);
         checkArgument(recipeOutputIn.getCapability(CODE_HOLDER).isPresent(),
-                "Recipe output (%s) has no ICodeHolder capability: %s", recipeOutputIn.getItem().getRegistryName(), idIn);
+            "Recipe output (%s) has no ICodeHolder capability: %s", recipeOutputIn.getItem().getRegistryName(), idIn);
         checkArgument(recipeOutputIn.getCapability(LOCK).isPresent(), "Recipe output (%s) has no ILock capability: %s",
-                recipeOutputIn.getItem().getRegistryName(), idIn);
+            recipeOutputIn.getItem().getRegistryName(), idIn);
     }
 
     public ItemStack assemble(CraftingContainer inv) {
@@ -36,7 +36,9 @@ public class CodedLockRecipe extends ShapedRecipe {
                 if (!stack.isEmpty() && stack.getCapability(CODE_HOLDER).isPresent()) {
                     IColorable.copyColors(stack, output);
                     ItemHelper.copyCodes(stack, output);
-                    if (stack.hasCustomHoverName()) { output.setHoverName(stack.getHoverName()); }
+                    if (stack.hasCustomHoverName()) {
+                        output.setHoverName(stack.getHoverName());
+                    }
                     break;
                 }
             }

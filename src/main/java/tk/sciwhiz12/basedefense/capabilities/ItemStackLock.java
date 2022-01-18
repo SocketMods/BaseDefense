@@ -32,13 +32,13 @@ public class ItemStackLock implements ILock, INBTSerializable<CompoundTag> {
     @Override
     public boolean canRemove(IKey key, ContainerLevelAccess worldPos, @Nullable Player player) {
         return !lockStack.isEmpty() && lockStack.getCapability(LOCK).map(lock -> lock.canRemove(key, worldPos, player))
-                .orElse(false);
+            .orElse(false);
     }
 
     @Override
     public boolean canUnlock(IKey key, ContainerLevelAccess worldPos, @Nullable Player player) {
         return !lockStack.isEmpty() && lockStack.getCapability(LOCK).map(lock -> lock.canUnlock(key, worldPos, player))
-                .orElse(false);
+            .orElse(false);
     }
 
     @Override

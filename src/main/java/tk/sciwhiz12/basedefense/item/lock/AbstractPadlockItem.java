@@ -35,8 +35,10 @@ public abstract class AbstractPadlockItem extends Item implements IColorable {
     @Override
     public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         stack.getCapability(LOCK).filter(ITooltipInfo.class::isInstance)
-                .ifPresent(lock -> ((ITooltipInfo) lock).addInformation(tooltip, flagIn.isAdvanced()));
-        if (!flagIn.isAdvanced()) { return; }
+            .ifPresent(lock -> ((ITooltipInfo) lock).addInformation(tooltip, flagIn.isAdvanced()));
+        if (!flagIn.isAdvanced()) {
+            return;
+        }
         ItemHelper.addColorInformation(stack, tooltip);
     }
 
@@ -50,7 +52,9 @@ public abstract class AbstractPadlockItem extends Item implements IColorable {
         final BlockState state = world.getBlockState(pos);
         if (state.getBlock() instanceof DoorBlock && !state.getValue(DoorBlock.OPEN) && !state.getValue(DoorBlock.POWERED)) {
             final PadlockedDoorBlock block = PadlockedDoorBlock.getReplacement(state.getBlock());
-            if (block == null || !block.isValidLock(stack)) { return InteractionResult.PASS; }
+            if (block == null || !block.isValidLock(stack)) {
+                return InteractionResult.PASS;
+            }
             if (!world.isClientSide) {
                 final boolean isLower = state.getValue(PadlockedDoorBlock.HALF) == DoubleBlockHalf.LOWER;
                 final BlockPos offPos = isLower ? pos.above() : pos.below();
@@ -69,11 +73,13 @@ public abstract class AbstractPadlockItem extends Item implements IColorable {
                 stack.setCount(stack.getCount() - 1);
 
                 int flags =
-                        Block.UPDATE_CLIENTS | Block.UPDATE_IMMEDIATE | Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_SUPPRESS_DROPS;
+                    Block.UPDATE_CLIENTS | Block.UPDATE_IMMEDIATE | Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_SUPPRESS_DROPS;
                 world.setBlock(pos, newState, flags);
                 world.setBlock(offPos, newOffState, flags);
                 BlockEntity te = world.getBlockEntity(isLower ? pos : offPos);
-                if (te instanceof PadlockedDoorTile) { ((PadlockedDoorTile) te).setLockStack(copy); }
+                if (te instanceof PadlockedDoorTile) {
+                    ((PadlockedDoorTile) te).setLockStack(copy);
+                }
             }
             return InteractionResult.SUCCESS;
         }
