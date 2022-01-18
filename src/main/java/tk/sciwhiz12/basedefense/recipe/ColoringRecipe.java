@@ -7,6 +7,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.Reference.RecipeSerializers;
 import tk.sciwhiz12.basedefense.item.IColorable;
 
@@ -41,7 +42,7 @@ public class ColoringRecipe extends CustomRecipe {
                         return false;
                     }
                 }
-                DyeColor color = DyeColor.getColor(stack);
+                @Nullable DyeColor color = DyeColor.getColor(stack);
                 if (color != null) {
                     colors++;
                 }
@@ -73,7 +74,7 @@ public class ColoringRecipe extends CustomRecipe {
                         return ItemStack.EMPTY;
                     }
                 }
-                DyeColor color = DyeColor.getColor(stack);
+                @Nullable DyeColor color = DyeColor.getColor(stack);
                 if (color != null) {
                     colors.add(color);
                 }

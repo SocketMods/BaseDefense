@@ -11,6 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.api.ITooltipInfo;
 import tk.sciwhiz12.basedefense.capabilities.CodedKey;
 import tk.sciwhiz12.basedefense.capabilities.SerializableCapabilityProvider;
@@ -32,12 +33,13 @@ public class KeyItem extends Item implements IColorable {
 
     @Override
     public boolean doesSneakBypassUse(ItemStack stack, LevelReader world, BlockPos pos, Player player) {
-        BlockEntity tile = world.getBlockEntity(pos);
+        @Nullable BlockEntity tile = world.getBlockEntity(pos);
         return tile != null && tile.getCapability(LOCK).isPresent();
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip,
+                                TooltipFlag flagIn) {
         stack.getCapability(KEY).filter(ITooltipInfo.class::isInstance)
             .ifPresent(lock -> ((ITooltipInfo) lock).addInformation(tooltip, flagIn.isAdvanced()));
         if (!flagIn.isAdvanced()) return;
@@ -45,7 +47,7 @@ public class KeyItem extends Item implements IColorable {
     }
 
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt) {
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
         return new SerializableCapabilityProvider<>(CodedKey::new, KEY, CONTAINS_CODE, CODE_HOLDER);
     }
 
@@ -55,7 +57,7 @@ public class KeyItem extends Item implements IColorable {
     }
 
     @Override
-    public void readShareTag(ItemStack stack, CompoundTag nbt) {
+    public void readShareTag(ItemStack stack, @Nullable CompoundTag nbt) {
         ItemHelper.readItemShareTag(stack, nbt, ItemHelper.CapabilitySerializer.CODED_KEY);
     }
 }

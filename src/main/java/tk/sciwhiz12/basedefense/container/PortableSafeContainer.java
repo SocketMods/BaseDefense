@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.Reference;
 import tk.sciwhiz12.basedefense.Reference.Containers;
 import tk.sciwhiz12.basedefense.tileentity.PortableSafeTileEntity;
@@ -28,7 +29,7 @@ public class PortableSafeContainer extends AbstractContainerMenu {
         this.worldPos = worldPosIn;
         this.inventory = inv;
         worldPos.execute((world, pos) -> {
-            BlockEntity te = world.getBlockEntity(pos);
+            @Nullable BlockEntity te = world.getBlockEntity(pos);
             if (te instanceof PortableSafeTileEntity) {
                 ((PortableSafeTileEntity) te).openInventory(playerInv.player);
             }
@@ -77,7 +78,7 @@ public class PortableSafeContainer extends AbstractContainerMenu {
     public void removed(Player playerIn) {
         super.removed(playerIn);
         worldPos.execute((world, pos) -> {
-            BlockEntity te = world.getBlockEntity(pos);
+            @Nullable BlockEntity te = world.getBlockEntity(pos);
             if (te instanceof PortableSafeTileEntity) {
                 ((PortableSafeTileEntity) te).closeInventory(playerIn);
             }

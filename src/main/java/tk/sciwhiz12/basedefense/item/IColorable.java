@@ -2,6 +2,7 @@ package tk.sciwhiz12.basedefense.item;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Arrays;
 
@@ -21,7 +22,7 @@ public interface IColorable {
     default boolean hasColors(ItemStack stack) {
         checkNotNull(stack);
         if (!stack.isEmpty() && stack.getItem() == this) {
-            CompoundTag display = stack.getTagElement("display");
+            @Nullable CompoundTag display = stack.getTagElement("display");
             if (display != null) {
                 return display.getIntArray("colors").length > 0;
             }
@@ -74,7 +75,7 @@ public interface IColorable {
     default int[] getColors(ItemStack stack) {
         checkNotNull(stack);
         if (!stack.isEmpty() && stack.getItem() == this && stack.hasTag()) {
-            CompoundTag display = stack.getTagElement("display");
+            @Nullable CompoundTag display = stack.getTagElement("display");
             if (display != null) {
                 return display.getIntArray("colors");
             }
@@ -93,7 +94,7 @@ public interface IColorable {
         checkNotNull(stack);
         checkArgument(index >= 0, "Index is negative: %s", index);
         if (!stack.isEmpty() && stack.getItem() == this && stack.hasTag()) {
-            CompoundTag display = stack.getTagElement("display");
+            @Nullable CompoundTag display = stack.getTagElement("display");
             if (display != null) {
                 int[] colors = display.getIntArray("colors");
                 if (colors.length - index > 0) {

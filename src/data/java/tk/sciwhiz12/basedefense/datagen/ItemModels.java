@@ -1,5 +1,6 @@
 package tk.sciwhiz12.basedefense.datagen;
 
+import com.google.common.base.Preconditions;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -9,6 +10,7 @@ import net.minecraftforge.client.model.generators.ModelBuilder;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.ModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.Reference.Items;
 
 import static tk.sciwhiz12.basedefense.Reference.MODID;
@@ -136,7 +138,8 @@ public class ItemModels extends ItemModelProvider {
         return keyParent;
     }
 
-    ResourceLocation itemLoc(ResourceLocation loc) {
+    ResourceLocation itemLoc(@Nullable ResourceLocation loc) {
+        Preconditions.checkNotNull(loc);
         return new ResourceLocation(loc.getNamespace(), ModelProvider.ITEM_FOLDER + "/" + loc.getPath());
     }
 }

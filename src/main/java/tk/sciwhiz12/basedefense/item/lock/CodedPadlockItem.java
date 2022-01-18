@@ -7,6 +7,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.ItemHandlerHelper;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.api.capablities.IKey;
 import tk.sciwhiz12.basedefense.capabilities.CodedLock;
 import tk.sciwhiz12.basedefense.capabilities.SerializableCapabilityProvider;
@@ -24,12 +25,12 @@ public class CodedPadlockItem extends AbstractPadlockItem {
     }
 
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt) {
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
         return new SerializableCapabilityProvider<>(() -> new CodedLock() {
             @Override
-            public void onRemove(IKey key, ContainerLevelAccess worldPos, Player player) {
+            public void onRemove(IKey key, ContainerLevelAccess worldPos, @Nullable Player player) {
                 worldPos.execute((world, pos) -> {
-                    BlockEntity te = world.getBlockEntity(pos);
+                    @Nullable BlockEntity te = world.getBlockEntity(pos);
                     if (te instanceof LockableTile) {
                         LockableTile lockTile = (LockableTile) te;
                         ItemHandlerHelper.giveItemToPlayer(player, lockTile.getLockStack());
@@ -46,7 +47,7 @@ public class CodedPadlockItem extends AbstractPadlockItem {
     }
 
     @Override
-    public void readShareTag(ItemStack stack, CompoundTag nbt) {
+    public void readShareTag(ItemStack stack, @Nullable CompoundTag nbt) {
         ItemHelper.readItemShareTag(stack, nbt, ItemHelper.CapabilitySerializer.CODED_LOCK);
     }
 }

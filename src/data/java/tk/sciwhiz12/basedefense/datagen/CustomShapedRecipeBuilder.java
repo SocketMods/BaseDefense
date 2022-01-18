@@ -21,10 +21,11 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -42,6 +43,7 @@ public class CustomShapedRecipeBuilder {
     private final List<String> pattern = Lists.newArrayList();
     private final Map<Character, Ingredient> key = Maps.newLinkedHashMap();
     private final Advancement.Builder advancementBuilder = Advancement.Builder.advancement();
+    @Nullable
     private String group;
 
     public CustomShapedRecipeBuilder(RecipeSerializer<? extends ShapedRecipe> serializerIn, ItemLike resultIn,
@@ -118,7 +120,7 @@ public class CustomShapedRecipeBuilder {
      * Builds this recipe into an {@link FinishedRecipe}.
      */
     public void save(Consumer<FinishedRecipe> consumerIn) {
-        this.save(consumerIn, ForgeRegistries.ITEMS.getKey(this.result));
+        this.save(consumerIn, Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(this.result)));
     }
 
     /**
@@ -126,7 +128,7 @@ public class CustomShapedRecipeBuilder {
      * {@link #save(Consumer)} if save is the same as the ID for the result.
      */
     public void save(Consumer<FinishedRecipe> consumerIn, String save) {
-        ResourceLocation resultLoc = ForgeRegistries.ITEMS.getKey(this.result);
+        ResourceLocation resultLoc = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(this.result));
         checkState(!new ResourceLocation(save).equals(resultLoc), "Shaped recipe %s should remove its 'save' argument",
             save);
         this.save(consumerIn, new ResourceLocation(save));
@@ -142,7 +144,7 @@ public class CustomShapedRecipeBuilder {
             .rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
         consumerIn.accept(new Result(id, serializer, result, count, group == null ? "" : group, pattern, key,
             advancementBuilder,
-            new ResourceLocation(id.getNamespace(), "recipes/" + result.getItemCategory().getRecipeFolderName() + "/" + id.getPath())));
+            new ResourceLocation(id.getNamespace(), "recipes/" + Objects.requireNonNull(result.getItemCategory()).getRecipeFolderName() + "/" + id.getPath())));
     }
 
     /**
@@ -213,7 +215,7 @@ public class CustomShapedRecipeBuilder {
 
             json.add("key", keysObj);
             JsonObject resultObj = new JsonObject();
-            resultObj.addProperty("item", ForgeRegistries.ITEMS.getKey(this.result).toString());
+            resultObj.addProperty("item", Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(this.result)).toString());
             if (this.count > 1) {
                 resultObj.addProperty("count", this.count);
             }

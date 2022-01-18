@@ -10,10 +10,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.Reference;
 import tk.sciwhiz12.basedefense.api.ITooltipInfo;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -61,7 +61,7 @@ public class LockedBlockItem extends BlockItem implements IContainsLockItem {
 
     public ItemStack getLockStack(ItemStack stack) {
         checkNotNull(stack);
-        CompoundTag nbt = stack.getTagElement(TAG_LOCK_ITEM);
+        @Nullable CompoundTag nbt = stack.getTagElement(TAG_LOCK_ITEM);
         if (nbt != null) {
             return ItemStack.of(nbt);
         }

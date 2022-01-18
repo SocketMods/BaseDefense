@@ -12,6 +12,7 @@ import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.ClientReference.Textures;
 import tk.sciwhiz12.basedefense.Reference.Blocks;
 import tk.sciwhiz12.basedefense.Reference.Containers;
@@ -41,6 +42,7 @@ public class KeysmithContainer extends AbstractContainerMenu {
         }
     };
     private final ContainerLevelAccess worldPos;
+    @Nullable
     private String customName = null;
 
     public KeysmithContainer(int windowId, Inventory playerInv) {
@@ -101,11 +103,12 @@ public class KeysmithContainer extends AbstractContainerMenu {
         this.broadcastChanges();
     }
 
-    public void setOutputName(String newName) {
+    public void setOutputName(@Nullable String newName) {
         this.customName = newName;
         this.onContentsChange();
     }
 
+    @Nullable
     public String getOutputName() {
         return this.customName;
     }

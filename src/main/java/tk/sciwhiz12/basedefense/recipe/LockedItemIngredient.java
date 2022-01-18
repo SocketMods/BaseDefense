@@ -9,9 +9,10 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.Reference.IngredientSerializers;
 
-import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import static tk.sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
@@ -53,9 +54,9 @@ public class LockedItemIngredient extends Ingredient {
     @Override
     public JsonElement toJson() {
         JsonObject json = new JsonObject();
-        json.addProperty("type", CraftingHelper.getID(IngredientSerializers.LOCKED_ITEM).toString());
+        json.addProperty("type", Objects.requireNonNull(CraftingHelper.getID(IngredientSerializers.LOCKED_ITEM)).toString());
         json.addProperty("has_codes", requiresCode);
-        json.addProperty("item", stack.getItem().getRegistryName().toString());
+        json.addProperty("item", Objects.requireNonNull(stack.getItem().getRegistryName()).toString());
         return json;
     }
 

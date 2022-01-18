@@ -8,6 +8,8 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A version of {@link GenericCapabilityProvider} that caters to capability
@@ -27,8 +29,9 @@ public class SerializableCapabilityProvider<C extends INBTSerializable<N>, N ext
         this.capInst = LazyOptional.of(factory);
     }
 
+    @NonNull
     @Override
-    public <X> LazyOptional<X> getCapability(Capability<X> cap, Direction side) {
+    public <X> LazyOptional<X> getCapability(Capability<X> cap, @Nullable Direction side) {
         for (Capability<?> capO : capObjs) {
             if (capO == cap) {
                 return capInst.cast();

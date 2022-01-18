@@ -37,6 +37,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.IRegistryDelegate;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.Reference.Sounds;
 import tk.sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import tk.sciwhiz12.basedefense.item.BrokenLockPiecesItem;
@@ -47,7 +48,6 @@ import tk.sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
 import tk.sciwhiz12.basedefense.util.UnlockHelper;
 import tk.sciwhiz12.basedefense.util.Util;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,6 +99,7 @@ public class PadlockedDoorBlock extends Block implements EntityBlock {
         return state.getValue(HALF) == DoubleBlockHalf.LOWER ? new PadlockedDoorTile(pos, state) : null;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult rayTrace) {
@@ -108,7 +109,7 @@ public class PadlockedDoorBlock extends Block implements EntityBlock {
         }
         if (worldIn.isLoaded(pos) && state.getBlock() == this) {
             ItemStack keyStack = player.getItemInHand(handIn);
-            BlockEntity te = worldIn.getBlockEntity(pos);
+            @Nullable BlockEntity te = worldIn.getBlockEntity(pos);
             if (te instanceof PadlockedDoorTile) {
                 PadlockedDoorTile doorTile = (PadlockedDoorTile) te;
                 if (!keyStack.isEmpty() && keyStack.getCapability(KEY).isPresent()) {
@@ -172,7 +173,7 @@ public class PadlockedDoorBlock extends Block implements EntityBlock {
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         List<ItemStack> drops = super.getDrops(state, builder);
-        BlockEntity te = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+        @Nullable BlockEntity te = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
         if (!drops.isEmpty() && te != null) {
             for (ItemStack stack : drops) {
                 LazyOptional<ICodeHolder> codeCap = stack.getCapability(CODE_HOLDER);
@@ -199,6 +200,7 @@ public class PadlockedDoorBlock extends Block implements EntityBlock {
         return drops;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         switch (state.getValue(FACING)) {
@@ -214,24 +216,27 @@ public class PadlockedDoorBlock extends Block implements EntityBlock {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return this.hasCollision ? state.getShape(worldIn, pos) : Shapes.empty();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public VoxelShape getOcclusionShape(BlockState state, BlockGetter worldIn, BlockPos pos) {
         return state.getShape(worldIn, pos);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public VoxelShape getInteractionShape(BlockState state, BlockGetter worldIn, BlockPos pos) {
         return Shapes.empty();
     }
 
     @Override
-    public void playerDestroy(Level worldIn, Player player, BlockPos pos, BlockState state, BlockEntity te,
-                              ItemStack stack) {
+    public void playerDestroy(Level worldIn, Player player, BlockPos pos, BlockState state,
+                              @Nullable BlockEntity te, ItemStack stack) {
         super.playerDestroy(worldIn, player, pos, Blocks.AIR.defaultBlockState(), te, stack);
     }
 
@@ -253,11 +258,13 @@ public class PadlockedDoorBlock extends Block implements EntityBlock {
         super.playerWillDestroy(worldIn, pos, state, player);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
         return false;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
         BlockPos blockpos = pos.below();
@@ -269,6 +276,7 @@ public class PadlockedDoorBlock extends Block implements EntityBlock {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.setValue(FACING, rot.rotate(state.getValue(FACING)));

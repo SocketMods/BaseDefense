@@ -36,12 +36,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.Reference.Sounds;
 import tk.sciwhiz12.basedefense.item.LockedBlockItem;
 import tk.sciwhiz12.basedefense.tileentity.LockedDoorTile;
 import tk.sciwhiz12.basedefense.util.UnlockHelper;
-
-import javax.annotation.Nullable;
 
 import static net.minecraft.ChatFormatting.GRAY;
 import static net.minecraft.ChatFormatting.ITALIC;
@@ -78,6 +77,7 @@ public class LockedDoorBlock extends Block implements EntityBlock {
         return state.getValue(HALF) == DoubleBlockHalf.LOWER ? new LockedDoorTile(pos, state) : null;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult rayTrace) {
@@ -88,7 +88,7 @@ public class LockedDoorBlock extends Block implements EntityBlock {
                 return InteractionResult.FAIL;
             }
             BlockPos lowerPos = half == DoubleBlockHalf.LOWER ? pos : pos.below();
-            LockedDoorTile te = (LockedDoorTile) worldIn.getBlockEntity(lowerPos);
+            @Nullable LockedDoorTile te = (LockedDoorTile) worldIn.getBlockEntity(lowerPos);
             if (te == null) {
                 return InteractionResult.FAIL;
             }
@@ -195,6 +195,7 @@ public class LockedDoorBlock extends Block implements EntityBlock {
         return this.material == Material.METAL ? LevelEvent.SOUND_OPEN_IRON_DOOR : LevelEvent.SOUND_OPEN_WOODEN_DOOR;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         Direction direction = state.getValue(FACING);
@@ -214,10 +215,10 @@ public class LockedDoorBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         boolean locked = false;
         if (!stack.isEmpty() && stack.getItem() instanceof LockedBlockItem) {
-            BlockEntity te = worldIn.getBlockEntity(pos);
+            @Nullable BlockEntity te = worldIn.getBlockEntity(pos);
             if (te instanceof LockedDoorTile) {
                 ((LockedDoorTile) te).setLockStack(((LockedBlockItem) stack.getItem()).getLockStack(stack));
                 locked = true;
@@ -316,6 +317,7 @@ public class LockedDoorBlock extends Block implements EntityBlock {
         super.playerWillDestroy(worldIn, pos, state, player);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
         switch (type) {
@@ -328,6 +330,7 @@ public class LockedDoorBlock extends Block implements EntityBlock {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
         BlockPos downPos = pos.below();
@@ -339,6 +342,7 @@ public class LockedDoorBlock extends Block implements EntityBlock {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.setValue(FACING, rot.rotate(state.getValue(FACING)));

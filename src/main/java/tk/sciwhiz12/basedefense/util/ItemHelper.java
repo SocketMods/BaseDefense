@@ -13,11 +13,11 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import tk.sciwhiz12.basedefense.capabilities.CodedKey;
 import tk.sciwhiz12.basedefense.capabilities.CodedLock;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -52,7 +52,7 @@ public final class ItemHelper {
     public static void addColorInformation(ItemStack stack, @Nullable List<Component> tooltip) {
         checkNotNull(stack);
         tooltip = tooltip != null ? tooltip : new ArrayList<>();
-        CompoundTag tag = stack.getTagElement("display");
+        @Nullable CompoundTag tag = stack.getTagElement("display");
         if (stack.hasTag() && tag != null && tag.contains("colors")) {
             int[] colors = tag.getIntArray("colors");
             for (int i = 0; i < colors.length; i++) {
@@ -69,6 +69,7 @@ public final class ItemHelper {
         checkNotNull(caps);
         CompoundTag shareTag = new CompoundTag();
         if (stack.hasTag()) {
+            assert stack.getTag() != null;
             shareTag.put("Tag", stack.getTag());
         }
         for (CapabilitySerializer<?, ?> cap : caps) {
@@ -92,13 +93,14 @@ public final class ItemHelper {
             stack.setTag(nbt.getCompound("Tag"));
         }
         for (CapabilitySerializer<?, ?> cap : caps) {
-            final Tag tag = nbt.get(cap.capability().getName());
+            @Nullable final Tag tag = nbt.get(cap.capability().getName());
             if (tag != null && cap.tagClass().isAssignableFrom(tag.getClass())) {
                 acceptTag(stack, cap, tag);
             }
         }
     }
 
+    @SuppressWarnings("unchecked")
     private static <C, T extends Tag> void accept(ICapabilityProvider provider, CapabilitySerializer<C, T> cap,
                                                   BiConsumer<CapabilitySerializer<C, T>, C> consumer) {
         provider.getCapability(cap.capability()).ifPresent(inst -> {
@@ -108,6 +110,7 @@ public final class ItemHelper {
         });
     }
 
+    @SuppressWarnings("unchecked")
     private static <C, T extends Tag> void acceptTag(ICapabilityProvider provider, CapabilitySerializer<C, T> cap,
                                                      Tag tag) {
         provider.getCapability(cap.capability()).ifPresent(inst -> {

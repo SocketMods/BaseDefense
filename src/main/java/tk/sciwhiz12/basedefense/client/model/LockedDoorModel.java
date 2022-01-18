@@ -7,6 +7,8 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.IModelData;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.tileentity.LockedDoorTile;
 
 import java.util.ArrayList;
@@ -22,16 +24,17 @@ public class LockedDoorModel implements BakedModel {
 
     @SuppressWarnings("deprecation")
     @Override
-    public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random rand) {
         return parentModel.getQuads(state, side, rand);
     }
 
+    @NonNull
     @Override
-    public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand, IModelData data) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random rand, IModelData data) {
         ArrayList<BakedQuad> list = new ArrayList<>();
         for (BakedQuad quad : this.getQuads(state, side, rand)) {
             if (quad.isTinted()) {
-                Integer colors = data.getData(LockedDoorTile.COLOR_PROPERTY);
+                @Nullable Integer colors = data.getData(LockedDoorTile.COLOR_PROPERTY);
                 if (colors != null && colors - 1 >= quad.getTintIndex() - 1) {
                     list.add(quad);
                 }

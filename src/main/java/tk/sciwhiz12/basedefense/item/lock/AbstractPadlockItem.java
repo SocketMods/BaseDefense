@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoorHingeSide;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.api.ITooltipInfo;
 import tk.sciwhiz12.basedefense.block.PadlockedDoorBlock;
 import tk.sciwhiz12.basedefense.item.IColorable;
@@ -33,7 +34,8 @@ public abstract class AbstractPadlockItem extends Item implements IColorable {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip,
+                                TooltipFlag flagIn) {
         stack.getCapability(LOCK).filter(ITooltipInfo.class::isInstance)
             .ifPresent(lock -> ((ITooltipInfo) lock).addInformation(tooltip, flagIn.isAdvanced()));
         if (!flagIn.isAdvanced()) {
@@ -43,7 +45,7 @@ public abstract class AbstractPadlockItem extends Item implements IColorable {
     }
 
     @Override
-    public abstract ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt);
+    public abstract ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt);
 
     @Override
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
@@ -76,7 +78,7 @@ public abstract class AbstractPadlockItem extends Item implements IColorable {
                     Block.UPDATE_CLIENTS | Block.UPDATE_IMMEDIATE | Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_SUPPRESS_DROPS;
                 world.setBlock(pos, newState, flags);
                 world.setBlock(offPos, newOffState, flags);
-                BlockEntity te = world.getBlockEntity(isLower ? pos : offPos);
+                @Nullable BlockEntity te = world.getBlockEntity(isLower ? pos : offPos);
                 if (te instanceof PadlockedDoorTile) {
                     ((PadlockedDoorTile) te).setLockStack(copy);
                 }

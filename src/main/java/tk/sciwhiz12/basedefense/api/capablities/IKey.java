@@ -2,8 +2,7 @@ package tk.sciwhiz12.basedefense.api.capablities;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Represents a key, which can unlock {@link ILock}s.

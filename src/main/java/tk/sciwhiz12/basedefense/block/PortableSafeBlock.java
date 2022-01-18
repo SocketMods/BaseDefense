@@ -45,13 +45,13 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.Reference;
 import tk.sciwhiz12.basedefense.item.IContainsLockItem;
 import tk.sciwhiz12.basedefense.item.LockedBlockItem;
 import tk.sciwhiz12.basedefense.tileentity.PortableSafeTileEntity;
 import tk.sciwhiz12.basedefense.util.UnlockHelper;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 import static net.minecraft.ChatFormatting.GRAY;
@@ -69,11 +69,13 @@ public class PortableSafeBlock extends Block implements SimpleWaterloggedBlock, 
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public RenderShape getRenderShape(BlockState state) {
         return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         switch (state.getValue(FACING)) {
@@ -96,7 +98,7 @@ public class PortableSafeBlock extends Block implements SimpleWaterloggedBlock, 
 
     @Override
     public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
-        BlockEntity te = worldIn.getBlockEntity(pos);
+        @Nullable BlockEntity te = worldIn.getBlockEntity(pos);
         if (te instanceof PortableSafeTileEntity) {
             PortableSafeTileEntity safe = (PortableSafeTileEntity) te;
             if (!worldIn.isClientSide && player.isCreative() && !safe.isEmpty()) {
@@ -128,7 +130,7 @@ public class PortableSafeBlock extends Block implements SimpleWaterloggedBlock, 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         builder = builder.withDynamicDrop(CONTENTS, (context, stackConsumer) -> {
-            BlockEntity te = context.getParamOrNull(LootContextParams.BLOCK_ENTITY);
+            @Nullable BlockEntity te = context.getParamOrNull(LootContextParams.BLOCK_ENTITY);
             if (te instanceof PortableSafeTileEntity) {
                 PortableSafeTileEntity safe = (PortableSafeTileEntity) te;
                 IItemHandler inv = safe.getInventory();
@@ -141,10 +143,10 @@ public class PortableSafeBlock extends Block implements SimpleWaterloggedBlock, 
     }
 
     @Override
-    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         if (!stack.isEmpty() && stack.getItem() instanceof LockedBlockItem) {
             LockedBlockItem item = (LockedBlockItem) stack.getItem();
-            BlockEntity te = worldIn.getBlockEntity(pos);
+            @Nullable BlockEntity te = worldIn.getBlockEntity(pos);
             if (item.hasLockStack(stack) && te instanceof PortableSafeTileEntity) {
                 PortableSafeTileEntity safeTE = (PortableSafeTileEntity) te;
                 ItemStack lockStack = item.getLockStack(stack);
@@ -161,14 +163,15 @@ public class PortableSafeBlock extends Block implements SimpleWaterloggedBlock, 
         super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
         if (worldIn.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
-            MenuProvider provider = this.getMenuProvider(state, worldIn, pos);
-            BlockEntity te = worldIn.getBlockEntity(pos);
+            @Nullable MenuProvider provider = this.getMenuProvider(state, worldIn, pos);
+            @Nullable BlockEntity te = worldIn.getBlockEntity(pos);
             if (provider != null && te instanceof PortableSafeTileEntity) {
                 PortableSafeTileEntity safeTE = (PortableSafeTileEntity) te;
                 ItemStack heldItem = player.getItemInHand(handIn);
@@ -185,14 +188,15 @@ public class PortableSafeBlock extends Block implements SimpleWaterloggedBlock, 
     @Override
     public boolean triggerEvent(BlockState state, Level worldIn, BlockPos pos, int id, int param) {
         super.triggerEvent(state, worldIn, pos, id, param);
-        BlockEntity tileentity = worldIn.getBlockEntity(pos);
+        @Nullable BlockEntity tileentity = worldIn.getBlockEntity(pos);
         return tileentity != null && tileentity.triggerEvent(id, param);
     }
 
+    @SuppressWarnings("deprecation")
     @Nullable
     @Override
     public MenuProvider getMenuProvider(BlockState state, Level world, BlockPos pos) {
-        BlockEntity te = world.getBlockEntity(pos);
+        @Nullable BlockEntity te = world.getBlockEntity(pos);
         return te instanceof PortableSafeTileEntity ? (PortableSafeTileEntity) te : null;
     }
 
@@ -200,7 +204,7 @@ public class PortableSafeBlock extends Block implements SimpleWaterloggedBlock, 
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip,
                                 TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        CompoundTag nbt = stack.getTagElement("BlockEntityTag");
+        @Nullable CompoundTag nbt = stack.getTagElement("BlockEntityTag");
         if (nbt != null && nbt.contains("Items", Tag.TAG_LIST)) {
             if (nbt.getInt("Size") > 0) {
                 tooltip.add(new TranslatableComponent("tooltip.basedefense.contains_items").withStyle(GRAY));
@@ -212,7 +216,7 @@ public class PortableSafeBlock extends Block implements SimpleWaterloggedBlock, 
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
                                        Player player) {
         ItemStack stack = super.getCloneItemStack(state, target, world, pos, player);
-        PortableSafeTileEntity te = (PortableSafeTileEntity) world.getBlockEntity(pos);
+        @Nullable PortableSafeTileEntity te = (PortableSafeTileEntity) world.getBlockEntity(pos);
         if (te != null) {
             CompoundTag compoundnbt = new CompoundTag();
             te.writeData(compoundnbt, false);
@@ -244,14 +248,16 @@ public class PortableSafeBlock extends Block implements SimpleWaterloggedBlock, 
         return expectedType == type ? (BlockEntityTicker<A>) ticker : null;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
-        BlockEntity te = worldIn.getBlockEntity(pos);
+        @Nullable BlockEntity te = worldIn.getBlockEntity(pos);
         if (te != null) {
             return ItemHandlerHelper.calcRedstoneFromInventory(
                 te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseGet(ItemStackHandler::new));
@@ -259,6 +265,7 @@ public class PortableSafeBlock extends Block implements SimpleWaterloggedBlock, 
         return 0;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
@@ -275,11 +282,13 @@ public class PortableSafeBlock extends Block implements SimpleWaterloggedBlock, 
         builder.add(FACING);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
         return false;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public PushReaction getPistonPushReaction(BlockState state) {
         return PushReaction.BLOCK;

@@ -15,6 +15,7 @@ import tk.sciwhiz12.basedefense.Reference.RecipeSerializers;
 import tk.sciwhiz12.basedefense.block.LockedDoorBlock;
 import tk.sciwhiz12.basedefense.recipe.LockedItemIngredient;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import static tk.sciwhiz12.basedefense.Reference.MODID;
@@ -79,7 +80,7 @@ public class Recipes extends RecipeProvider {
             .define('d', block.baseBlock)
             .define('C', new LockedItemIngredient(Reference.Items.LOCK_CORE, true))
             .unlockedBy("has_lock_core", InventoryChangeTrigger.TriggerInstance.hasItems(Reference.Items.LOCK_CORE))
-            .save(consumer, block.getRegistryName());
+            .save(consumer, Objects.requireNonNull(block.getRegistryName()));
         // @formatter:on
     }
 

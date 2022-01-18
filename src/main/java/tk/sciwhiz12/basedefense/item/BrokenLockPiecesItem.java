@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.Reference;
 import tk.sciwhiz12.basedefense.api.ITooltipInfo;
 import tk.sciwhiz12.basedefense.capabilities.CodedLock;
@@ -18,6 +19,7 @@ import tk.sciwhiz12.basedefense.capabilities.SerializableCapabilityProvider;
 import tk.sciwhiz12.basedefense.util.ItemHelper;
 
 import java.util.List;
+import java.util.Objects;
 
 public class BrokenLockPiecesItem extends Item implements IColorable {
     public BrokenLockPiecesItem() {
@@ -25,7 +27,8 @@ public class BrokenLockPiecesItem extends Item implements IColorable {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip,
+                                TooltipFlag flagIn) {
         if (hasPreviousName(stack)) {
             tooltip.add(getPreviousName(stack).withStyle(ChatFormatting.ITALIC));
         }
@@ -36,12 +39,12 @@ public class BrokenLockPiecesItem extends Item implements IColorable {
     }
 
     public boolean hasPreviousName(ItemStack stack) {
-        return stack.hasTag() && stack.getTag().contains("BrokenLockName", Tag.TAG_STRING);
+        return stack.hasTag() && Objects.requireNonNull(stack.getTag()).contains("BrokenLockName", Tag.TAG_STRING);
     }
 
     public MutableComponent getPreviousName(ItemStack stack) {
         return hasPreviousName(stack) ?
-            Component.Serializer.fromJson(stack.getTag().getString("BrokenLockName")) :
+            Objects.requireNonNull(Component.Serializer.fromJson(Objects.requireNonNull(stack.getTag()).getString("BrokenLockName"))) :
             new TextComponent("");
     }
 
@@ -50,7 +53,7 @@ public class BrokenLockPiecesItem extends Item implements IColorable {
     }
 
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt) {
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
         // Using CodedLock for code holder capability, not for lock capability
         return new SerializableCapabilityProvider<>(CodedLock::new, Reference.Capabilities.CONTAINS_CODE, Reference.Capabilities.CODE_HOLDER);
     }
@@ -61,7 +64,7 @@ public class BrokenLockPiecesItem extends Item implements IColorable {
     }
 
     @Override
-    public void readShareTag(ItemStack stack, CompoundTag nbt) {
+    public void readShareTag(ItemStack stack, @Nullable CompoundTag nbt) {
         ItemHelper.readItemShareTag(stack, nbt, ItemHelper.CapabilitySerializer.CODED_LOCK);
     }
 }

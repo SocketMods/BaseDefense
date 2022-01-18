@@ -25,6 +25,7 @@ public class LocksmithBlock extends Block {
         super(Block.Properties.of(Material.METAL).strength(3.5F).sound(SoundType.METAL));
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player playerEntity,
                                  InteractionHand hand, BlockHitResult result) {
@@ -34,6 +35,7 @@ public class LocksmithBlock extends Block {
         return InteractionResult.SUCCESS;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public MenuProvider getMenuProvider(BlockState state, Level world, BlockPos pos) {
         return new SimpleMenuProvider(
@@ -41,6 +43,7 @@ public class LocksmithBlock extends Block {
                 ContainerLevelAccess.create(world, pos)), new TranslatableComponent("container.basedefense.locksmith"));
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
         return false;

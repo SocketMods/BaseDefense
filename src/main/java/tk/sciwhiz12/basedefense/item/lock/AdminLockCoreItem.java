@@ -5,6 +5,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.capabilities.AdminKeyLock;
 import tk.sciwhiz12.basedefense.capabilities.GenericCapabilityProvider;
 
@@ -22,7 +23,7 @@ public class AdminLockCoreItem extends AbstractLockCoreItem {
     }
 
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt) {
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
         return new GenericCapabilityProvider<>(AdminKeyLock::new, LOCK);
     }
 }

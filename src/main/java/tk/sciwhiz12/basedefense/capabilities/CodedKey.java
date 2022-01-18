@@ -7,13 +7,13 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraftforge.common.util.INBTSerializable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.api.ITooltipInfo;
 import tk.sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import tk.sciwhiz12.basedefense.api.capablities.IContainsCode;
 import tk.sciwhiz12.basedefense.api.capablities.IKey;
 import tk.sciwhiz12.basedefense.api.capablities.ILock;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -29,6 +29,7 @@ import static net.minecraft.ChatFormatting.GRAY;
  * @author SciWhiz12
  */
 public class CodedKey implements ICodeHolder, IKey, INBTSerializable<LongTag>, ITooltipInfo {
+    @Nullable
     protected Long storedCode = null;
 
     @Override
@@ -45,7 +46,7 @@ public class CodedKey implements ICodeHolder, IKey, INBTSerializable<LongTag>, I
     }
 
     @Override
-    public boolean containsCode(Long code) {
+    public boolean containsCode(@Nullable Long code) {
         return code != null && storedCode != null && code.longValue() == storedCode.longValue();
     }
 
@@ -75,7 +76,7 @@ public class CodedKey implements ICodeHolder, IKey, INBTSerializable<LongTag>, I
 
     @Override
     public void removeCode(Long code) {
-        if (this.storedCode.longValue() == checkNotNull(code).longValue()) {
+        if (this.storedCode != null && this.storedCode.longValue() == checkNotNull(code).longValue()) {
             this.storedCode = null;
         }
     }

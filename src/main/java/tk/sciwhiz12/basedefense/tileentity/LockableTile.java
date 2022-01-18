@@ -12,8 +12,12 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.Reference.TileEntities;
 import tk.sciwhiz12.basedefense.capabilities.CodedItemStackLock;
+
+import java.util.Objects;
 
 import static tk.sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
 import static tk.sciwhiz12.basedefense.Reference.Capabilities.CONTAINS_CODE;
@@ -22,7 +26,7 @@ import static tk.sciwhiz12.basedefense.Reference.Capabilities.LOCK;
 public class LockableTile extends BlockEntity {
     public static final String TAG_LOCK_ITEM = "LockItem";
 
-    protected LazyOptional<CodedItemStackLock> lockCap;
+    @Nullable protected LazyOptional<CodedItemStackLock> lockCap;
     protected final CodedItemStackLock lock = new CodedItemStackLock();
 
     public LockableTile(BlockPos pos, BlockState state) {
@@ -33,8 +37,9 @@ public class LockableTile extends BlockEntity {
         super(type, pos, state);
     }
 
+    @NonNull
     @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+    public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
         if (cap == CONTAINS_CODE || cap == CODE_HOLDER || cap == LOCK) {
             if (lockCap == null) {
                 lockCap = LazyOptional.of(() -> this.lock);
@@ -53,7 +58,7 @@ public class LockableTile extends BlockEntity {
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.lock.setStack(ItemStack.of(pkt.getTag().getCompound(TAG_LOCK_ITEM)));
+        this.lock.setStack(ItemStack.of(Objects.requireNonNull(pkt.getTag()).getCompound(TAG_LOCK_ITEM)));
     }
 
     @Override

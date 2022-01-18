@@ -27,12 +27,14 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
 import tk.sciwhiz12.basedefense.Reference.TileEntities;
 import tk.sciwhiz12.basedefense.block.PortableSafeBlock;
 import tk.sciwhiz12.basedefense.container.PortableSafeContainer;
 import tk.sciwhiz12.basedefense.util.Util;
 
-import javax.annotation.Nullable;
+import java.util.Objects;
 
 import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
 
@@ -46,7 +48,9 @@ public class PortableSafeTileEntity extends LockableTile implements MenuProvider
             PortableSafeTileEntity.this.setChanged();
         }
     };
+    @Nullable
     private LazyOptional<IItemHandler> invHandler;
+    @Nullable
     private Component customName;
 
     public PortableSafeTileEntity(BlockPos pos, BlockState state) {
@@ -119,8 +123,8 @@ public class PortableSafeTileEntity extends LockableTile implements MenuProvider
         double d1 = (double) this.worldPosition.getY() + 0.5D;
         double d2 = (double) this.worldPosition.getZ() + 0.5D;
 
-        this.level
-            .playSound(null, d0, d1, d2, soundIn, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F);
+        assert this.level != null;
+        this.level.playSound(null, d0, d1, d2, soundIn, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F);
     }
 
     @Override
@@ -154,6 +158,7 @@ public class PortableSafeTileEntity extends LockableTile implements MenuProvider
     protected void onOpenOrClose() {
         Block block = this.getBlockState().getBlock();
         if (block instanceof PortableSafeBlock) {
+            assert level != null;
             this.level.blockEvent(this.worldPosition, block, 1, this.numPlayersUsing);
             this.level.updateNeighborsAt(this.worldPosition, block);
         }
@@ -177,7 +182,7 @@ public class PortableSafeTileEntity extends LockableTile implements MenuProvider
     }
 
     @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+    public <T> @NotNull LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
         if (cap == ITEM_HANDLER_CAPABILITY) {
             if (this.invHandler == null) {
                 this.invHandler = LazyOptional.of(() -> inv);
@@ -238,7 +243,7 @@ public class PortableSafeTileEntity extends LockableTile implements MenuProvider
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(pkt.getTag());
+        this.load(Objects.requireNonNull(pkt.getTag()));
     }
 
     public void setCustomName(Component name) {

@@ -17,6 +17,8 @@ import tk.sciwhiz12.basedefense.Reference.Blocks;
 import tk.sciwhiz12.basedefense.block.LockedDoorBlock;
 import tk.sciwhiz12.basedefense.block.PadlockedDoorBlock;
 
+import java.util.Objects;
+
 import static tk.sciwhiz12.basedefense.Reference.MODID;
 import static tk.sciwhiz12.basedefense.util.Util.appendPath;
 
@@ -78,7 +80,7 @@ public class BlockStates extends BlockStateProvider {
     }
 
     void padlockedDoor(PadlockedDoorBlock block) {
-        String base = block.baseBlock.getRegistryName().getPath();
+        String base = Objects.requireNonNull(block.baseBlock.getRegistryName()).getPath();
         ModelFile bottomLeft = models().getExistingFile(mcLoc(base + "_bottom"));
         ModelFile bottomRight = models().getExistingFile(mcLoc(base + "_bottom_hinge"));
         ModelFile topLeft = models().getExistingFile(mcLoc(base + "_top"));
@@ -104,11 +106,11 @@ public class BlockStates extends BlockStateProvider {
         VariantBlockStateBuilder builder = getVariantBuilder(b);
         ModelFile model = cubeAll(b);
         builder.setModels(builder.partialState(), ConfiguredModel.builder().modelFile(model).build());
-        itemModels().getBuilder(b.getRegistryName().toString()).parent(model);
+        itemModels().getBuilder(Objects.requireNonNull(b.getRegistryName()).toString()).parent(model);
     }
 
     BlockModelBuilder lockedDoorModel(LockedDoorBlock block, String locAppend) {
-        String parent = ModelProvider.BLOCK_FOLDER + "/door/" + block.getRegistryName().getPath() + locAppend;
+        String parent = ModelProvider.BLOCK_FOLDER + "/door/" + Objects.requireNonNull(block.getRegistryName()).getPath() + locAppend;
         ResourceLocation blockTex = blockTexture(block.baseBlock);
 
         BlockModelBuilder model = models().withExistingParent(parent, modLoc("locked_door" + locAppend));

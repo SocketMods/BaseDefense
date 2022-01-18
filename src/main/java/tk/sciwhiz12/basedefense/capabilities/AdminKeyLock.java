@@ -7,11 +7,11 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.api.ITooltipInfo;
 import tk.sciwhiz12.basedefense.api.capablities.IKey;
 import tk.sciwhiz12.basedefense.api.capablities.ILock;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -49,12 +49,10 @@ public class AdminKeyLock implements IKey, ILock, ITooltipInfo {
 
     @Override
     public void onRemove(IKey key, ContainerLevelAccess worldPos, @Nullable Player player) {
-        if (worldPos != null) {
-            worldPos.execute((world, pos) -> {
-                world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1.0F,
-                    world.random.nextFloat() * 0.1F + 0.9F);
-            });
-        }
+        worldPos.execute((world, pos) -> {
+            world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1.0F,
+                world.random.nextFloat() * 0.1F + 0.9F);
+        });
     }
 
     @Override

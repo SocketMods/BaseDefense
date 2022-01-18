@@ -14,6 +14,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerListener;
 import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.lwjgl.glfw.GLFW;
 import tk.sciwhiz12.basedefense.ClientReference.Textures;
 import tk.sciwhiz12.basedefense.Reference;
@@ -22,7 +23,7 @@ import tk.sciwhiz12.basedefense.net.NetworkHandler;
 import tk.sciwhiz12.basedefense.net.TextFieldChangePacket;
 
 public class KeysmithScreen extends AbstractContainerScreen<KeysmithContainer> implements ContainerListener {
-    private EditBox nameField;
+    @MonotonicNonNull private EditBox nameField;
     private boolean isEnabledText = false;
 
     public KeysmithScreen(KeysmithContainer container, Inventory inv, Component title) {
@@ -34,6 +35,7 @@ public class KeysmithScreen extends AbstractContainerScreen<KeysmithContainer> i
     @Override
     protected void init() {
         super.init();
+        assert this.minecraft != null;
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
         this.nameField = new EditBox(this.font, leftPos + 91, topPos + 28, 82, 12, new TextComponent(""));
         this.nameField.setCanLoseFocus(false);
@@ -58,13 +60,15 @@ public class KeysmithScreen extends AbstractContainerScreen<KeysmithContainer> i
     public void removed() {
         super.removed();
         this.menu.removeSlotListener(this);
+        assert this.minecraft != null;
         this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
     }
 
     @Override
     public boolean keyPressed(int key, int scanCode, int modifiers) {
         if (key == GLFW.GLFW_KEY_ESCAPE) {
-            minecraft.player.closeContainer();
+            assert this.minecraft != null && this.minecraft.player != null;
+            this.minecraft.player.closeContainer();
         }
 
         return this.nameField.keyPressed(key, scanCode, modifiers) || this.nameField.canConsumeInput() || super
@@ -80,7 +84,6 @@ public class KeysmithScreen extends AbstractContainerScreen<KeysmithContainer> i
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -103,13 +106,6 @@ public class KeysmithScreen extends AbstractContainerScreen<KeysmithContainer> i
         NetworkHandler.CHANNEL.sendToServer(new TextFieldChangePacket(newText));
     }
 
-//    @Override
-//    public void refreshContainer(AbstractContainerMenu container, NonNullList<ItemStack> itemsList) {
-//        this.slotChanged(container, 0, container.getSlot(0).getItem());
-//        this.slotChanged(container, 1, container.getSlot(1).getItem());
-//        this.slotChanged(container, 2, container.getSlot(2).getItem());
-//    }
-
     @Override
     public void slotChanged(AbstractContainerMenu containerToSend, int slotInd, ItemStack stack) {
         if (slotInd == 0) {
@@ -120,6 +116,7 @@ public class KeysmithScreen extends AbstractContainerScreen<KeysmithContainer> i
                 isEnabledText = true;
                 nameField.setValue(I18n.get(Reference.Items.KEY.getDescriptionId()));
             }
+            assert this.minecraft != null;
             this.minecraft.submitAsync(() -> this.nameField.setEditable(isEnabledText));
         } else if (slotInd == 1) {
             if (!stack.isEmpty() && isEnabledText) {

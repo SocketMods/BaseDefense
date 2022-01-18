@@ -25,6 +25,7 @@ public class KeysmithBlock extends Block {
         super(Block.Properties.of(Material.WOOD).strength(2.5F).sound(SoundType.WOOD));
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player playerEntity,
                                  InteractionHand hand, BlockHitResult result) {
@@ -34,6 +35,7 @@ public class KeysmithBlock extends Block {
         return InteractionResult.SUCCESS;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public MenuProvider getMenuProvider(BlockState state, Level world, BlockPos pos) {
         return new SimpleMenuProvider(
@@ -41,6 +43,7 @@ public class KeysmithBlock extends Block {
                 ContainerLevelAccess.create(world, pos)), new TranslatableComponent("container.basedefense.keysmith"));
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
         return false;

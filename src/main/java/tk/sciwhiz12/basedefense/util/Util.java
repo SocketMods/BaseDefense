@@ -6,9 +6,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
@@ -30,8 +30,9 @@ public final class Util {
      *
      * @return {@code null}
      */
-    @Nonnull
+    @NonNull
     public static <T> T Null() {
+        //noinspection ConstantConditions
         return null;
     }
 

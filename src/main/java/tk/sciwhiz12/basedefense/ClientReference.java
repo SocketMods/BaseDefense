@@ -8,12 +8,14 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.block.LockedDoorBlock;
 import tk.sciwhiz12.basedefense.item.IColorable;
 import tk.sciwhiz12.basedefense.tileentity.LockedDoorTile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static tk.sciwhiz12.basedefense.Reference.modLoc;
 
@@ -34,7 +36,7 @@ public final class ClientReference {
 
         public static final BlockColor LOCKED_DOOR_COLOR = (state, world, pos, tintIndex) -> {
             if (world != null && pos != null && state.getBlock() instanceof LockedDoorBlock) {
-                BlockEntity tile = world.getBlockEntity(pos);
+                @Nullable BlockEntity tile = world.getBlockEntity(pos);
                 if (tile instanceof LockedDoorTile && ((LockedDoorTile) tile).hasColors()) {
                     int[] colors = ((LockedDoorTile) tile).getColors();
                     // offset by 1 since index 0 is reserved for particle color
@@ -53,7 +55,7 @@ public final class ClientReference {
 
     public static final class ModelLayers {
         public static final ModelLayerLocation PORTABLE_SAFE =
-            new ModelLayerLocation(Reference.Blocks.PORTABLE_SAFE.getRegistryName(), "portable_safe");
+            new ModelLayerLocation(Objects.requireNonNull(Reference.Blocks.PORTABLE_SAFE.getRegistryName()), "portable_safe");
 
         // Prevent instantiation
         private ModelLayers() {
@@ -64,7 +66,7 @@ public final class ClientReference {
         public static final ResourceLocation COLORS = new ResourceLocation("colors");
 
         public static final ItemPropertyFunction COLORS_GETTER = (stack, world, livingEntity, seed) -> {
-            CompoundTag tag = stack.getTagElement("display");
+            @Nullable CompoundTag tag = stack.getTagElement("display");
             if (tag != null && tag.contains("colors")) {
                 return (float) tag.getIntArray("colors").length;
             }

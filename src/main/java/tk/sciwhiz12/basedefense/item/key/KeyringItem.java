@@ -26,6 +26,8 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.network.NetworkHooks;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.capabilities.ItemHandlerKey;
 import tk.sciwhiz12.basedefense.client.render.KeyringRenderer;
 import tk.sciwhiz12.basedefense.container.KeyringContainer;
@@ -55,7 +57,8 @@ public class KeyringItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip,
+                                TooltipFlag flagIn) {
         stack.getCapability(ITEM_HANDLER_CAPABILITY).ifPresent((handler) -> {
             int keys = 0;
             for (int i = 0; i < handler.getSlots(); i++) {
@@ -74,7 +77,7 @@ public class KeyringItem extends Item {
     @Override
     public boolean doesSneakBypassUse(ItemStack stack, LevelReader world, BlockPos pos, Player player) {
         if (world.isAreaLoaded(pos, 0)) {
-            BlockEntity te = world.getBlockEntity(pos);
+            @Nullable BlockEntity te = world.getBlockEntity(pos);
             return te != null && te.getCapability(LOCK).isPresent();
         }
         return false;
@@ -99,12 +102,12 @@ public class KeyringItem extends Item {
 
     @Override
 
-    public void readShareTag(ItemStack stack, CompoundTag nbt) {
+    public void readShareTag(ItemStack stack, @Nullable CompoundTag nbt) {
         ItemHelper.readItemShareTag(stack, nbt, ItemHelper.CapabilitySerializer.ITEM_STACK_HANDLER);
     }
 
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt) {
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
         return new KeyringProvider();
     }
 
@@ -113,8 +116,9 @@ public class KeyringItem extends Item {
         private final LazyOptional<IItemHandler> itemCap = LazyOptional.of(() -> item);
         private final LazyOptional<ItemHandlerKey> key = LazyOptional.of(() -> new ItemHandlerKey(item));
 
+        @NonNull
         @Override
-        public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+        public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
             if (cap == ITEM_HANDLER_CAPABILITY) {
                 return itemCap.cast();
             }

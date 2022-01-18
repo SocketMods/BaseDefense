@@ -6,6 +6,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import tk.sciwhiz12.basedefense.Reference.TileEntities;
 import tk.sciwhiz12.basedefense.item.IColorable;
 
@@ -29,6 +30,7 @@ public class LockedDoorTile extends LockableTile {
         return new int[0];
     }
 
+    @NonNull
     @Override
     public IModelData getModelData() {
         IModelData data = new ModelDataMap.Builder().withInitial(COLOR_PROPERTY, 0).build();

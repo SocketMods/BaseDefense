@@ -21,6 +21,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.client.gui.KeyringScreen;
 import tk.sciwhiz12.basedefense.client.gui.KeysmithScreen;
 import tk.sciwhiz12.basedefense.client.gui.LocksmithScreen;
@@ -32,6 +34,7 @@ import tk.sciwhiz12.basedefense.client.render.KeyringLayer;
 import tk.sciwhiz12.basedefense.client.render.PadlockedDoorRenderer;
 import tk.sciwhiz12.basedefense.client.render.PortableSafeRenderer;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 import static tk.sciwhiz12.basedefense.Reference.Blocks;
@@ -86,10 +89,14 @@ public final class ClientRegistration {
     @SubscribeEvent
     static void addCustomLayerRenderers(EntityRenderersEvent.AddLayers event) {
         BaseDefense.LOG.debug(BaseDefense.CLIENT, "Adding custom player layer renderers");
-        final PlayerRenderer defaultRenderer = event.getSkin("default");
-        defaultRenderer.addLayer(new KeyringLayer<>(defaultRenderer));
-        final PlayerRenderer slimRenderer = event.getSkin("slim");
-        slimRenderer.addLayer(new KeyringLayer<>(slimRenderer));
+        @Nullable final PlayerRenderer defaultRenderer = event.getSkin("default");
+        if (defaultRenderer != null) {
+            defaultRenderer.addLayer(new KeyringLayer<>(defaultRenderer));
+        }
+        @Nullable final PlayerRenderer slimRenderer = event.getSkin("slim");
+        if (slimRenderer != null) {
+            slimRenderer.addLayer(new KeyringLayer<>(slimRenderer));
+        }
     }
 
     static void registerScreenFactories() {
@@ -168,7 +175,7 @@ public final class ClientRegistration {
     }
 
     static void overrideItemModel(ModelBakeEvent event, Item i, Function<BakedModel, BakedModel> transform) {
-        overrideModel(event, new ModelResourceLocation(i.getRegistryName(), "inventory"), transform);
+        overrideModel(event, new ModelResourceLocation(Objects.requireNonNull(i.getRegistryName()), "inventory"), transform);
     }
 
     static void overrideModel(ModelBakeEvent event, ModelResourceLocation mrl,

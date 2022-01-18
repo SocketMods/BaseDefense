@@ -1,6 +1,7 @@
 package tk.sciwhiz12.basedefense.capabilities;
 
 import net.minecraft.world.item.ItemStack;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import tk.sciwhiz12.basedefense.api.capablities.ILock;
 
@@ -18,7 +19,7 @@ import static tk.sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
  */
 public class CodedItemStackLock extends ItemStackLock implements ICodeHolder {
     @Override
-    public boolean containsCode(Long code) {
+    public boolean containsCode(@Nullable Long code) {
         return !lockStack.isEmpty() && lockStack.getCapability(CODE_HOLDER).map(holder -> holder.containsCode(code))
             .orElse(false);
     }

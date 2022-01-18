@@ -3,6 +3,7 @@ package tk.sciwhiz12.basedefense.item.lock;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.capabilities.CodedLock;
 import tk.sciwhiz12.basedefense.capabilities.SerializableCapabilityProvider;
 import tk.sciwhiz12.basedefense.util.ItemHelper;
@@ -21,7 +22,7 @@ public class CodedLockCoreItem extends AbstractLockCoreItem {
     }
 
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt) {
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
         return new SerializableCapabilityProvider<>(CodedLock::new, CONTAINS_CODE, CODE_HOLDER, LOCK);
     }
 
@@ -31,7 +32,7 @@ public class CodedLockCoreItem extends AbstractLockCoreItem {
     }
 
     @Override
-    public void readShareTag(ItemStack stack, CompoundTag nbt) {
+    public void readShareTag(ItemStack stack, @Nullable CompoundTag nbt) {
         ItemHelper.readItemShareTag(stack, nbt, ItemHelper.CapabilitySerializer.CODED_LOCK);
     }
 }

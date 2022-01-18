@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.api.ITooltipInfo;
 import tk.sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import tk.sciwhiz12.basedefense.api.capablities.IContainsCode;
@@ -27,7 +28,7 @@ public class CodeHolder implements ICodeHolder, ITooltipInfo {
     protected LongList storedCodes = new LongArrayList();
 
     @Override
-    public boolean containsCode(Long code) {
+    public boolean containsCode(@Nullable Long code) {
         return code != null && storedCodes.contains(checkNotNull(code).longValue());
     }
 

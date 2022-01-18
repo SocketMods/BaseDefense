@@ -10,6 +10,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.api.ITooltipInfo;
 import tk.sciwhiz12.basedefense.block.LockedDoorBlock;
 import tk.sciwhiz12.basedefense.item.IColorable;
@@ -25,7 +26,8 @@ public abstract class AbstractLockCoreItem extends Item implements IColorable {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip,
+                                TooltipFlag flagIn) {
         stack.getCapability(LOCK).filter(ITooltipInfo.class::isInstance)
             .ifPresent(lock -> ((ITooltipInfo) lock).addInformation(tooltip, flagIn.isAdvanced()));
         if (!flagIn.isAdvanced()) {
@@ -40,5 +42,5 @@ public abstract class AbstractLockCoreItem extends Item implements IColorable {
     }
 
     @Override
-    public abstract ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt);
+    public abstract ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt);
 }

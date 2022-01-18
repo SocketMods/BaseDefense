@@ -5,10 +5,9 @@ import net.minecraft.nbt.LongArrayTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraftforge.common.util.INBTSerializable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import tk.sciwhiz12.basedefense.api.capablities.IKey;
 import tk.sciwhiz12.basedefense.api.capablities.ILock;
-
-import javax.annotation.Nullable;
 
 /**
  * <p>An implementation of {@link ILock} that extends {@link CodeHolder}.</p>
