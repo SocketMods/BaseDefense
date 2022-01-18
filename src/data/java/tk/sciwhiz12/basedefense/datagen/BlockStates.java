@@ -55,14 +55,14 @@ public class BlockStates extends BlockStateProvider {
         BlockModelBuilder topRight = lockedDoorModel(block, "_top_hinge");
 
         getVariantBuilder(block).forAllStatesExcept(state -> {
-            int yRot = ((int) state.get(LockedDoorBlock.FACING).getHorizontalAngle()) + 90;
-            boolean rh = state.get(LockedDoorBlock.HINGE) == DoorHingeSide.RIGHT;
-            boolean open = state.get(LockedDoorBlock.OPEN);
+            int yRot = ((int) state.getValue(LockedDoorBlock.FACING).toYRot()) + 90;
+            boolean rh = state.getValue(LockedDoorBlock.HINGE) == DoorHingeSide.RIGHT;
+            boolean open = state.getValue(LockedDoorBlock.OPEN);
             boolean right = rh ^ open;
             if (open) { yRot += 90; }
             if (rh && open) { yRot += 180; }
             yRot %= 360;
-            return ConfiguredModel.builder().modelFile(state.get(LockedDoorBlock.HALF) == DoubleBlockHalf.LOWER ?
+            return ConfiguredModel.builder().modelFile(state.getValue(LockedDoorBlock.HALF) == DoubleBlockHalf.LOWER ?
                     (right ? bottomRight : bottomLeft) :
                     (right ? topRight : topLeft)).rotationY(yRot).build();
         }, LockedDoorBlock.LOCKED);
@@ -76,9 +76,9 @@ public class BlockStates extends BlockStateProvider {
         ModelFile topRight = models().getExistingFile(mcLoc(base + "_top_hinge"));
 
         getVariantBuilder(block).forAllStatesExcept(state -> {
-            int yRot = (int) (state.get(PadlockedDoorBlock.FACING).getHorizontalAngle() + 90) % 360;
-            boolean rh = state.get(PadlockedDoorBlock.HINGE) == DoorHingeSide.RIGHT;
-            return ConfiguredModel.builder().modelFile(state.get(DoorBlock.HALF) == DoubleBlockHalf.LOWER ?
+            int yRot = (int) (state.getValue(PadlockedDoorBlock.FACING).toYRot() + 90) % 360;
+            boolean rh = state.getValue(PadlockedDoorBlock.HINGE) == DoorHingeSide.RIGHT;
+            return ConfiguredModel.builder().modelFile(state.getValue(DoorBlock.HALF) == DoubleBlockHalf.LOWER ?
                     (rh ? bottomRight : bottomLeft) :
                     (rh ? topRight : topLeft)).rotationY(yRot).build();
         }, PadlockedDoorBlock.SIDE);

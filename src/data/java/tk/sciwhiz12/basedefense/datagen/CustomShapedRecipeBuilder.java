@@ -40,7 +40,7 @@ public class CustomShapedRecipeBuilder {
     private final int count;
     private final List<String> pattern = Lists.newArrayList();
     private final Map<Character, Ingredient> key = Maps.newLinkedHashMap();
-    private final Advancement.Builder advancementBuilder = Advancement.Builder.builder();
+    private final Advancement.Builder advancementBuilder = Advancement.Builder.advancement();
     private String group;
 
     public CustomShapedRecipeBuilder(IRecipeSerializer<? extends ShapedRecipe> serializerIn, IItemProvider resultIn,
@@ -53,37 +53,37 @@ public class CustomShapedRecipeBuilder {
     /**
      * Creates a new builder for a shaped recipe.
      */
-    public static CustomShapedRecipeBuilder shapedRecipe(IRecipeSerializer<? extends ShapedRecipe> serializerIn,
-            IItemProvider resultIn) {
-        return shapedRecipe(serializerIn, resultIn, 1);
+    public static CustomShapedRecipeBuilder shaped(IRecipeSerializer<? extends ShapedRecipe> serializerIn,
+                                                   IItemProvider resultIn) {
+        return shaped(serializerIn, resultIn, 1);
     }
 
     /**
      * Creates a new builder for a shaped recipe.
      */
-    public static CustomShapedRecipeBuilder shapedRecipe(IRecipeSerializer<? extends ShapedRecipe> serializerIn,
-            IItemProvider resultIn, int countIn) {
+    public static CustomShapedRecipeBuilder shaped(IRecipeSerializer<? extends ShapedRecipe> serializerIn,
+                                                   IItemProvider resultIn, int countIn) {
         return new CustomShapedRecipeBuilder(serializerIn, resultIn, countIn);
     }
 
     /**
      * Adds a key to the recipe pattern.
      */
-    public CustomShapedRecipeBuilder key(Character symbol, ITag<Item> tagIn) {
-        return this.key(symbol, Ingredient.fromTag(tagIn));
+    public CustomShapedRecipeBuilder define(Character symbol, ITag<Item> tagIn) {
+        return this.define(symbol, Ingredient.of(tagIn));
     }
 
     /**
      * Adds a key to the recipe pattern.
      */
-    public CustomShapedRecipeBuilder key(Character symbol, IItemProvider itemIn) {
-        return this.key(symbol, Ingredient.fromItems(itemIn));
+    public CustomShapedRecipeBuilder define(Character symbol, IItemProvider itemIn) {
+        return this.define(symbol, Ingredient.of(itemIn));
     }
 
     /**
      * Adds a key to the recipe pattern.
      */
-    public CustomShapedRecipeBuilder key(Character symbol, Ingredient ingredientIn) {
+    public CustomShapedRecipeBuilder define(Character symbol, Ingredient ingredientIn) {
         checkArgument(!key.containsKey(symbol), "Symbol '%s' is already defined!", symbol);
         checkArgument(symbol != ' ', "Symbol ' ' (whitespace) is reserved and cannot be defined");
         this.key.put(symbol, ingredientIn);
@@ -93,7 +93,7 @@ public class CustomShapedRecipeBuilder {
     /**
      * Adds a new entry to the patterns for this recipe.
      */
-    public CustomShapedRecipeBuilder patternLine(String patternIn) {
+    public CustomShapedRecipeBuilder pattern(String patternIn) {
         checkArgument(pattern.isEmpty() || patternIn.length() == pattern.get(0).length(),
                 "Pattern must be the same width on every line!");
         this.pattern.add(patternIn);
@@ -103,12 +103,12 @@ public class CustomShapedRecipeBuilder {
     /**
      * Adds a criterion needed to unlock the recipe.
      */
-    public CustomShapedRecipeBuilder addCriterion(String name, ICriterionInstance criterionIn) {
-        this.advancementBuilder.withCriterion(name, criterionIn);
+    public CustomShapedRecipeBuilder unlockedBy(String name, ICriterionInstance criterionIn) {
+        this.advancementBuilder.addCriterion(name, criterionIn);
         return this;
     }
 
-    public CustomShapedRecipeBuilder setGroup(String groupIn) {
+    public CustomShapedRecipeBuilder group(String groupIn) {
         this.group = groupIn;
         return this;
     }
@@ -116,38 +116,38 @@ public class CustomShapedRecipeBuilder {
     /**
      * Builds this recipe into an {@link IFinishedRecipe}.
      */
-    public void build(Consumer<IFinishedRecipe> consumerIn) {
-        this.build(consumerIn, ForgeRegistries.ITEMS.getKey(this.result));
+    public void save(Consumer<IFinishedRecipe> consumerIn) {
+        this.save(consumerIn, ForgeRegistries.ITEMS.getKey(this.result));
     }
 
     /**
      * Builds this recipe into an {@link IFinishedRecipe}. Use
-     * {@link #build(Consumer)} if save is the same as the ID for the result.
+     * {@link #save(Consumer)} if save is the same as the ID for the result.
      */
-    public void build(Consumer<IFinishedRecipe> consumerIn, String save) {
+    public void save(Consumer<IFinishedRecipe> consumerIn, String save) {
         ResourceLocation resultLoc = ForgeRegistries.ITEMS.getKey(this.result);
         checkState(!new ResourceLocation(save).equals(resultLoc), "Shaped recipe %s should remove its 'save' argument",
                 save);
-        this.build(consumerIn, new ResourceLocation(save));
+        this.save(consumerIn, new ResourceLocation(save));
     }
 
     /**
      * Builds this recipe into an {@link IFinishedRecipe}.
      */
-    public void build(Consumer<IFinishedRecipe> consumerIn, ResourceLocation id) {
-        this.validate(id);
-        this.advancementBuilder.withParentId(new ResourceLocation("recipes/root")).withCriterion("has_the_recipe",
-                new RecipeUnlockedTrigger.Instance(EntityPredicate.AndPredicate.ANY_AND, id))
-                .withRewards(AdvancementRewards.Builder.recipe(id)).withRequirementsStrategy(IRequirementsStrategy.OR);
+    public void save(Consumer<IFinishedRecipe> consumerIn, ResourceLocation id) {
+        this.ensureValid(id);
+        this.advancementBuilder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe",
+                new RecipeUnlockedTrigger.Instance(EntityPredicate.AndPredicate.ANY, id))
+                .rewards(AdvancementRewards.Builder.recipe(id)).requirements(IRequirementsStrategy.OR);
         consumerIn.accept(new Result(id, serializer, result, count, group == null ? "" : group, pattern, key,
                 advancementBuilder,
-                new ResourceLocation(id.getNamespace(), "recipes/" + result.getGroup().getPath() + "/" + id.getPath())));
+                new ResourceLocation(id.getNamespace(), "recipes/" + result.getItemCategory().getRecipeFolderName() + "/" + id.getPath())));
     }
 
     /**
      * Makes sure that this recipe is valid and obtainable.
      */
-    private void validate(ResourceLocation id) {
+    private void ensureValid(ResourceLocation id) {
         checkState(!pattern.isEmpty(), "No pattern is defined for shaped recipe %s!", id);
         Set<Character> set = Sets.newHashSet(this.key.keySet());
         set.remove(' ');
@@ -191,7 +191,8 @@ public class CustomShapedRecipeBuilder {
             this.advancementId = advancementIdIn;
         }
 
-        public void serialize(JsonObject json) {
+        @Override
+        public void serializeRecipeData(JsonObject json) {
             if (!this.group.isEmpty()) { json.addProperty("group", this.group); }
 
             JsonArray patternArr = new JsonArray();
@@ -202,7 +203,7 @@ public class CustomShapedRecipeBuilder {
             JsonObject keysObj = new JsonObject();
 
             for (Map.Entry<Character, Ingredient> entry : this.key.entrySet()) {
-                keysObj.add(String.valueOf(entry.getKey()), entry.getValue().serialize());
+                keysObj.add(String.valueOf(entry.getKey()), entry.getValue().toJson());
             }
 
             json.add("key", keysObj);
@@ -213,14 +214,16 @@ public class CustomShapedRecipeBuilder {
             json.add("result", resultObj);
         }
 
-        public IRecipeSerializer<?> getSerializer() {
+        @Override
+        public IRecipeSerializer<?> getType() {
             return serializer;
         }
 
         /**
          * Gets the ID for the recipe.
          */
-        public ResourceLocation getID() {
+        @Override
+        public ResourceLocation getId() {
             return this.id;
         }
 
@@ -229,16 +232,18 @@ public class CustomShapedRecipeBuilder {
          * no advancement.
          */
         @Nullable
-        public JsonObject getAdvancementJson() {
-            return this.advancementBuilder.serialize();
+        @Override
+        public JsonObject serializeAdvancement() {
+            return this.advancementBuilder.serializeToJson();
         }
 
         /**
          * Gets the ID for the advancement associated with this recipe. Should not be
-         * null if {@link #getAdvancementJson} is non-null.
+         * null if {@link #serializeAdvancement} is non-null.
          */
         @Nullable
-        public ResourceLocation getAdvancementID() {
+        @Override
+        public ResourceLocation getAdvancementId() {
             return this.advancementId;
         }
     }

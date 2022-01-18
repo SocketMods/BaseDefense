@@ -69,47 +69,47 @@ public class LootTables extends LootTableProvider {
     }
 
     void lockedDoor(LockedDoorBlock block) {
-        StatePropertiesPredicate.Builder predicate = StatePropertiesPredicate.Builder.newBuilder()
-                .withProp(LockedDoorBlock.HALF, LOWER);
+        StatePropertiesPredicate.Builder predicate = StatePropertiesPredicate.Builder.properties()
+                .hasProperty(LockedDoorBlock.HALF, LOWER);
 
         LootPool.Builder builder = createStandardDrops(block.baseBlock);
-        builder.acceptCondition(BlockStateProperty.builder(block).fromProperties(predicate));
+        builder.when(BlockStateProperty.hasBlockStateProperties(block).setProperties(predicate));
 
-        blockTable(block, LootTable.builder().addLootPool(builder));
+        blockTable(block, LootTable.lootTable().withPool(builder));
     }
 
     void padlockedDoor(PadlockedDoorBlock block) {
-        StatePropertiesPredicate.Builder predicate = StatePropertiesPredicate.Builder.newBuilder()
-                .withProp(PadlockedDoorBlock.HALF, LOWER);
+        StatePropertiesPredicate.Builder predicate = StatePropertiesPredicate.Builder.properties()
+                .hasProperty(PadlockedDoorBlock.HALF, LOWER);
 
         LootPool.Builder doorItem = createStandardDrops(block.baseBlock);
-        doorItem.acceptCondition(BlockStateProperty.builder(block).fromProperties(predicate));
+        doorItem.when(BlockStateProperty.hasBlockStateProperties(block).setProperties(predicate));
 
         LootPool.Builder padlock = createStandardDrops(Items.BROKEN_LOCK_PIECES);
-        padlock.acceptCondition(BlockStateProperty.builder(block).fromProperties(predicate));
+        padlock.when(BlockStateProperty.hasBlockStateProperties(block).setProperties(predicate));
 
-        blockTable(block, LootTable.builder().addLootPool(doorItem).addLootPool(padlock));
+        blockTable(block, LootTable.lootTable().withPool(doorItem).withPool(padlock));
     }
 
     void portableSafe() {
-        LootFunction.Builder<?> copyNameFunc = CopyName.builder(CopyName.Source.BLOCK_ENTITY);
-        SetContents.Builder contentsFunc = SetContents.builderIn()
-                .addLootEntry(DynamicLootEntry.func_216162_a(PortableSafeBlock.CONTENTS));
+        LootFunction.Builder<?> copyNameFunc = CopyName.copyName(CopyName.Source.BLOCK_ENTITY);
+        SetContents.Builder contentsFunc = SetContents.setContents()
+                .withEntry(DynamicLootEntry.dynamicEntry(PortableSafeBlock.CONTENTS));
         CopyNbt.Builder copyLockFunc = createCopyLockFunc(PortableSafeTileEntity.TAG_LOCK_ITEM);
 
         LootPool.Builder safeItem = createStandardDrops(Blocks.PORTABLE_SAFE);
-        safeItem.acceptFunction(copyNameFunc).acceptFunction(contentsFunc).acceptFunction(copyLockFunc);
+        safeItem.apply(copyNameFunc).apply(contentsFunc).apply(copyLockFunc);
 
-        blockTable(Blocks.PORTABLE_SAFE, LootTable.builder().addLootPool(safeItem));
+        blockTable(Blocks.PORTABLE_SAFE, LootTable.lootTable().withPool(safeItem));
     }
 
     CopyNbt.Builder createCopyLockFunc(String tag) {
-        return CopyNbt.builder(CopyNbt.Source.BLOCK_ENTITY)
-                .addOperation(tag, "BlockEntityTag." + tag, CopyNbt.Action.REPLACE);
+        return CopyNbt.copyData(CopyNbt.Source.BLOCK_ENTITY)
+                .copy(tag, "BlockEntityTag." + tag, CopyNbt.Action.REPLACE);
     }
 
     void standardDropTable(Block b) {
-        blockTable(b, LootTable.builder().addLootPool(createStandardDrops(b)));
+        blockTable(b, LootTable.lootTable().withPool(createStandardDrops(b)));
     }
 
     void blockTable(Block b, LootTable.Builder lootTable) {
@@ -121,12 +121,12 @@ public class LootTables extends LootTableProvider {
     }
 
     LootPool.Builder createStandardDrops(IItemProvider itemProvider) {
-        return LootPool.builder().rolls(ConstantRange.of(1)).acceptCondition(SurvivesExplosion.builder())
-                .addEntry(ItemLootEntry.builder(itemProvider));
+        return LootPool.lootPool().setRolls(ConstantRange.exactly(1)).when(SurvivesExplosion.survivesExplosion())
+                .add(ItemLootEntry.lootTableItem(itemProvider));
     }
 
     @Override
     protected void validate(Map<ResourceLocation, LootTable> map, ValidationTracker validationtracker) {
-        map.forEach((loc, table) -> LootTableManager.validateLootTable(validationtracker, loc, table));
+        map.forEach((loc, table) -> LootTableManager.validate(validationtracker, loc, table));
     }
 }

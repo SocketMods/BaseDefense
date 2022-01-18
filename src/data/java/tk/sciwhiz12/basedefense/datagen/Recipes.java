@@ -22,38 +22,38 @@ public class Recipes extends RecipeProvider {
     }
 
     @Override
-    protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {
+    protected void buildShapelessRecipes(Consumer<IFinishedRecipe> consumer) {
         // @formatter:off
-        CustomRecipeBuilder.customRecipe(RecipeSerializers.COLORING).build(consumer, modStr("coloring"));
-        ShapedRecipeBuilder.shapedRecipe(Reference.Items.BLANK_KEY, 2)
-                .patternLine(" g ")
-                .patternLine(" in")
-                .patternLine(" in")
-                .key('g', Tags.Items.INGOTS_GOLD)
-                .key('i', Tags.Items.INGOTS_IRON)
-                .key('n', Tags.Items.NUGGETS_IRON)
-                .addCriterion("has_ingots", InventoryChangeTrigger.Instance.forItems(Items.GOLD_INGOT, Items.IRON_INGOT))
-                .build(consumer, modLoc("blank_key"));
-        CustomShapedRecipeBuilder.shapedRecipe(RecipeSerializers.CODED_LOCK, Reference.Items.PADLOCK)
-                .patternLine(" i ")
-                .patternLine("ICI")
-                .patternLine("GGG")
-                .key('i', Tags.Items.NUGGETS_IRON)
-                .key('I', Tags.Items.INGOTS_IRON)
-                .key('G', Tags.Items.INGOTS_GOLD)
-                .key('C', new LockedItemIngredient(Reference.Items.LOCK_CORE, true))
-                .addCriterion("has_lock_core", InventoryChangeTrigger.Instance.forItems(Reference.Items.LOCK_CORE))
-                .build(consumer, modLoc("padlock"));
-        CustomShapedRecipeBuilder.shapedRecipe(RecipeSerializers.LOCKED_ITEM, Reference.Items.PORTABLE_SAFE)
-                .patternLine("iLi")
-                .patternLine("ici")
-                .patternLine("iPi")
-                .key('i', Tags.Items.INGOTS_IRON)
-                .key('c', Tags.Items.CHESTS_WOODEN)
-                .key('P', ItemTags.PLANKS)
-                .key('L', new LockedItemIngredient(Reference.Items.LOCK_CORE, false))
-                .addCriterion("has_lock_core", InventoryChangeTrigger.Instance.forItems(Reference.Items.LOCK_CORE))
-                .build(consumer, modLoc("portable_safe"));
+        CustomRecipeBuilder.special(RecipeSerializers.COLORING).save(consumer, modStr("coloring"));
+        ShapedRecipeBuilder.shaped(Reference.Items.BLANK_KEY, 2)
+                .pattern(" g ")
+                .pattern(" in")
+                .pattern(" in")
+                .define('g', Tags.Items.INGOTS_GOLD)
+                .define('i', Tags.Items.INGOTS_IRON)
+                .define('n', Tags.Items.NUGGETS_IRON)
+                .unlockedBy("has_ingots", InventoryChangeTrigger.Instance.hasItems(Items.GOLD_INGOT, Items.IRON_INGOT))
+                .save(consumer, modLoc("blank_key"));
+        CustomShapedRecipeBuilder.shaped(RecipeSerializers.CODED_LOCK, Reference.Items.PADLOCK)
+                .pattern(" i ")
+                .pattern("ICI")
+                .pattern("GGG")
+                .define('i', Tags.Items.NUGGETS_IRON)
+                .define('I', Tags.Items.INGOTS_IRON)
+                .define('G', Tags.Items.INGOTS_GOLD)
+                .define('C', new LockedItemIngredient(Reference.Items.LOCK_CORE, true))
+                .unlockedBy("has_lock_core", InventoryChangeTrigger.Instance.hasItems(Reference.Items.LOCK_CORE))
+                .save(consumer, modLoc("padlock"));
+        CustomShapedRecipeBuilder.shaped(RecipeSerializers.LOCKED_ITEM, Reference.Items.PORTABLE_SAFE)
+                .pattern("iLi")
+                .pattern("ici")
+                .pattern("iPi")
+                .define('i', Tags.Items.INGOTS_IRON)
+                .define('c', Tags.Items.CHESTS_WOODEN)
+                .define('P', ItemTags.PLANKS)
+                .define('L', new LockedItemIngredient(Reference.Items.LOCK_CORE, false))
+                .unlockedBy("has_lock_core", InventoryChangeTrigger.Instance.hasItems(Reference.Items.LOCK_CORE))
+                .save(consumer, modLoc("portable_safe"));
         // @formatter:on
         lockedDoorRecipe(consumer, Blocks.LOCKED_OAK_DOOR);
         lockedDoorRecipe(consumer, Blocks.LOCKED_BIRCH_DOOR);
@@ -68,14 +68,14 @@ public class Recipes extends RecipeProvider {
 
     void lockedDoorRecipe(Consumer<IFinishedRecipe> consumer, LockedDoorBlock block) {
         // @formatter:off
-        CustomShapedRecipeBuilder.shapedRecipe(RecipeSerializers.LOCKED_ITEM, block)
-                .setGroup("locked_door")
-                .patternLine("IdC")
-                .key('I', Tags.Items.INGOTS_IRON)
-                .key('d', block.baseBlock)
-                .key('C', new LockedItemIngredient(Reference.Items.LOCK_CORE, true))
-                .addCriterion("has_lock_core", InventoryChangeTrigger.Instance.forItems(Reference.Items.LOCK_CORE))
-                .build(consumer, block.getRegistryName());
+        CustomShapedRecipeBuilder.shaped(RecipeSerializers.LOCKED_ITEM, block)
+                .group("locked_door")
+                .pattern("IdC")
+                .define('I', Tags.Items.INGOTS_IRON)
+                .define('d', block.baseBlock)
+                .define('C', new LockedItemIngredient(Reference.Items.LOCK_CORE, true))
+                .unlockedBy("has_lock_core", InventoryChangeTrigger.Instance.hasItems(Reference.Items.LOCK_CORE))
+                .save(consumer, block.getRegistryName());
         // @formatter:on
     }
 
