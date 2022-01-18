@@ -1,0 +1,36 @@
+package tk.sciwhiz12.basedefense.client.model;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
+import net.minecraftforge.client.model.BakedModelWrapper;
+
+public class ISTERWrapper extends BakedModelWrapper<IBakedModel> {
+    protected TransformType currentPerspective;
+
+    public ISTERWrapper(IBakedModel parent) {
+        this(parent, TransformType.NONE);
+    }
+
+    public ISTERWrapper(IBakedModel parent, TransformType perspective) {
+        super(parent);
+        this.currentPerspective = perspective;
+    }
+
+    @Override
+    public boolean isCustomRenderer() {
+        return true;
+    }
+
+    @Override
+    public IBakedModel handlePerspective(ItemCameraTransforms.TransformType cameraTransformType, MatrixStack mat) {
+        this.currentPerspective = cameraTransformType;
+        originalModel.handlePerspective(cameraTransformType, mat);
+        return this;
+    }
+
+    public TransformType getCurrentPerspective() {
+        return currentPerspective;
+    }
+}
