@@ -3,8 +3,8 @@ package tk.sciwhiz12.basedefense.capabilities;
 import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import tk.sciwhiz12.basedefense.api.ITooltipInfo;
 import tk.sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import tk.sciwhiz12.basedefense.util.Util;
@@ -13,8 +13,8 @@ import tk.sciwhiz12.basedefense.api.capablities.IContainsCode;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static net.minecraft.util.text.TextFormatting.DARK_GRAY;
-import static net.minecraft.util.text.TextFormatting.GRAY;
+import static net.minecraft.ChatFormatting.DARK_GRAY;
+import static net.minecraft.ChatFormatting.GRAY;
 
 /**
  * Default implementation of {@link ICodeHolder} and
@@ -54,13 +54,13 @@ public class CodeHolder implements ICodeHolder, ITooltipInfo {
     }
 
     @Override
-    public void addInformation(List<ITextComponent> info, boolean verbose) {
+    public void addInformation(List<Component> info, boolean verbose) {
         if (!verbose || this.storedCodes.size() == 0) {
             info.add(Util.createAmountTooltip("tooltip.basedefense.codes.count", this.storedCodes.size()).withStyle(GRAY));
         } else {
-            info.add(new TranslationTextComponent("tooltip.basedefense.codes.header").withStyle(GRAY));
+            info.add(new TranslatableComponent("tooltip.basedefense.codes.header").withStyle(GRAY));
             for (long id : this.storedCodes) {
-                info.add(new TranslationTextComponent("tooltip.basedefense.codes.line", String.format("%016X", id))
+                info.add(new TranslatableComponent("tooltip.basedefense.codes.line", String.format("%016X", id))
                         .withStyle(DARK_GRAY));
             }
         }

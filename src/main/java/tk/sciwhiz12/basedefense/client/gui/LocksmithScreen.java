@@ -1,32 +1,33 @@
 package tk.sciwhiz12.basedefense.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.chat.Component;
 import tk.sciwhiz12.basedefense.ClientReference.Textures;
 import tk.sciwhiz12.basedefense.container.LocksmithContainer;
 
-public class LocksmithScreen extends ContainerScreen<LocksmithContainer> {
-    public LocksmithScreen(LocksmithContainer container, PlayerInventory inv, ITextComponent title) {
+public class LocksmithScreen extends AbstractContainerScreen<LocksmithContainer> {
+    public LocksmithScreen(LocksmithContainer container, Inventory inv, Component title) {
         super(container, inv, title);
         this.imageWidth = 176;
         this.imageHeight = 166;
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, partialTicks);
         this.renderTooltip(stack, mouseX, mouseY);
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    protected void renderBg(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bind(Textures.LOCKSMITH_GUI);
+    protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, Textures.LOCKSMITH_GUI);
         this.blit(stack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
         int iconX = 0, iconY = 166;
         if (this.menu.testingState.get() == 1) iconX = 21;

@@ -1,12 +1,12 @@
 package tk.sciwhiz12.basedefense.item.lock;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.ItemHandlerHelper;
 import tk.sciwhiz12.basedefense.api.capablities.IKey;
@@ -30,13 +30,13 @@ public class AdminPadlockItem extends AbstractPadlockItem {
     }
 
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT nbt) {
+    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt) {
         return new GenericCapabilityProvider<>(() -> new AdminKeyLock() {
             @Override
-            public void onRemove(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
+            public void onRemove(IKey key, ContainerLevelAccess worldPos, @Nullable Player player) {
                 super.onRemove(key, worldPos, player);
                 worldPos.execute((world, pos) -> {
-                    TileEntity te = world.getBlockEntity(pos);
+                    BlockEntity te = world.getBlockEntity(pos);
                     if (te instanceof LockableTile) {
                         LockableTile lockTile = (LockableTile) te;
                         ItemHandlerHelper.giveItemToPlayer(player, lockTile.getLockStack());

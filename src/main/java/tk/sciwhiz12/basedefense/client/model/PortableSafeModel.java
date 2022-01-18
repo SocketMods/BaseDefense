@@ -1,61 +1,78 @@
 package tk.sciwhiz12.basedefense.client.model;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.model.Model;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.Model;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.util.ColorHelper;
+import net.minecraft.util.FastColor;
 
 public class PortableSafeModel extends Model {
-    private final ModelRenderer feet;
-    private final ModelRenderer walls;
-    private final ModelRenderer door;
-    private final ModelRenderer top;
-    private final ModelRenderer middle;
-    private final ModelRenderer bottom;
+    private final ModelPart feet;
+    private final ModelPart walls;
+    private final ModelPart door;
+    private final ModelPart top;
+    private final ModelPart middle;
+    private final ModelPart bottom;
     public float[] topColor = new float[3], middleColor = new float[3], bottomColor = new float[3];
 
-    public PortableSafeModel() {
+    public PortableSafeModel(ModelPart root) {
         super(RenderType::entityCutoutNoCull);
-        texWidth = 64;
-        texHeight = 64;
 
-        feet = new ModelRenderer(this);
-        feet.setPos(0.0F, 0.0F, 0.0F);
-        feet.texOffs(42, 0).addBox(-6.0F, 7.0F, -6.0F, 2.0F, 1.0F, 2.0F, 0.0F, false);
-        feet.texOffs(42, 3).addBox(4.0F, 7.0F, -6.0F, 2.0F, 1.0F, 2.0F, 0.0F, false);
-        feet.texOffs(42, 6).addBox(-6.0F, 7.0F, 4.0F, 2.0F, 1.0F, 2.0F, 0.0F, false);
-        feet.texOffs(42, 9).addBox(4.0F, 7.0F, 4.0F, 2.0F, 1.0F, 2.0F, 0.0F, false);
+        this.feet = root.getChild("feet");
+        this.walls = root.getChild("walls");
+        this.door = root.getChild("door");
+        this.top = root.getChild("top");
+        this.middle = root.getChild("middle");
+        this.bottom = root.getChild("bottom");
+    }
 
-        walls = new ModelRenderer(this);
-        walls.setPos(0.0F, 0.0F, 0.0F);
-        walls.texOffs(0, 0).addBox(-7.0F, -7.0F, -7.0F, 14.0F, 2.0F, 14.0F, 0.0F, false);
-        walls.texOffs(0, 0).addBox(-7.0F, 5.0F, -7.0F, 14.0F, 2.0F, 14.0F, 0.0F, true);
-        walls.texOffs(32, 16).addBox(-7.0F, -5.0F, -7.0F, 2.0F, 10.0F, 14.0F, 0.0F, false);
-        walls.texOffs(0, 16).addBox(5.0F, -5.0F, -7.0F, 2.0F, 10.0F, 14.0F, 0.0F, false);
-        walls.texOffs(18, 16).addBox(-5.0F, -5.0F, 5.0F, 10.0F, 10.0F, 2.0F, 0.0F, false);
+    public static LayerDefinition createLayerDefinition() {
+        MeshDefinition mesh = new MeshDefinition();
+        PartDefinition part = mesh.getRoot();
 
-        door = new ModelRenderer(this);
-        door.setPos(4.0F, 0.0F, -6.0F);
-        door.texOffs(18, 16).addBox(-9.0F, -5.0F, -0.5F, 10.0F, 10.0F, 2.0F, 0.0F, false);
-        door.texOffs(0, 0).addBox(-8.0F, -2.0F, -1.5F, 2.0F, 4.0F, 1.0F, 0.0F, false);
+        part.addOrReplaceChild("feet", CubeListBuilder.create()
+            .texOffs(42, 0).addBox(-6.0F, 7.0F, -6.0F, 2.0F, 1.0F, 2.0F, false)
+            .texOffs(42, 3).addBox(4.0F, 7.0F, -6.0F, 2.0F, 1.0F, 2.0F, false)
+            .texOffs(42, 6).addBox(-6.0F, 7.0F, 4.0F, 2.0F, 1.0F, 2.0F, false)
+            .texOffs(42, 9).addBox(4.0F, 7.0F, 4.0F, 2.0F, 1.0F, 2.0F, false),
+            PartPose.ZERO);
 
-        top = new ModelRenderer(this);
-        top.setPos(4.0F, 0.0F, -6.0F);
-        top.texOffs(0, 5).addBox(-5.0F, -1.0F, -1.0F, 1.0F, 2.0F, 1.0F, 0.0F, true);
+        part.addOrReplaceChild("walls", CubeListBuilder.create()
+            .texOffs(0, 0).addBox(-7.0F, -7.0F, -7.0F, 14.0F, 2.0F, 14.0F, false)
+            .texOffs(0, 0).addBox(-7.0F, 5.0F, -7.0F, 14.0F, 2.0F, 14.0F, true)
+            .texOffs(32, 16).addBox(-7.0F, -5.0F, -7.0F, 2.0F, 10.0F, 14.0F, false)
+            .texOffs(0, 16).addBox(5.0F, -5.0F, -7.0F, 2.0F, 10.0F, 14.0F, false)
+            .texOffs(18, 16).addBox(-5.0F, -5.0F, 5.0F, 10.0F, 10.0F, 2.0F, false),
+            PartPose.ZERO);
 
-        middle = new ModelRenderer(this);
-        middle.setPos(4.0F, 0.0F, -6.0F);
-        middle.texOffs(0, 8).addBox(-3.5F, -1.0F, -1.0F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+        part.addOrReplaceChild("door", CubeListBuilder.create()
+            .texOffs(18, 16).addBox(-9.0F, -5.0F, -0.5F, 10.0F, 10.0F, 2.0F, false)
+            .texOffs(0, 0).addBox(-8.0F, -2.0F, -1.5F, 2.0F, 4.0F, 1.0F, false),
+            PartPose.offset(4.0F, 0.0F, -6.0F));
 
-        bottom = new ModelRenderer(this);
-        bottom.setPos(4.0F, 0.0F, -6.0F);
-        bottom.texOffs(0, 11).addBox(-2.0F, -1.0F, -1.0F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+        part.addOrReplaceChild("top", CubeListBuilder.create()
+            .texOffs(0, 5).addBox(-5.0F, -1.0F, -1.0F, 1.0F, 2.0F, 1.0F, true),
+            PartPose.offset(4.0F, 0.0F, -6.0F));
+
+        part.addOrReplaceChild("middle", CubeListBuilder.create()
+            .texOffs(0, 8).addBox(-3.5F, -1.0F, -1.0F, 1.0F, 2.0F, 1.0F,  false),
+            PartPose.offset(4.0F, 0.0F, -6.0F));
+
+        part.addOrReplaceChild("bottom", CubeListBuilder.create()
+            .texOffs(0, 11).addBox(-2.0F, -1.0F, -1.0F, 1.0F, 2.0F, 1.0F, false),
+            PartPose.offset(4.0F, 0.0F, -6.0F));
+
+        return LayerDefinition.create(mesh, 64, 64);
     }
 
     @Override
-    public void renderToBuffer(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red,
+    public void renderToBuffer(PoseStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red,
             float green, float blue, float alpha) {
         matrixStack.pushPose();
         feet.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
@@ -83,14 +100,14 @@ public class PortableSafeModel extends Model {
     }
 
     public void setColors(int top, int middle, int bottom) {
-        this.topColor[0] = ColorHelper.PackedColor.red(top) / 255F;
-        this.topColor[1] = ColorHelper.PackedColor.green(top) / 255F;
-        this.topColor[2] = ColorHelper.PackedColor.blue(top) / 255F;
-        this.middleColor[0] = ColorHelper.PackedColor.red(middle) / 255F;
-        this.middleColor[1] = ColorHelper.PackedColor.green(middle) / 255F;
-        this.middleColor[2] = ColorHelper.PackedColor.blue(middle) / 255F;
-        this.bottomColor[0] = ColorHelper.PackedColor.red(bottom) / 255F;
-        this.bottomColor[1] = ColorHelper.PackedColor.green(bottom) / 255F;
-        this.bottomColor[2] = ColorHelper.PackedColor.blue(bottom) / 255F;
+        this.topColor[0] = FastColor.ARGB32.red(top) / 255F;
+        this.topColor[1] = FastColor.ARGB32.green(top) / 255F;
+        this.topColor[2] = FastColor.ARGB32.blue(top) / 255F;
+        this.middleColor[0] = FastColor.ARGB32.red(middle) / 255F;
+        this.middleColor[1] = FastColor.ARGB32.green(middle) / 255F;
+        this.middleColor[2] = FastColor.ARGB32.blue(middle) / 255F;
+        this.bottomColor[0] = FastColor.ARGB32.red(bottom) / 255F;
+        this.bottomColor[1] = FastColor.ARGB32.green(bottom) / 255F;
+        this.bottomColor[2] = FastColor.ARGB32.blue(bottom) / 255F;
     }
 }

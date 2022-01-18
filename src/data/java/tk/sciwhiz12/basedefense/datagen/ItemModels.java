@@ -1,8 +1,8 @@
 package tk.sciwhiz12.basedefense.datagen;
 
 import net.minecraft.data.DataGenerator;
-import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.generators.*;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import tk.sciwhiz12.basedefense.Reference.Items;

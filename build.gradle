@@ -68,7 +68,7 @@ dependencies {
 
 java {
     archivesBaseName = "${project.name}-${mc_version}"
-    toolchain.languageVersion = JavaLanguageVersion.of(8)
+    toolchain.languageVersion = JavaLanguageVersion.of(17)
     withSourcesJar()
 }
 

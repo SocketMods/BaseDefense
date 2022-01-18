@@ -1,9 +1,9 @@
 package tk.sciwhiz12.basedefense.capabilities;
 
 import it.unimi.dsi.fastutil.longs.LongArrayList;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.LongArrayNBT;
-import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.LongArrayTag;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraftforge.common.util.INBTSerializable;
 import tk.sciwhiz12.basedefense.api.capablities.IKey;
 import tk.sciwhiz12.basedefense.api.capablities.ILock;
@@ -18,30 +18,30 @@ import javax.annotation.Nullable;
  *
  * @author SciWhiz12
  */
-public class CodedLock extends CodeHolder implements ILock, INBTSerializable<LongArrayNBT> {
+public class CodedLock extends CodeHolder implements ILock, INBTSerializable<LongArrayTag> {
     @Override
-    public boolean canRemove(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
+    public boolean canRemove(IKey key, ContainerLevelAccess worldPos, @Nullable Player player) {
         return key.canUnlock(this, worldPos, player) && this.canUnlock(key, worldPos, player);
     }
 
     @Override
-    public boolean canUnlock(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
+    public boolean canUnlock(IKey key, ContainerLevelAccess worldPos, @Nullable Player player) {
         return true;
     }
 
     @Override
-    public void onRemove(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {}
+    public void onRemove(IKey key, ContainerLevelAccess worldPos, @Nullable Player player) {}
 
     @Override
-    public void onUnlock(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {}
+    public void onUnlock(IKey key, ContainerLevelAccess worldPos, @Nullable Player player) {}
 
     @Override
-    public LongArrayNBT serializeNBT() {
-        return new LongArrayNBT(storedCodes.toLongArray());
+    public LongArrayTag serializeNBT() {
+        return new LongArrayTag(storedCodes.toLongArray());
     }
 
     @Override
-    public void deserializeNBT(LongArrayNBT nbt) {
+    public void deserializeNBT(LongArrayTag nbt) {
         this.storedCodes = new LongArrayList(nbt.getAsLongArray());
     }
 }

@@ -1,7 +1,7 @@
 package tk.sciwhiz12.basedefense.item.lock;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import tk.sciwhiz12.basedefense.capabilities.CodedLock;
 import tk.sciwhiz12.basedefense.capabilities.SerializableCapabilityProvider;
@@ -19,17 +19,17 @@ public class CodedLockCoreItem extends AbstractLockCoreItem {
     }
 
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT nbt) {
+    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt) {
         return new SerializableCapabilityProvider<>(CodedLock::new, CONTAINS_CODE, CODE_HOLDER, LOCK);
     }
 
     @Override
-    public CompoundNBT getShareTag(ItemStack stack) {
-        return ItemHelper.getItemShareTag(stack, CODE_HOLDER);
+    public CompoundTag getShareTag(ItemStack stack) {
+        return ItemHelper.getItemShareTag(stack, ItemHelper.CapabilitySerializer.CODED_LOCK);
     }
 
     @Override
-    public void readShareTag(ItemStack stack, CompoundNBT nbt) {
-        ItemHelper.readItemShareTag(stack, nbt, CODE_HOLDER);
+    public void readShareTag(ItemStack stack, CompoundTag nbt) {
+        ItemHelper.readItemShareTag(stack, nbt, ItemHelper.CapabilitySerializer.CODED_LOCK);
     }
 }

@@ -1,9 +1,9 @@
 package tk.sciwhiz12.basedefense.item.lock;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import tk.sciwhiz12.basedefense.capabilities.AdminKeyLock;
 import tk.sciwhiz12.basedefense.capabilities.GenericCapabilityProvider;
@@ -22,7 +22,7 @@ public class AdminLockCoreItem extends AbstractLockCoreItem {
     }
 
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT nbt) {
+    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt) {
         return new GenericCapabilityProvider<>(AdminKeyLock::new, LOCK);
     }
 }

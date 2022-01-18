@@ -1,10 +1,10 @@
 package tk.sciwhiz12.basedefense.util;
 
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
@@ -24,9 +24,8 @@ public final class Util {
     private Util() {}
 
     /**
-     * >A fix for IntelliJ IDEA's "Constant conditions" inspection. Used for
-     * {@link net.minecraftforge.registries.ObjectHolder} and
-     * {@link net.minecraftforge.common.capabilities.CapabilityInject} fields.
+     * A fix for IntelliJ IDEA's "Constant conditions" inspection. Used for
+     * {@link net.minecraftforge.registries.ObjectHolder} fields.
      *
      * @return {@code null}
      */
@@ -36,16 +35,16 @@ public final class Util {
     }
 
     /**
-     * Returns an {@link IWorldPosCallable} containing the given parameters, or
-     * {@link IWorldPosCallable#NULL} if either parameter is {@code null}.
+     * Returns an {@link ContainerLevelAccess} containing the given parameters, or
+     * {@link ContainerLevelAccess#NULL} if either parameter is {@code null}.
      *
-     * @param world A {@link World}, or {@code null}
+     * @param world A {@link Level}, or {@code null}
      * @param pos   A {@link BlockPos} or {@code null}
-     * @return an {@link IWorldPosCallable}, or {@link IWorldPosCallable#NULL}
+     * @return an {@link ContainerLevelAccess}, or {@link ContainerLevelAccess#NULL}
      */
-    public static IWorldPosCallable getOrDummy(@Nullable World world, @Nullable BlockPos pos) {
-        if (world != null && pos != null) { return IWorldPosCallable.create(world, pos); }
-        return IWorldPosCallable.NULL;
+    public static ContainerLevelAccess getOrDummy(@Nullable Level world, @Nullable BlockPos pos) {
+        if (world != null && pos != null) { return ContainerLevelAccess.create(world, pos); }
+        return ContainerLevelAccess.NULL;
     }
 
     /**
@@ -102,7 +101,7 @@ public final class Util {
     }
 
     /**
-     * <p>Creates a {@link TranslationTextComponent} based on if the given amount is {@code 0}, {@code 1}, or more than
+     * <p>Creates a {@link TranslatableComponent} based on if the given amount is {@code 0}, {@code 1}, or more than
      * {@code 1}.</p>
      *
      * <p>This method uses the following logic for determining the translation key:
@@ -120,14 +119,14 @@ public final class Util {
      * @param additionalInfo     The additional objects when construction the {@code TranslationTextComponent}
      * @return The resulting {@code TranslationTextComponent}
      */
-    public static TranslationTextComponent createAmountTooltip(String translationKeyBase, int amount,
+    public static TranslatableComponent createAmountTooltip(String translationKeyBase, int amount,
             Object... additionalInfo) {
         if (amount == 0) {
-            return new TranslationTextComponent(translationKeyBase + ".zero", amount, additionalInfo);
+            return new TranslatableComponent(translationKeyBase + ".zero", amount, additionalInfo);
         } else if (amount == 1) {
-            return new TranslationTextComponent(translationKeyBase + ".one", amount, additionalInfo);
+            return new TranslatableComponent(translationKeyBase + ".one", amount, additionalInfo);
         } else {
-            return new TranslationTextComponent(translationKeyBase, amount, additionalInfo);
+            return new TranslatableComponent(translationKeyBase, amount, additionalInfo);
         }
     }
 }

@@ -1,38 +1,40 @@
 package tk.sciwhiz12.basedefense.block;
 
-import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
+import tk.sciwhiz12.basedefense.Reference;
 import tk.sciwhiz12.basedefense.item.IContainsLockItem;
 import tk.sciwhiz12.basedefense.item.LockedBlockItem;
 import tk.sciwhiz12.basedefense.tileentity.PortableSafeTileEntity;
@@ -41,9 +43,20 @@ import tk.sciwhiz12.basedefense.util.UnlockHelper;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import static net.minecraft.util.text.TextFormatting.GRAY;
+import static net.minecraft.ChatFormatting.GRAY;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 
-public class PortableSafeBlock extends Block implements IWaterLoggable {
+public class PortableSafeBlock extends Block implements SimpleWaterloggedBlock, EntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final ResourceLocation CONTENTS = new ResourceLocation("contents");
     private static final VoxelShape NORTH_SHAPE = Block.box(1.0D, 0.0D, 0.5D, 15.0D, 15.0D, 15.0D);
@@ -52,17 +65,17 @@ public class PortableSafeBlock extends Block implements IWaterLoggable {
     private static final VoxelShape WEST_SHAPE = Block.box(0.5D, 0.0D, 1.0D, 15.0D, 15.0D, 15.0D);
 
     public PortableSafeBlock() {
-        super(AbstractBlock.Properties.of(Material.METAL).strength(40F, 1200F));
+        super(BlockBehaviour.Properties.of(Material.METAL).strength(40F, 1200F));
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 
     @Override
-    public BlockRenderType getRenderShape(BlockState state) {
-        return BlockRenderType.ENTITYBLOCK_ANIMATED;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         switch (state.getValue(FACING)) {
             default:
             case NORTH:
@@ -77,20 +90,21 @@ public class PortableSafeBlock extends Block implements IWaterLoggable {
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
-    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        TileEntity te = worldIn.getBlockEntity(pos);
+    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
+        BlockEntity te = worldIn.getBlockEntity(pos);
         if (te instanceof PortableSafeTileEntity) {
             PortableSafeTileEntity safe = (PortableSafeTileEntity) te;
             if (!worldIn.isClientSide && player.isCreative() && !safe.isEmpty()) {
                 @SuppressWarnings("deprecation")
                 ItemStack stack = this.getCloneItemStack(worldIn, pos, state);
 
-                CompoundNBT compoundnbt = safe.writeData(new CompoundNBT());
+                CompoundTag compoundnbt = new CompoundTag();
+                safe.writeData(compoundnbt, false);
                 if (!compoundnbt.isEmpty()) {
                     stack.addTagElement("BlockEntityTag", compoundnbt);
                 }
@@ -114,7 +128,7 @@ public class PortableSafeBlock extends Block implements IWaterLoggable {
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         builder = builder.withDynamicDrop(CONTENTS, (context, stackConsumer) -> {
-            TileEntity te = context.getParamOrNull(LootParameters.BLOCK_ENTITY);
+            BlockEntity te = context.getParamOrNull(LootContextParams.BLOCK_ENTITY);
             if (te instanceof PortableSafeTileEntity) {
                 PortableSafeTileEntity safe = (PortableSafeTileEntity) te;
                 IItemHandler inv = safe.getInventory();
@@ -127,10 +141,10 @@ public class PortableSafeBlock extends Block implements IWaterLoggable {
     }
 
     @Override
-    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         if (!stack.isEmpty() && stack.getItem() instanceof LockedBlockItem) {
             LockedBlockItem item = (LockedBlockItem) stack.getItem();
-            TileEntity te = worldIn.getBlockEntity(pos);
+            BlockEntity te = worldIn.getBlockEntity(pos);
             if (item.hasLockStack(stack) && te instanceof PortableSafeTileEntity) {
                 PortableSafeTileEntity safeTE = (PortableSafeTileEntity) te;
                 ItemStack lockStack = item.getLockStack(stack);
@@ -142,19 +156,19 @@ public class PortableSafeBlock extends Block implements IWaterLoggable {
 
     @SuppressWarnings("deprecation")
     @Override
-    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         worldIn.updateNeighbourForOutputSignal(pos, this);
         super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-            BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
+            BlockHitResult hit) {
         if (worldIn.isClientSide) {
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else {
-            INamedContainerProvider provider = this.getMenuProvider(state, worldIn, pos);
-            TileEntity te = worldIn.getBlockEntity(pos);
+            MenuProvider provider = this.getMenuProvider(state, worldIn, pos);
+            BlockEntity te = worldIn.getBlockEntity(pos);
             if (provider != null && te instanceof PortableSafeTileEntity) {
                 PortableSafeTileEntity safeTE = (PortableSafeTileEntity) te;
                 ItemStack heldItem = player.getItemInHand(handIn);
@@ -163,44 +177,45 @@ public class PortableSafeBlock extends Block implements IWaterLoggable {
                     player.openMenu(provider);
                 }
             }
-            return ActionResultType.CONSUME;
+            return InteractionResult.CONSUME;
         }
     }
 
     @SuppressWarnings("deprecation")
     @Override
-    public boolean triggerEvent(BlockState state, World worldIn, BlockPos pos, int id, int param) {
+    public boolean triggerEvent(BlockState state, Level worldIn, BlockPos pos, int id, int param) {
         super.triggerEvent(state, worldIn, pos, id, param);
-        TileEntity tileentity = worldIn.getBlockEntity(pos);
+        BlockEntity tileentity = worldIn.getBlockEntity(pos);
         return tileentity != null && tileentity.triggerEvent(id, param);
     }
 
     @Nullable
     @Override
-    public INamedContainerProvider getMenuProvider(BlockState state, World world, BlockPos pos) {
-        TileEntity te = world.getBlockEntity(pos);
+    public MenuProvider getMenuProvider(BlockState state, Level world, BlockPos pos) {
+        BlockEntity te = world.getBlockEntity(pos);
         return te instanceof PortableSafeTileEntity ? (PortableSafeTileEntity) te : null;
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip,
-            ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip,
+            TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        CompoundNBT nbt = stack.getTagElement("BlockEntityTag");
-        if (nbt != null && nbt.contains("Items", Constants.NBT.TAG_LIST)) {
+        CompoundTag nbt = stack.getTagElement("BlockEntityTag");
+        if (nbt != null && nbt.contains("Items", Tag.TAG_LIST)) {
             if (nbt.getInt("Size") > 0) {
-                tooltip.add(new TranslationTextComponent("tooltip.basedefense.contains_items").withStyle(GRAY));
+                tooltip.add(new TranslatableComponent("tooltip.basedefense.contains_items").withStyle(GRAY));
             }
         }
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
-            PlayerEntity player) {
-        ItemStack stack = super.getPickBlock(state, target, world, pos, player);
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
+            Player player) {
+        ItemStack stack = super.getCloneItemStack(state, target, world, pos, player);
         PortableSafeTileEntity te = (PortableSafeTileEntity) world.getBlockEntity(pos);
         if (te != null) {
-            CompoundNBT compoundnbt = te.writeData(new CompoundNBT(), false);
+            CompoundTag compoundnbt = new CompoundTag();
+            te.writeData(compoundnbt, false);
             if (!compoundnbt.isEmpty()) {
                 stack.addTagElement("BlockEntityTag", compoundnbt);
             }
@@ -211,15 +226,22 @@ public class PortableSafeBlock extends Block implements IWaterLoggable {
         return stack;
     }
 
+    @Nullable
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new PortableSafeTileEntity(pos, state);
     }
 
     @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new PortableSafeTileEntity();
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+        return createTickerHelper(blockEntityType, Reference.TileEntities.PORTABLE_SAFE, PortableSafeTileEntity::tick);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Nullable
+    public static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> type, BlockEntityType<E> expectedType, BlockEntityTicker<? super E> ticker) {
+        return expectedType == type ? (BlockEntityTicker<A>) ticker : null;
     }
 
     @Override
@@ -228,8 +250,8 @@ public class PortableSafeBlock extends Block implements IWaterLoggable {
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos) {
-        TileEntity te = worldIn.getBlockEntity(pos);
+    public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
+        BlockEntity te = worldIn.getBlockEntity(pos);
         if (te != null) {
             return ItemHandlerHelper.calcRedstoneFromInventory(
                     te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseGet(ItemStackHandler::new));
@@ -249,12 +271,12 @@ public class PortableSafeBlock extends Block implements IWaterLoggable {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
         return false;
     }
 

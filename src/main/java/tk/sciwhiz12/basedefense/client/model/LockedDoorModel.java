@@ -1,11 +1,11 @@
 package tk.sciwhiz12.basedefense.client.model;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemOverrideList;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 import net.minecraftforge.client.model.data.IModelData;
 import tk.sciwhiz12.basedefense.tileentity.LockedDoorTile;
 
@@ -13,10 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class LockedDoorModel implements IBakedModel {
-    private final IBakedModel parentModel;
+public class LockedDoorModel implements BakedModel {
+    private final BakedModel parentModel;
 
-    public LockedDoorModel(IBakedModel parent) {
+    public LockedDoorModel(BakedModel parent) {
         this.parentModel = parent;
     }
 
@@ -67,7 +67,7 @@ public class LockedDoorModel implements IBakedModel {
     }
 
     @Override
-    public ItemOverrideList getOverrides() {
+    public ItemOverrides getOverrides() {
         return parentModel.getOverrides();
     }
 }

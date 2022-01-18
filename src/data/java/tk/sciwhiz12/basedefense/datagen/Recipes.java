@@ -1,8 +1,8 @@
 package tk.sciwhiz12.basedefense.datagen;
 
-import net.minecraft.advancements.criterion.InventoryChangeTrigger;
+import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.*;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.Items;
 import net.minecraft.tags.ItemTags;
 import net.minecraftforge.common.Tags;
 import tk.sciwhiz12.basedefense.Reference;
@@ -16,15 +16,20 @@ import java.util.function.Consumer;
 import static tk.sciwhiz12.basedefense.Reference.MODID;
 import static tk.sciwhiz12.basedefense.Reference.modLoc;
 
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.SpecialRecipeBuilder;
+
 public class Recipes extends RecipeProvider {
     public Recipes(DataGenerator gen) {
         super(gen);
     }
 
     @Override
-    protected void buildShapelessRecipes(Consumer<IFinishedRecipe> consumer) {
+    protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer) {
         // @formatter:off
-        CustomRecipeBuilder.special(RecipeSerializers.COLORING).save(consumer, modStr("coloring"));
+        SpecialRecipeBuilder.special(RecipeSerializers.COLORING).save(consumer, modStr("coloring"));
         ShapedRecipeBuilder.shaped(Reference.Items.BLANK_KEY, 2)
                 .pattern(" g ")
                 .pattern(" in")
@@ -32,7 +37,7 @@ public class Recipes extends RecipeProvider {
                 .define('g', Tags.Items.INGOTS_GOLD)
                 .define('i', Tags.Items.INGOTS_IRON)
                 .define('n', Tags.Items.NUGGETS_IRON)
-                .unlockedBy("has_ingots", InventoryChangeTrigger.Instance.hasItems(Items.GOLD_INGOT, Items.IRON_INGOT))
+                .unlockedBy("has_ingots", InventoryChangeTrigger.TriggerInstance.hasItems(Items.GOLD_INGOT, Items.IRON_INGOT))
                 .save(consumer, modLoc("blank_key"));
         CustomShapedRecipeBuilder.shaped(RecipeSerializers.CODED_LOCK, Reference.Items.PADLOCK)
                 .pattern(" i ")
@@ -42,7 +47,7 @@ public class Recipes extends RecipeProvider {
                 .define('I', Tags.Items.INGOTS_IRON)
                 .define('G', Tags.Items.INGOTS_GOLD)
                 .define('C', new LockedItemIngredient(Reference.Items.LOCK_CORE, true))
-                .unlockedBy("has_lock_core", InventoryChangeTrigger.Instance.hasItems(Reference.Items.LOCK_CORE))
+                .unlockedBy("has_lock_core", InventoryChangeTrigger.TriggerInstance.hasItems(Reference.Items.LOCK_CORE))
                 .save(consumer, modLoc("padlock"));
         CustomShapedRecipeBuilder.shaped(RecipeSerializers.LOCKED_ITEM, Reference.Items.PORTABLE_SAFE)
                 .pattern("iLi")
@@ -52,7 +57,7 @@ public class Recipes extends RecipeProvider {
                 .define('c', Tags.Items.CHESTS_WOODEN)
                 .define('P', ItemTags.PLANKS)
                 .define('L', new LockedItemIngredient(Reference.Items.LOCK_CORE, false))
-                .unlockedBy("has_lock_core", InventoryChangeTrigger.Instance.hasItems(Reference.Items.LOCK_CORE))
+                .unlockedBy("has_lock_core", InventoryChangeTrigger.TriggerInstance.hasItems(Reference.Items.LOCK_CORE))
                 .save(consumer, modLoc("portable_safe"));
         // @formatter:on
         lockedDoorRecipe(consumer, Blocks.LOCKED_OAK_DOOR);
@@ -66,7 +71,7 @@ public class Recipes extends RecipeProvider {
         lockedDoorRecipe(consumer, Blocks.LOCKED_WARPED_DOOR);
     }
 
-    void lockedDoorRecipe(Consumer<IFinishedRecipe> consumer, LockedDoorBlock block) {
+    void lockedDoorRecipe(Consumer<FinishedRecipe> consumer, LockedDoorBlock block) {
         // @formatter:off
         CustomShapedRecipeBuilder.shaped(RecipeSerializers.LOCKED_ITEM, block)
                 .group("locked_door")
@@ -74,7 +79,7 @@ public class Recipes extends RecipeProvider {
                 .define('I', Tags.Items.INGOTS_IRON)
                 .define('d', block.baseBlock)
                 .define('C', new LockedItemIngredient(Reference.Items.LOCK_CORE, true))
-                .unlockedBy("has_lock_core", InventoryChangeTrigger.Instance.hasItems(Reference.Items.LOCK_CORE))
+                .unlockedBy("has_lock_core", InventoryChangeTrigger.TriggerInstance.hasItems(Reference.Items.LOCK_CORE))
                 .save(consumer, block.getRegistryName());
         // @formatter:on
     }

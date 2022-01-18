@@ -1,18 +1,18 @@
 package tk.sciwhiz12.basedefense.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.IContainerListener;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerListener;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.glfw.GLFW;
 import tk.sciwhiz12.basedefense.ClientReference.Textures;
@@ -21,11 +21,11 @@ import tk.sciwhiz12.basedefense.container.KeysmithContainer;
 import tk.sciwhiz12.basedefense.net.NetworkHandler;
 import tk.sciwhiz12.basedefense.net.TextFieldChangePacket;
 
-public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implements IContainerListener {
-    private TextFieldWidget nameField;
+public class KeysmithScreen extends AbstractContainerScreen<KeysmithContainer> implements ContainerListener {
+    private EditBox nameField;
     private boolean isEnabledText = false;
 
-    public KeysmithScreen(KeysmithContainer container, PlayerInventory inv, ITextComponent title) {
+    public KeysmithScreen(KeysmithContainer container, Inventory inv, Component title) {
         super(container, inv, title);
         this.imageWidth = 176;
         this.imageHeight = 166;
@@ -35,7 +35,7 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
     protected void init() {
         super.init();
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
-        this.nameField = new TextFieldWidget(this.font, leftPos + 91, topPos + 28, 82, 12, new StringTextComponent(""));
+        this.nameField = new EditBox(this.font, leftPos + 91, topPos + 28, 82, 12, new TextComponent(""));
         this.nameField.setCanLoseFocus(false);
         this.nameField.setTextColor(-1);
         this.nameField.setTextColorUneditable(-1);
@@ -43,7 +43,7 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
         this.nameField.setMaxLength(35);
         this.nameField.setResponder(this::onTextChange);
         this.menu.addSlotListener(this);
-        this.children.add(nameField);
+        this.addRenderableWidget(nameField);
         this.setInitialFocus(nameField);
     }
 
@@ -72,7 +72,7 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, partialTicks);
         this.nameField.render(stack, mouseX, mouseY, partialTicks);
@@ -81,9 +81,10 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
 
     @Override
     @SuppressWarnings("deprecation")
-    protected void renderBg(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bind(Textures.KEYSMITH_GUI);
+    protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, Textures.KEYSMITH_GUI);
         this.blit(stack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
         if (this.nameField.canConsumeInput()) {
             this.blit(stack, leftPos + 88, topPos + 24, 0, 166, 82, 15);
@@ -100,15 +101,15 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
         NetworkHandler.CHANNEL.sendToServer(new TextFieldChangePacket(newText));
     }
 
-    @Override
-    public void refreshContainer(Container container, NonNullList<ItemStack> itemsList) {
-        this.slotChanged(container, 0, container.getSlot(0).getItem());
-        this.slotChanged(container, 1, container.getSlot(1).getItem());
-        this.slotChanged(container, 2, container.getSlot(2).getItem());
-    }
+//    @Override
+//    public void refreshContainer(AbstractContainerMenu container, NonNullList<ItemStack> itemsList) {
+//        this.slotChanged(container, 0, container.getSlot(0).getItem());
+//        this.slotChanged(container, 1, container.getSlot(1).getItem());
+//        this.slotChanged(container, 2, container.getSlot(2).getItem());
+//    }
 
     @Override
-    public void slotChanged(Container containerToSend, int slotInd, ItemStack stack) {
+    public void slotChanged(AbstractContainerMenu containerToSend, int slotInd, ItemStack stack) {
         if (slotInd == 0) {
             if (stack.isEmpty() && isEnabledText) {
                 isEnabledText = false;
@@ -124,5 +125,5 @@ public class KeysmithScreen extends ContainerScreen<KeysmithContainer> implement
     }
 
     @Override
-    public void setContainerData(Container containerIn, int varToUpdate, int newValue) {}
+    public void dataChanged(AbstractContainerMenu containerIn, int varToUpdate, int newValue) {}
 }

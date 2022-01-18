@@ -1,9 +1,9 @@
 package tk.sciwhiz12.basedefense.net;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.network.NetworkEvent;
 import tk.sciwhiz12.basedefense.container.KeysmithContainer;
 
 import java.util.function.Supplier;
@@ -15,20 +15,20 @@ public class TextFieldChangePacket {
         this.text = text != null ? text : "";
     }
 
-    public static void encode(TextFieldChangePacket pkt, PacketBuffer buf) {
+    public static void encode(TextFieldChangePacket pkt, FriendlyByteBuf buf) {
         buf.writeUtf(pkt.text);
     }
 
-    public static TextFieldChangePacket decode(PacketBuffer buf) {
+    public static TextFieldChangePacket decode(FriendlyByteBuf buf) {
         return new TextFieldChangePacket(buf.readUtf(64));
     }
 
-    public static boolean process(TextFieldChangePacket pkt, Supplier<Context> ctx) {
+    public static boolean process(TextFieldChangePacket pkt, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ctx.get().getDirection();
-            ServerPlayerEntity sender = ctx.get().getSender();
+            ServerPlayer sender = ctx.get().getSender();
             if (sender != null) {
-                Container cont = sender.containerMenu;
+                AbstractContainerMenu cont = sender.containerMenu;
                 if (cont instanceof KeysmithContainer) {
                     ((KeysmithContainer) cont).setOutputName(pkt.text);
                 }

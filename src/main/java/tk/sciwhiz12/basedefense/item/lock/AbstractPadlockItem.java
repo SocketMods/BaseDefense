@@ -1,22 +1,22 @@
 package tk.sciwhiz12.basedefense.item.lock;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.DoorBlock;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.properties.DoorHingeSide;
-import net.minecraft.state.properties.DoubleBlockHalf;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.state.properties.DoorHingeSide;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.Constants;
 import tk.sciwhiz12.basedefense.api.ITooltipInfo;
 import tk.sciwhiz12.basedefense.block.PadlockedDoorBlock;
 import tk.sciwhiz12.basedefense.item.IColorable;
@@ -33,7 +33,7 @@ public abstract class AbstractPadlockItem extends Item implements IColorable {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         stack.getCapability(LOCK).filter(ITooltipInfo.class::isInstance)
                 .ifPresent(lock -> ((ITooltipInfo) lock).addInformation(tooltip, flagIn.isAdvanced()));
         if (!flagIn.isAdvanced()) { return; }
@@ -41,16 +41,16 @@ public abstract class AbstractPadlockItem extends Item implements IColorable {
     }
 
     @Override
-    public abstract ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT nbt);
+    public abstract ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt);
 
     @Override
-    public ActionResultType onItemUseFirst(ItemStack stack, ItemUseContext context) {
-        final World world = context.getLevel();
+    public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
+        final Level world = context.getLevel();
         final BlockPos pos = context.getClickedPos();
         final BlockState state = world.getBlockState(pos);
         if (state.getBlock() instanceof DoorBlock && !state.getValue(DoorBlock.OPEN) && !state.getValue(DoorBlock.POWERED)) {
             final PadlockedDoorBlock block = PadlockedDoorBlock.getReplacement(state.getBlock());
-            if (block == null || !block.isValidLock(stack)) { return ActionResultType.PASS; }
+            if (block == null || !block.isValidLock(stack)) { return InteractionResult.PASS; }
             if (!world.isClientSide) {
                 final boolean isLower = state.getValue(PadlockedDoorBlock.HALF) == DoubleBlockHalf.LOWER;
                 final BlockPos offPos = isLower ? pos.above() : pos.below();
@@ -69,14 +69,14 @@ public abstract class AbstractPadlockItem extends Item implements IColorable {
                 stack.setCount(stack.getCount() - 1);
 
                 int flags =
-                        Constants.BlockFlags.BLOCK_UPDATE | Constants.BlockFlags.RERENDER_MAIN_THREAD | Constants.BlockFlags.UPDATE_NEIGHBORS | Constants.BlockFlags.NO_NEIGHBOR_DROPS;
+                        Block.UPDATE_CLIENTS | Block.UPDATE_IMMEDIATE | Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_SUPPRESS_DROPS;
                 world.setBlock(pos, newState, flags);
                 world.setBlock(offPos, newOffState, flags);
-                TileEntity te = world.getBlockEntity(isLower ? pos : offPos);
+                BlockEntity te = world.getBlockEntity(isLower ? pos : offPos);
                 if (te instanceof PadlockedDoorTile) { ((PadlockedDoorTile) te).setLockStack(copy); }
             }
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 }

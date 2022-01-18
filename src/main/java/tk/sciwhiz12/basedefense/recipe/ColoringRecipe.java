@@ -1,25 +1,25 @@
 package tk.sciwhiz12.basedefense.recipe;
 
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.SpecialRecipe;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.CustomRecipe;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import tk.sciwhiz12.basedefense.Reference.RecipeSerializers;
 import tk.sciwhiz12.basedefense.item.IColorable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ColoringRecipe extends SpecialRecipe {
+public class ColoringRecipe extends CustomRecipe {
     public ColoringRecipe(ResourceLocation idIn) {
         super(idIn);
     }
 
     @Override
-    public boolean matches(CraftingInventory inv, World worldIn) {
+    public boolean matches(CraftingContainer inv, Level worldIn) {
         final int width = inv.getWidth();
         final int height = inv.getHeight();
         int colors = 0;
@@ -46,7 +46,7 @@ public class ColoringRecipe extends SpecialRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingInventory inv) {
+    public ItemStack assemble(CraftingContainer inv) {
         final int width = inv.getWidth();
         final int height = inv.getHeight();
         List<DyeColor> colors = new ArrayList<>(4);
@@ -73,7 +73,7 @@ public class ColoringRecipe extends SpecialRecipe {
         ItemStack output = colorItem.copy();
         IColorable color = (IColorable) output.getItem();
 
-        for (int idx = 0; idx < colors.size(); idx++) { color.setColor(output, idx, colors.get(idx).getColorValue()); }
+        for (int idx = 0; idx < colors.size(); idx++) { color.setColor(output, idx, colors.get(idx).getTextColor()); }
         return output;
     }
 
@@ -83,7 +83,7 @@ public class ColoringRecipe extends SpecialRecipe {
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer() {
         return RecipeSerializers.COLORING;
     }
 }

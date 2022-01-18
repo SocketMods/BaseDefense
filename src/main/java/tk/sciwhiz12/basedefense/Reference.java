@@ -1,16 +1,17 @@
 package tk.sciwhiz12.basedefense;
 
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.SpecialRecipeSerializer;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
 import net.minecraftforge.registries.ObjectHolder;
 import tk.sciwhiz12.basedefense.api.capablities.ICodeHolder;
@@ -35,15 +36,15 @@ import tk.sciwhiz12.basedefense.item.lock.AdminLockCoreItem;
 import tk.sciwhiz12.basedefense.item.lock.AdminPadlockItem;
 import tk.sciwhiz12.basedefense.item.lock.CodedLockCoreItem;
 import tk.sciwhiz12.basedefense.item.lock.CodedPadlockItem;
+import tk.sciwhiz12.basedefense.recipe.CodedLockRecipe;
+import tk.sciwhiz12.basedefense.recipe.ColoringRecipe;
+import tk.sciwhiz12.basedefense.recipe.LockedItemIngredient;
+import tk.sciwhiz12.basedefense.recipe.LockedItemRecipe;
 import tk.sciwhiz12.basedefense.tileentity.LockableTile;
 import tk.sciwhiz12.basedefense.tileentity.LockedDoorTile;
 import tk.sciwhiz12.basedefense.tileentity.PadlockedDoorTile;
 import tk.sciwhiz12.basedefense.tileentity.PortableSafeTileEntity;
 import tk.sciwhiz12.basedefense.util.RecipeHelper;
-import tk.sciwhiz12.basedefense.recipe.CodedLockRecipe;
-import tk.sciwhiz12.basedefense.recipe.ColoringRecipe;
-import tk.sciwhiz12.basedefense.recipe.LockedItemIngredient;
-import tk.sciwhiz12.basedefense.recipe.LockedItemRecipe;
 import tk.sciwhiz12.basedefense.util.Util;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -88,20 +89,20 @@ public final class Reference {
     }
 
     public static final class Capabilities {
-        @CapabilityInject(ILock.class)
-        public static final Capability<ILock> LOCK = Util.Null();
-        @CapabilityInject(IKey.class)
-        public static final Capability<IKey> KEY = Util.Null();
-        @CapabilityInject(IContainsCode.class)
-        public static final Capability<IContainsCode> CONTAINS_CODE = Util.Null();
-        @CapabilityInject(ICodeHolder.class)
-        public static final Capability<ICodeHolder> CODE_HOLDER = Util.Null();
+        public static final Capability<ILock> LOCK = CapabilityManager.get(new CapabilityToken<>() {
+        });
+        public static final Capability<IKey> KEY = CapabilityManager.get(new CapabilityToken<>() {
+        });
+        public static final Capability<IContainsCode> CONTAINS_CODE = CapabilityManager.get(new CapabilityToken<>() {
+        });
+        public static final Capability<ICodeHolder> CODE_HOLDER = CapabilityManager.get(new CapabilityToken<>() {
+        });
 
         // Prevent instantiation
         private Capabilities() {}
     }
 
-    public static final ItemGroup ITEM_GROUP = new ItemGroup(MODID) {
+    public static final CreativeModeTab ITEM_GROUP = new CreativeModeTab(MODID) {
         @Override
         public ItemStack makeIcon() {
             return new ItemStack(Items.LOCK_CORE);
@@ -141,10 +142,10 @@ public final class Reference {
 
     @ObjectHolder(MODID)
     public static final class Containers {
-        public static final ContainerType<KeysmithContainer> KEYSMITH_TABLE = Util.Null();
-        public static final ContainerType<LocksmithContainer> LOCKSMITH_TABLE = Util.Null();
-        public static final ContainerType<KeyringContainer> KEYRING = Util.Null();
-        public static final ContainerType<PortableSafeContainer> PORTABLE_SAFE = Util.Null();
+        public static final MenuType<KeysmithContainer> KEYSMITH_TABLE = Util.Null();
+        public static final MenuType<LocksmithContainer> LOCKSMITH_TABLE = Util.Null();
+        public static final MenuType<KeyringContainer> KEYRING = Util.Null();
+        public static final MenuType<PortableSafeContainer> PORTABLE_SAFE = Util.Null();
 
         // Prevent instantiation
         private Containers() {}
@@ -154,7 +155,7 @@ public final class Reference {
     public static final class RecipeSerializers {
         public static final RecipeHelper.ShapedSerializer<LockedItemRecipe> LOCKED_ITEM = Util.Null();
         public static final RecipeHelper.ShapedSerializer<CodedLockRecipe> CODED_LOCK = Util.Null();
-        public static final SpecialRecipeSerializer<ColoringRecipe> COLORING = Util.Null();
+        public static final SimpleRecipeSerializer<ColoringRecipe> COLORING = Util.Null();
 
         // Prevent instantiation
         private RecipeSerializers() {}
@@ -179,10 +180,10 @@ public final class Reference {
 
     @ObjectHolder(MODID)
     public static final class TileEntities {
-        public static final TileEntityType<LockableTile> LOCKABLE_TILE = Util.Null();
-        public static final TileEntityType<PadlockedDoorTile> PADLOCKED_DOOR = Util.Null();
-        public static final TileEntityType<LockedDoorTile> LOCKED_DOOR = Util.Null();
-        public static final TileEntityType<PortableSafeTileEntity> PORTABLE_SAFE = Util.Null();
+        public static final BlockEntityType<LockableTile> LOCKABLE_TILE = Util.Null();
+        public static final BlockEntityType<PadlockedDoorTile> PADLOCKED_DOOR = Util.Null();
+        public static final BlockEntityType<LockedDoorTile> LOCKED_DOOR = Util.Null();
+        public static final BlockEntityType<PortableSafeTileEntity> PORTABLE_SAFE = Util.Null();
 
         // Prevent instantiation
         private TileEntities() {}

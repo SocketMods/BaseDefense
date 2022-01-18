@@ -1,12 +1,13 @@
 package tk.sciwhiz12.basedefense;
 
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.item.IItemPropertyGetter;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.color.block.BlockColor;
+import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.client.renderer.item.ItemPropertyFunction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.resources.ResourceLocation;
 import tk.sciwhiz12.basedefense.block.LockedDoorBlock;
 import tk.sciwhiz12.basedefense.item.IColorable;
 import tk.sciwhiz12.basedefense.tileentity.LockedDoorTile;
@@ -24,16 +25,16 @@ import static tk.sciwhiz12.basedefense.Reference.modLoc;
  */
 public final class ClientReference {
     public static final class Colors {
-        public static final IItemColor ITEM_COLOR = (stack, tintIndex) -> {
+        public static final ItemColor ITEM_COLOR = (stack, tintIndex) -> {
             if (stack.getItem() instanceof IColorable && tintIndex >= 2) {
                 return ((IColorable) stack.getItem()).getColor(stack, tintIndex - 2);
             }
             return -1;
         };
 
-        public static final IBlockColor LOCKED_DOOR_COLOR = (state, world, pos, tintIndex) -> {
+        public static final BlockColor LOCKED_DOOR_COLOR = (state, world, pos, tintIndex) -> {
             if (world != null && pos != null && state.getBlock() instanceof LockedDoorBlock) {
-                TileEntity tile = world.getBlockEntity(pos);
+                BlockEntity tile = world.getBlockEntity(pos);
                 if (tile instanceof LockedDoorTile && ((LockedDoorTile) tile).hasColors()) {
                     int[] colors = ((LockedDoorTile) tile).getColors();
                     // offset by 1 since index 0 is reserved for particle color
@@ -47,11 +48,19 @@ public final class ClientReference {
         private Colors() {}
     }
 
+    public static final class ModelLayers {
+        public static final ModelLayerLocation PORTABLE_SAFE =
+            new ModelLayerLocation(Reference.Blocks.PORTABLE_SAFE.getRegistryName(), "portable_safe");
+
+        // Prevent instantiation
+        private ModelLayers() {}
+    }
+
     public static final class PropertyOverrides {
         public static final ResourceLocation COLORS = new ResourceLocation("colors");
 
-        public static final IItemPropertyGetter COLORS_GETTER = (stack, world, livingEntity) -> {
-            CompoundNBT tag = stack.getTagElement("display");
+        public static final ItemPropertyFunction COLORS_GETTER = (stack, world, livingEntity, seed) -> {
+            CompoundTag tag = stack.getTagElement("display");
             if (tag != null && tag.contains("colors")) { return (float) tag.getIntArray("colors").length; }
             return 0.0F;
         };
@@ -63,7 +72,7 @@ public final class ClientReference {
     public static final class Textures {
         static final List<ResourceLocation> SPRITE_LIST = new ArrayList<>();
 
-        public static final ResourceLocation ATLAS_BLOCKS_TEXTURE = PlayerContainer.BLOCK_ATLAS;
+        public static final ResourceLocation ATLAS_BLOCKS_TEXTURE = InventoryMenu.BLOCK_ATLAS;
 
         public static final ResourceLocation SLOT_KEY = addSprite("item/slot_key");
         public static final ResourceLocation SLOT_BLANK_KEY = addSprite("item/slot_blank_key");

@@ -1,9 +1,9 @@
 package tk.sciwhiz12.basedefense.util;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import tk.sciwhiz12.basedefense.api.capablities.IKey;
@@ -36,13 +36,13 @@ public final class UnlockHelper {
     }
 
     public static boolean checkUnlock(final ICapabilityProvider keyProv, final ICapabilityProvider lockProv,
-            final @Nullable World world, final @Nullable BlockPos pos, final @Nullable PlayerEntity player,
+            final @Nullable Level world, final @Nullable BlockPos pos, final @Nullable Player player,
             final boolean onUnlock) {
         return checkUnlock(keyProv, lockProv, Util.getOrDummy(world, pos), player, onUnlock);
     }
 
     public static boolean checkUnlock(final ICapabilityProvider keyProv, final ICapabilityProvider lockProv,
-            final IWorldPosCallable worldPos, final @Nullable PlayerEntity player, final boolean onUnlock) {
+            final ContainerLevelAccess worldPos, final @Nullable Player player, final boolean onUnlock) {
         checkNotNull(keyProv);
         checkNotNull(lockProv);
         checkNotNull(worldPos);
@@ -59,13 +59,13 @@ public final class UnlockHelper {
     }
 
     public static boolean checkRemove(final ICapabilityProvider keyProv, final ICapabilityProvider lockProv,
-            final @Nullable World world, final @Nullable BlockPos pos, final @Nullable PlayerEntity player,
+            final @Nullable Level world, final @Nullable BlockPos pos, final @Nullable Player player,
             final boolean onUnlock) {
         return checkRemove(keyProv, lockProv, Util.getOrDummy(world, pos), player, onUnlock);
     }
 
     public static boolean checkRemove(final ICapabilityProvider keyProv, final ICapabilityProvider lockProv,
-            final IWorldPosCallable worldPos, final @Nullable PlayerEntity player, final boolean onUnlock) {
+            final ContainerLevelAccess worldPos, final @Nullable Player player, final boolean onUnlock) {
         checkNotNull(keyProv);
         checkNotNull(lockProv);
         checkNotNull(worldPos);

@@ -7,18 +7,19 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.ICriterionInstance;
-import net.minecraft.advancements.IRequirementsStrategy;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
-import net.minecraft.data.IFinishedRecipe;
-import net.minecraft.item.Item;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.advancements.RequirementsStrategy;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
@@ -31,11 +32,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 
 /**
- * Copy of {@link net.minecraft.data.ShapedRecipeBuilder} that allows a custom
- * {@link IRecipeSerializer<ShapedRecipe>}.
+ * Copy of {@link ShapedRecipeBuilder} that allows a custom
+ * {@link RecipeSerializer<ShapedRecipe>}.
  */
 public class CustomShapedRecipeBuilder {
-    private final IRecipeSerializer<? extends ShapedRecipe> serializer;
+    private final RecipeSerializer<? extends ShapedRecipe> serializer;
     private final Item result;
     private final int count;
     private final List<String> pattern = Lists.newArrayList();
@@ -43,7 +44,7 @@ public class CustomShapedRecipeBuilder {
     private final Advancement.Builder advancementBuilder = Advancement.Builder.advancement();
     private String group;
 
-    public CustomShapedRecipeBuilder(IRecipeSerializer<? extends ShapedRecipe> serializerIn, IItemProvider resultIn,
+    public CustomShapedRecipeBuilder(RecipeSerializer<? extends ShapedRecipe> serializerIn, ItemLike resultIn,
             int countIn) {
         this.serializer = serializerIn;
         this.result = resultIn.asItem();
@@ -53,30 +54,30 @@ public class CustomShapedRecipeBuilder {
     /**
      * Creates a new builder for a shaped recipe.
      */
-    public static CustomShapedRecipeBuilder shaped(IRecipeSerializer<? extends ShapedRecipe> serializerIn,
-                                                   IItemProvider resultIn) {
+    public static CustomShapedRecipeBuilder shaped(RecipeSerializer<? extends ShapedRecipe> serializerIn,
+                                                   ItemLike resultIn) {
         return shaped(serializerIn, resultIn, 1);
     }
 
     /**
      * Creates a new builder for a shaped recipe.
      */
-    public static CustomShapedRecipeBuilder shaped(IRecipeSerializer<? extends ShapedRecipe> serializerIn,
-                                                   IItemProvider resultIn, int countIn) {
+    public static CustomShapedRecipeBuilder shaped(RecipeSerializer<? extends ShapedRecipe> serializerIn,
+                                                   ItemLike resultIn, int countIn) {
         return new CustomShapedRecipeBuilder(serializerIn, resultIn, countIn);
     }
 
     /**
      * Adds a key to the recipe pattern.
      */
-    public CustomShapedRecipeBuilder define(Character symbol, ITag<Item> tagIn) {
+    public CustomShapedRecipeBuilder define(Character symbol, Tag<Item> tagIn) {
         return this.define(symbol, Ingredient.of(tagIn));
     }
 
     /**
      * Adds a key to the recipe pattern.
      */
-    public CustomShapedRecipeBuilder define(Character symbol, IItemProvider itemIn) {
+    public CustomShapedRecipeBuilder define(Character symbol, ItemLike itemIn) {
         return this.define(symbol, Ingredient.of(itemIn));
     }
 
@@ -103,7 +104,7 @@ public class CustomShapedRecipeBuilder {
     /**
      * Adds a criterion needed to unlock the recipe.
      */
-    public CustomShapedRecipeBuilder unlockedBy(String name, ICriterionInstance criterionIn) {
+    public CustomShapedRecipeBuilder unlockedBy(String name, CriterionTriggerInstance criterionIn) {
         this.advancementBuilder.addCriterion(name, criterionIn);
         return this;
     }
@@ -114,17 +115,17 @@ public class CustomShapedRecipeBuilder {
     }
 
     /**
-     * Builds this recipe into an {@link IFinishedRecipe}.
+     * Builds this recipe into an {@link FinishedRecipe}.
      */
-    public void save(Consumer<IFinishedRecipe> consumerIn) {
+    public void save(Consumer<FinishedRecipe> consumerIn) {
         this.save(consumerIn, ForgeRegistries.ITEMS.getKey(this.result));
     }
 
     /**
-     * Builds this recipe into an {@link IFinishedRecipe}. Use
+     * Builds this recipe into an {@link FinishedRecipe}. Use
      * {@link #save(Consumer)} if save is the same as the ID for the result.
      */
-    public void save(Consumer<IFinishedRecipe> consumerIn, String save) {
+    public void save(Consumer<FinishedRecipe> consumerIn, String save) {
         ResourceLocation resultLoc = ForgeRegistries.ITEMS.getKey(this.result);
         checkState(!new ResourceLocation(save).equals(resultLoc), "Shaped recipe %s should remove its 'save' argument",
                 save);
@@ -132,13 +133,13 @@ public class CustomShapedRecipeBuilder {
     }
 
     /**
-     * Builds this recipe into an {@link IFinishedRecipe}.
+     * Builds this recipe into an {@link FinishedRecipe}.
      */
-    public void save(Consumer<IFinishedRecipe> consumerIn, ResourceLocation id) {
+    public void save(Consumer<FinishedRecipe> consumerIn, ResourceLocation id) {
         this.ensureValid(id);
         this.advancementBuilder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe",
-                new RecipeUnlockedTrigger.Instance(EntityPredicate.AndPredicate.ANY, id))
-                .rewards(AdvancementRewards.Builder.recipe(id)).requirements(IRequirementsStrategy.OR);
+                new RecipeUnlockedTrigger.TriggerInstance(EntityPredicate.Composite.ANY, id))
+                .rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
         consumerIn.accept(new Result(id, serializer, result, count, group == null ? "" : group, pattern, key,
                 advancementBuilder,
                 new ResourceLocation(id.getNamespace(), "recipes/" + result.getItemCategory().getRecipeFolderName() + "/" + id.getPath())));
@@ -166,9 +167,9 @@ public class CustomShapedRecipeBuilder {
         checkState(!advancementBuilder.getCriteria().isEmpty(), "No way of obtaining recipe %s", id);
     }
 
-    public static class Result implements IFinishedRecipe {
+    public static class Result implements FinishedRecipe {
         private final ResourceLocation id;
-        private final IRecipeSerializer<? extends ShapedRecipe> serializer;
+        private final RecipeSerializer<? extends ShapedRecipe> serializer;
         private final Item result;
         private final int count;
         private final String group;
@@ -177,7 +178,7 @@ public class CustomShapedRecipeBuilder {
         private final Advancement.Builder advancementBuilder;
         private final ResourceLocation advancementId;
 
-        public Result(ResourceLocation idIn, IRecipeSerializer<? extends ShapedRecipe> serializerIn, Item resultIn,
+        public Result(ResourceLocation idIn, RecipeSerializer<? extends ShapedRecipe> serializerIn, Item resultIn,
                 int countIn, String groupIn, List<String> patternIn, Map<Character, Ingredient> keyIn,
                 Advancement.Builder advancementBuilderIn, ResourceLocation advancementIdIn) {
             this.id = idIn;
@@ -215,7 +216,7 @@ public class CustomShapedRecipeBuilder {
         }
 
         @Override
-        public IRecipeSerializer<?> getType() {
+        public RecipeSerializer<?> getType() {
             return serializer;
         }
 

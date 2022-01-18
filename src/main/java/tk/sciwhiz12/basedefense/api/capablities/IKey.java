@@ -1,7 +1,7 @@
 package tk.sciwhiz12.basedefense.api.capablities;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 
 import javax.annotation.Nullable;
 
@@ -27,7 +27,7 @@ public interface IKey {
      * @return {@code true} if the given {@link ILock} is unlockable, otherwise
      * {@code false}
      */
-    boolean canUnlock(ILock lock, IWorldPosCallable worldPos, @Nullable PlayerEntity player);
+    boolean canUnlock(ILock lock, ContainerLevelAccess worldPos, @Nullable Player player);
 
     /**
      * Called when the unlock action is performed successfully.
@@ -37,5 +37,5 @@ public interface IKey {
      * @param player   The player performing the unlock, or {@code null} if not
      *                 applicable
      */
-    void onUnlock(ILock lock, IWorldPosCallable worldPos, @Nullable PlayerEntity player);
+    void onUnlock(ILock lock, ContainerLevelAccess worldPos, @Nullable Player player);
 }

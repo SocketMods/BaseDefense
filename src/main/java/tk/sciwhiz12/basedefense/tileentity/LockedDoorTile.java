@@ -1,6 +1,8 @@
 package tk.sciwhiz12.basedefense.tileentity;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -10,8 +12,8 @@ import tk.sciwhiz12.basedefense.item.IColorable;
 public class LockedDoorTile extends LockableTile {
     public static final ModelProperty<Integer> COLOR_PROPERTY = new ModelProperty<>();
 
-    public LockedDoorTile() {
-        super(TileEntities.LOCKED_DOOR);
+    public LockedDoorTile(BlockPos pos, BlockState state) {
+        super(TileEntities.LOCKED_DOOR, pos, state);
     }
 
     public boolean hasColors() {

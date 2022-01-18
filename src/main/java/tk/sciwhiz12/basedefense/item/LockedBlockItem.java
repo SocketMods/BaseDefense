@@ -1,15 +1,15 @@
 package tk.sciwhiz12.basedefense.item;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import tk.sciwhiz12.basedefense.api.ITooltipInfo;
 import tk.sciwhiz12.basedefense.Reference;
 
@@ -30,25 +30,25 @@ public class LockedBlockItem extends BlockItem implements IContainsLockItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if (hasLockStack(stack)) {
-            tooltip.add(new TranslationTextComponent("tooltip.basedefense.locked_block_item.has_lock")
-                    .withStyle(TextFormatting.GRAY));
+            tooltip.add(new TranslatableComponent("tooltip.basedefense.locked_block_item.has_lock")
+                    .withStyle(ChatFormatting.GRAY));
             ItemStack lockStack = getLockStack(stack);
             lockStack.getCapability(Reference.Capabilities.LOCK).filter(ITooltipInfo.class::isInstance)
                     .ifPresent(lock -> ((ITooltipInfo) lock).addInformation(tooltip, flagIn.isAdvanced()));
         } else {
-            tooltip.add(new TranslationTextComponent("tooltip.basedefense.locked_block_item.no_lock")
-                    .withStyle(TextFormatting.GRAY));
+            tooltip.add(new TranslatableComponent("tooltip.basedefense.locked_block_item.no_lock")
+                    .withStyle(ChatFormatting.GRAY));
         }
     }
 
     @Override
-    public ITextComponent getName(ItemStack stack) {
+    public Component getName(ItemStack stack) {
         ItemStack lock = getLockStack(stack);
         if (hasLockStack(stack) && lock.hasCustomHoverName()) {
-            return lock.getHoverName().copy().withStyle(TextFormatting.ITALIC);
+            return lock.getHoverName().copy().withStyle(ChatFormatting.ITALIC);
         }
         return super.getName(stack);
     }
@@ -56,12 +56,12 @@ public class LockedBlockItem extends BlockItem implements IContainsLockItem {
     public void setLockStack(ItemStack stack, ItemStack lockStack) {
         checkNotNull(stack);
         checkNotNull(lockStack);
-        stack.addTagElement(TAG_LOCK_ITEM, lockStack.save(new CompoundNBT()));
+        stack.addTagElement(TAG_LOCK_ITEM, lockStack.save(new CompoundTag()));
     }
 
     public ItemStack getLockStack(ItemStack stack) {
         checkNotNull(stack);
-        CompoundNBT nbt = stack.getTagElement(TAG_LOCK_ITEM);
+        CompoundTag nbt = stack.getTagElement(TAG_LOCK_ITEM);
         if (nbt != null) { return ItemStack.of(nbt); }
         return ItemStack.EMPTY;
     }

@@ -1,7 +1,7 @@
 package tk.sciwhiz12.basedefense.util;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Helper methods for {@link net.minecraft.inventory.container.Container}s.
+ * Helper methods for {@link net.minecraft.world.Container}s.
  *
  * @author SciWhiz12
  */
@@ -41,7 +41,7 @@ public final class ContainerHelper {
         return index;
     }
 
-    public static void layoutPlayerInventorySlots(Consumer<Slot> adder, PlayerInventory playerInv, int leftCol, int topRow) {
+    public static void layoutPlayerInventorySlots(Consumer<Slot> adder, Inventory playerInv, int leftCol, int topRow) {
         checkNotNull(adder);
         checkNotNull(playerInv);
         IItemHandler inv = new InvWrapper(playerInv);

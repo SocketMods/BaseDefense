@@ -1,5 +1,6 @@
 package tk.sciwhiz12.basedefense.capabilities;
 
+import net.minecraft.world.item.ItemStack;
 import tk.sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import tk.sciwhiz12.basedefense.api.capablities.ILock;
 
@@ -11,7 +12,7 @@ import static tk.sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
 
 /**
  * An {@link ILock ILock} and {@link ICodeHolder}
- * that simply references the stored {@link net.minecraft.item.ItemStack ItemStack's} capabilities, if present.
+ * that simply references the stored {@link ItemStack}'s capabilities, if present.
  *
  * @author SciWhiz12
  */

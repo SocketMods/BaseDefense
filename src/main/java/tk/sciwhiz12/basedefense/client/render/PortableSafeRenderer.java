@@ -1,16 +1,17 @@
 package tk.sciwhiz12.basedefense.client.render;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ChestBlock;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import com.mojang.math.Vector3f;
+import tk.sciwhiz12.basedefense.ClientReference;
 import tk.sciwhiz12.basedefense.ClientReference.Textures;
 import tk.sciwhiz12.basedefense.Reference.Blocks;
 import tk.sciwhiz12.basedefense.block.PortableSafeBlock;
@@ -18,15 +19,15 @@ import tk.sciwhiz12.basedefense.client.model.PortableSafeModel;
 import tk.sciwhiz12.basedefense.item.IColorable;
 import tk.sciwhiz12.basedefense.tileentity.PortableSafeTileEntity;
 
-public class PortableSafeRenderer extends TileEntityRenderer<PortableSafeTileEntity> {
-    private final PortableSafeModel model = new PortableSafeModel();
+public class PortableSafeRenderer implements BlockEntityRenderer<PortableSafeTileEntity> {
+    private final PortableSafeModel model;
 
-    public PortableSafeRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
+    public PortableSafeRenderer(BlockEntityRendererProvider.Context context) {
+        this.model = new PortableSafeModel(context.bakeLayer(ClientReference.ModelLayers.PORTABLE_SAFE));
     }
 
-    public void render(PortableSafeTileEntity tileEntityIn, float partialTicks, MatrixStack matrixStackIn,
-            IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
+    public void render(PortableSafeTileEntity tileEntityIn, float partialTicks, PoseStack matrixStackIn,
+            MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         final BlockState blockstate = tileEntityIn.getLevel() != null ?
                 tileEntityIn.getBlockState() :
                 Blocks.PORTABLE_SAFE.defaultBlockState().setValue(ChestBlock.FACING, Direction.SOUTH);
@@ -35,7 +36,7 @@ public class PortableSafeRenderer extends TileEntityRenderer<PortableSafeTileEnt
             matrixStackIn.translate(0.5D, 0.5D, 0.5D);
             matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-blockstate.getValue(ChestBlock.FACING).toYRot()));
             matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(180));
-            IVertexBuilder vertex = bufferIn.getBuffer(RenderType.entityCutout(Textures.PORTABLE_SAFE_MODEL));
+            VertexConsumer vertex = bufferIn.getBuffer(RenderType.entityCutout(Textures.PORTABLE_SAFE_MODEL));
             this.setModelColors(tileEntityIn);
             model.setDoorAngle((float) -(tileEntityIn.getDoorAngle(partialTicks) * (Math.PI / 2F)));
             model.renderToBuffer(matrixStackIn, vertex, combinedLightIn, combinedOverlayIn, 1F, 1F, 1F, 1F);

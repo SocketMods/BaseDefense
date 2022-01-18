@@ -1,11 +1,11 @@
 package tk.sciwhiz12.basedefense.datagen;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.DoorBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.state.properties.DoorHingeSide;
-import net.minecraft.state.properties.DoubleBlockHalf;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.block.state.properties.DoorHingeSide;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.generators.*;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import tk.sciwhiz12.basedefense.Reference.Blocks;

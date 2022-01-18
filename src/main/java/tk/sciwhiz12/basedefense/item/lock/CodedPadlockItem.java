@@ -1,10 +1,10 @@
 package tk.sciwhiz12.basedefense.item.lock;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.ItemHandlerHelper;
 import tk.sciwhiz12.basedefense.api.capablities.IKey;
@@ -22,12 +22,12 @@ public class CodedPadlockItem extends AbstractPadlockItem {
     }
 
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT nbt) {
+    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt) {
         return new SerializableCapabilityProvider<>(() -> new CodedLock() {
             @Override
-            public void onRemove(IKey key, IWorldPosCallable worldPos, PlayerEntity player) {
+            public void onRemove(IKey key, ContainerLevelAccess worldPos, Player player) {
                 worldPos.execute((world, pos) -> {
-                    TileEntity te = world.getBlockEntity(pos);
+                    BlockEntity te = world.getBlockEntity(pos);
                     if (te instanceof LockableTile) {
                         LockableTile lockTile = (LockableTile) te;
                         ItemHandlerHelper.giveItemToPlayer(player, lockTile.getLockStack());
@@ -39,12 +39,12 @@ public class CodedPadlockItem extends AbstractPadlockItem {
     }
 
     @Override
-    public CompoundNBT getShareTag(ItemStack stack) {
-        return ItemHelper.getItemShareTag(stack, CODE_HOLDER);
+    public CompoundTag getShareTag(ItemStack stack) {
+        return ItemHelper.getItemShareTag(stack, ItemHelper.CapabilitySerializer.CODED_LOCK);
     }
 
     @Override
-    public void readShareTag(ItemStack stack, CompoundNBT nbt) {
-        ItemHelper.readItemShareTag(stack, nbt, CODE_HOLDER);
+    public void readShareTag(ItemStack stack, CompoundTag nbt) {
+        ItemHelper.readItemShareTag(stack, nbt, ItemHelper.CapabilitySerializer.CODED_LOCK);
     }
 }

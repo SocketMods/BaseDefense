@@ -2,11 +2,11 @@ package tk.sciwhiz12.basedefense.recipe;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.JSONUtils;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.util.GsonHelper;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
 import tk.sciwhiz12.basedefense.Reference.IngredientSerializers;
@@ -22,12 +22,12 @@ public class LockedItemIngredient extends Ingredient {
     private final boolean requiresCode;
 
     protected LockedItemIngredient(ItemStack stack, boolean requiresCode) {
-        super(Stream.of(new Ingredient.SingleItemList(stack)));
+        super(Stream.of(new Ingredient.ItemValue(stack)));
         this.stack = stack;
         this.requiresCode = requiresCode;
     }
 
-    public LockedItemIngredient(IItemProvider item, boolean requiresCode) {
+    public LockedItemIngredient(ItemLike item, boolean requiresCode) {
         this(new ItemStack(item), requiresCode);
     }
 
@@ -61,18 +61,18 @@ public class LockedItemIngredient extends Ingredient {
 
     public static class Serializer implements IIngredientSerializer<LockedItemIngredient> {
         @Override
-        public LockedItemIngredient parse(PacketBuffer buffer) {
+        public LockedItemIngredient parse(FriendlyByteBuf buffer) {
             return new LockedItemIngredient(buffer.readItem(), buffer.readBoolean());
         }
 
         @Override
         public LockedItemIngredient parse(JsonObject json) {
             return new LockedItemIngredient(CraftingHelper.getItemStack(json, true),
-                    JSONUtils.getAsBoolean(json, "has_codes"));
+                    GsonHelper.getAsBoolean(json, "has_codes"));
         }
 
         @Override
-        public void write(PacketBuffer buffer, LockedItemIngredient ingredient) {
+        public void write(FriendlyByteBuf buffer, LockedItemIngredient ingredient) {
             buffer.writeItem(ingredient.stack);
             buffer.writeBoolean(ingredient.requiresCode);
         }

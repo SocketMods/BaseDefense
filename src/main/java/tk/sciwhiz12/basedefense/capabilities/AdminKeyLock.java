@@ -1,12 +1,12 @@
 package tk.sciwhiz12.basedefense.capabilities;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 import tk.sciwhiz12.basedefense.api.ITooltipInfo;
 import tk.sciwhiz12.basedefense.api.capablities.IKey;
 import tk.sciwhiz12.basedefense.api.capablities.ILock;
@@ -25,38 +25,38 @@ import java.util.List;
 public class AdminKeyLock implements IKey, ILock, ITooltipInfo {
 
     @Override
-    public boolean canUnlock(ILock lock, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
+    public boolean canUnlock(ILock lock, ContainerLevelAccess worldPos, @Nullable Player player) {
         return true;
     }
 
     @Override
-    public boolean canUnlock(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
+    public boolean canUnlock(IKey key, ContainerLevelAccess worldPos, @Nullable Player player) {
         return key instanceof AdminKeyLock;
     }
 
     @Override
-    public boolean canRemove(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
+    public boolean canRemove(IKey key, ContainerLevelAccess worldPos, @Nullable Player player) {
         return key instanceof AdminKeyLock;
     }
 
     @Override
-    public void onUnlock(ILock lock, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {}
+    public void onUnlock(ILock lock, ContainerLevelAccess worldPos, @Nullable Player player) {}
 
     @Override
-    public void onUnlock(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {}
+    public void onUnlock(IKey key, ContainerLevelAccess worldPos, @Nullable Player player) {}
 
     @Override
-    public void onRemove(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
+    public void onRemove(IKey key, ContainerLevelAccess worldPos, @Nullable Player player) {
         if (worldPos != null) {
             worldPos.execute((world, pos) -> {
-                world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F,
+                world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1.0F,
                         world.random.nextFloat() * 0.1F + 0.9F);
             });
         }
     }
 
     @Override
-    public void addInformation(List<ITextComponent> information, boolean verbose) {
-        information.add(new TranslationTextComponent("tooltip.basedefense.admin_only").withStyle(TextFormatting.DARK_RED));
+    public void addInformation(List<Component> information, boolean verbose) {
+        information.add(new TranslatableComponent("tooltip.basedefense.admin_only").withStyle(ChatFormatting.DARK_RED));
     }
 }

@@ -1,9 +1,9 @@
 package tk.sciwhiz12.basedefense.capabilities;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraftforge.common.util.INBTSerializable;
 import tk.sciwhiz12.basedefense.api.capablities.IKey;
 import tk.sciwhiz12.basedefense.api.capablities.ILock;
@@ -18,7 +18,7 @@ import static tk.sciwhiz12.basedefense.Reference.Capabilities.LOCK;
  *
  * @author SciWhiz12
  */
-public class ItemStackLock implements ILock, INBTSerializable<CompoundNBT> {
+public class ItemStackLock implements ILock, INBTSerializable<CompoundTag> {
     protected ItemStack lockStack = ItemStack.EMPTY;
 
     public void setStack(ItemStack stack) {
@@ -30,34 +30,34 @@ public class ItemStackLock implements ILock, INBTSerializable<CompoundNBT> {
     }
 
     @Override
-    public boolean canRemove(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
+    public boolean canRemove(IKey key, ContainerLevelAccess worldPos, @Nullable Player player) {
         return !lockStack.isEmpty() && lockStack.getCapability(LOCK).map(lock -> lock.canRemove(key, worldPos, player))
                 .orElse(false);
     }
 
     @Override
-    public boolean canUnlock(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
+    public boolean canUnlock(IKey key, ContainerLevelAccess worldPos, @Nullable Player player) {
         return !lockStack.isEmpty() && lockStack.getCapability(LOCK).map(lock -> lock.canUnlock(key, worldPos, player))
                 .orElse(false);
     }
 
     @Override
-    public void onRemove(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
+    public void onRemove(IKey key, ContainerLevelAccess worldPos, @Nullable Player player) {
         if (!lockStack.isEmpty()) lockStack.getCapability(LOCK).ifPresent(lock -> lock.onRemove(key, worldPos, player));
     }
 
     @Override
-    public void onUnlock(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
+    public void onUnlock(IKey key, ContainerLevelAccess worldPos, @Nullable Player player) {
         if (!lockStack.isEmpty()) lockStack.getCapability(LOCK).ifPresent(lock -> lock.onUnlock(key, worldPos, player));
     }
 
     @Override
-    public CompoundNBT serializeNBT() {
-        return this.lockStack.save(new CompoundNBT());
+    public CompoundTag serializeNBT() {
+        return this.lockStack.save(new CompoundTag());
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         this.lockStack = ItemStack.of(nbt);
     }
 }

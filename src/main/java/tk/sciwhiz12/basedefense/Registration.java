@@ -1,40 +1,34 @@
 package tk.sciwhiz12.basedefense;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.SpecialRecipeSerializer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.common.extensions.IForgeContainerType;
+import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import tk.sciwhiz12.basedefense.api.capablities.ICodeHolder;
 import tk.sciwhiz12.basedefense.api.capablities.IContainsCode;
 import tk.sciwhiz12.basedefense.api.capablities.IKey;
 import tk.sciwhiz12.basedefense.api.capablities.ILock;
-import tk.sciwhiz12.basedefense.block.*;
-import tk.sciwhiz12.basedefense.capabilities.CodeHolder;
-import tk.sciwhiz12.basedefense.capabilities.CodedKey;
-import tk.sciwhiz12.basedefense.capabilities.CodedLock;
-import tk.sciwhiz12.basedefense.capabilities.FlexibleStorage;
-import tk.sciwhiz12.basedefense.client.render.PortableSafeItemStackRenderer;
 import tk.sciwhiz12.basedefense.container.KeyringContainer;
 import tk.sciwhiz12.basedefense.container.KeysmithContainer;
 import tk.sciwhiz12.basedefense.container.LocksmithContainer;
 import tk.sciwhiz12.basedefense.container.PortableSafeContainer;
 import tk.sciwhiz12.basedefense.item.BrokenLockPiecesItem;
 import tk.sciwhiz12.basedefense.item.LockedBlockItem;
+import tk.sciwhiz12.basedefense.item.PortableSafeBlockItem;
 import tk.sciwhiz12.basedefense.item.key.AdminKeyItem;
 import tk.sciwhiz12.basedefense.item.key.KeyItem;
 import tk.sciwhiz12.basedefense.item.key.KeyringItem;
@@ -103,23 +97,23 @@ public final class Registration {
     }
 
     @SubscribeEvent
-    static void registerCapabilities(FMLCommonSetupEvent event) {
+    static void registerCapabilities(RegisterCapabilitiesEvent event) {
         BaseDefense.LOG.debug(BaseDefense.COMMON, "Registering capabilities");
-        CapabilityManager.INSTANCE.register(ILock.class, new FlexibleStorage<>(), CodedLock::new);
-        CapabilityManager.INSTANCE.register(IKey.class, new FlexibleStorage<>(), CodedKey::new);
-        CapabilityManager.INSTANCE.register(IContainsCode.class, new FlexibleStorage<>(), CodeHolder::new);
-        CapabilityManager.INSTANCE.register(ICodeHolder.class, new FlexibleStorage<>(), CodeHolder::new);
+        event.register(ILock.class);
+        event.register(IKey.class);
+        event.register(IContainsCode.class);
+        event.register(ICodeHolder.class);
     }
 
     @SubscribeEvent
-    static void registerContainers(RegistryEvent.Register<ContainerType<?>> event) {
+    static void registerContainers(RegistryEvent.Register<MenuType<?>> event) {
         BaseDefense.LOG.debug(BaseDefense.COMMON, "Registering containers");
-        final IForgeRegistry<ContainerType<?>> reg = event.getRegistry();
+        final IForgeRegistry<MenuType<?>> reg = event.getRegistry();
 
-        reg.register(new ContainerType<>(KeysmithContainer::new).setRegistryName("keysmith_table"));
-        reg.register(new ContainerType<>(LocksmithContainer::new).setRegistryName("locksmith_table"));
-        reg.register(IForgeContainerType.create(KeyringContainer::new).setRegistryName("keyring"));
-        reg.register(new ContainerType<>(PortableSafeContainer::new).setRegistryName("portable_safe"));
+        reg.register(new MenuType<>(KeysmithContainer::new).setRegistryName("keysmith_table"));
+        reg.register(new MenuType<>(LocksmithContainer::new).setRegistryName("locksmith_table"));
+        reg.register(IForgeMenuType.create(KeyringContainer::new).setRegistryName("keyring"));
+        reg.register(new MenuType<>(PortableSafeContainer::new).setRegistryName("portable_safe"));
     }
 
     @SubscribeEvent
@@ -152,18 +146,18 @@ public final class Registration {
         reg.register(new LockedBlockItem(Reference.Blocks.LOCKED_WARPED_DOOR).setRegistryName("locked_warped_door"));
         reg.register(new LockedBlockItem(Reference.Blocks.LOCKED_IRON_DOOR).setRegistryName("locked_iron_door"));
 
-        reg.register(new LockedBlockItem(Reference.Blocks.PORTABLE_SAFE, new Item.Properties().tab(Reference.ITEM_GROUP).durability(0)
-                .setISTER(() -> PortableSafeItemStackRenderer::create)).setRegistryName("portable_safe"));
+        reg.register(new PortableSafeBlockItem(Reference.Blocks.PORTABLE_SAFE, new Item.Properties().tab(Reference.ITEM_GROUP).durability(0))
+                .setRegistryName("portable_safe"));
     }
 
     @SubscribeEvent
-    static void registerRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> event) {
+    static void registerRecipeSerializers(RegistryEvent.Register<RecipeSerializer<?>> event) {
         BaseDefense.LOG.debug(BaseDefense.COMMON, "Registering recipe and ingredient serializers");
-        final IForgeRegistry<IRecipeSerializer<?>> reg = event.getRegistry();
+        final IForgeRegistry<RecipeSerializer<?>> reg = event.getRegistry();
 
         reg.register(new RecipeHelper.ShapedSerializer<>(LockedItemRecipe::new).setRegistryName("locked_item"));
         reg.register(new RecipeHelper.ShapedSerializer<>(CodedLockRecipe::new).setRegistryName("coded_lock"));
-        reg.register(new SpecialRecipeSerializer<>(ColoringRecipe::new).setRegistryName("coloring"));
+        reg.register(new SimpleRecipeSerializer<>(ColoringRecipe::new).setRegistryName("coloring"));
 
         Reference.IngredientSerializers.LOCKED_ITEM = CraftingHelper
                 .register(Reference.modLoc("locked_item"), new LockedItemIngredient.Serializer());
@@ -180,9 +174,9 @@ public final class Registration {
     }
 
     @SubscribeEvent
-    static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
+    static void registerTileEntities(RegistryEvent.Register<BlockEntityType<?>> event) {
         BaseDefense.LOG.debug(BaseDefense.COMMON, "Registering tile entities");
-        final IForgeRegistry<TileEntityType<?>> reg = event.getRegistry();
+        final IForgeRegistry<BlockEntityType<?>> reg = event.getRegistry();
 
         reg.register(makeType(LockableTile::new).setRegistryName("lockable_tile"));
         reg.register(makeType(PadlockedDoorTile::new, Reference.Blocks.PADLOCKED_IRON_DOOR, Reference.Blocks.PADLOCKED_OAK_DOOR, Reference.Blocks.PADLOCKED_BIRCH_DOOR,
@@ -195,7 +189,7 @@ public final class Registration {
         reg.register(makeType(PortableSafeTileEntity::new, Reference.Blocks.PORTABLE_SAFE).setRegistryName("portable_safe"));
     }
 
-    private static <T extends TileEntity> TileEntityType<T> makeType(Supplier<T> factory, Block... validBlocks) {
-        return TileEntityType.Builder.of(factory, validBlocks).build(Util.Null());
+    private static <T extends BlockEntity> BlockEntityType<T> makeType(BlockEntityType.BlockEntitySupplier<T> factory, Block... validBlocks) {
+        return BlockEntityType.Builder.of(factory, validBlocks).build(Util.Null());
     }
 }

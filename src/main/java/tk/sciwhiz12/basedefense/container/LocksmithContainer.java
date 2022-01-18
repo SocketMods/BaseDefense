@@ -2,16 +2,16 @@ package tk.sciwhiz12.basedefense.container;
 
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.CraftResultInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.IntReferenceHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.DataSlot;
 import net.minecraftforge.common.Tags;
 import tk.sciwhiz12.basedefense.ClientReference.Textures;
 import tk.sciwhiz12.basedefense.Reference;
@@ -24,33 +24,33 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static tk.sciwhiz12.basedefense.Reference.Capabilities.CODE_HOLDER;
 
-public class LocksmithContainer extends Container {
-    private final IInventory outputSlot = new CraftResultInventory() {
+public class LocksmithContainer extends AbstractContainerMenu {
+    private final Container outputSlot = new ResultContainer() {
         public void setChanged() {
             super.setChanged();
             LocksmithContainer.this.slotsChanged(this);
         }
     };
-    private final IInventory inputSlots = new Inventory(7) {
+    private final Container inputSlots = new SimpleContainer(7) {
         public void setChanged() {
             super.setChanged();
             LocksmithContainer.this.slotsChanged(this);
         }
     };
-    private final IInventory testingSlots = new Inventory(2) {
+    private final Container testingSlots = new SimpleContainer(2) {
         public void setChanged() {
             super.setChanged();
             LocksmithContainer.this.slotsChanged(this);
         }
     };
-    private final IWorldPosCallable worldPos;
-    public final IntReferenceHolder testingState = IntReferenceHolder.standalone();
+    private final ContainerLevelAccess worldPos;
+    public final DataSlot testingState = DataSlot.standalone();
 
-    public LocksmithContainer(int windowId, PlayerInventory playerInv) {
-        this(windowId, playerInv, IWorldPosCallable.NULL);
+    public LocksmithContainer(int windowId, Inventory playerInv) {
+        this(windowId, playerInv, ContainerLevelAccess.NULL);
     }
 
-    public LocksmithContainer(int windowId, PlayerInventory playerInv, IWorldPosCallable worldPos) {
+    public LocksmithContainer(int windowId, Inventory playerInv, ContainerLevelAccess worldPos) {
         super(Reference.Containers.LOCKSMITH_TABLE, windowId);
         this.worldPos = worldPos;
         this.addDataSlot(this.testingState);
@@ -82,9 +82,8 @@ public class LocksmithContainer extends Container {
                 return false;
             }
 
-            public ItemStack onTake(PlayerEntity player, ItemStack stack) {
+            public void onTake(Player player, ItemStack stack) {
                 LocksmithContainer.this.inputSlots.removeItem(0, 1);
-                return stack;
             }
         }.setBackground(Textures.ATLAS_BLOCKS_TEXTURE, Textures.SLOT_LOCK_CORE));
 
@@ -103,7 +102,7 @@ public class LocksmithContainer extends Container {
         ContainerHelper.layoutPlayerInventorySlots(this::addSlot, playerInv, 8, 84);
     }
 
-    public void slotsChanged(IInventory inv) {
+    public void slotsChanged(Container inv) {
         super.slotsChanged(inv);
         if (inv == this.inputSlots || inv == this.outputSlot) { this.updateOutputs(); }
         if (inv == this.testingSlots) { this.updateTestingState(); }
@@ -144,26 +143,26 @@ public class LocksmithContainer extends Container {
         ItemStack keyStack = this.testingSlots.getItem(0);
         ItemStack lockStack = this.testingSlots.getItem(1);
         if (!keyStack.isEmpty() && !lockStack.isEmpty()) {
-            if (UnlockHelper.checkUnlock(keyStack, lockStack, IWorldPosCallable.NULL, null, false)) { flag = 1; }
+            if (UnlockHelper.checkUnlock(keyStack, lockStack, ContainerLevelAccess.NULL, null, false)) { flag = 1; }
         }
         this.testingState.set(flag);
         this.broadcastChanges();
     }
 
     @Override
-    public boolean stillValid(PlayerEntity player) {
+    public boolean stillValid(Player player) {
         return stillValid(worldPos, player, Blocks.LOCKSMITH_TABLE);
     }
 
-    public void removed(PlayerEntity playerIn) {
+    public void removed(Player playerIn) {
         super.removed(playerIn);
         this.worldPos.execute((world, pos) -> {
-            this.clearContainer(playerIn, world, this.inputSlots);
-            this.clearContainer(playerIn, world, this.testingSlots);
+            this.clearContainer(playerIn, this.inputSlots);
+            this.clearContainer(playerIn, this.testingSlots);
         });
     }
 
-    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
+    public ItemStack quickMoveStack(Player playerIn, int index) {
         Slot slot = this.slots.get(index);
         if (slot != null && slot.hasItem()) {
             ItemStack slotStack = slot.getItem();

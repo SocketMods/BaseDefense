@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "basedefense:lock_core"
+            "items": [
+              "basedefense:lock_core"
+            ]
           }
         ]
       }

@@ -1,12 +1,12 @@
 package tk.sciwhiz12.basedefense.container;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
@@ -15,20 +15,20 @@ import tk.sciwhiz12.basedefense.Reference.Containers;
 import tk.sciwhiz12.basedefense.tileentity.PortableSafeTileEntity;
 import tk.sciwhiz12.basedefense.util.ContainerHelper;
 
-public class PortableSafeContainer extends Container {
+public class PortableSafeContainer extends AbstractContainerMenu {
     private final IItemHandler inventory;
-    private final IWorldPosCallable worldPos;
+    private final ContainerLevelAccess worldPos;
 
-    public PortableSafeContainer(int windowId, PlayerInventory playerInv) {
-        this(windowId, playerInv, IWorldPosCallable.NULL, new ItemStackHandler(18));
+    public PortableSafeContainer(int windowId, Inventory playerInv) {
+        this(windowId, playerInv, ContainerLevelAccess.NULL, new ItemStackHandler(18));
     }
 
-    public PortableSafeContainer(int windowId, PlayerInventory playerInv, IWorldPosCallable worldPosIn, IItemHandler inv) {
+    public PortableSafeContainer(int windowId, Inventory playerInv, ContainerLevelAccess worldPosIn, IItemHandler inv) {
         super(Containers.PORTABLE_SAFE, windowId);
         this.worldPos = worldPosIn;
         this.inventory = inv;
         worldPos.execute((world, pos) -> {
-            TileEntity te = world.getBlockEntity(pos);
+            BlockEntity te = world.getBlockEntity(pos);
             if (te instanceof PortableSafeTileEntity) {
                 ((PortableSafeTileEntity) te).openInventory(playerInv.player);
             }
@@ -44,12 +44,12 @@ public class PortableSafeContainer extends Container {
     }
 
     @Override
-    public boolean stillValid(PlayerEntity playerIn) {
+    public boolean stillValid(Player playerIn) {
         return stillValid(worldPos, playerIn, Reference.Blocks.PORTABLE_SAFE);
     }
 
     @Override
-    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
+    public ItemStack quickMoveStack(Player playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
         if (slot != null && slot.hasItem()) {
@@ -74,17 +74,17 @@ public class PortableSafeContainer extends Container {
     }
 
     @Override
-    public void removed(PlayerEntity playerIn) {
+    public void removed(Player playerIn) {
         super.removed(playerIn);
         worldPos.execute((world, pos) -> {
-            TileEntity te = world.getBlockEntity(pos);
+            BlockEntity te = world.getBlockEntity(pos);
             if (te instanceof PortableSafeTileEntity) {
                 ((PortableSafeTileEntity) te).closeInventory(playerIn);
             }
         });
     }
 
-    public IWorldPosCallable getWorldPos() {
+    public ContainerLevelAccess getWorldPos() {
         return this.worldPos;
     }
 }

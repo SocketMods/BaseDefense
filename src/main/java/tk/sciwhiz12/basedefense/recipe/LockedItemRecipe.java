@@ -1,12 +1,12 @@
 package tk.sciwhiz12.basedefense.recipe;
 
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
 import tk.sciwhiz12.basedefense.Reference.RecipeSerializers;
 import tk.sciwhiz12.basedefense.item.IContainsLockItem;
 
@@ -24,7 +24,7 @@ public class LockedItemRecipe extends ShapedRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingInventory inv) {
+    public ItemStack assemble(CraftingContainer inv) {
         ItemStack output = this.getResultItem().copy();
         for (int row = 0; row < inv.getHeight(); row++) {
             for (int col = 0; col < inv.getWidth(); col++) {
@@ -39,7 +39,7 @@ public class LockedItemRecipe extends ShapedRecipe {
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer() {
         return RecipeSerializers.LOCKED_ITEM;
     }
 }

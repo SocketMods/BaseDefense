@@ -1,18 +1,20 @@
 package tk.sciwhiz12.basedefense.datagen;
 
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.advancements.criterion.StatePropertiesPredicate;
-import net.minecraft.block.Block;
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.LootTableProvider;
-import net.minecraft.loot.*;
-import net.minecraft.loot.conditions.BlockStateProperty;
-import net.minecraft.loot.conditions.SurvivesExplosion;
-import net.minecraft.loot.functions.CopyName;
-import net.minecraft.loot.functions.CopyNbt;
-import net.minecraft.loot.functions.SetContents;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
+import net.minecraft.world.level.storage.loot.functions.CopyNameFunction;
+import net.minecraft.world.level.storage.loot.functions.CopyNbtFunction;
+import net.minecraft.world.level.storage.loot.functions.SetContainerContents;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import tk.sciwhiz12.basedefense.Reference;
 import tk.sciwhiz12.basedefense.Reference.Blocks;
 import tk.sciwhiz12.basedefense.Reference.Items;
 import tk.sciwhiz12.basedefense.block.LockedDoorBlock;
@@ -27,17 +29,26 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static net.minecraft.state.properties.DoubleBlockHalf.LOWER;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.ValidationContext;
+import net.minecraft.world.level.storage.loot.entries.DynamicLoot;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+
+import static net.minecraft.world.level.block.state.properties.DoubleBlockHalf.LOWER;
 
 public class LootTables extends LootTableProvider {
-    private final List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootParameterSet>> tables = new ArrayList<>();
+    private final List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootContextParamSet>> tables = new ArrayList<>();
 
     public LootTables(DataGenerator dataGeneratorIn) {
         super(dataGeneratorIn);
     }
 
     @Override
-    protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootParameterSet>> getTables() {
+    protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootContextParamSet>> getTables() {
         tables.clear();
 
         standardDropTable(Blocks.LOCKSMITH_TABLE);
@@ -73,7 +84,7 @@ public class LootTables extends LootTableProvider {
                 .hasProperty(LockedDoorBlock.HALF, LOWER);
 
         LootPool.Builder builder = createStandardDrops(block.baseBlock);
-        builder.when(BlockStateProperty.hasBlockStateProperties(block).setProperties(predicate));
+        builder.when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(predicate));
 
         blockTable(block, LootTable.lootTable().withPool(builder));
     }
@@ -83,19 +94,19 @@ public class LootTables extends LootTableProvider {
                 .hasProperty(PadlockedDoorBlock.HALF, LOWER);
 
         LootPool.Builder doorItem = createStandardDrops(block.baseBlock);
-        doorItem.when(BlockStateProperty.hasBlockStateProperties(block).setProperties(predicate));
+        doorItem.when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(predicate));
 
         LootPool.Builder padlock = createStandardDrops(Items.BROKEN_LOCK_PIECES);
-        padlock.when(BlockStateProperty.hasBlockStateProperties(block).setProperties(predicate));
+        padlock.when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(predicate));
 
         blockTable(block, LootTable.lootTable().withPool(doorItem).withPool(padlock));
     }
 
     void portableSafe() {
-        LootFunction.Builder<?> copyNameFunc = CopyName.copyName(CopyName.Source.BLOCK_ENTITY);
-        SetContents.Builder contentsFunc = SetContents.setContents()
-                .withEntry(DynamicLootEntry.dynamicEntry(PortableSafeBlock.CONTENTS));
-        CopyNbt.Builder copyLockFunc = createCopyLockFunc(PortableSafeTileEntity.TAG_LOCK_ITEM);
+        LootItemConditionalFunction.Builder<?> copyNameFunc = CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY);
+        SetContainerContents.Builder contentsFunc = SetContainerContents.setContents(Reference.TileEntities.PORTABLE_SAFE)
+                .withEntry(DynamicLoot.dynamicEntry(PortableSafeBlock.CONTENTS));
+        CopyNbtFunction.Builder copyLockFunc = createCopyLockFunc(PortableSafeTileEntity.TAG_LOCK_ITEM);
 
         LootPool.Builder safeItem = createStandardDrops(Blocks.PORTABLE_SAFE);
         safeItem.apply(copyNameFunc).apply(contentsFunc).apply(copyLockFunc);
@@ -103,9 +114,9 @@ public class LootTables extends LootTableProvider {
         blockTable(Blocks.PORTABLE_SAFE, LootTable.lootTable().withPool(safeItem));
     }
 
-    CopyNbt.Builder createCopyLockFunc(String tag) {
-        return CopyNbt.copyData(CopyNbt.Source.BLOCK_ENTITY)
-                .copy(tag, "BlockEntityTag." + tag, CopyNbt.Action.REPLACE);
+    CopyNbtFunction.Builder createCopyLockFunc(String tag) {
+        return CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
+                .copy(tag, "BlockEntityTag." + tag, CopyNbtFunction.MergeStrategy.REPLACE);
     }
 
     void standardDropTable(Block b) {
@@ -113,20 +124,20 @@ public class LootTables extends LootTableProvider {
     }
 
     void blockTable(Block b, LootTable.Builder lootTable) {
-        addTable(b.getLootTable(), lootTable, LootParameterSets.BLOCK);
+        addTable(b.getLootTable(), lootTable, LootContextParamSets.BLOCK);
     }
 
-    void addTable(ResourceLocation path, LootTable.Builder lootTable, LootParameterSet paramSet) {
+    void addTable(ResourceLocation path, LootTable.Builder lootTable, LootContextParamSet paramSet) {
         tables.add(Pair.of(() -> (lootBuilder) -> lootBuilder.accept(path, lootTable), paramSet));
     }
 
-    LootPool.Builder createStandardDrops(IItemProvider itemProvider) {
-        return LootPool.lootPool().setRolls(ConstantRange.exactly(1)).when(SurvivesExplosion.survivesExplosion())
-                .add(ItemLootEntry.lootTableItem(itemProvider));
+    LootPool.Builder createStandardDrops(ItemLike itemProvider) {
+        return LootPool.lootPool().setRolls(ConstantValue.exactly(1)).when(ExplosionCondition.survivesExplosion())
+                .add(LootItem.lootTableItem(itemProvider));
     }
 
     @Override
-    protected void validate(Map<ResourceLocation, LootTable> map, ValidationTracker validationtracker) {
-        map.forEach((loc, table) -> LootTableManager.validate(validationtracker, loc, table));
+    protected void validate(Map<ResourceLocation, LootTable> map, ValidationContext validationtracker) {
+        map.forEach((loc, table) -> net.minecraft.world.level.storage.loot.LootTables.validate(validationtracker, loc, table));
     }
 }

@@ -1,8 +1,8 @@
 package tk.sciwhiz12.basedefense.capabilities;
 
-import net.minecraft.nbt.EndNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.util.Direction;
+import net.minecraft.nbt.EndTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -14,10 +14,10 @@ import net.minecraftforge.common.util.NonNullSupplier;
  * instances which are {@link INBTSerializable}.
  *
  * @param <C> The capability type
- * @param <N> The {@link INBT} type that the capability supports
+ * @param <N> The {@link Tag} type that the capability supports
  * @author SciWhiz12
  */
-public class SerializableCapabilityProvider<C extends INBTSerializable<N>, N extends INBT>
+public class SerializableCapabilityProvider<C extends INBTSerializable<N>, N extends Tag>
         implements ICapabilitySerializable<N> {
     private final Capability<?>[] capObjs;
     private final LazyOptional<C> capInst;
@@ -36,11 +36,11 @@ public class SerializableCapabilityProvider<C extends INBTSerializable<N>, N ext
     @SuppressWarnings("unchecked")
     @Override
     public N serializeNBT() {
-        return capInst.map(INBTSerializable::serializeNBT).orElse((N) EndNBT.INSTANCE);
+        return capInst.map(INBTSerializable::serializeNBT).orElse((N) EndTag.INSTANCE);
     }
 
     @Override
     public void deserializeNBT(N nbt) {
-        if (!(nbt instanceof EndNBT)) { capInst.ifPresent((inst) -> inst.deserializeNBT(nbt)); }
+        if (!(nbt instanceof EndTag)) { capInst.ifPresent((inst) -> inst.deserializeNBT(nbt)); }
     }
 }

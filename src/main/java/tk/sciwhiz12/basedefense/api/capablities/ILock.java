@@ -1,7 +1,7 @@
 package tk.sciwhiz12.basedefense.api.capablities;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 
 import javax.annotation.Nullable;
 
@@ -29,7 +29,7 @@ public interface ILock {
      * @return {@code true} if the given {@link IKey} could unlock this, otherwise
      * {@code false}
      */
-    boolean canUnlock(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player);
+    boolean canUnlock(IKey key, ContainerLevelAccess worldPos, @Nullable Player player);
 
     /**
      * <p>Returns {@code true} if this can be removed by the given {@link IKey}.</p>
@@ -47,7 +47,7 @@ public interface ILock {
      * @return {@code true} if the given {@link IKey} could remove this, otherwise
      * {@code false}
      */
-    boolean canRemove(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player);
+    boolean canRemove(IKey key, ContainerLevelAccess worldPos, @Nullable Player player);
 
     /**
      * Called when the unlock action is performed successfully.
@@ -57,7 +57,7 @@ public interface ILock {
      * @param player   The player performing the unlock, or {@code null} if not
      *                 applicable
      */
-    void onUnlock(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player);
+    void onUnlock(IKey key, ContainerLevelAccess worldPos, @Nullable Player player);
 
     /**
      * Called when the removal action is performed successfully.
@@ -67,6 +67,6 @@ public interface ILock {
      * @param player   The player performing the removal, or {@code null} if not
      *                 applicable
      */
-    void onRemove(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player);
+    void onRemove(IKey key, ContainerLevelAccess worldPos, @Nullable Player player);
 
 }

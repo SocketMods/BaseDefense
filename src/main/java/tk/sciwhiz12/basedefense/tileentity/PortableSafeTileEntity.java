@@ -1,23 +1,23 @@
 package tk.sciwhiz12.basedefense.tileentity;
 
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -30,7 +30,14 @@ import javax.annotation.Nullable;
 
 import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
 
-public class PortableSafeTileEntity extends LockableTile implements ITickableTileEntity, INamedContainerProvider, INameable {
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Nameable;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+
+public class PortableSafeTileEntity extends LockableTile implements MenuProvider, Nameable {
     protected float doorAngle;
     protected float prevDoorAngle;
     protected int numPlayersUsing;
@@ -41,49 +48,48 @@ public class PortableSafeTileEntity extends LockableTile implements ITickableTil
         }
     };
     private LazyOptional<IItemHandler> invHandler;
-    private ITextComponent customName;
+    private Component customName;
 
-    public PortableSafeTileEntity() {
-        super(TileEntities.PORTABLE_SAFE);
+    public PortableSafeTileEntity(BlockPos pos, BlockState state) {
+        super(TileEntities.PORTABLE_SAFE, pos, state);
     }
 
-    @Override
-    public void tick() {
-        int x = this.worldPosition.getX();
-        int y = this.worldPosition.getY();
-        int z = this.worldPosition.getZ();
-        ++this.ticksSinceSync;
-        this.numPlayersUsing = calculatePlayersUsingSync(this.level, this, this.ticksSinceSync, x, y, z,
-                this.numPlayersUsing);
-        this.prevDoorAngle = this.doorAngle;
-        if (this.numPlayersUsing > 0 && this.doorAngle == 0.0F) {
-            this.playSound(SoundEvents.CHEST_OPEN); // TODO: change to own sound
+    public static void tick(Level level, BlockPos pos, BlockState state, PortableSafeTileEntity blockEntity) {
+        int x = pos.getX();
+        int y = pos.getY();
+        int z = pos.getZ();
+        ++blockEntity.ticksSinceSync;
+        blockEntity.numPlayersUsing = calculatePlayersUsingSync(level, blockEntity, blockEntity.ticksSinceSync, x, y, z,
+            blockEntity.numPlayersUsing);
+        blockEntity.prevDoorAngle = blockEntity.doorAngle;
+        if (blockEntity.numPlayersUsing > 0 && blockEntity.doorAngle == 0.0F) {
+            blockEntity.playSound(SoundEvents.CHEST_OPEN); // TODO: change to own sound
         }
 
-        if (this.numPlayersUsing == 0 && this.doorAngle > 0.0F || this.numPlayersUsing > 0 && this.doorAngle < 1.0F) {
-            float oldAngle = this.doorAngle;
-            if (this.numPlayersUsing > 0) {
-                this.doorAngle += 0.1F;
+        if (blockEntity.numPlayersUsing == 0 && blockEntity.doorAngle > 0.0F || blockEntity.numPlayersUsing > 0 && blockEntity.doorAngle < 1.0F) {
+            float oldAngle = blockEntity.doorAngle;
+            if (blockEntity.numPlayersUsing > 0) {
+                blockEntity.doorAngle += 0.1F;
             } else {
-                this.doorAngle -= 0.1F;
+                blockEntity.doorAngle -= 0.1F;
             }
 
-            if (this.doorAngle > 1.0F) {
-                this.doorAngle = 1.0F;
+            if (blockEntity.doorAngle > 1.0F) {
+                blockEntity.doorAngle = 1.0F;
             }
 
-            if (this.doorAngle < 0.5F && oldAngle >= 0.5F) {
-                this.playSound(SoundEvents.CHEST_CLOSE); // TODO: change to own sound
+            if (blockEntity.doorAngle < 0.5F && oldAngle >= 0.5F) {
+                blockEntity.playSound(SoundEvents.CHEST_CLOSE); // TODO: change to own sound
             }
 
-            if (this.doorAngle < 0.0F) {
-                this.doorAngle = 0.0F;
+            if (blockEntity.doorAngle < 0.0F) {
+                blockEntity.doorAngle = 0.0F;
             }
         }
 
     }
 
-    public static int calculatePlayersUsingSync(World worldIn, TileEntity tileEntityIn, int ticksSinceSync, int posX,
+    public static int calculatePlayersUsingSync(Level worldIn, BlockEntity tileEntityIn, int ticksSinceSync, int posX,
             int posY, int posZ, int numPlayersUsing) {
         if (!worldIn.isClientSide && numPlayersUsing != 0 && (ticksSinceSync + posX + posY + posZ) % 200 == 0) {
             numPlayersUsing = calculatePlayersUsing(worldIn, tileEntityIn, posX, posY, posZ);
@@ -92,14 +98,14 @@ public class PortableSafeTileEntity extends LockableTile implements ITickableTil
         return numPlayersUsing;
     }
 
-    public static int calculatePlayersUsing(World worldIn, TileEntity tileEntity, int posX, int posY, int posZ) {
+    public static int calculatePlayersUsing(Level worldIn, BlockEntity tileEntity, int posX, int posY, int posZ) {
         int playerCount = 0;
 
-        for (PlayerEntity player : worldIn.getEntitiesOfClass(PlayerEntity.class,
-                new AxisAlignedBB((float) posX - 5.0F, (float) posY - 5.0F, (float) posZ - 5.0F, (float) (posX + 1) + 5.0F,
+        for (Player player : worldIn.getEntitiesOfClass(Player.class,
+                new AABB((float) posX - 5.0F, (float) posY - 5.0F, (float) posZ - 5.0F, (float) (posX + 1) + 5.0F,
                         (float) (posY + 1) + 5.0F, (float) (posZ + 1) + 5.0F))) {
             if (player.containerMenu instanceof PortableSafeContainer) {
-                IWorldPosCallable worldPos = ((PortableSafeContainer) player.containerMenu).getWorldPos();
+                ContainerLevelAccess worldPos = ((PortableSafeContainer) player.containerMenu).getWorldPos();
                 if (worldPos.evaluate((world, pos) -> world.getBlockEntity(pos) == tileEntity, false)) {
                     playerCount++;
                 }
@@ -115,7 +121,7 @@ public class PortableSafeTileEntity extends LockableTile implements ITickableTil
         double d2 = (double) this.worldPosition.getZ() + 0.5D;
 
         this.level
-                .playSound(null, d0, d1, d2, soundIn, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F);
+                .playSound(null, d0, d1, d2, soundIn, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F);
     }
 
     @Override
@@ -128,7 +134,7 @@ public class PortableSafeTileEntity extends LockableTile implements ITickableTil
         }
     }
 
-    public void openInventory(PlayerEntity player) {
+    public void openInventory(Player player) {
         if (!player.isSpectator()) {
             if (this.numPlayersUsing < 0) {
                 this.numPlayersUsing = 0;
@@ -139,7 +145,7 @@ public class PortableSafeTileEntity extends LockableTile implements ITickableTil
 
     }
 
-    public void closeInventory(PlayerEntity player) {
+    public void closeInventory(Player player) {
         if (!player.isSpectator()) {
             --this.numPlayersUsing;
             this.onOpenOrClose();
@@ -155,7 +161,7 @@ public class PortableSafeTileEntity extends LockableTile implements ITickableTil
     }
 
     public float getDoorAngle(float partialTicks) {
-        return MathHelper.lerp(partialTicks, this.prevDoorAngle, this.doorAngle);
+        return Mth.lerp(partialTicks, this.prevDoorAngle, this.doorAngle);
     }
 
     public int getNumPlayersUsing() {
@@ -163,8 +169,8 @@ public class PortableSafeTileEntity extends LockableTile implements ITickableTil
     }
 
     @Override
-    public void clearCache() {
-        super.clearCache();
+    public void setRemoved() {
+        super.setRemoved();
         if (this.invHandler != null) {
             this.invHandler.invalidate();
             this.invHandler = null;
@@ -196,83 +202,73 @@ public class PortableSafeTileEntity extends LockableTile implements ITickableTil
     }
 
     @Override
-    public void setRemoved() {
-        super.setRemoved();
-        if (invHandler != null) {
-            invHandler.invalidate();
-            this.invHandler = null;
-        }
-    }
-
-    @Override
-    public void readData(CompoundNBT compound) {
+    public void readData(CompoundTag compound) {
         super.readData(compound);
-        if (compound.contains("Items", Constants.NBT.TAG_LIST)) {
+        if (compound.contains("Items", Tag.TAG_LIST)) {
             inv.deserializeNBT(compound);
         }
-        if (compound.contains("CustomName", Constants.NBT.TAG_STRING)) {
-            this.customName = ITextComponent.Serializer.fromJson(compound.getString("CustomName"));
+        if (compound.contains("CustomName", Tag.TAG_STRING)) {
+            this.customName = Component.Serializer.fromJson(compound.getString("CustomName"));
         }
     }
 
     @Override
-    public CompoundNBT writeData(CompoundNBT compound) {
-        return writeData(compound, true);
+    public void writeData(CompoundTag compound) {
+        writeData(compound, true);
     }
 
-    public CompoundNBT writeData(CompoundNBT compound, boolean includingLock) {
+    public void writeData(CompoundTag compound, boolean includingLock) {
         if (includingLock) {
-            compound = super.writeData(compound);
+            super.writeData(compound);
         }
         compound.merge(inv.serializeNBT());
         if (this.customName != null) {
-            compound.putString("CustomName", ITextComponent.Serializer.toJson(this.customName));
+            compound.putString("CustomName", Component.Serializer.toJson(this.customName));
         }
-        return compound;
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return this.save(new CompoundTag());
     }
 
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(worldPosition, 0, getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.load(getBlockState(), pkt.getTag());
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+        this.load(pkt.getTag());
     }
 
-    public void setCustomName(ITextComponent name) {
+    public void setCustomName(Component name) {
         this.customName = name;
     }
 
     @Override
-    public ITextComponent getName() {
+    public Component getName() {
         return this.customName != null ? this.customName : this.getDefaultName();
     }
 
     @Override
-    public ITextComponent getDisplayName() {
+    public Component getDisplayName() {
         return this.getName();
     }
 
     @Nullable
     @Override
-    public ITextComponent getCustomName() {
+    public Component getCustomName() {
         return this.customName;
     }
 
-    protected ITextComponent getDefaultName() {
-        return new TranslationTextComponent("container.basedefense.portable_safe");
+    protected Component getDefaultName() {
+        return new TranslatableComponent("container.basedefense.portable_safe");
     }
 
     @Nullable
     @Override
-    public Container createMenu(int windowId, PlayerInventory playerInv, PlayerEntity playerEntity) {
+    public AbstractContainerMenu createMenu(int windowId, Inventory playerInv, Player playerEntity) {
         return new PortableSafeContainer(windowId, playerInv, Util.getOrDummy(level, worldPosition), inv);
     }
 }

@@ -1,11 +1,11 @@
 package tk.sciwhiz12.basedefense.capabilities;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.LongNBT;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.LongTag;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.util.INBTSerializable;
 import tk.sciwhiz12.basedefense.api.ITooltipInfo;
 import tk.sciwhiz12.basedefense.api.capablities.ICodeHolder;
@@ -17,8 +17,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static net.minecraft.util.text.TextFormatting.DARK_GRAY;
-import static net.minecraft.util.text.TextFormatting.GRAY;
+import static net.minecraft.ChatFormatting.DARK_GRAY;
+import static net.minecraft.ChatFormatting.GRAY;
 
 /**
  * <p>An implementation of {@link IKey} and {@link ICodeHolder}.</p>
@@ -28,11 +28,11 @@ import static net.minecraft.util.text.TextFormatting.GRAY;
  *
  * @author SciWhiz12
  */
-public class CodedKey implements ICodeHolder, IKey, INBTSerializable<LongNBT>, ITooltipInfo {
+public class CodedKey implements ICodeHolder, IKey, INBTSerializable<LongTag>, ITooltipInfo {
     protected Long storedCode = null;
 
     @Override
-    public boolean canUnlock(ILock lock, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
+    public boolean canUnlock(ILock lock, ContainerLevelAccess worldPos, @Nullable Player player) {
         if (lock instanceof IContainsCode) {
             IContainsCode codeLock = (IContainsCode) lock;
             return codeLock.containsCode(storedCode);
@@ -41,7 +41,7 @@ public class CodedKey implements ICodeHolder, IKey, INBTSerializable<LongNBT>, I
     }
 
     @Override
-    public void onUnlock(ILock lock, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {}
+    public void onUnlock(ILock lock, ContainerLevelAccess worldPos, @Nullable Player player) {}
 
     @Override
     public boolean containsCode(Long code) {
@@ -78,26 +78,26 @@ public class CodedKey implements ICodeHolder, IKey, INBTSerializable<LongNBT>, I
     }
 
     @Override
-    public LongNBT serializeNBT() {
-        return this.storedCode != null ? LongNBT.valueOf(this.storedCode) : LongNBT.valueOf(0);
+    public LongTag serializeNBT() {
+        return this.storedCode != null ? LongTag.valueOf(this.storedCode) : LongTag.valueOf(0);
     }
 
     @Override
-    public void deserializeNBT(LongNBT nbt) {
+    public void deserializeNBT(LongTag nbt) {
         this.storedCode = nbt.getAsLong() != 0 ? nbt.getAsLong() : null;
     }
 
     @Override
-    public void addInformation(List<ITextComponent> info, boolean verbose) {
+    public void addInformation(List<Component> info, boolean verbose) {
         if (verbose && this.storedCode != null) {
-            info.add(new TranslationTextComponent("tooltip.basedefense.codes.header").withStyle(GRAY));
-            info.add(new TranslationTextComponent("tooltip.basedefense.codes.line", String.format("%016X", storedCode))
+            info.add(new TranslatableComponent("tooltip.basedefense.codes.header").withStyle(GRAY));
+            info.add(new TranslatableComponent("tooltip.basedefense.codes.line", String.format("%016X", storedCode))
                     .withStyle(DARK_GRAY));
         } else {
             if (this.storedCode != null) {
-                info.add(new TranslationTextComponent("tooltip.basedefense.codes.count.one", 1).withStyle(GRAY));
+                info.add(new TranslatableComponent("tooltip.basedefense.codes.count.one", 1).withStyle(GRAY));
             } else {
-                info.add(new TranslationTextComponent("tooltip.basedefense.codes.count.zero", 0).withStyle(GRAY));
+                info.add(new TranslatableComponent("tooltip.basedefense.codes.count.zero", 0).withStyle(GRAY));
             }
         }
     }
