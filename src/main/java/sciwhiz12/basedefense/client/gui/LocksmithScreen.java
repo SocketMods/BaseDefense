@@ -11,25 +11,25 @@ import sciwhiz12.basedefense.container.LocksmithContainer;
 public class LocksmithScreen extends ContainerScreen<LocksmithContainer> {
     public LocksmithScreen(LocksmithContainer container, PlayerInventory inv, ITextComponent title) {
         super(container, inv, title);
-        this.xSize = 176;
-        this.ySize = 166;
+        this.imageWidth = 176;
+        this.imageHeight = 166;
     }
 
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, partialTicks);
-        this.renderHoveredTooltip(stack, mouseX, mouseY);
+        this.renderTooltip(stack, mouseX, mouseY);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(Textures.LOCKSMITH_GUI);
-        this.blit(stack, guiLeft, guiTop, 0, 0, xSize, ySize);
+        this.minecraft.getTextureManager().bind(Textures.LOCKSMITH_GUI);
+        this.blit(stack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
         int iconX = 0, iconY = 166;
-        if (this.container.testingState.get() == 1) iconX = 21;
-        this.blit(stack, guiLeft + 114, guiTop + 27, iconX, iconY, 21, 21);
+        if (this.menu.testingState.get() == 1) iconX = 21;
+        this.blit(stack, leftPos + 114, topPos + 27, iconX, iconY, 21, 21);
     }
 }

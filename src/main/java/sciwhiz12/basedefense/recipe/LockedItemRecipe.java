@@ -24,11 +24,11 @@ public class LockedItemRecipe extends ShapedRecipe {
     }
 
     @Override
-    public ItemStack getCraftingResult(CraftingInventory inv) {
-        ItemStack output = this.getRecipeOutput().copy();
+    public ItemStack assemble(CraftingInventory inv) {
+        ItemStack output = this.getResultItem().copy();
         for (int row = 0; row < inv.getHeight(); row++) {
             for (int col = 0; col < inv.getWidth(); col++) {
-                ItemStack stack = inv.getStackInSlot(row + col * inv.getWidth());
+                ItemStack stack = inv.getItem(row + col * inv.getWidth());
                 if (!stack.isEmpty() && stack.getCapability(LOCK).isPresent()) {
                     ((IContainsLockItem) output.getItem()).setLockStack(output, stack);
                     break;

@@ -13,11 +13,11 @@ import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
 
 public class AdminLockCoreItem extends AbstractLockCoreItem {
     public AdminLockCoreItem() {
-        super(new Item.Properties().maxDamage(0).rarity(Rarity.EPIC).group(ITEM_GROUP));
+        super(new Item.Properties().durability(0).rarity(Rarity.EPIC).tab(ITEM_GROUP));
     }
 
     @Override
-    public boolean hasEffect(ItemStack stack) {
+    public boolean isFoil(ItemStack stack) {
         return true;
     }
 

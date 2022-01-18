@@ -25,7 +25,7 @@ public abstract class AbstractLockCoreItem extends Item implements IColorable {
     }
 
     @Override
-    public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         stack.getCapability(LOCK).filter(ITooltipInfo.class::isInstance)
                 .ifPresent(lock -> ((ITooltipInfo) lock).addInformation(tooltip, flagIn.isAdvanced()));
         if (!flagIn.isAdvanced()) { return; }

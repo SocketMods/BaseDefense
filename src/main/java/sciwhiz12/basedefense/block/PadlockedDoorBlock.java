@@ -62,10 +62,10 @@ public class PadlockedDoorBlock extends Block {
     public static final EnumProperty<DoorSide> SIDE = EnumProperty.create("padlock", DoorSide.class);
     public static final EnumProperty<DoorHingeSide> HINGE = BlockStateProperties.DOOR_HINGE;
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
-    protected static final VoxelShape SOUTH_AABB = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 3.0D);
-    protected static final VoxelShape NORTH_AABB = Block.makeCuboidShape(0.0D, 0.0D, 13.0D, 16.0D, 16.0D, 16.0D);
-    protected static final VoxelShape WEST_AABB = Block.makeCuboidShape(13.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
-    protected static final VoxelShape EAST_AABB = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 3.0D, 16.0D, 16.0D);
+    protected static final VoxelShape SOUTH_AABB = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 3.0D);
+    protected static final VoxelShape NORTH_AABB = Block.box(0.0D, 0.0D, 13.0D, 16.0D, 16.0D, 16.0D);
+    protected static final VoxelShape WEST_AABB = Block.box(13.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+    protected static final VoxelShape EAST_AABB = Block.box(0.0D, 0.0D, 0.0D, 3.0D, 16.0D, 16.0D);
 
     public final Block baseBlock;
 
@@ -74,16 +74,16 @@ public class PadlockedDoorBlock extends Block {
     }
 
     public PadlockedDoorBlock(Block blockIn) {
-        super(Block.Properties.from(blockIn));
+        super(Block.Properties.copy(blockIn));
         this.baseBlock = blockIn;
         REPLACEMENT_MAP.put(blockIn.delegate, this.delegate);
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(SIDE, DoorSide.OUTSIDE)
-                .with(HINGE, DoorHingeSide.LEFT).with(HALF, DoubleBlockHalf.LOWER));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(SIDE, DoorSide.OUTSIDE)
+                .setValue(HINGE, DoorHingeSide.LEFT).setValue(HALF, DoubleBlockHalf.LOWER));
     }
 
     @Override
     public boolean hasTileEntity(BlockState state) {
-        return state.getBlock() == this && state.get(HALF) == DoubleBlockHalf.LOWER;
+        return state.getBlock() == this && state.getValue(HALF) == DoubleBlockHalf.LOWER;
     }
 
     @Override
@@ -92,42 +92,42 @@ public class PadlockedDoorBlock extends Block {
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
             BlockRayTraceResult rayTrace) {
-        if (state.get(HALF) == DoubleBlockHalf.UPPER) {
-            pos = pos.offset(Direction.DOWN);
+        if (state.getValue(HALF) == DoubleBlockHalf.UPPER) {
+            pos = pos.relative(Direction.DOWN);
             state = worldIn.getBlockState(pos);
         }
-        if (worldIn.isBlockPresent(pos) && state.getBlock() == this) {
-            ItemStack keyStack = player.getHeldItem(handIn);
-            TileEntity te = worldIn.getTileEntity(pos);
+        if (worldIn.isLoaded(pos) && state.getBlock() == this) {
+            ItemStack keyStack = player.getItemInHand(handIn);
+            TileEntity te = worldIn.getBlockEntity(pos);
             if (te instanceof PadlockedDoorTile) {
                 PadlockedDoorTile doorTile = (PadlockedDoorTile) te;
                 if (!keyStack.isEmpty() && keyStack.getCapability(KEY).isPresent()) {
-                    if (allowOpen(state.get(SIDE), state.get(FACING), rayTrace.getFace())) {
+                    if (allowOpen(state.getValue(SIDE), state.getValue(FACING), rayTrace.getDirection())) {
                         IWorldPosCallable worldPos = Util.getOrDummy(worldIn, pos);
                         if (UnlockHelper.checkRemove(keyStack, doorTile, worldPos, player, true)) {
                             replaceDoor(worldIn, pos);
                         }
-                        player.swingArm(handIn);
+                        player.swing(handIn);
                         return ActionResultType.SUCCESS;
                     }
                 } else if (handIn == Hand.OFF_HAND) {
-                    if (player.isSneaking() && allowOpen(state.get(SIDE), state.get(FACING), rayTrace.getFace())) {
+                    if (player.isShiftKeyDown() && allowOpen(state.getValue(SIDE), state.getValue(FACING), rayTrace.getDirection())) {
                         ItemStack lockStack = doorTile.getLockStack();
-                        if (!lockStack.isEmpty() && lockStack.hasDisplayName()) {
-                            player.sendStatusMessage(new TranslationTextComponent("status.basedefense.door.info",
-                                            lockStack.getDisplayName().copyRaw().mergeStyle(WHITE)).mergeStyle(YELLOW,
+                        if (!lockStack.isEmpty() && lockStack.hasCustomHoverName()) {
+                            player.displayClientMessage(new TranslationTextComponent("status.basedefense.door.info",
+                                            lockStack.getHoverName().plainCopy().withStyle(WHITE)).withStyle(YELLOW,
                                     ITALIC),
                                     true);
                         }
                     } else {
-                        player.sendStatusMessage(new TranslationTextComponent("status.basedefense.door.locked",
-                                new TranslationTextComponent(this.baseBlock.getTranslationKey()).mergeStyle(WHITE))
-                                .mergeStyle(GRAY, ITALIC), true);
+                        player.displayClientMessage(new TranslationTextComponent("status.basedefense.door.locked",
+                                new TranslationTextComponent(this.baseBlock.getDescriptionId()).withStyle(WHITE))
+                                .withStyle(GRAY, ITALIC), true);
                     }
                     worldIn.playSound(player, pos, Sounds.LOCKED_DOOR_ATTEMPT, SoundCategory.BLOCKS, 1.0F,
-                            worldIn.rand.nextFloat() * 0.1F + 0.9F);
+                            worldIn.random.nextFloat() * 0.1F + 0.9F);
                 }
             }
         }
@@ -140,20 +140,20 @@ public class PadlockedDoorBlock extends Block {
 
     private void replaceDoor(World worldIn, BlockPos pos) {
         final BlockState state = worldIn.getBlockState(pos);
-        final BlockPos offPos = state.get(PadlockedDoorBlock.HALF) == DoubleBlockHalf.LOWER ? pos.up() : pos.down();
+        final BlockPos offPos = state.getValue(PadlockedDoorBlock.HALF) == DoubleBlockHalf.LOWER ? pos.above() : pos.below();
         final BlockState offState = worldIn.getBlockState(offPos);
 
-        final Direction facing = state.get(FACING);
-        final DoorHingeSide hinge = state.get(HINGE);
-        final BlockState defState = this.baseBlock.getDefaultState().with(DoorBlock.HINGE, hinge)
-                .with(DoorBlock.FACING, facing).with(DoorBlock.OPEN, false);
+        final Direction facing = state.getValue(FACING);
+        final DoorHingeSide hinge = state.getValue(HINGE);
+        final BlockState defState = this.baseBlock.defaultBlockState().setValue(DoorBlock.HINGE, hinge)
+                .setValue(DoorBlock.FACING, facing).setValue(DoorBlock.OPEN, false);
 
-        final BlockState newState = defState.with(DoorBlock.HALF, state.get(HALF));
-        final BlockState newOffState = defState.with(DoorBlock.HALF, offState.get(HALF));
+        final BlockState newState = defState.setValue(DoorBlock.HALF, state.getValue(HALF));
+        final BlockState newOffState = defState.setValue(DoorBlock.HALF, offState.getValue(HALF));
 
         int flags = Constants.BlockFlags.DEFAULT_AND_RERENDER | Constants.BlockFlags.NO_NEIGHBOR_DROPS;
-        worldIn.setBlockState(offPos, newOffState, flags);
-        worldIn.setBlockState(pos, newState, flags);
+        worldIn.setBlock(offPos, newOffState, flags);
+        worldIn.setBlock(pos, newState, flags);
     }
 
     public boolean isValidLock(ItemStack stack) {
@@ -164,7 +164,7 @@ public class PadlockedDoorBlock extends Block {
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         List<ItemStack> drops = super.getDrops(state, builder);
-        TileEntity te = builder.get(LootParameters.BLOCK_ENTITY);
+        TileEntity te = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
         if (!drops.isEmpty() && te != null) {
             for (ItemStack stack : drops) {
                 LazyOptional<ICodeHolder> codeCap = stack.getCapability(CODE_HOLDER);
@@ -179,8 +179,8 @@ public class PadlockedDoorBlock extends Block {
                             to.setColors(stack, from.getColors(lockStack));
                         }
                         if (stack.getItem() instanceof BrokenLockPiecesItem) {
-                            ((BrokenLockPiecesItem) stack.getItem()).setPreviousName(stack, lockStack.getDisplayName());
-                        } else if (lockStack.hasDisplayName()) { stack.setDisplayName(lockStack.getDisplayName()); }
+                            ((BrokenLockPiecesItem) stack.getItem()).setPreviousName(stack, lockStack.getHoverName());
+                        } else if (lockStack.hasCustomHoverName()) { stack.setHoverName(lockStack.getHoverName()); }
                     }
                     break;
                 }
@@ -191,7 +191,7 @@ public class PadlockedDoorBlock extends Block {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        switch (state.get(FACING)) {
+        switch (state.getValue(FACING)) {
             case EAST:
             default:
                 return EAST_AABB;
@@ -206,54 +206,54 @@ public class PadlockedDoorBlock extends Block {
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return this.canCollide ? state.getShape(worldIn, pos) : VoxelShapes.empty();
+        return this.hasCollision ? state.getShape(worldIn, pos) : VoxelShapes.empty();
     }
 
     @Override
-    public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
+    public VoxelShape getOcclusionShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return state.getShape(worldIn, pos);
     }
 
     @Override
-    public VoxelShape getRaytraceShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
+    public VoxelShape getInteractionShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return VoxelShapes.empty();
     }
 
     @Override
-    public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, TileEntity te,
+    public void playerDestroy(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, TileEntity te,
             ItemStack stack) {
-        super.harvestBlock(worldIn, player, pos, Blocks.AIR.getDefaultState(), te, stack);
+        super.playerDestroy(worldIn, player, pos, Blocks.AIR.defaultBlockState(), te, stack);
     }
 
     @Override
-    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        DoubleBlockHalf half = state.get(HALF);
-        BlockPos otherPos = (half == DoubleBlockHalf.LOWER) ? pos.up() : pos.down();
+    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+        DoubleBlockHalf half = state.getValue(HALF);
+        BlockPos otherPos = (half == DoubleBlockHalf.LOWER) ? pos.above() : pos.below();
         BlockState otherState = worldIn.getBlockState(otherPos);
-        if (otherState.get(HALF) != half) {
-            ItemStack itemstack = player.getHeldItemMainhand();
-            if (!worldIn.isRemote && !player.isCreative() && player.func_234569_d_(otherState)) {
+        if (otherState.getValue(HALF) != half) {
+            ItemStack itemstack = player.getMainHandItem();
+            if (!worldIn.isClientSide && !player.isCreative() && player.hasCorrectToolForDrops(otherState)) {
                 BlockPos tePos = (half == DoubleBlockHalf.LOWER) ? pos : otherPos;
-                Block.spawnDrops(state, worldIn, pos, worldIn.getTileEntity(tePos), player, itemstack);
-                Block.spawnDrops(otherState, worldIn, otherPos, worldIn.getTileEntity(tePos), player, itemstack);
+                Block.dropResources(state, worldIn, pos, worldIn.getBlockEntity(tePos), player, itemstack);
+                Block.dropResources(otherState, worldIn, otherPos, worldIn.getBlockEntity(tePos), player, itemstack);
             }
-            worldIn.setBlockState(otherPos, Blocks.AIR.getDefaultState(), 35);
-            worldIn.playEvent(player, Constants.WorldEvents.BREAK_BLOCK_EFFECTS, otherPos, Block.getStateId(otherState));
+            worldIn.setBlock(otherPos, Blocks.AIR.defaultBlockState(), 35);
+            worldIn.levelEvent(player, Constants.WorldEvents.BREAK_BLOCK_EFFECTS, otherPos, Block.getId(otherState));
         }
-        super.onBlockHarvested(worldIn, pos, state, player);
+        super.playerWillDestroy(worldIn, pos, state, player);
     }
 
     @Override
-    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
         return false;
     }
 
     @Override
-    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        BlockPos blockpos = pos.down();
+    public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+        BlockPos blockpos = pos.below();
         BlockState blockstate = worldIn.getBlockState(blockpos);
-        if (state.get(HALF) == DoubleBlockHalf.LOWER) {
-            return blockstate.isSolidSide(worldIn, blockpos, Direction.UP);
+        if (state.getValue(HALF) == DoubleBlockHalf.LOWER) {
+            return blockstate.isFaceSturdy(worldIn, blockpos, Direction.UP);
         } else {
             return blockstate.getBlock() == this;
         }
@@ -261,17 +261,17 @@ public class PadlockedDoorBlock extends Block {
 
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return mirrorIn == Mirror.NONE ? state : state.rotate(mirrorIn.toRotation(state.get(FACING))).func_235896_a_(HINGE);
+        return mirrorIn == Mirror.NONE ? state : state.rotate(mirrorIn.getRotation(state.getValue(FACING))).cycle(HINGE);
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(HALF, FACING, SIDE, HINGE);
     }
 
@@ -285,7 +285,7 @@ public class PadlockedDoorBlock extends Block {
         }
 
         @Override
-        public String getString() {
+        public String getSerializedName() {
             return name;
         }
 

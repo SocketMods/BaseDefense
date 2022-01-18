@@ -22,25 +22,25 @@ import sciwhiz12.basedefense.container.LocksmithContainer;
 
 public class LocksmithBlock extends Block {
     public LocksmithBlock() {
-        super(Block.Properties.create(Material.IRON).hardnessAndResistance(3.5F).sound(SoundType.METAL));
+        super(Block.Properties.of(Material.METAL).strength(3.5F).sound(SoundType.METAL));
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity playerEntity,
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity playerEntity,
             Hand hand, BlockRayTraceResult result) {
-        if (!world.isRemote) { NetworkHooks.openGui((ServerPlayerEntity) playerEntity, getContainer(state, world, pos)); }
+        if (!world.isClientSide) { NetworkHooks.openGui((ServerPlayerEntity) playerEntity, getMenuProvider(state, world, pos)); }
         return ActionResultType.SUCCESS;
     }
 
     @Override
-    public INamedContainerProvider getContainer(BlockState state, World world, BlockPos pos) {
+    public INamedContainerProvider getMenuProvider(BlockState state, World world, BlockPos pos) {
         return new SimpleNamedContainerProvider(
                 (windowId, playerInventory, playerEntity) -> new LocksmithContainer(windowId, playerInventory,
-                        IWorldPosCallable.of(world, pos)), new TranslationTextComponent("container.basedefense.locksmith"));
+                        IWorldPosCallable.create(world, pos)), new TranslationTextComponent("container.basedefense.locksmith"));
     }
 
     @Override
-    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
         return false;
     }
 }

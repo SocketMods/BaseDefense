@@ -45,10 +45,10 @@ public class LockedDoorBlock extends Block {
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
     public static final BooleanProperty LOCKED = BlockStateProperties.LOCKED;
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
-    protected static final VoxelShape SOUTH_AABB = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 3.0D);
-    protected static final VoxelShape NORTH_AABB = Block.makeCuboidShape(0.0D, 0.0D, 13.0D, 16.0D, 16.0D, 16.0D);
-    protected static final VoxelShape WEST_AABB = Block.makeCuboidShape(13.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
-    protected static final VoxelShape EAST_AABB = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 3.0D, 16.0D, 16.0D);
+    protected static final VoxelShape SOUTH_AABB = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 3.0D);
+    protected static final VoxelShape NORTH_AABB = Block.box(0.0D, 0.0D, 13.0D, 16.0D, 16.0D, 16.0D);
+    protected static final VoxelShape WEST_AABB = Block.box(13.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+    protected static final VoxelShape EAST_AABB = Block.box(0.0D, 0.0D, 0.0D, 3.0D, 16.0D, 16.0D);
     public final Block baseBlock;
 
     public LockedDoorBlock() {
@@ -56,15 +56,15 @@ public class LockedDoorBlock extends Block {
     }
 
     public LockedDoorBlock(Block block) {
-        super(Block.Properties.from(block));
+        super(Block.Properties.copy(block));
         this.baseBlock = block;
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(HINGE, DoorHingeSide.LEFT)
-                .with(HALF, DoubleBlockHalf.LOWER).with(OPEN, false).with(LOCKED, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(HINGE, DoorHingeSide.LEFT)
+                .setValue(HALF, DoubleBlockHalf.LOWER).setValue(OPEN, false).setValue(LOCKED, false));
     }
 
     @Override
     public boolean hasTileEntity(BlockState state) {
-        return state.getBlock() == this && state.get(HALF) == DoubleBlockHalf.LOWER;
+        return state.getBlock() == this && state.getValue(HALF) == DoubleBlockHalf.LOWER;
     }
 
     @Override
@@ -73,30 +73,30 @@ public class LockedDoorBlock extends Block {
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
             BlockRayTraceResult rayTrace) {
-        if (worldIn.isBlockPresent(pos) && state.getBlock() == this) { // verify that block is loaded
-            DoubleBlockHalf half = state.get(HALF);
-            BlockPos otherPos = half == DoubleBlockHalf.LOWER ? pos.up() : pos.down();
-            if (!worldIn.isBlockPresent(otherPos) || worldIn.getBlockState(otherPos).getBlock() != this) {
+        if (worldIn.isLoaded(pos) && state.getBlock() == this) { // verify that block is loaded
+            DoubleBlockHalf half = state.getValue(HALF);
+            BlockPos otherPos = half == DoubleBlockHalf.LOWER ? pos.above() : pos.below();
+            if (!worldIn.isLoaded(otherPos) || worldIn.getBlockState(otherPos).getBlock() != this) {
                 return ActionResultType.FAIL;
             }
-            BlockPos lowerPos = half == DoubleBlockHalf.LOWER ? pos : pos.down();
-            LockedDoorTile te = (LockedDoorTile) worldIn.getTileEntity(lowerPos);
+            BlockPos lowerPos = half == DoubleBlockHalf.LOWER ? pos : pos.below();
+            LockedDoorTile te = (LockedDoorTile) worldIn.getBlockEntity(lowerPos);
             if (te == null) { return ActionResultType.FAIL; }
-            ItemStack heldStack = player.getHeldItem(handIn);
-            if (state.get(LOCKED)) { // LOCKED
+            ItemStack heldStack = player.getItemInHand(handIn);
+            if (state.getValue(LOCKED)) { // LOCKED
                 if (!heldStack.isEmpty() && UnlockHelper.checkUnlock(heldStack, te, worldIn, lowerPos, player, true)) {
                     // LOCKED, KEY
                     BlockState newState;
-                    if (player.isSneaking()) { // LOCKED, KEY, SNEAKING => toggle locked state
-                        final boolean newLocked = !state.get(LOCKED);
-                        newState = state.with(LOCKED, newLocked);
+                    if (player.isShiftKeyDown()) { // LOCKED, KEY, SNEAKING => toggle locked state
+                        final boolean newLocked = !state.getValue(LOCKED);
+                        newState = state.setValue(LOCKED, newLocked);
                         final SoundEvent sound = newLocked ? Sounds.LOCKED_DOOR_RELOCK : Sounds.LOCKED_DOOR_UNLOCK;
                         playSound(player, worldIn, pos, sound);
                     } else { // LOCKED, KEY, NOT SNEAKING => toggle open state
-                        final boolean newOpen = !state.get(OPEN);
-                        newState = state.with(OPEN, newOpen);
+                        final boolean newOpen = !state.getValue(OPEN);
+                        newState = state.setValue(OPEN, newOpen);
                         this.playDoorSound(player, worldIn, pos, newOpen);
                     }
                     setAndNotify(newState, pos, worldIn);
@@ -104,14 +104,14 @@ public class LockedDoorBlock extends Block {
                 } else { // LOCKED, NO KEY
                     ItemStack lock = te.getLockStack();
                     if (handIn == Hand.OFF_HAND) {
-                        if (player.isSneaking() && lock.hasDisplayName()) {
+                        if (player.isShiftKeyDown() && lock.hasCustomHoverName()) {
                             // LOCKED, NO KEY, SNEAKING => inform player of lock name
-                            player.sendStatusMessage(new TranslationTextComponent("status.basedefense.door.info",
-                                    lock.getDisplayName().copyRaw().mergeStyle(WHITE)).mergeStyle(YELLOW, ITALIC), true);
+                            player.displayClientMessage(new TranslationTextComponent("status.basedefense.door.info",
+                                    lock.getHoverName().plainCopy().withStyle(WHITE)).withStyle(YELLOW, ITALIC), true);
                         } else { // LOCKED, NO KEY, NOT SNEAKING => inform player that door is locked
-                            player.sendStatusMessage(new TranslationTextComponent("status.basedefense.door.locked",
-                                    new TranslationTextComponent(this.baseBlock.getTranslationKey()).mergeStyle(WHITE))
-                                    .mergeStyle(GRAY, ITALIC), true);
+                            player.displayClientMessage(new TranslationTextComponent("status.basedefense.door.locked",
+                                    new TranslationTextComponent(this.baseBlock.getDescriptionId()).withStyle(WHITE))
+                                    .withStyle(GRAY, ITALIC), true);
                         }
                         playSound(player, worldIn, pos, Sounds.LOCKED_DOOR_ATTEMPT);
                         return ActionResultType.SUCCESS;
@@ -119,11 +119,11 @@ public class LockedDoorBlock extends Block {
                     return ActionResultType.PASS;
                 }
             } else { // UNLOCKED
-                if (player.isSneaking()) { // UNLOCKED, SNEAKING
+                if (player.isShiftKeyDown()) { // UNLOCKED, SNEAKING
                     if (!te.getLockStack().isEmpty()) {
                         // UNLOCKED, SNEAKING, HAS LOCK => set to locked and unopened state
-                        boolean wasOpen = state.get(OPEN);
-                        setAndNotify(state.with(LOCKED, true).with(OPEN, false), pos, worldIn);
+                        boolean wasOpen = state.getValue(OPEN);
+                        setAndNotify(state.setValue(LOCKED, true).setValue(OPEN, false), pos, worldIn);
                         playSound(player, worldIn, pos, Sounds.LOCKED_DOOR_RELOCK);
                         if (wasOpen) { this.playDoorSound(player, worldIn, pos, false); }
                     } else { // UNLOCKED, SNEAKING, NO LOCK
@@ -132,15 +132,15 @@ public class LockedDoorBlock extends Block {
                             // remove from inv, set to locked state
                             te.setLockStack(heldStack.copy());
                             heldStack.setCount(heldStack.getCount() - 1);
-                            setAndNotify(state.with(LOCKED, true), pos, worldIn);
+                            setAndNotify(state.setValue(LOCKED, true), pos, worldIn);
                             playSound(player, worldIn, pos, Sounds.LOCKED_DOOR_RELOCK);
                             te.requestModelDataUpdate();
                         } // UNLOCKED, SNEAKING, NO LOCK, NOT HOLDING LOCK => nothing;
                     }
 
                 } else { // UNLOCKED, NOT SNEAKING => toggle open state
-                    final boolean newOpen = !state.get(OPEN);
-                    setAndNotify(state.with(OPEN, newOpen), pos, worldIn);
+                    final boolean newOpen = !state.getValue(OPEN);
+                    setAndNotify(state.setValue(OPEN, newOpen), pos, worldIn);
                     this.playDoorSound(player, worldIn, pos, newOpen);
                 }
 
@@ -150,12 +150,12 @@ public class LockedDoorBlock extends Block {
     }
 
     private void setAndNotify(BlockState state, BlockPos pos, World worldIn) {
-        worldIn.setBlockState(pos, state, DEFAULT_AND_RERENDER);
+        worldIn.setBlock(pos, state, DEFAULT_AND_RERENDER);
         worldIn.neighborChanged(getOtherHalf(state, pos), this, pos);
     }
 
     private void playSound(PlayerEntity player, World world, BlockPos pos, SoundEvent event) {
-        world.playSound(player, pos, event, SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
+        world.playSound(player, pos, event, SoundCategory.BLOCKS, 1.0F, world.random.nextFloat() * 0.1F + 0.9F);
     }
 
     @SuppressWarnings("deprecation")
@@ -166,30 +166,30 @@ public class LockedDoorBlock extends Block {
         if (fromBlockIn != this) return;
         BlockState otherState = worldIn.getBlockState(fromPos);
         if (otherState.getBlock() != this) return;
-        worldIn.setBlockState(pos, state.with(LOCKED, otherState.get(LOCKED)).with(OPEN, otherState.get(OPEN)));
+        worldIn.setBlockAndUpdate(pos, state.setValue(LOCKED, otherState.getValue(LOCKED)).setValue(OPEN, otherState.getValue(OPEN)));
     }
 
     private BlockPos getOtherHalf(BlockState selfState, BlockPos selfPos) {
-        return selfState.get(HALF) == DoubleBlockHalf.LOWER ? selfPos.up() : selfPos.down();
+        return selfState.getValue(HALF) == DoubleBlockHalf.LOWER ? selfPos.above() : selfPos.below();
     }
 
     private void playDoorSound(PlayerEntity player, World worldIn, BlockPos pos, boolean isOpening) {
-        worldIn.playEvent(player, isOpening ? this.getOpenSound() : this.getCloseSound(), pos, 0);
+        worldIn.levelEvent(player, isOpening ? this.getOpenSound() : this.getCloseSound(), pos, 0);
     }
 
     private int getCloseSound() {
-        return this.material == Material.IRON ? WorldEvents.IRON_DOOR_CLOSE_SOUND : WorldEvents.WOODEN_DOOR_CLOSE_SOUND;
+        return this.material == Material.METAL ? WorldEvents.IRON_DOOR_CLOSE_SOUND : WorldEvents.WOODEN_DOOR_CLOSE_SOUND;
     }
 
     private int getOpenSound() {
-        return this.material == Material.IRON ? WorldEvents.IRON_DOOR_OPEN_SOUND : WorldEvents.WOODEN_DOOR_OPEN_SOUND;
+        return this.material == Material.METAL ? WorldEvents.IRON_DOOR_OPEN_SOUND : WorldEvents.WOODEN_DOOR_OPEN_SOUND;
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        Direction direction = state.get(FACING);
-        boolean closed = !state.get(OPEN);
-        boolean rightHinge = state.get(HINGE) == DoorHingeSide.RIGHT;
+        Direction direction = state.getValue(FACING);
+        boolean closed = !state.getValue(OPEN);
+        boolean rightHinge = state.getValue(HINGE) == DoorHingeSide.RIGHT;
         switch (direction) {
             case EAST:
             default:
@@ -204,78 +204,78 @@ public class LockedDoorBlock extends Block {
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         boolean locked = false;
         if (!stack.isEmpty() && stack.getItem() instanceof LockedBlockItem) {
-            TileEntity te = worldIn.getTileEntity(pos);
+            TileEntity te = worldIn.getBlockEntity(pos);
             if (te instanceof LockedDoorTile) {
                 ((LockedDoorTile) te).setLockStack(((LockedBlockItem) stack.getItem()).getLockStack(stack));
                 locked = true;
-                worldIn.setBlockState(pos, state.with(LOCKED, locked), DEFAULT_AND_RERENDER);
+                worldIn.setBlock(pos, state.setValue(LOCKED, locked), DEFAULT_AND_RERENDER);
             }
         }
-        worldIn.setBlockState(pos.up(), state.with(HALF, DoubleBlockHalf.UPPER).with(LOCKED, locked), DEFAULT_AND_RERENDER);
+        worldIn.setBlock(pos.above(), state.setValue(HALF, DoubleBlockHalf.UPPER).setValue(LOCKED, locked), DEFAULT_AND_RERENDER);
     }
 
     @SuppressWarnings("deprecation")
     @Override
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
             BlockPos currentPos, BlockPos facingPos) {
-        DoubleBlockHalf doubleblockhalf = stateIn.get(HALF);
+        DoubleBlockHalf doubleblockhalf = stateIn.getValue(HALF);
         if (facing.getAxis() == Direction.Axis.Y && doubleblockhalf == DoubleBlockHalf.LOWER == (facing == Direction.UP)) {
-            if (facingState.getBlock() == this && facingState.get(HALF) != doubleblockhalf) {
-                return stateIn.with(FACING, facingState.get(FACING)).with(OPEN, facingState.get(OPEN))
-                        .with(HINGE, facingState.get(HINGE)).with(LOCKED, facingState.get(LOCKED));
+            if (facingState.getBlock() == this && facingState.getValue(HALF) != doubleblockhalf) {
+                return stateIn.setValue(FACING, facingState.getValue(FACING)).setValue(OPEN, facingState.getValue(OPEN))
+                        .setValue(HINGE, facingState.getValue(HINGE)).setValue(LOCKED, facingState.getValue(LOCKED));
             } else {
-                return Blocks.AIR.getDefaultState();
+                return Blocks.AIR.defaultBlockState();
             }
         } else {
             if (doubleblockhalf == DoubleBlockHalf.LOWER && facing == Direction.DOWN && !stateIn
-                    .isValidPosition(worldIn, currentPos)) {
-                return Blocks.AIR.getDefaultState();
+                    .canSurvive(worldIn, currentPos)) {
+                return Blocks.AIR.defaultBlockState();
             } else {
-                return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+                return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
             }
         }
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        BlockPos blockpos = context.getPos();
-        if (blockpos.getY() < 255 && context.getWorld().getBlockState(blockpos.up()).isReplaceable(context)) {
-            return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing())
-                    .with(HINGE, this.getHingeSide(context)).with(HALF, DoubleBlockHalf.LOWER);
+        BlockPos blockpos = context.getClickedPos();
+        if (blockpos.getY() < 255 && context.getLevel().getBlockState(blockpos.above()).canBeReplaced(context)) {
+            return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection())
+                    .setValue(HINGE, this.getHingeSide(context)).setValue(HALF, DoubleBlockHalf.LOWER);
         } else {
             return null;
         }
     }
 
     private DoorHingeSide getHingeSide(BlockItemUseContext context) {
-        IBlockReader world = context.getWorld();
-        BlockPos blockPos = context.getPos();
-        Direction horizFacing = context.getPlacementHorizontalFacing();
-        BlockPos abovePos = blockPos.up();
-        Direction leftFacing = horizFacing.rotateYCCW();
-        BlockPos leftPos = blockPos.offset(leftFacing);
+        IBlockReader world = context.getLevel();
+        BlockPos blockPos = context.getClickedPos();
+        Direction horizFacing = context.getHorizontalDirection();
+        BlockPos abovePos = blockPos.above();
+        Direction leftFacing = horizFacing.getCounterClockWise();
+        BlockPos leftPos = blockPos.relative(leftFacing);
         BlockState leftState = world.getBlockState(leftPos);
-        BlockPos leftAbovePos = abovePos.offset(leftFacing);
+        BlockPos leftAbovePos = abovePos.relative(leftFacing);
         BlockState leftAboveState = world.getBlockState(leftAbovePos);
-        Direction rightFacing = horizFacing.rotateY();
-        BlockPos rightPos = blockPos.offset(rightFacing);
+        Direction rightFacing = horizFacing.getClockWise();
+        BlockPos rightPos = blockPos.relative(rightFacing);
         BlockState rightState = world.getBlockState(rightPos);
-        BlockPos rightAbovePos = abovePos.offset(rightFacing);
+        BlockPos rightAbovePos = abovePos.relative(rightFacing);
         BlockState rightAboveState = world.getBlockState(rightAbovePos);
-        int i = (leftState.hasOpaqueCollisionShape(world, leftPos) ? -1 : 0) + (leftAboveState
-                .hasOpaqueCollisionShape(world, leftAbovePos) ? -1 : 0) + (rightState
-                .hasOpaqueCollisionShape(world, rightPos) ? 1 : 0) + (rightAboveState
-                .hasOpaqueCollisionShape(world, rightAbovePos) ? 1 : 0);
-        boolean leftHasDoor = leftState.isIn(this) && leftState.get(HALF) == DoubleBlockHalf.LOWER;
-        boolean rightHasDoor = rightState.isIn(this) && rightState.get(HALF) == DoubleBlockHalf.LOWER;
+        int i = (leftState.isCollisionShapeFullBlock(world, leftPos) ? -1 : 0) + (leftAboveState
+                .isCollisionShapeFullBlock(world, leftAbovePos) ? -1 : 0) + (rightState
+                .isCollisionShapeFullBlock(world, rightPos) ? 1 : 0) + (rightAboveState
+                .isCollisionShapeFullBlock(world, rightAbovePos) ? 1 : 0);
+        boolean leftHasDoor = leftState.is(this) && leftState.getValue(HALF) == DoubleBlockHalf.LOWER;
+        boolean rightHasDoor = rightState.is(this) && rightState.getValue(HALF) == DoubleBlockHalf.LOWER;
         if ((!leftHasDoor || rightHasDoor) && i <= 0) {
             if ((!rightHasDoor || leftHasDoor) && i >= 0) {
-                int xOffset = horizFacing.getXOffset();
-                int yOffset = horizFacing.getZOffset();
-                Vector3d hitVec = context.getHitVec();
+                int xOffset = horizFacing.getStepX();
+                int yOffset = horizFacing.getStepZ();
+                Vector3d hitVec = context.getClickLocation();
                 double d0 = hitVec.x - (double) blockPos.getX();
                 double d1 = hitVec.z - (double) blockPos.getZ();
                 return (xOffset >= 0 || !(d1 < 0.5D)) && (xOffset <= 0 || !(d1 > 0.5D)) && (yOffset >= 0 || !(d0 > 0.5D)) && (yOffset <= 0 || !(d0 < 0.5D)) ?
@@ -290,28 +290,28 @@ public class LockedDoorBlock extends Block {
     }
 
     @Override
-    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        if (!worldIn.isRemote && player.isCreative()) {
+    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+        if (!worldIn.isClientSide && player.isCreative()) {
             // Coped from DoublePlantBlock.removeBottomHalf(worldIn, pos, state, player)
-            if (state.get(HALF) == DoubleBlockHalf.UPPER) {
-                BlockPos lowerPos = pos.down();
+            if (state.getValue(HALF) == DoubleBlockHalf.UPPER) {
+                BlockPos lowerPos = pos.below();
                 BlockState lowerState = worldIn.getBlockState(lowerPos);
-                if (lowerState.getBlock() == state.getBlock() && lowerState.get(HALF) == DoubleBlockHalf.LOWER) {
-                    worldIn.setBlockState(lowerPos, Blocks.AIR.getDefaultState(),
+                if (lowerState.getBlock() == state.getBlock() && lowerState.getValue(HALF) == DoubleBlockHalf.LOWER) {
+                    worldIn.setBlock(lowerPos, Blocks.AIR.defaultBlockState(),
                             BlockFlags.NO_NEIGHBOR_DROPS | BlockFlags.DEFAULT);
-                    worldIn.playEvent(player, WorldEvents.BREAK_BLOCK_EFFECTS, lowerPos, Block.getStateId(lowerState));
+                    worldIn.levelEvent(player, WorldEvents.BREAK_BLOCK_EFFECTS, lowerPos, Block.getId(lowerState));
                 }
             }
         }
-        super.onBlockHarvested(worldIn, pos, state, player);
+        super.playerWillDestroy(worldIn, pos, state, player);
     }
 
     @Override
-    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
         switch (type) {
             case AIR:
             case LAND:
-                return state.get(OPEN);
+                return state.getValue(OPEN);
             case WATER:
             default:
                 return false;
@@ -319,11 +319,11 @@ public class LockedDoorBlock extends Block {
     }
 
     @Override
-    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        BlockPos downPos = pos.down();
+    public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+        BlockPos downPos = pos.below();
         BlockState downState = worldIn.getBlockState(downPos);
-        if (state.get(HALF) == DoubleBlockHalf.LOWER) {
-            return downState.isSolidSide(worldIn, downPos, Direction.UP);
+        if (state.getValue(HALF) == DoubleBlockHalf.LOWER) {
+            return downState.isFaceSturdy(worldIn, downPos, Direction.UP);
         } else {
             return downState.getBlock() == this;
         }
@@ -331,17 +331,17 @@ public class LockedDoorBlock extends Block {
 
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return mirrorIn == Mirror.NONE ? state : state.rotate(mirrorIn.toRotation(state.get(FACING))).func_235896_a_(HINGE);
+        return mirrorIn == Mirror.NONE ? state : state.rotate(mirrorIn.getRotation(state.getValue(FACING))).cycle(HINGE);
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(HALF, FACING, HINGE, OPEN, LOCKED);
     }
 }

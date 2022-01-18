@@ -39,11 +39,11 @@ import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
 
 public class KeyringItem extends Item {
     public KeyringItem() {
-        super(new Item.Properties().group(ITEM_GROUP).maxDamage(0).setISTER(() -> KeyringRenderer::new));
+        super(new Item.Properties().tab(ITEM_GROUP).durability(0).setISTER(() -> KeyringRenderer::new));
     }
 
     @Override
-    public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         stack.getCapability(ITEM_HANDLER_CAPABILITY).ifPresent((handler) -> {
             int keys = 0;
             for (int i = 0; i < handler.getSlots(); i++) {
@@ -52,7 +52,7 @@ public class KeyringItem extends Item {
             }
             if (keys > 0) {
                 tooltip.add(new TranslationTextComponent("tooltip.basedefense.keyring.count", keys)
-                        .mergeStyle(TextFormatting.GRAY));
+                        .withStyle(TextFormatting.GRAY));
             }
         });
     }
@@ -60,22 +60,22 @@ public class KeyringItem extends Item {
     @Override
     public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, PlayerEntity player) {
         if (world.isAreaLoaded(pos, 0)) {
-            TileEntity te = world.getTileEntity(pos);
+            TileEntity te = world.getBlockEntity(pos);
             return te != null && te.getCapability(LOCK).isPresent();
         }
         return false;
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        ItemStack stack = playerIn.getHeldItem(handIn);
-        if (!worldIn.isRemote && playerIn.isSneaking()) {
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack stack = playerIn.getItemInHand(handIn);
+        if (!worldIn.isClientSide && playerIn.isShiftKeyDown()) {
             NetworkHooks.openGui((ServerPlayerEntity) playerIn,
                     new SimpleNamedContainerProvider((id, inv, player) -> new KeyringContainer(id, inv, stack),
-                            stack.getDisplayName()), buf -> buf.writeItemStack(stack));
-            return ActionResult.resultSuccess(stack);
+                            stack.getHoverName()), buf -> buf.writeItem(stack));
+            return ActionResult.success(stack);
         }
-        return ActionResult.resultPass(stack);
+        return ActionResult.pass(stack);
     }
 
     @Override

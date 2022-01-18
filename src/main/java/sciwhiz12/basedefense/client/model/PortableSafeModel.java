@@ -17,47 +17,47 @@ public class PortableSafeModel extends Model {
     public float[] topColor = new float[3], middleColor = new float[3], bottomColor = new float[3];
 
     public PortableSafeModel() {
-        super(RenderType::getEntityCutoutNoCull);
-        textureWidth = 64;
-        textureHeight = 64;
+        super(RenderType::entityCutoutNoCull);
+        texWidth = 64;
+        texHeight = 64;
 
         feet = new ModelRenderer(this);
-        feet.setRotationPoint(0.0F, 0.0F, 0.0F);
-        feet.setTextureOffset(42, 0).addBox(-6.0F, 7.0F, -6.0F, 2.0F, 1.0F, 2.0F, 0.0F, false);
-        feet.setTextureOffset(42, 3).addBox(4.0F, 7.0F, -6.0F, 2.0F, 1.0F, 2.0F, 0.0F, false);
-        feet.setTextureOffset(42, 6).addBox(-6.0F, 7.0F, 4.0F, 2.0F, 1.0F, 2.0F, 0.0F, false);
-        feet.setTextureOffset(42, 9).addBox(4.0F, 7.0F, 4.0F, 2.0F, 1.0F, 2.0F, 0.0F, false);
+        feet.setPos(0.0F, 0.0F, 0.0F);
+        feet.texOffs(42, 0).addBox(-6.0F, 7.0F, -6.0F, 2.0F, 1.0F, 2.0F, 0.0F, false);
+        feet.texOffs(42, 3).addBox(4.0F, 7.0F, -6.0F, 2.0F, 1.0F, 2.0F, 0.0F, false);
+        feet.texOffs(42, 6).addBox(-6.0F, 7.0F, 4.0F, 2.0F, 1.0F, 2.0F, 0.0F, false);
+        feet.texOffs(42, 9).addBox(4.0F, 7.0F, 4.0F, 2.0F, 1.0F, 2.0F, 0.0F, false);
 
         walls = new ModelRenderer(this);
-        walls.setRotationPoint(0.0F, 0.0F, 0.0F);
-        walls.setTextureOffset(0, 0).addBox(-7.0F, -7.0F, -7.0F, 14.0F, 2.0F, 14.0F, 0.0F, false);
-        walls.setTextureOffset(0, 0).addBox(-7.0F, 5.0F, -7.0F, 14.0F, 2.0F, 14.0F, 0.0F, true);
-        walls.setTextureOffset(32, 16).addBox(-7.0F, -5.0F, -7.0F, 2.0F, 10.0F, 14.0F, 0.0F, false);
-        walls.setTextureOffset(0, 16).addBox(5.0F, -5.0F, -7.0F, 2.0F, 10.0F, 14.0F, 0.0F, false);
-        walls.setTextureOffset(18, 16).addBox(-5.0F, -5.0F, 5.0F, 10.0F, 10.0F, 2.0F, 0.0F, false);
+        walls.setPos(0.0F, 0.0F, 0.0F);
+        walls.texOffs(0, 0).addBox(-7.0F, -7.0F, -7.0F, 14.0F, 2.0F, 14.0F, 0.0F, false);
+        walls.texOffs(0, 0).addBox(-7.0F, 5.0F, -7.0F, 14.0F, 2.0F, 14.0F, 0.0F, true);
+        walls.texOffs(32, 16).addBox(-7.0F, -5.0F, -7.0F, 2.0F, 10.0F, 14.0F, 0.0F, false);
+        walls.texOffs(0, 16).addBox(5.0F, -5.0F, -7.0F, 2.0F, 10.0F, 14.0F, 0.0F, false);
+        walls.texOffs(18, 16).addBox(-5.0F, -5.0F, 5.0F, 10.0F, 10.0F, 2.0F, 0.0F, false);
 
         door = new ModelRenderer(this);
-        door.setRotationPoint(4.0F, 0.0F, -6.0F);
-        door.setTextureOffset(18, 16).addBox(-9.0F, -5.0F, -0.5F, 10.0F, 10.0F, 2.0F, 0.0F, false);
-        door.setTextureOffset(0, 0).addBox(-8.0F, -2.0F, -1.5F, 2.0F, 4.0F, 1.0F, 0.0F, false);
+        door.setPos(4.0F, 0.0F, -6.0F);
+        door.texOffs(18, 16).addBox(-9.0F, -5.0F, -0.5F, 10.0F, 10.0F, 2.0F, 0.0F, false);
+        door.texOffs(0, 0).addBox(-8.0F, -2.0F, -1.5F, 2.0F, 4.0F, 1.0F, 0.0F, false);
 
         top = new ModelRenderer(this);
-        top.setRotationPoint(4.0F, 0.0F, -6.0F);
-        top.setTextureOffset(0, 5).addBox(-5.0F, -1.0F, -1.0F, 1.0F, 2.0F, 1.0F, 0.0F, true);
+        top.setPos(4.0F, 0.0F, -6.0F);
+        top.texOffs(0, 5).addBox(-5.0F, -1.0F, -1.0F, 1.0F, 2.0F, 1.0F, 0.0F, true);
 
         middle = new ModelRenderer(this);
-        middle.setRotationPoint(4.0F, 0.0F, -6.0F);
-        middle.setTextureOffset(0, 8).addBox(-3.5F, -1.0F, -1.0F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+        middle.setPos(4.0F, 0.0F, -6.0F);
+        middle.texOffs(0, 8).addBox(-3.5F, -1.0F, -1.0F, 1.0F, 2.0F, 1.0F, 0.0F, false);
 
         bottom = new ModelRenderer(this);
-        bottom.setRotationPoint(4.0F, 0.0F, -6.0F);
-        bottom.setTextureOffset(0, 11).addBox(-2.0F, -1.0F, -1.0F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+        bottom.setPos(4.0F, 0.0F, -6.0F);
+        bottom.texOffs(0, 11).addBox(-2.0F, -1.0F, -1.0F, 1.0F, 2.0F, 1.0F, 0.0F, false);
     }
 
     @Override
-    public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red,
+    public void renderToBuffer(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red,
             float green, float blue, float alpha) {
-        matrixStack.push();
+        matrixStack.pushPose();
         feet.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
         walls.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
         door.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
@@ -66,31 +66,31 @@ public class PortableSafeModel extends Model {
                 alpha);
         bottom.render(matrixStack, buffer, packedLight, packedOverlay, bottomColor[0], bottomColor[1], bottomColor[2],
                 alpha);
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
     public void setDoorAngle(float angle) {
-        door.rotateAngleY = angle;
-        top.rotateAngleY = angle;
-        middle.rotateAngleY = angle;
-        bottom.rotateAngleY = angle;
+        door.yRot = angle;
+        top.yRot = angle;
+        middle.yRot = angle;
+        bottom.yRot = angle;
     }
 
     public void setColorsVisibility(boolean top, boolean middle, boolean bottom) {
-        this.top.showModel = top;
-        this.middle.showModel = middle;
-        this.bottom.showModel = bottom;
+        this.top.visible = top;
+        this.middle.visible = middle;
+        this.bottom.visible = bottom;
     }
 
     public void setColors(int top, int middle, int bottom) {
-        this.topColor[0] = ColorHelper.PackedColor.getRed(top) / 255F;
-        this.topColor[1] = ColorHelper.PackedColor.getGreen(top) / 255F;
-        this.topColor[2] = ColorHelper.PackedColor.getBlue(top) / 255F;
-        this.middleColor[0] = ColorHelper.PackedColor.getRed(middle) / 255F;
-        this.middleColor[1] = ColorHelper.PackedColor.getGreen(middle) / 255F;
-        this.middleColor[2] = ColorHelper.PackedColor.getBlue(middle) / 255F;
-        this.bottomColor[0] = ColorHelper.PackedColor.getRed(bottom) / 255F;
-        this.bottomColor[1] = ColorHelper.PackedColor.getGreen(bottom) / 255F;
-        this.bottomColor[2] = ColorHelper.PackedColor.getBlue(bottom) / 255F;
+        this.topColor[0] = ColorHelper.PackedColor.red(top) / 255F;
+        this.topColor[1] = ColorHelper.PackedColor.green(top) / 255F;
+        this.topColor[2] = ColorHelper.PackedColor.blue(top) / 255F;
+        this.middleColor[0] = ColorHelper.PackedColor.red(middle) / 255F;
+        this.middleColor[1] = ColorHelper.PackedColor.green(middle) / 255F;
+        this.middleColor[2] = ColorHelper.PackedColor.blue(middle) / 255F;
+        this.bottomColor[0] = ColorHelper.PackedColor.red(bottom) / 255F;
+        this.bottomColor[1] = ColorHelper.PackedColor.green(bottom) / 255F;
+        this.bottomColor[2] = ColorHelper.PackedColor.blue(bottom) / 255F;
     }
 }

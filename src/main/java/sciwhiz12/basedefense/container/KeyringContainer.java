@@ -22,7 +22,7 @@ public class KeyringContainer extends Container {
     private final ItemStack stack;
 
     public KeyringContainer(int windowId, PlayerInventory inv, PacketBuffer data) {
-        this(windowId, inv, data.readItemStack());
+        this(windowId, inv, data.readItem());
     }
 
     public KeyringContainer(int id, PlayerInventory inv, ItemStack stack) {
@@ -35,12 +35,12 @@ public class KeyringContainer extends Container {
         for (int i = 0; i < 9; i++) {
             addSlot(new SlotItemHandler(itemHandler, i, 8 + i * 18, 18) {
                 @Override
-                public void onSlotChanged() {
-                    super.onSlotChanged();
+                public void setChanged() {
+                    super.setChanged();
                     if (KeyringContainer.this.playerInv.player instanceof ServerPlayerEntity) {
                         // SSetSlotPacket: windowId = -2 means player inventory
                         ((ServerPlayerEntity) KeyringContainer.this.playerInv.player).connection
-                                .sendPacket(new SSetSlotPacket(-2, KeyringContainer.this.playerInv.currentItem, stack));
+                                .send(new SSetSlotPacket(-2, KeyringContainer.this.playerInv.selected, stack));
                     }
                 }
             });
@@ -50,23 +50,23 @@ public class KeyringContainer extends Container {
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
-        ItemStack heldStack = playerIn.getHeldItem(playerIn.getActiveHand());
-        return heldStack.getItem() instanceof KeyringItem && ItemStack.areItemStackTagsEqual(heldStack, stack);
+    public boolean stillValid(PlayerEntity playerIn) {
+        ItemStack heldStack = playerIn.getItemInHand(playerIn.getUsedItemHand());
+        return heldStack.getItem() instanceof KeyringItem && ItemStack.tagMatches(heldStack, stack);
     }
 
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
-        Slot slot = this.inventorySlots.get(index);
-        if (slot != null && slot.getHasStack()) {
-            ItemStack slotStack = slot.getStack();
+    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
+        Slot slot = this.slots.get(index);
+        if (slot != null && slot.hasItem()) {
+            ItemStack slotStack = slot.getItem();
             if (index > 8) {
-                if (index < 45 && !this.mergeItemStack(slotStack, 0, 9, false)) { return ItemStack.EMPTY; }
-            } else if (!this.mergeItemStack(slotStack, 9, 46, false)) { return ItemStack.EMPTY; }
+                if (index < 45 && !this.moveItemStackTo(slotStack, 0, 9, false)) { return ItemStack.EMPTY; }
+            } else if (!this.moveItemStackTo(slotStack, 9, 46, false)) { return ItemStack.EMPTY; }
 
             if (slotStack.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             } else {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
 
             slot.onTake(playerIn, slotStack);

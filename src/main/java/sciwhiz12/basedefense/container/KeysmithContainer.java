@@ -28,15 +28,15 @@ public class KeysmithContainer extends Container {
     private static final Random RANDOM = new Random();
     private final IInventory outputSlot = new CraftResultInventory() {
         @Override
-        public void markDirty() {
-            super.markDirty();
+        public void setChanged() {
+            super.setChanged();
             KeysmithContainer.this.onContentsChange();
         }
     };
     private final IInventory inputSlots = new Inventory(7) {
         @Override
-        public void markDirty() {
-            super.markDirty();
+        public void setChanged() {
+            super.setChanged();
             KeysmithContainer.this.onContentsChange();
         }
     };
@@ -44,7 +44,7 @@ public class KeysmithContainer extends Container {
     private String customName = null;
 
     public KeysmithContainer(int windowId, PlayerInventory playerInv) {
-        this(windowId, playerInv, IWorldPosCallable.DUMMY);
+        this(windowId, playerInv, IWorldPosCallable.NULL);
     }
 
     public KeysmithContainer(int windowId, PlayerInventory playerInv, IWorldPosCallable worldPos) {
@@ -53,26 +53,26 @@ public class KeysmithContainer extends Container {
 
         this.addSlot(new Slot(this.inputSlots, 0, 14, 24) {
             @Override
-            public boolean isItemValid(ItemStack stack) {
+            public boolean mayPlace(ItemStack stack) {
                 return stack.getItem() == Items.BLANK_KEY;
             }
         }.setBackground(Textures.ATLAS_BLOCKS_TEXTURE, Textures.SLOT_BLANK_KEY));
         this.addSlot(new Slot(this.inputSlots, 1, 31, 46) {
             @Override
-            public boolean isItemValid(ItemStack stack) {
+            public boolean mayPlace(ItemStack stack) {
                 return stack.getItem() == Items.KEY;
             }
         }.setBackground(Textures.ATLAS_BLOCKS_TEXTURE, Textures.SLOT_KEY));
         this.addSlot(new Slot(this.outputSlot, 0, 64, 24) {
             @Override
-            public boolean isItemValid(ItemStack stack) {
+            public boolean mayPlace(ItemStack stack) {
                 return false;
             }
 
             @Override
             public ItemStack onTake(PlayerEntity player, ItemStack stack) {
-                KeysmithContainer.this.inputSlots.decrStackSize(0, 1);
-                if (KeysmithContainer.this.inputSlots.getStackInSlot(0).isEmpty()) {
+                KeysmithContainer.this.inputSlots.removeItem(0, 1);
+                if (KeysmithContainer.this.inputSlots.getItem(0).isEmpty()) {
                     KeysmithContainer.this.setOutputName(null);
                 }
                 return stack;
@@ -82,8 +82,8 @@ public class KeysmithContainer extends Container {
     }
 
     public void onContentsChange() {
-        ItemStack blank = this.inputSlots.getStackInSlot(0);
-        ItemStack dupl = this.inputSlots.getStackInSlot(1);
+        ItemStack blank = this.inputSlots.getItem(0);
+        ItemStack dupl = this.inputSlots.getItem(1);
         ItemStack out = blank.isEmpty() ? ItemStack.EMPTY : new ItemStack(Items.KEY, 1);
         if (blank.isEmpty()) {
             this.customName = null;
@@ -93,11 +93,11 @@ public class KeysmithContainer extends Container {
                             .orElseGet(() -> LongLists.singleton(RANDOM.nextLong()))));
             IColorable.copyColors(dupl, out);
             if (!StringUtils.isBlank(this.customName)) {
-                out.setDisplayName(new StringTextComponent(this.customName));
-            } else if (out.hasDisplayName()) { out.clearCustomName(); }
+                out.setHoverName(new StringTextComponent(this.customName));
+            } else if (out.hasCustomHoverName()) { out.resetHoverName(); }
         }
-        this.outputSlot.setInventorySlotContents(0, out);
-        this.detectAndSendChanges();
+        this.outputSlot.setItem(0, out);
+        this.broadcastChanges();
     }
 
     public void setOutputName(String newName) {
@@ -110,31 +110,31 @@ public class KeysmithContainer extends Container {
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity player) {
-        return isWithinUsableDistance(worldPos, player, Blocks.KEYSMITH_TABLE);
+    public boolean stillValid(PlayerEntity player) {
+        return stillValid(worldPos, player, Blocks.KEYSMITH_TABLE);
     }
 
-    public void onContainerClosed(PlayerEntity playerIn) {
-        super.onContainerClosed(playerIn);
-        this.worldPos.consume((world, pos) -> this.clearContainer(playerIn, world, this.inputSlots));
+    public void removed(PlayerEntity playerIn) {
+        super.removed(playerIn);
+        this.worldPos.execute((world, pos) -> this.clearContainer(playerIn, world, this.inputSlots));
     }
 
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
-        Slot slot = this.inventorySlots.get(index);
-        if (slot != null && slot.getHasStack()) {
-            ItemStack slotStack = slot.getStack();
+    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
+        Slot slot = this.slots.get(index);
+        if (slot != null && slot.hasItem()) {
+            ItemStack slotStack = slot.getItem();
             if (index == 2) {
-                if (!this.mergeItemStack(slotStack, 3, 39, true)) { return ItemStack.EMPTY; }
+                if (!this.moveItemStackTo(slotStack, 3, 39, true)) { return ItemStack.EMPTY; }
             } else if (index != 0 && index != 1) {
-                if (index < 39 && !this.mergeItemStack(slotStack, 0, 2, false)) {
+                if (index < 39 && !this.moveItemStackTo(slotStack, 0, 2, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(slotStack, 3, 39, false)) { return ItemStack.EMPTY; }
+            } else if (!this.moveItemStackTo(slotStack, 3, 39, false)) { return ItemStack.EMPTY; }
 
             if (slotStack.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             } else {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
             slot.onTake(playerIn, slotStack);
         }

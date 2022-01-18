@@ -34,7 +34,7 @@ public abstract class AbstractPadlockItem extends Item implements IColorable {
     }
 
     @Override
-    public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         stack.getCapability(LOCK).filter(ITooltipInfo.class::isInstance)
                 .ifPresent(lock -> ((ITooltipInfo) lock).addInformation(tooltip, flagIn.isAdvanced()));
         if (!flagIn.isAdvanced()) { return; }
@@ -46,24 +46,24 @@ public abstract class AbstractPadlockItem extends Item implements IColorable {
 
     @Override
     public ActionResultType onItemUseFirst(ItemStack stack, ItemUseContext context) {
-        final World world = context.getWorld();
-        final BlockPos pos = context.getPos();
+        final World world = context.getLevel();
+        final BlockPos pos = context.getClickedPos();
         final BlockState state = world.getBlockState(pos);
-        if (state.getBlock() instanceof DoorBlock && !state.get(DoorBlock.OPEN) && !state.get(DoorBlock.POWERED)) {
+        if (state.getBlock() instanceof DoorBlock && !state.getValue(DoorBlock.OPEN) && !state.getValue(DoorBlock.POWERED)) {
             final PadlockedDoorBlock block = PadlockedDoorBlock.getReplacement(state.getBlock());
             if (block == null || !block.isValidLock(stack)) { return ActionResultType.PASS; }
-            if (!world.isRemote) {
-                final boolean isLower = state.get(PadlockedDoorBlock.HALF) == DoubleBlockHalf.LOWER;
-                final BlockPos offPos = isLower ? pos.up() : pos.down();
+            if (!world.isClientSide) {
+                final boolean isLower = state.getValue(PadlockedDoorBlock.HALF) == DoubleBlockHalf.LOWER;
+                final BlockPos offPos = isLower ? pos.above() : pos.below();
                 final BlockState offState = world.getBlockState(offPos);
 
-                final Direction facing = state.get(DoorBlock.FACING);
-                final DoorHingeSide hinge = state.get(DoorBlock.HINGE);
-                DoorSide side = DoorSide.getSideForDirection(facing, context.getFace());
-                final BlockState defState = block.getDefaultState().with(HINGE, hinge).with(FACING, facing);
+                final Direction facing = state.getValue(DoorBlock.FACING);
+                final DoorHingeSide hinge = state.getValue(DoorBlock.HINGE);
+                DoorSide side = DoorSide.getSideForDirection(facing, context.getClickedFace());
+                final BlockState defState = block.defaultBlockState().setValue(HINGE, hinge).setValue(FACING, facing);
 
-                final BlockState newState = defState.with(HALF, state.get(DoorBlock.HALF)).with(SIDE, side);
-                final BlockState newOffState = defState.with(HALF, offState.get(DoorBlock.HALF)).with(SIDE, side);
+                final BlockState newState = defState.setValue(HALF, state.getValue(DoorBlock.HALF)).setValue(SIDE, side);
+                final BlockState newOffState = defState.setValue(HALF, offState.getValue(DoorBlock.HALF)).setValue(SIDE, side);
 
                 final ItemStack copy = stack.copy();
                 copy.setCount(1);
@@ -71,9 +71,9 @@ public abstract class AbstractPadlockItem extends Item implements IColorable {
 
                 int flags =
                         Constants.BlockFlags.BLOCK_UPDATE | Constants.BlockFlags.RERENDER_MAIN_THREAD | Constants.BlockFlags.UPDATE_NEIGHBORS | Constants.BlockFlags.NO_NEIGHBOR_DROPS;
-                world.setBlockState(pos, newState, flags);
-                world.setBlockState(offPos, newOffState, flags);
-                TileEntity te = world.getTileEntity(isLower ? pos : offPos);
+                world.setBlock(pos, newState, flags);
+                world.setBlock(offPos, newOffState, flags);
+                TileEntity te = world.getBlockEntity(isLower ? pos : offPos);
                 if (te instanceof PadlockedDoorTile) { ((PadlockedDoorTile) te).setLockStack(copy); }
             }
             return ActionResultType.SUCCESS;

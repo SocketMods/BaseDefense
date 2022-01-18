@@ -21,11 +21,11 @@ import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
 
 public class AdminPadlockItem extends AbstractPadlockItem {
     public AdminPadlockItem() {
-        super(new Item.Properties().maxDamage(0).rarity(Rarity.EPIC).group(ITEM_GROUP));
+        super(new Item.Properties().durability(0).rarity(Rarity.EPIC).tab(ITEM_GROUP));
     }
 
     @Override
-    public boolean hasEffect(ItemStack stack) {
+    public boolean isFoil(ItemStack stack) {
         return true;
     }
 
@@ -35,8 +35,8 @@ public class AdminPadlockItem extends AbstractPadlockItem {
             @Override
             public void onRemove(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
                 super.onRemove(key, worldPos, player);
-                worldPos.consume((world, pos) -> {
-                    TileEntity te = world.getTileEntity(pos);
+                worldPos.execute((world, pos) -> {
+                    TileEntity te = world.getBlockEntity(pos);
                     if (te instanceof LockableTile) {
                         LockableTile lockTile = (LockableTile) te;
                         ItemHandlerHelper.giveItemToPlayer(player, lockTile.getLockStack());

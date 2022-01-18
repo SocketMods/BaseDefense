@@ -27,19 +27,19 @@ public class PortableSafeRenderer extends TileEntityRenderer<PortableSafeTileEnt
 
     public void render(PortableSafeTileEntity tileEntityIn, float partialTicks, MatrixStack matrixStackIn,
             IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
-        final BlockState blockstate = tileEntityIn.getWorld() != null ?
+        final BlockState blockstate = tileEntityIn.getLevel() != null ?
                 tileEntityIn.getBlockState() :
-                Blocks.PORTABLE_SAFE.getDefaultState().with(ChestBlock.FACING, Direction.SOUTH);
+                Blocks.PORTABLE_SAFE.defaultBlockState().setValue(ChestBlock.FACING, Direction.SOUTH);
         if (blockstate.getBlock() instanceof PortableSafeBlock) {
-            matrixStackIn.push();
+            matrixStackIn.pushPose();
             matrixStackIn.translate(0.5D, 0.5D, 0.5D);
-            matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-blockstate.get(ChestBlock.FACING).getHorizontalAngle()));
-            matrixStackIn.rotate(Vector3f.XP.rotationDegrees(180));
-            IVertexBuilder vertex = bufferIn.getBuffer(RenderType.getEntityCutout(Textures.PORTABLE_SAFE_MODEL));
+            matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-blockstate.getValue(ChestBlock.FACING).toYRot()));
+            matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(180));
+            IVertexBuilder vertex = bufferIn.getBuffer(RenderType.entityCutout(Textures.PORTABLE_SAFE_MODEL));
             this.setModelColors(tileEntityIn);
             model.setDoorAngle((float) -(tileEntityIn.getDoorAngle(partialTicks) * (Math.PI / 2F)));
-            model.render(matrixStackIn, vertex, combinedLightIn, combinedOverlayIn, 1F, 1F, 1F, 1F);
-            matrixStackIn.pop();
+            model.renderToBuffer(matrixStackIn, vertex, combinedLightIn, combinedOverlayIn, 1F, 1F, 1F, 1F);
+            matrixStackIn.popPose();
         }
     }
 

@@ -38,7 +38,7 @@ public class LockedItemIngredient extends Ingredient {
     @Override
     public boolean test(@Nullable ItemStack input) {
         if (input == null) return false;
-        final boolean itemAndDamage = this.stack.getItem() == input.getItem() && this.stack.getDamage() == input.getDamage();
+        final boolean itemAndDamage = this.stack.getItem() == input.getItem() && this.stack.getDamageValue() == input.getDamageValue();
         final boolean hasLock = input.getCapability(LOCK).isPresent();
         final boolean hasCode = (!requiresCode || input.getCapability(CODE_HOLDER)
                 .map(holder -> holder.getCodes().size() > 0).orElse(false));
@@ -51,7 +51,7 @@ public class LockedItemIngredient extends Ingredient {
     }
 
     @Override
-    public JsonElement serialize() {
+    public JsonElement toJson() {
         JsonObject json = new JsonObject();
         json.addProperty("type", CraftingHelper.getID(IngredientSerializers.LOCKED_ITEM).toString());
         json.addProperty("has_codes", requiresCode);
@@ -62,18 +62,18 @@ public class LockedItemIngredient extends Ingredient {
     public static class Serializer implements IIngredientSerializer<LockedItemIngredient> {
         @Override
         public LockedItemIngredient parse(PacketBuffer buffer) {
-            return new LockedItemIngredient(buffer.readItemStack(), buffer.readBoolean());
+            return new LockedItemIngredient(buffer.readItem(), buffer.readBoolean());
         }
 
         @Override
         public LockedItemIngredient parse(JsonObject json) {
             return new LockedItemIngredient(CraftingHelper.getItemStack(json, true),
-                    JSONUtils.getBoolean(json, "has_codes"));
+                    JSONUtils.getAsBoolean(json, "has_codes"));
         }
 
         @Override
         public void write(PacketBuffer buffer, LockedItemIngredient ingredient) {
-            buffer.writeItemStack(ingredient.stack);
+            buffer.writeItem(ingredient.stack);
             buffer.writeBoolean(ingredient.requiresCode);
         }
     }

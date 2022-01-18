@@ -18,7 +18,7 @@ import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
 
 public class CodedPadlockItem extends AbstractPadlockItem {
     public CodedPadlockItem() {
-        super(new Properties().maxDamage(0).group(ITEM_GROUP));
+        super(new Properties().durability(0).tab(ITEM_GROUP));
     }
 
     @Override
@@ -26,8 +26,8 @@ public class CodedPadlockItem extends AbstractPadlockItem {
         return new SerializableCapabilityProvider<>(() -> new CodedLock() {
             @Override
             public void onRemove(IKey key, IWorldPosCallable worldPos, PlayerEntity player) {
-                worldPos.consume((world, pos) -> {
-                    TileEntity te = world.getTileEntity(pos);
+                worldPos.execute((world, pos) -> {
+                    TileEntity te = world.getBlockEntity(pos);
                     if (te instanceof LockableTile) {
                         LockableTile lockTile = (LockableTile) te;
                         ItemHandlerHelper.giveItemToPlayer(player, lockTile.getLockStack());

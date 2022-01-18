@@ -44,45 +44,45 @@ public class LockableTile extends TileEntity {
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
         CompoundNBT tag = new CompoundNBT();
-        tag.put(TAG_LOCK_ITEM, lock.getStack().write(new CompoundNBT()));
-        return new SUpdateTileEntityPacket(pos, 0, getUpdateTag());
+        tag.put(TAG_LOCK_ITEM, lock.getStack().save(new CompoundNBT()));
+        return new SUpdateTileEntityPacket(worldPosition, 0, getUpdateTag());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.lock.setStack(ItemStack.read(pkt.getNbtCompound().getCompound(TAG_LOCK_ITEM)));
+        this.lock.setStack(ItemStack.of(pkt.getTag().getCompound(TAG_LOCK_ITEM)));
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
         readData(compound);
     }
 
     public void readData(CompoundNBT compound) {
-        lock.setStack(ItemStack.read(compound.getCompound(TAG_LOCK_ITEM)));
+        lock.setStack(ItemStack.of(compound.getCompound(TAG_LOCK_ITEM)));
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        compound = super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        compound = super.save(compound);
         compound = writeData(compound);
         return compound;
     }
 
     public CompoundNBT writeData(CompoundNBT compound) {
-        compound.put(TAG_LOCK_ITEM, lock.getStack().write(new CompoundNBT()));
+        compound.put(TAG_LOCK_ITEM, lock.getStack().save(new CompoundNBT()));
         return compound;
     }
 
     @Override
-    public void remove() {
-        super.remove();
+    public void setRemoved() {
+        super.setRemoved();
         if (lockCap != null) {
             lockCap.invalidate();
             lockCap = null;
@@ -91,10 +91,10 @@ public class LockableTile extends TileEntity {
 
     public void setLockStack(ItemStack stack) {
         lock.setStack(stack);
-        if (world != null) {
-            this.world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.DEFAULT);
+        if (level != null) {
+            this.level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.DEFAULT);
         }
-        this.markDirty();
+        this.setChanged();
         if (lockCap != null) {
             lockCap.invalidate();
             lockCap = null;

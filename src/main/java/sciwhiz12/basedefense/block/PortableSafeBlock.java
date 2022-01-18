@@ -46,24 +46,24 @@ import static net.minecraft.util.text.TextFormatting.GRAY;
 public class PortableSafeBlock extends Block implements IWaterLoggable {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final ResourceLocation CONTENTS = new ResourceLocation("contents");
-    private static final VoxelShape NORTH_SHAPE = Block.makeCuboidShape(1.0D, 0.0D, 0.5D, 15.0D, 15.0D, 15.0D);
-    private static final VoxelShape EAST_SHAPE = Block.makeCuboidShape(1.0D, 0.0D, 1.0D, 15.5D, 15.0D, 15.0D);
-    private static final VoxelShape SOUTH_SHAPE = Block.makeCuboidShape(1.0D, 0.0D, 1.0D, 15.0D, 15.0D, 15.5D);
-    private static final VoxelShape WEST_SHAPE = Block.makeCuboidShape(0.5D, 0.0D, 1.0D, 15.0D, 15.0D, 15.0D);
+    private static final VoxelShape NORTH_SHAPE = Block.box(1.0D, 0.0D, 0.5D, 15.0D, 15.0D, 15.0D);
+    private static final VoxelShape EAST_SHAPE = Block.box(1.0D, 0.0D, 1.0D, 15.5D, 15.0D, 15.0D);
+    private static final VoxelShape SOUTH_SHAPE = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 15.0D, 15.5D);
+    private static final VoxelShape WEST_SHAPE = Block.box(0.5D, 0.0D, 1.0D, 15.0D, 15.0D, 15.0D);
 
     public PortableSafeBlock() {
-        super(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(40F, 1200F));
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH));
+        super(AbstractBlock.Properties.of(Material.METAL).strength(40F, 1200F));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        switch (state.get(FACING)) {
+        switch (state.getValue(FACING)) {
             default:
             case NORTH:
                 return NORTH_SHAPE;
@@ -78,24 +78,24 @@ public class PortableSafeBlock extends Block implements IWaterLoggable {
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
-    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        TileEntity te = worldIn.getTileEntity(pos);
+    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+        TileEntity te = worldIn.getBlockEntity(pos);
         if (te instanceof PortableSafeTileEntity) {
             PortableSafeTileEntity safe = (PortableSafeTileEntity) te;
-            if (!worldIn.isRemote && player.isCreative() && !safe.isEmpty()) {
+            if (!worldIn.isClientSide && player.isCreative() && !safe.isEmpty()) {
                 @SuppressWarnings("deprecation")
-                ItemStack stack = this.getItem(worldIn, pos, state);
+                ItemStack stack = this.getCloneItemStack(worldIn, pos, state);
 
                 CompoundNBT compoundnbt = safe.writeData(new CompoundNBT());
                 if (!compoundnbt.isEmpty()) {
-                    stack.setTagInfo("BlockEntityTag", compoundnbt);
+                    stack.addTagElement("BlockEntityTag", compoundnbt);
                 }
                 if (safe.hasCustomName()) {
-                    stack.setDisplayName(safe.getCustomName());
+                    stack.setHoverName(safe.getCustomName());
                 }
                 if (stack.getItem() instanceof IContainsLockItem) {
                     ((IContainsLockItem) stack.getItem()).setLockStack(stack, safe.getLockStack());
@@ -103,18 +103,18 @@ public class PortableSafeBlock extends Block implements IWaterLoggable {
 
                 ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D,
                         (double) pos.getZ() + 0.5D, stack);
-                itementity.setDefaultPickupDelay();
-                worldIn.addEntity(itementity);
+                itementity.setDefaultPickUpDelay();
+                worldIn.addFreshEntity(itementity);
             }
         }
-        super.onBlockHarvested(worldIn, pos, state, player);
+        super.playerWillDestroy(worldIn, pos, state, player);
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         builder = builder.withDynamicDrop(CONTENTS, (context, stackConsumer) -> {
-            TileEntity te = context.get(LootParameters.BLOCK_ENTITY);
+            TileEntity te = context.getParamOrNull(LootParameters.BLOCK_ENTITY);
             if (te instanceof PortableSafeTileEntity) {
                 PortableSafeTileEntity safe = (PortableSafeTileEntity) te;
                 IItemHandler inv = safe.getInventory();
@@ -127,14 +127,14 @@ public class PortableSafeBlock extends Block implements IWaterLoggable {
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         if (!stack.isEmpty() && stack.getItem() instanceof LockedBlockItem) {
             LockedBlockItem item = (LockedBlockItem) stack.getItem();
-            TileEntity te = worldIn.getTileEntity(pos);
+            TileEntity te = worldIn.getBlockEntity(pos);
             if (item.hasLockStack(stack) && te instanceof PortableSafeTileEntity) {
                 PortableSafeTileEntity safeTE = (PortableSafeTileEntity) te;
                 ItemStack lockStack = item.getLockStack(stack);
-                safeTE.setCustomName(lockStack.getDisplayName());
+                safeTE.setCustomName(lockStack.getHoverName());
                 safeTE.setLockStack(lockStack);
             }
         }
@@ -142,25 +142,25 @@ public class PortableSafeBlock extends Block implements IWaterLoggable {
 
     @SuppressWarnings("deprecation")
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        worldIn.updateComparatorOutputLevel(pos, this);
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
+    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        worldIn.updateNeighbourForOutputSignal(pos, this);
+        super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
             BlockRayTraceResult hit) {
-        if (worldIn.isRemote) {
+        if (worldIn.isClientSide) {
             return ActionResultType.SUCCESS;
         } else {
-            INamedContainerProvider provider = this.getContainer(state, worldIn, pos);
-            TileEntity te = worldIn.getTileEntity(pos);
+            INamedContainerProvider provider = this.getMenuProvider(state, worldIn, pos);
+            TileEntity te = worldIn.getBlockEntity(pos);
             if (provider != null && te instanceof PortableSafeTileEntity) {
                 PortableSafeTileEntity safeTE = (PortableSafeTileEntity) te;
-                ItemStack heldItem = player.getHeldItem(handIn);
+                ItemStack heldItem = player.getItemInHand(handIn);
                 if (safeTE.getNumPlayersUsing() > 0 || (!heldItem.isEmpty() && UnlockHelper
                         .checkUnlock(heldItem, safeTE, worldIn, pos, player, true))) {
-                    player.openContainer(provider);
+                    player.openMenu(provider);
                 }
             }
             return ActionResultType.CONSUME;
@@ -169,27 +169,27 @@ public class PortableSafeBlock extends Block implements IWaterLoggable {
 
     @SuppressWarnings("deprecation")
     @Override
-    public boolean eventReceived(BlockState state, World worldIn, BlockPos pos, int id, int param) {
-        super.eventReceived(state, worldIn, pos, id, param);
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-        return tileentity != null && tileentity.receiveClientEvent(id, param);
+    public boolean triggerEvent(BlockState state, World worldIn, BlockPos pos, int id, int param) {
+        super.triggerEvent(state, worldIn, pos, id, param);
+        TileEntity tileentity = worldIn.getBlockEntity(pos);
+        return tileentity != null && tileentity.triggerEvent(id, param);
     }
 
     @Nullable
     @Override
-    public INamedContainerProvider getContainer(BlockState state, World world, BlockPos pos) {
-        TileEntity te = world.getTileEntity(pos);
+    public INamedContainerProvider getMenuProvider(BlockState state, World world, BlockPos pos) {
+        TileEntity te = world.getBlockEntity(pos);
         return te instanceof PortableSafeTileEntity ? (PortableSafeTileEntity) te : null;
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip,
+    public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip,
             ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-        CompoundNBT nbt = stack.getChildTag("BlockEntityTag");
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        CompoundNBT nbt = stack.getTagElement("BlockEntityTag");
         if (nbt != null && nbt.contains("Items", Constants.NBT.TAG_LIST)) {
             if (nbt.getInt("Size") > 0) {
-                tooltip.add(new TranslationTextComponent("tooltip.basedefense.contains_items").mergeStyle(GRAY));
+                tooltip.add(new TranslationTextComponent("tooltip.basedefense.contains_items").withStyle(GRAY));
             }
         }
     }
@@ -198,11 +198,11 @@ public class PortableSafeBlock extends Block implements IWaterLoggable {
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
             PlayerEntity player) {
         ItemStack stack = super.getPickBlock(state, target, world, pos, player);
-        PortableSafeTileEntity te = (PortableSafeTileEntity) world.getTileEntity(pos);
+        PortableSafeTileEntity te = (PortableSafeTileEntity) world.getBlockEntity(pos);
         if (te != null) {
             CompoundNBT compoundnbt = te.writeData(new CompoundNBT(), false);
             if (!compoundnbt.isEmpty()) {
-                stack.setTagInfo("BlockEntityTag", compoundnbt);
+                stack.addTagElement("BlockEntityTag", compoundnbt);
             }
             if (stack.getItem() instanceof IContainsLockItem) {
                 ((IContainsLockItem) stack.getItem()).setLockStack(stack, te.getLockStack());
@@ -223,13 +223,13 @@ public class PortableSafeBlock extends Block implements IWaterLoggable {
     }
 
     @Override
-    public boolean hasComparatorInputOverride(BlockState state) {
+    public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
     @Override
-    public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
-        TileEntity te = worldIn.getTileEntity(pos);
+    public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos) {
+        TileEntity te = worldIn.getBlockEntity(pos);
         if (te != null) {
             return ItemHandlerHelper.calcRedstoneFromInventory(
                     te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseGet(ItemStackHandler::new));
@@ -239,27 +239,27 @@ public class PortableSafeBlock extends Block implements IWaterLoggable {
 
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 
     @Override
-    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
         return false;
     }
 
     @Override
-    public PushReaction getPushReaction(BlockState state) {
+    public PushReaction getPistonPushReaction(BlockState state) {
         return PushReaction.BLOCK;
     }
 }

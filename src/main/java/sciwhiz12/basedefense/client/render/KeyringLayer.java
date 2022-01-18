@@ -34,10 +34,10 @@ public class KeyringLayer<Player extends PlayerEntity, Model extends BipedModel<
      */
     public static ItemStack getKeyring(PlayerEntity player) {
         PlayerInventory inv = player.inventory;
-        if (inv.getItemStack().getItem() instanceof KeyringItem) { return inv.getItemStack(); }
-        ItemStack primaryHeld = player.getHeldItemMainhand();
-        ItemStack offHeld = player.getHeldItemOffhand();
-        for (ItemStack stack : inv.mainInventory) {
+        if (inv.getCarried().getItem() instanceof KeyringItem) { return inv.getCarried(); }
+        ItemStack primaryHeld = player.getMainHandItem();
+        ItemStack offHeld = player.getOffhandItem();
+        for (ItemStack stack : inv.items) {
             if (stack.getItem() instanceof KeyringItem && stack != primaryHeld && stack != offHeld) {
                 return stack;
             }
@@ -51,23 +51,23 @@ public class KeyringLayer<Player extends PlayerEntity, Model extends BipedModel<
             float headPitch) {
         ItemStack stack = getKeyring(player);
         if (!stack.isEmpty()) {
-            final FirstPersonRenderer fpRenderer = Minecraft.getInstance().getFirstPersonRenderer();
+            final FirstPersonRenderer fpRenderer = Minecraft.getInstance().getItemInHandRenderer();
             final Pose pose = player.getPose();
             final boolean crouching = pose == Pose.CROUCHING;
             if (crouching || pose == Pose.STANDING) {
-                matrixStack.push();
+                matrixStack.pushPose();
 
-                final boolean leftHand = player.getPrimaryHand() == HandSide.LEFT;
+                final boolean leftHand = player.getMainArm() == HandSide.LEFT;
                 matrixStack.translate(-0.08f + (leftHand ? 0.51f : 0f), 0.665f, 0.25f + (crouching ? 0.3f : 0));
-                matrixStack.rotate(Vector3f.YN.rotationDegrees(90f));
-                matrixStack.rotate(Vector3f.ZP.rotationDegrees(crouching ? 30f : 45f));
+                matrixStack.mulPose(Vector3f.YN.rotationDegrees(90f));
+                matrixStack.mulPose(Vector3f.ZP.rotationDegrees(crouching ? 30f : 45f));
                 matrixStack.scale(0.4f, 0.4f, 0.4f);
                 // x: left, y: down, z: back
 
                 // TODO: fix the renderer being early of the crouching
-                fpRenderer.renderItemSide(player, stack, ItemCameraTransforms.TransformType.HEAD, leftHand, matrixStack,
+                fpRenderer.renderItem(player, stack, ItemCameraTransforms.TransformType.HEAD, leftHand, matrixStack,
                         buffer, light);
-                matrixStack.pop();
+                matrixStack.popPose();
             }
         }
     }

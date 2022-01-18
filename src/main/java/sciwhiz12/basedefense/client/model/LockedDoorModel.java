@@ -30,7 +30,7 @@ public class LockedDoorModel implements IBakedModel {
     public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand, IModelData data) {
         ArrayList<BakedQuad> list = new ArrayList<>();
         for (BakedQuad quad : this.getQuads(state, side, rand)) {
-            if (quad.hasTintIndex()) {
+            if (quad.isTinted()) {
                 Integer colors = data.getData(LockedDoorTile.COLOR_PROPERTY);
                 if (colors != null && colors - 1 >= quad.getTintIndex() - 1) { list.add(quad); }
             } else {
@@ -41,8 +41,8 @@ public class LockedDoorModel implements IBakedModel {
     }
 
     @Override
-    public boolean isAmbientOcclusion() {
-        return parentModel.isAmbientOcclusion();
+    public boolean useAmbientOcclusion() {
+        return parentModel.useAmbientOcclusion();
     }
 
     @Override
@@ -51,19 +51,19 @@ public class LockedDoorModel implements IBakedModel {
     }
 
     @Override
-    public boolean isSideLit() {
-        return parentModel.isSideLit();
+    public boolean usesBlockLight() {
+        return parentModel.usesBlockLight();
     }
 
     @Override
-    public boolean isBuiltInRenderer() {
-        return parentModel.isBuiltInRenderer();
+    public boolean isCustomRenderer() {
+        return parentModel.isCustomRenderer();
     }
 
     @SuppressWarnings("deprecation")
     @Override
-    public TextureAtlasSprite getParticleTexture() {
-        return parentModel.getParticleTexture();
+    public TextureAtlasSprite getParticleIcon() {
+        return parentModel.getParticleIcon();
     }
 
     @Override

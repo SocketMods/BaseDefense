@@ -33,7 +33,7 @@ public final class ClientReference {
 
         public static final IBlockColor LOCKED_DOOR_COLOR = (state, world, pos, tintIndex) -> {
             if (world != null && pos != null && state.getBlock() instanceof LockedDoorBlock) {
-                TileEntity tile = world.getTileEntity(pos);
+                TileEntity tile = world.getBlockEntity(pos);
                 if (tile instanceof LockedDoorTile && ((LockedDoorTile) tile).hasColors()) {
                     int[] colors = ((LockedDoorTile) tile).getColors();
                     // offset by 1 since index 0 is reserved for particle color
@@ -51,7 +51,7 @@ public final class ClientReference {
         public static final ResourceLocation COLORS = new ResourceLocation("colors");
 
         public static final IItemPropertyGetter COLORS_GETTER = (stack, world, livingEntity) -> {
-            CompoundNBT tag = stack.getChildTag("display");
+            CompoundNBT tag = stack.getTagElement("display");
             if (tag != null && tag.contains("colors")) { return (float) tag.getIntArray("colors").length; }
             return 0.0F;
         };
@@ -63,7 +63,7 @@ public final class ClientReference {
     public static final class Textures {
         static final List<ResourceLocation> SPRITE_LIST = new ArrayList<>();
 
-        public static final ResourceLocation ATLAS_BLOCKS_TEXTURE = PlayerContainer.LOCATION_BLOCKS_TEXTURE;
+        public static final ResourceLocation ATLAS_BLOCKS_TEXTURE = PlayerContainer.BLOCK_ATLAS;
 
         public static final ResourceLocation SLOT_KEY = addSprite("item/slot_key");
         public static final ResourceLocation SLOT_BLANK_KEY = addSprite("item/slot_blank_key");

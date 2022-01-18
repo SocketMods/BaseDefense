@@ -11,23 +11,23 @@ import sciwhiz12.basedefense.container.KeyringContainer;
 public class KeyringScreen extends ContainerScreen<KeyringContainer> {
     public KeyringScreen(KeyringContainer container, PlayerInventory inv, ITextComponent title) {
         super(container, inv, title);
-        this.xSize = 176;
-        this.ySize = 130;
-        this.playerInventoryTitleY = 37;
+        this.imageWidth = 176;
+        this.imageHeight = 130;
+        this.inventoryLabelY = 37;
     }
 
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, partialTicks);
-        this.renderHoveredTooltip(stack, mouseX, mouseY);
+        this.renderTooltip(stack, mouseX, mouseY);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(Textures.KEYRING_GUI);
-        this.blit(stack, guiLeft, guiTop, 0, 0, xSize, ySize);
+        this.minecraft.getTextureManager().bind(Textures.KEYRING_GUI);
+        this.blit(stack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
     }
 }

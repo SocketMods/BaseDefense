@@ -66,10 +66,10 @@ public final class ClientRegistration {
     static void registerPropertyOverrides() {
         LOG.debug(CLIENT, "Registering item property overrides");
 
-        ItemModelsProperties.registerProperty(Items.KEY, COLORS, PropertyOverrides.COLORS_GETTER);
-        ItemModelsProperties.registerProperty(Items.LOCK_CORE, COLORS, PropertyOverrides.COLORS_GETTER);
-        ItemModelsProperties.registerProperty(Items.PADLOCK, COLORS, PropertyOverrides.COLORS_GETTER);
-        ItemModelsProperties.registerProperty(Items.BROKEN_LOCK_PIECES, COLORS, PropertyOverrides.COLORS_GETTER);
+        ItemModelsProperties.register(Items.KEY, COLORS, PropertyOverrides.COLORS_GETTER);
+        ItemModelsProperties.register(Items.LOCK_CORE, COLORS, PropertyOverrides.COLORS_GETTER);
+        ItemModelsProperties.register(Items.PADLOCK, COLORS, PropertyOverrides.COLORS_GETTER);
+        ItemModelsProperties.register(Items.BROKEN_LOCK_PIECES, COLORS, PropertyOverrides.COLORS_GETTER);
     }
 
     @SubscribeEvent
@@ -89,7 +89,7 @@ public final class ClientRegistration {
 
     static void addCustomLayerRenderers() {
         LOG.debug(CLIENT, "Adding custom player layer renderers");
-        final Map<String, PlayerRenderer> skinMap = Minecraft.getInstance().getRenderManager().getSkinMap();
+        final Map<String, PlayerRenderer> skinMap = Minecraft.getInstance().getEntityRenderDispatcher().getSkinMap();
         final PlayerRenderer defaultRenderer = skinMap.get("default");
         defaultRenderer.addLayer(new KeyringLayer<>(defaultRenderer));
         final PlayerRenderer slimRenderer = skinMap.get("slim");
@@ -98,10 +98,10 @@ public final class ClientRegistration {
 
     static void registerScreenFactories() {
         LOG.debug(CLIENT, "Registering screen factories");
-        ScreenManager.registerFactory(Containers.KEYSMITH_TABLE, KeysmithScreen::new);
-        ScreenManager.registerFactory(Containers.LOCKSMITH_TABLE, LocksmithScreen::new);
-        ScreenManager.registerFactory(Containers.KEYRING, KeyringScreen::new);
-        ScreenManager.registerFactory(Containers.PORTABLE_SAFE, PortableSafeScreen::new);
+        ScreenManager.register(Containers.KEYSMITH_TABLE, KeysmithScreen::new);
+        ScreenManager.register(Containers.LOCKSMITH_TABLE, LocksmithScreen::new);
+        ScreenManager.register(Containers.KEYRING, KeyringScreen::new);
+        ScreenManager.register(Containers.PORTABLE_SAFE, PortableSafeScreen::new);
     }
 
     static void bindTileEntityRenderers() {
@@ -112,7 +112,7 @@ public final class ClientRegistration {
 
     @SubscribeEvent
     static void onTextureStitchPre(TextureStitchEvent.Pre event) {
-        ResourceLocation mapLoc = event.getMap().getTextureLocation();
+        ResourceLocation mapLoc = event.getMap().location();
         if (mapLoc.equals(Textures.ATLAS_BLOCKS_TEXTURE)) {
             LOG.debug(CLIENT, "Adding sprites to atlas: {}", mapLoc);
             for (ResourceLocation spriteLoc : Textures.SPRITE_LIST) { event.addSprite(spriteLoc); }
@@ -121,10 +121,10 @@ public final class ClientRegistration {
 
     static void setupRenderLayer() {
         LOG.debug(CLIENT, "Setting up block render layers");
-        final RenderType solid = RenderType.getSolid();
+        final RenderType solid = RenderType.solid();
         RenderTypeLookup.setRenderLayer(Blocks.KEYSMITH_TABLE, solid);
         RenderTypeLookup.setRenderLayer(Blocks.LOCKSMITH_TABLE, solid);
-        final RenderType cutoutMipped = RenderType.getCutoutMipped();
+        final RenderType cutoutMipped = RenderType.cutoutMipped();
         RenderTypeLookup.setRenderLayer(Blocks.PADLOCKED_IRON_DOOR, cutoutMipped);
         RenderTypeLookup.setRenderLayer(Blocks.PADLOCKED_OAK_DOOR, cutoutMipped);
         RenderTypeLookup.setRenderLayer(Blocks.PADLOCKED_BIRCH_DOOR, cutoutMipped);
@@ -157,8 +157,8 @@ public final class ClientRegistration {
     }
 
     static void overrideBlockModel(ModelBakeEvent event, Block b, Function<IBakedModel, IBakedModel> transform) {
-        for (BlockState blockState : b.getStateContainer().getValidStates()) {
-            ModelResourceLocation variantMRL = BlockModelShapes.getModelLocation(blockState);
+        for (BlockState blockState : b.getStateDefinition().getPossibleStates()) {
+            ModelResourceLocation variantMRL = BlockModelShapes.stateToModelLocation(blockState);
             overrideModel(event, variantMRL, transform);
         }
     }

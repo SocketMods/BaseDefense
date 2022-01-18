@@ -19,7 +19,7 @@ public class PortableSafeItemStackRenderer extends ItemStackTileEntityRenderer {
     }
 
     @Override
-    public void func_239207_a_(ItemStack stack, ItemCameraTransforms.TransformType transforms, MatrixStack matrixStack,
+    public void renderByItem(ItemStack stack, ItemCameraTransforms.TransformType transforms, MatrixStack matrixStack,
             IRenderTypeBuffer buffer, int light, int overlay) {
         TileEntityRendererDispatcher.instance.renderItem(te.get(), matrixStack, buffer, light, overlay);
     }

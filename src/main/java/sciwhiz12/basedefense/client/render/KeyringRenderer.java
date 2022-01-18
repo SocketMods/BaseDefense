@@ -25,20 +25,20 @@ public class KeyringRenderer extends ItemStackTileEntityRenderer {
     private static final int[] rotations = { 135, 90, 180 };
 
     @Override
-    public void func_239207_a_(ItemStack stack, ItemCameraTransforms.TransformType transform, MatrixStack matrixStack,
+    public void renderByItem(ItemStack stack, ItemCameraTransforms.TransformType transform, MatrixStack matrixStack,
             IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
         stack.getCapability(ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
             int keys = 0;
             for (int i = 0; i < handler.getSlots() && keys < 3; i++) {
                 ItemStack keyStack = handler.getStackInSlot(i);
                 if (!keyStack.isEmpty()) {
-                    matrixStack.push();
+                    matrixStack.pushPose();
                     matrixStack.translate(0D, 0D, 0.15D);
                     matrixStack.scale(0.7F, 0.7F, 0.7F);
                     matrixStack.translate(transforms[keys][0], transforms[keys][1], transforms[keys][2]);
-                    matrixStack.rotate(Vector3f.ZN.rotationDegrees(rotations[keys]));
+                    matrixStack.mulPose(Vector3f.ZN.rotationDegrees(rotations[keys]));
                     this.renderItem(keyStack, matrixStack, buffer, combinedLight, combinedOverlay);
-                    matrixStack.pop();
+                    matrixStack.popPose();
                     keys++;
                 }
             }
@@ -48,13 +48,13 @@ public class KeyringRenderer extends ItemStackTileEntityRenderer {
 
     public void renderItem(ItemStack stack, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight,
             int combinedOverlay) {
-        matrix.push();
+        matrix.pushPose();
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-        IBakedModel model = itemRenderer.getItemModelWithOverrides(stack, null, null);
+        IBakedModel model = itemRenderer.getModel(stack, null, null);
         IVertexBuilder builder = ItemRenderer
-                .getBuffer(buffer, RenderTypeLookup.func_239219_a_(stack, false), true, stack.hasEffect());
+                .getFoilBuffer(buffer, RenderTypeLookup.getRenderType(stack, false), true, stack.hasFoil());
         List<BakedQuad> quads = model.getQuads(null, null, new Random(42L), EmptyModelData.INSTANCE);
-        itemRenderer.renderQuads(matrix, builder, quads, stack, combinedLight, combinedOverlay);
-        matrix.pop();
+        itemRenderer.renderQuadList(matrix, builder, quads, stack, combinedLight, combinedOverlay);
+        matrix.popPose();
     }
 }

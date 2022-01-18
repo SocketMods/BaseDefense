@@ -27,21 +27,21 @@ public class PadlockedDoorRenderer extends TileEntityRenderer<PadlockedDoorTile>
     @Override
     public void render(PadlockedDoorTile tileEntity, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer,
             int combinedLightIn, int combinedOverlayIn) {
-        matrixStack.push();
+        matrixStack.pushPose();
         BlockState state = tileEntity.getBlockState();
         ItemStack itemstack = tileEntity.getLockStack();
-        Direction dir = state.get(PadlockedDoorBlock.FACING);
-        DoorHingeSide hinge = state.get(PadlockedDoorBlock.HINGE);
+        Direction dir = state.getValue(PadlockedDoorBlock.FACING);
+        DoorHingeSide hinge = state.getValue(PadlockedDoorBlock.HINGE);
         double mult = (hinge == DoorHingeSide.RIGHT ? 1D : -1D) * (dir.getAxis() == Direction.Axis.Z ? 1D : -1D);
-        matrixStack.translate(dir.getXOffset() * -0.51D + 0.5D, 1D, dir.getZOffset() * -0.51D + 0.5D);
-        matrixStack.rotate(Vector3f.YP.rotationDegrees(dir.getHorizontalAngle()));
+        matrixStack.translate(dir.getStepX() * -0.51D + 0.5D, 1D, dir.getStepZ() * -0.51D + 0.5D);
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(dir.toYRot()));
         matrixStack.translate(mult * 0.275D, 0D, 0D);
-        if (state.get(PadlockedDoorBlock.SIDE) == DoorSide.INSIDE) {
+        if (state.getValue(PadlockedDoorBlock.SIDE) == DoorSide.INSIDE) {
             matrixStack.translate(0D, 0D, dir.getAxis() == Direction.Axis.X ? -0.205D : 0.205D);
         }
         matrixStack.scale(0.5F, 0.5F, 0.5F);
-        this.itemRenderer.renderItem(null, itemstack, ItemCameraTransforms.TransformType.FIXED, false, matrixStack, buffer,
-                tileEntity.getWorld(), combinedLightIn, combinedOverlayIn);
-        matrixStack.pop();
+        this.itemRenderer.renderStatic(null, itemstack, ItemCameraTransforms.TransformType.FIXED, false, matrixStack, buffer,
+                tileEntity.getLevel(), combinedLightIn, combinedOverlayIn);
+        matrixStack.popPose();
     }
 }

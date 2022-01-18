@@ -53,11 +53,11 @@ public class ItemStackLock implements ILock, INBTSerializable<CompoundNBT> {
 
     @Override
     public CompoundNBT serializeNBT() {
-        return this.lockStack.write(new CompoundNBT());
+        return this.lockStack.save(new CompoundNBT());
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        this.lockStack = ItemStack.read(nbt);
+        this.lockStack = ItemStack.of(nbt);
     }
 }

@@ -55,12 +55,12 @@ public class CodeHolder implements ICodeHolder, ITooltipInfo {
     @Override
     public void addInformation(List<ITextComponent> info, boolean verbose) {
         if (!verbose || this.storedCodes.size() == 0) {
-            info.add(Util.createAmountTooltip("tooltip.basedefense.codes.count", this.storedCodes.size()).mergeStyle(GRAY));
+            info.add(Util.createAmountTooltip("tooltip.basedefense.codes.count", this.storedCodes.size()).withStyle(GRAY));
         } else {
-            info.add(new TranslationTextComponent("tooltip.basedefense.codes.header").mergeStyle(GRAY));
+            info.add(new TranslationTextComponent("tooltip.basedefense.codes.header").withStyle(GRAY));
             for (long id : this.storedCodes) {
                 info.add(new TranslationTextComponent("tooltip.basedefense.codes.line", String.format("%016X", id))
-                        .mergeStyle(DARK_GRAY));
+                        .withStyle(DARK_GRAY));
             }
         }
     }

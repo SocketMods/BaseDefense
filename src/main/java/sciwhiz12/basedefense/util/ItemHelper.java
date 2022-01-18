@@ -33,9 +33,9 @@ public final class ItemHelper {
         tooltip = tooltip != null ? tooltip : new ArrayList<>();
         List<Long> ids = stack.getCapability(CODE_HOLDER).map(ICodeHolder::getCodes).orElse(Collections.emptyList());
         if (ids.size() != 0) {
-            tooltip.add(new TranslationTextComponent("tooltip.basedefense.storedcodes").mergeStyle(TextFormatting.GRAY));
+            tooltip.add(new TranslationTextComponent("tooltip.basedefense.storedcodes").withStyle(TextFormatting.GRAY));
             for (long id : ids) {
-                tooltip.add(new StringTextComponent("  " + String.format("%016X", id)).mergeStyle(TextFormatting.DARK_GRAY));
+                tooltip.add(new StringTextComponent("  " + String.format("%016X", id)).withStyle(TextFormatting.DARK_GRAY));
             }
         }
     }
@@ -43,13 +43,13 @@ public final class ItemHelper {
     public static void addColorInformation(ItemStack stack, @Nullable List<ITextComponent> tooltip) {
         checkNotNull(stack);
         tooltip = tooltip != null ? tooltip : new ArrayList<>();
-        CompoundNBT tag = stack.getChildTag("display");
+        CompoundNBT tag = stack.getTagElement("display");
         if (stack.hasTag() && tag != null && tag.contains("colors")) {
             int[] colors = tag.getIntArray("colors");
             for (int i = 0; i < colors.length; i++) {
                 tooltip.add(new TranslationTextComponent("tooltip.basedefense.color", i + 1,
-                        new StringTextComponent(String.format("#%06X", colors[i])).mergeStyle(TextFormatting.DARK_GRAY))
-                        .mergeStyle(TextFormatting.GRAY));
+                        new StringTextComponent(String.format("#%06X", colors[i])).withStyle(TextFormatting.DARK_GRAY))
+                        .withStyle(TextFormatting.GRAY));
             }
         }
     }

@@ -27,47 +27,47 @@ public class LockedBlockItem extends BlockItem implements IContainsLockItem {
     }
 
     public LockedBlockItem(Block blockIn) {
-        this(blockIn, new Item.Properties().group(ITEM_GROUP).maxDamage(0));
+        this(blockIn, new Item.Properties().tab(ITEM_GROUP).durability(0));
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if (hasLockStack(stack)) {
             tooltip.add(new TranslationTextComponent("tooltip.basedefense.locked_block_item.has_lock")
-                    .mergeStyle(TextFormatting.GRAY));
+                    .withStyle(TextFormatting.GRAY));
             ItemStack lockStack = getLockStack(stack);
             lockStack.getCapability(LOCK).filter(ITooltipInfo.class::isInstance)
                     .ifPresent(lock -> ((ITooltipInfo) lock).addInformation(tooltip, flagIn.isAdvanced()));
         } else {
             tooltip.add(new TranslationTextComponent("tooltip.basedefense.locked_block_item.no_lock")
-                    .mergeStyle(TextFormatting.GRAY));
+                    .withStyle(TextFormatting.GRAY));
         }
     }
 
     @Override
-    public ITextComponent getDisplayName(ItemStack stack) {
+    public ITextComponent getName(ItemStack stack) {
         ItemStack lock = getLockStack(stack);
-        if (hasLockStack(stack) && lock.hasDisplayName()) {
-            return lock.getDisplayName().deepCopy().mergeStyle(TextFormatting.ITALIC);
+        if (hasLockStack(stack) && lock.hasCustomHoverName()) {
+            return lock.getHoverName().copy().withStyle(TextFormatting.ITALIC);
         }
-        return super.getDisplayName(stack);
+        return super.getName(stack);
     }
 
     public void setLockStack(ItemStack stack, ItemStack lockStack) {
         checkNotNull(stack);
         checkNotNull(lockStack);
-        stack.setTagInfo(TAG_LOCK_ITEM, lockStack.write(new CompoundNBT()));
+        stack.addTagElement(TAG_LOCK_ITEM, lockStack.save(new CompoundNBT()));
     }
 
     public ItemStack getLockStack(ItemStack stack) {
         checkNotNull(stack);
-        CompoundNBT nbt = stack.getChildTag(TAG_LOCK_ITEM);
-        if (nbt != null) { return ItemStack.read(nbt); }
+        CompoundNBT nbt = stack.getTagElement(TAG_LOCK_ITEM);
+        if (nbt != null) { return ItemStack.of(nbt); }
         return ItemStack.EMPTY;
     }
 
     public boolean hasLockStack(ItemStack stack) {
-        return stack.hasTag() && stack.getChildTag(TAG_LOCK_ITEM) != null;
+        return stack.hasTag() && stack.getTagElement(TAG_LOCK_ITEM) != null;
     }
 }

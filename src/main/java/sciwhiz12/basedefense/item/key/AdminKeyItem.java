@@ -24,23 +24,23 @@ import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
 
 public class AdminKeyItem extends Item {
     public AdminKeyItem() {
-        super(new Item.Properties().maxDamage(0).rarity(Rarity.EPIC).group(ITEM_GROUP));
+        super(new Item.Properties().durability(0).rarity(Rarity.EPIC).tab(ITEM_GROUP));
     }
 
     @Override
-    public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         stack.getCapability(KEY).filter(ITooltipInfo.class::isInstance)
                 .ifPresent(lock -> ((ITooltipInfo) lock).addInformation(tooltip, flagIn.isAdvanced()));
     }
 
     @Override
-    public boolean hasEffect(ItemStack stack) {
+    public boolean isFoil(ItemStack stack) {
         return true;
     }
 
     @Override
     public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, PlayerEntity player) {
-        TileEntity te = world.getTileEntity(pos);
+        TileEntity te = world.getBlockEntity(pos);
         return te != null && te.getCapability(LOCK).isPresent();
     }
 

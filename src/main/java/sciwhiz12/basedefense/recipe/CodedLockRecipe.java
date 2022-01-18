@@ -28,15 +28,15 @@ public class CodedLockRecipe extends ShapedRecipe {
                 recipeOutputIn.getItem().getRegistryName(), idIn);
     }
 
-    public ItemStack getCraftingResult(CraftingInventory inv) {
-        ItemStack output = this.getRecipeOutput().copy();
+    public ItemStack assemble(CraftingInventory inv) {
+        ItemStack output = this.getResultItem().copy();
         for (int row = 0; row < inv.getHeight(); row++) {
             for (int col = 0; col < inv.getWidth(); col++) {
-                ItemStack stack = inv.getStackInSlot(row + col * inv.getWidth());
+                ItemStack stack = inv.getItem(row + col * inv.getWidth());
                 if (!stack.isEmpty() && stack.getCapability(CODE_HOLDER).isPresent()) {
                     IColorable.copyColors(stack, output);
                     ItemHelper.copyCodes(stack, output);
-                    if (stack.hasDisplayName()) { output.setDisplayName(stack.getDisplayName()); }
+                    if (stack.hasCustomHoverName()) { output.setHoverName(stack.getHoverName()); }
                     break;
                 }
             }

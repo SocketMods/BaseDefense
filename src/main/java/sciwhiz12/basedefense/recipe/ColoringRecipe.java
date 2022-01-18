@@ -27,7 +27,7 @@ public class ColoringRecipe extends SpecialRecipe {
         if (inv.isEmpty()) { return false; }
         for (int row = 0; row < width; row++) {
             for (int col = 0; col < height; col++) {
-                ItemStack stack = inv.getStackInSlot(row * width + col);
+                ItemStack stack = inv.getItem(row * width + col);
                 if (stack.isEmpty()) { continue; }
                 if (stack.getItem() instanceof IColorable) {
                     if (colorItem.isEmpty()) {
@@ -46,14 +46,14 @@ public class ColoringRecipe extends SpecialRecipe {
     }
 
     @Override
-    public ItemStack getCraftingResult(CraftingInventory inv) {
+    public ItemStack assemble(CraftingInventory inv) {
         final int width = inv.getWidth();
         final int height = inv.getHeight();
         List<DyeColor> colors = new ArrayList<>(4);
         ItemStack colorItem = ItemStack.EMPTY;
         for (int row = 0; row < width; row++) {
             for (int col = 0; col < height; col++) {
-                ItemStack stack = inv.getStackInSlot(row * width + col);
+                ItemStack stack = inv.getItem(row * width + col);
                 if (stack.isEmpty()) { continue; }
                 if (stack.getItem() instanceof IColorable) {
                     if (colorItem.isEmpty()) {
@@ -78,7 +78,7 @@ public class ColoringRecipe extends SpecialRecipe {
     }
 
     @Override
-    public boolean canFit(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height) {
         return width * height >= 4;
     }
 

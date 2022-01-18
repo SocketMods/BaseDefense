@@ -16,11 +16,11 @@ public class TextFieldChangePacket {
     }
 
     public static void encode(TextFieldChangePacket pkt, PacketBuffer buf) {
-        buf.writeString(pkt.text);
+        buf.writeUtf(pkt.text);
     }
 
     public static TextFieldChangePacket decode(PacketBuffer buf) {
-        return new TextFieldChangePacket(buf.readString(64));
+        return new TextFieldChangePacket(buf.readUtf(64));
     }
 
     public static boolean process(TextFieldChangePacket pkt, Supplier<Context> ctx) {
@@ -28,7 +28,7 @@ public class TextFieldChangePacket {
             ctx.get().getDirection();
             ServerPlayerEntity sender = ctx.get().getSender();
             if (sender != null) {
-                Container cont = sender.openContainer;
+                Container cont = sender.containerMenu;
                 if (cont instanceof KeysmithContainer) {
                     ((KeysmithContainer) cont).setOutputName(pkt.text);
                 }

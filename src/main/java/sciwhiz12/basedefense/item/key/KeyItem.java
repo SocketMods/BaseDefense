@@ -24,17 +24,17 @@ import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
 
 public class KeyItem extends Item implements IColorable {
     public KeyItem() {
-        super(new Item.Properties().maxDamage(0).group(ITEM_GROUP));
+        super(new Item.Properties().durability(0).tab(ITEM_GROUP));
     }
 
     @Override
     public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, PlayerEntity player) {
-        TileEntity tile = world.getTileEntity(pos);
+        TileEntity tile = world.getBlockEntity(pos);
         return tile != null && tile.getCapability(LOCK).isPresent();
     }
 
     @Override
-    public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         stack.getCapability(KEY).filter(ITooltipInfo.class::isInstance)
                 .ifPresent(lock -> ((ITooltipInfo) lock).addInformation(tooltip, flagIn.isAdvanced()));
         if (!flagIn.isAdvanced()) return;

@@ -21,7 +21,7 @@ public interface IColorable {
     default boolean hasColors(ItemStack stack) {
         checkNotNull(stack);
         if (!stack.isEmpty() && stack.getItem() == this) {
-            CompoundNBT display = stack.getChildTag("display");
+            CompoundNBT display = stack.getTagElement("display");
             if (display != null) { return display.getIntArray("colors").length > 0; }
         }
         return false;
@@ -38,7 +38,7 @@ public interface IColorable {
         checkNotNull(stack);
         checkArgument(index >= 0, "Index is negative: %s", index);
         if (!stack.isEmpty() && stack.getItem() == this) {
-            CompoundNBT display = stack.getOrCreateChildTag("display");
+            CompoundNBT display = stack.getOrCreateTagElement("display");
             int[] colors = display.getIntArray("colors");
             if (colors.length <= index) { colors = Arrays.copyOf(colors, index + 1); }
             colors[index] = color;
@@ -56,7 +56,7 @@ public interface IColorable {
         checkNotNull(stack);
         checkNotNull(colors);
         if (!stack.isEmpty() && stack.getItem() == this) {
-            CompoundNBT display = stack.getOrCreateChildTag("display");
+            CompoundNBT display = stack.getOrCreateTagElement("display");
             display.putIntArray("colors", colors);
         }
     }
@@ -70,7 +70,7 @@ public interface IColorable {
     default int[] getColors(ItemStack stack) {
         checkNotNull(stack);
         if (!stack.isEmpty() && stack.getItem() == this && stack.hasTag()) {
-            CompoundNBT display = stack.getChildTag("display");
+            CompoundNBT display = stack.getTagElement("display");
             if (display != null) { return display.getIntArray("colors"); }
         }
         return new int[0];
@@ -87,7 +87,7 @@ public interface IColorable {
         checkNotNull(stack);
         checkArgument(index >= 0, "Index is negative: %s", index);
         if (!stack.isEmpty() && stack.getItem() == this && stack.hasTag()) {
-            CompoundNBT display = stack.getChildTag("display");
+            CompoundNBT display = stack.getTagElement("display");
             if (display != null) {
                 int[] colors = display.getIntArray("colors");
                 if (colors.length - index > 0) { return colors[index]; }

@@ -48,15 +48,15 @@ public class AdminKeyLock implements IKey, ILock, ITooltipInfo {
     @Override
     public void onRemove(IKey key, IWorldPosCallable worldPos, @Nullable PlayerEntity player) {
         if (worldPos != null) {
-            worldPos.consume((world, pos) -> {
-                world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F,
-                        world.rand.nextFloat() * 0.1F + 0.9F);
+            worldPos.execute((world, pos) -> {
+                world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F,
+                        world.random.nextFloat() * 0.1F + 0.9F);
             });
         }
     }
 
     @Override
     public void addInformation(List<ITextComponent> information, boolean verbose) {
-        information.add(new TranslationTextComponent("tooltip.basedefense.admin_only").mergeStyle(TextFormatting.DARK_RED));
+        information.add(new TranslationTextComponent("tooltip.basedefense.admin_only").withStyle(TextFormatting.DARK_RED));
     }
 }

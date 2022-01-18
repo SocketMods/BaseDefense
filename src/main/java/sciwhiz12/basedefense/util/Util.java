@@ -37,15 +37,15 @@ public final class Util {
 
     /**
      * Returns an {@link IWorldPosCallable} containing the given parameters, or
-     * {@link IWorldPosCallable#DUMMY} if either parameter is {@code null}.
+     * {@link IWorldPosCallable#NULL} if either parameter is {@code null}.
      *
      * @param world A {@link World}, or {@code null}
      * @param pos   A {@link BlockPos} or {@code null}
-     * @return an {@link IWorldPosCallable}, or {@link IWorldPosCallable#DUMMY}
+     * @return an {@link IWorldPosCallable}, or {@link IWorldPosCallable#NULL}
      */
     public static IWorldPosCallable getOrDummy(@Nullable World world, @Nullable BlockPos pos) {
-        if (world != null && pos != null) { return IWorldPosCallable.of(world, pos); }
-        return IWorldPosCallable.DUMMY;
+        if (world != null && pos != null) { return IWorldPosCallable.create(world, pos); }
+        return IWorldPosCallable.NULL;
     }
 
     /**

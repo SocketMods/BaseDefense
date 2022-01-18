@@ -24,12 +24,12 @@ import static sciwhiz12.basedefense.Reference.ITEM_GROUP;
 
 public class BrokenLockPiecesItem extends Item implements IColorable {
     public BrokenLockPiecesItem() {
-        super(new Item.Properties().maxDamage(0).group(ITEM_GROUP));
+        super(new Item.Properties().durability(0).tab(ITEM_GROUP));
     }
 
     @Override
-    public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        if (hasPreviousName(stack)) { tooltip.add(getPreviousName(stack).mergeStyle(TextFormatting.ITALIC)); }
+    public void appendHoverText(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        if (hasPreviousName(stack)) { tooltip.add(getPreviousName(stack).withStyle(TextFormatting.ITALIC)); }
         stack.getCapability(CODE_HOLDER).filter(ITooltipInfo.class::isInstance)
                 .ifPresent(lock -> ((ITooltipInfo) lock).addInformation(tooltip, flagIn.isAdvanced()));
         if (!flagIn.isAdvanced()) return;
@@ -42,7 +42,7 @@ public class BrokenLockPiecesItem extends Item implements IColorable {
 
     public IFormattableTextComponent getPreviousName(ItemStack stack) {
         return hasPreviousName(stack) ?
-                ITextComponent.Serializer.getComponentFromJson(stack.getTag().getString("BrokenLockName")) :
+                ITextComponent.Serializer.fromJson(stack.getTag().getString("BrokenLockName")) :
                 new StringTextComponent("");
     }
 

@@ -100,7 +100,7 @@ public final class Reference {
 
     public static final ItemGroup ITEM_GROUP = new ItemGroup(MODID) {
         @Override
-        public ItemStack createIcon() {
+        public ItemStack makeIcon() {
             return new ItemStack(Items.LOCK_CORE);
         }
     };

@@ -15,7 +15,7 @@ public class CodedLockCoreItem extends AbstractLockCoreItem {
     }
 
     public CodedLockCoreItem() {
-        super(new Properties().maxDamage(0));
+        super(new Properties().durability(0));
     }
 
     @Override

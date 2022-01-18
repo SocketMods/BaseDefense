@@ -29,13 +29,13 @@ public class RecipeHelper {
     private RecipeHelper() {}
 
     public static final Method DESERIALIZE_KEY = ObfuscationReflectionHelper
-            .findMethod(ShapedRecipe.class, "func_192408_a", JsonObject.class);
+            .findMethod(ShapedRecipe.class, "keyFromJson", JsonObject.class);
     public static final Method SHRINK = ObfuscationReflectionHelper
-            .findMethod(ShapedRecipe.class, "func_194134_a", String[].class);
+            .findMethod(ShapedRecipe.class, "shrink", String[].class);
     public static final Method PATTERN_FROM_JSON = ObfuscationReflectionHelper
-            .findMethod(ShapedRecipe.class, "func_192407_a", JsonArray.class);
+            .findMethod(ShapedRecipe.class, "patternFromJson", JsonArray.class);
     public static final Method DESERIALIZE_INGREDIENTS = ObfuscationReflectionHelper
-            .findMethod(ShapedRecipe.class, "func_192402_a", String[].class, Map.class, int.class, int.class);
+            .findMethod(ShapedRecipe.class, "dissolvePattern", String[].class, Map.class, int.class, int.class);
 
     /**
      * <p>A generic {@link IRecipeSerializer} for classes extending {@link ShapedRecipe}.</p>
@@ -55,18 +55,18 @@ public class RecipeHelper {
 
         @SuppressWarnings("unchecked")
         @Override
-        public S read(ResourceLocation recipeId, JsonObject json) {
+        public S fromJson(ResourceLocation recipeId, JsonObject json) {
             try {
-                String group = JSONUtils.getString(json, "group", "");
+                String group = JSONUtils.getAsString(json, "group", "");
                 Map<String, Ingredient> keyMap = (Map<String, Ingredient>) DESERIALIZE_KEY
-                        .invoke(null, JSONUtils.getJsonObject(json, "key"));
+                        .invoke(null, JSONUtils.getAsJsonObject(json, "key"));
                 String[] patterns = (String[]) SHRINK
-                        .invoke(null, PATTERN_FROM_JSON.invoke(null, JSONUtils.getJsonArray(json, "pattern")));
+                        .invoke(null, PATTERN_FROM_JSON.invoke(null, JSONUtils.getAsJsonArray(json, "pattern")));
                 int width = patterns[0].length();
                 int height = patterns.length;
                 NonNullList<Ingredient> ingredients = (NonNullList<Ingredient>) DESERIALIZE_INGREDIENTS
                         .invoke(null, patterns, keyMap, width, height);
-                ItemStack output = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
+                ItemStack output = ShapedRecipe.itemFromJson(JSONUtils.getAsJsonObject(json, "result"));
                 return factory.create(recipeId, group, width, height, ingredients, output);
             }
             catch (InvocationTargetException | IllegalAccessException | IllegalArgumentException e) {
@@ -75,27 +75,27 @@ public class RecipeHelper {
         }
 
         @Override
-        public S read(ResourceLocation recipeId, PacketBuffer buffer) {
+        public S fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
             int width = buffer.readVarInt();
             int height = buffer.readVarInt();
-            String group = buffer.readString(32767);
+            String group = buffer.readUtf(32767);
             NonNullList<Ingredient> ingredients = NonNullList.withSize(width * height, Ingredient.EMPTY);
 
-            for (int i = 0; i < ingredients.size(); ++i) { ingredients.set(i, Ingredient.read(buffer)); }
+            for (int i = 0; i < ingredients.size(); ++i) { ingredients.set(i, Ingredient.fromNetwork(buffer)); }
 
-            ItemStack output = buffer.readItemStack();
+            ItemStack output = buffer.readItem();
             return factory.create(recipeId, group, width, height, ingredients, output);
         }
 
         @Override
-        public void write(PacketBuffer buffer, S recipe) {
+        public void toNetwork(PacketBuffer buffer, S recipe) {
             buffer.writeVarInt(recipe.getRecipeWidth());
             buffer.writeVarInt(recipe.getRecipeHeight());
-            buffer.writeString(recipe.getGroup());
+            buffer.writeUtf(recipe.getGroup());
 
-            for (Ingredient ingredient : recipe.getIngredients()) { ingredient.write(buffer); }
+            for (Ingredient ingredient : recipe.getIngredients()) { ingredient.toNetwork(buffer); }
 
-            buffer.writeItemStack(recipe.getRecipeOutput());
+            buffer.writeItem(recipe.getResultItem());
         }
     }
 

@@ -127,7 +127,7 @@ public final class Registration {
         LOG.debug(COMMON, "Registering items");
         final IForgeRegistry<Item> reg = event.getRegistry();
 
-        final Item.Properties defaultProps = new Item.Properties().group(ITEM_GROUP);
+        final Item.Properties defaultProps = new Item.Properties().tab(ITEM_GROUP);
 
         reg.register(new Item(defaultProps).setRegistryName("blank_key"));
         reg.register(new KeyItem().setRegistryName("key"));
@@ -152,7 +152,7 @@ public final class Registration {
         reg.register(new LockedBlockItem(LOCKED_WARPED_DOOR).setRegistryName("locked_warped_door"));
         reg.register(new LockedBlockItem(LOCKED_IRON_DOOR).setRegistryName("locked_iron_door"));
 
-        reg.register(new LockedBlockItem(PORTABLE_SAFE, new Item.Properties().group(ITEM_GROUP).maxDamage(0)
+        reg.register(new LockedBlockItem(PORTABLE_SAFE, new Item.Properties().tab(ITEM_GROUP).durability(0)
                 .setISTER(() -> PortableSafeItemStackRenderer::create)).setRegistryName("portable_safe"));
     }
 
@@ -196,6 +196,6 @@ public final class Registration {
     }
 
     private static <T extends TileEntity> TileEntityType<T> makeType(Supplier<T> factory, Block... validBlocks) {
-        return TileEntityType.Builder.create(factory, validBlocks).build(Null());
+        return TileEntityType.Builder.of(factory, validBlocks).build(Null());
     }
 }

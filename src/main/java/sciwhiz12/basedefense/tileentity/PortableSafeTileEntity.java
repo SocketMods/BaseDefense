@@ -37,7 +37,7 @@ public class PortableSafeTileEntity extends LockableTile implements ITickableTil
     private int ticksSinceSync;
     private final ItemStackHandler inv = new ItemStackHandler(18) {
         protected void onContentsChanged(int slot) {
-            PortableSafeTileEntity.this.markDirty();
+            PortableSafeTileEntity.this.setChanged();
         }
     };
     private LazyOptional<IItemHandler> invHandler;
@@ -49,15 +49,15 @@ public class PortableSafeTileEntity extends LockableTile implements ITickableTil
 
     @Override
     public void tick() {
-        int x = this.pos.getX();
-        int y = this.pos.getY();
-        int z = this.pos.getZ();
+        int x = this.worldPosition.getX();
+        int y = this.worldPosition.getY();
+        int z = this.worldPosition.getZ();
         ++this.ticksSinceSync;
-        this.numPlayersUsing = calculatePlayersUsingSync(this.world, this, this.ticksSinceSync, x, y, z,
+        this.numPlayersUsing = calculatePlayersUsingSync(this.level, this, this.ticksSinceSync, x, y, z,
                 this.numPlayersUsing);
         this.prevDoorAngle = this.doorAngle;
         if (this.numPlayersUsing > 0 && this.doorAngle == 0.0F) {
-            this.playSound(SoundEvents.BLOCK_CHEST_OPEN); // TODO: change to own sound
+            this.playSound(SoundEvents.CHEST_OPEN); // TODO: change to own sound
         }
 
         if (this.numPlayersUsing == 0 && this.doorAngle > 0.0F || this.numPlayersUsing > 0 && this.doorAngle < 1.0F) {
@@ -73,7 +73,7 @@ public class PortableSafeTileEntity extends LockableTile implements ITickableTil
             }
 
             if (this.doorAngle < 0.5F && oldAngle >= 0.5F) {
-                this.playSound(SoundEvents.BLOCK_CHEST_CLOSE); // TODO: change to own sound
+                this.playSound(SoundEvents.CHEST_CLOSE); // TODO: change to own sound
             }
 
             if (this.doorAngle < 0.0F) {
@@ -85,7 +85,7 @@ public class PortableSafeTileEntity extends LockableTile implements ITickableTil
 
     public static int calculatePlayersUsingSync(World worldIn, TileEntity tileEntityIn, int ticksSinceSync, int posX,
             int posY, int posZ, int numPlayersUsing) {
-        if (!worldIn.isRemote && numPlayersUsing != 0 && (ticksSinceSync + posX + posY + posZ) % 200 == 0) {
+        if (!worldIn.isClientSide && numPlayersUsing != 0 && (ticksSinceSync + posX + posY + posZ) % 200 == 0) {
             numPlayersUsing = calculatePlayersUsing(worldIn, tileEntityIn, posX, posY, posZ);
         }
 
@@ -95,12 +95,12 @@ public class PortableSafeTileEntity extends LockableTile implements ITickableTil
     public static int calculatePlayersUsing(World worldIn, TileEntity tileEntity, int posX, int posY, int posZ) {
         int playerCount = 0;
 
-        for (PlayerEntity player : worldIn.getEntitiesWithinAABB(PlayerEntity.class,
+        for (PlayerEntity player : worldIn.getEntitiesOfClass(PlayerEntity.class,
                 new AxisAlignedBB((float) posX - 5.0F, (float) posY - 5.0F, (float) posZ - 5.0F, (float) (posX + 1) + 5.0F,
                         (float) (posY + 1) + 5.0F, (float) (posZ + 1) + 5.0F))) {
-            if (player.openContainer instanceof PortableSafeContainer) {
-                IWorldPosCallable worldPos = ((PortableSafeContainer) player.openContainer).getWorldPos();
-                if (worldPos.applyOrElse((world, pos) -> world.getTileEntity(pos) == tileEntity, false)) {
+            if (player.containerMenu instanceof PortableSafeContainer) {
+                IWorldPosCallable worldPos = ((PortableSafeContainer) player.containerMenu).getWorldPos();
+                if (worldPos.evaluate((world, pos) -> world.getBlockEntity(pos) == tileEntity, false)) {
                     playerCount++;
                 }
             }
@@ -110,21 +110,21 @@ public class PortableSafeTileEntity extends LockableTile implements ITickableTil
     }
 
     private void playSound(SoundEvent soundIn) {
-        double d0 = (double) this.pos.getX() + 0.5D;
-        double d1 = (double) this.pos.getY() + 0.5D;
-        double d2 = (double) this.pos.getZ() + 0.5D;
+        double d0 = (double) this.worldPosition.getX() + 0.5D;
+        double d1 = (double) this.worldPosition.getY() + 0.5D;
+        double d2 = (double) this.worldPosition.getZ() + 0.5D;
 
-        this.world
-                .playSound(null, d0, d1, d2, soundIn, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
+        this.level
+                .playSound(null, d0, d1, d2, soundIn, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F);
     }
 
     @Override
-    public boolean receiveClientEvent(int id, int type) {
+    public boolean triggerEvent(int id, int type) {
         if (id == 1) {
             this.numPlayersUsing = type;
             return true;
         } else {
-            return super.receiveClientEvent(id, type);
+            return super.triggerEvent(id, type);
         }
     }
 
@@ -149,8 +149,8 @@ public class PortableSafeTileEntity extends LockableTile implements ITickableTil
     protected void onOpenOrClose() {
         Block block = this.getBlockState().getBlock();
         if (block instanceof PortableSafeBlock) {
-            this.world.addBlockEvent(this.pos, block, 1, this.numPlayersUsing);
-            this.world.notifyNeighborsOfStateChange(this.pos, block);
+            this.level.blockEvent(this.worldPosition, block, 1, this.numPlayersUsing);
+            this.level.updateNeighborsAt(this.worldPosition, block);
         }
     }
 
@@ -163,8 +163,8 @@ public class PortableSafeTileEntity extends LockableTile implements ITickableTil
     }
 
     @Override
-    public void updateContainingBlockInfo() {
-        super.updateContainingBlockInfo();
+    public void clearCache() {
+        super.clearCache();
         if (this.invHandler != null) {
             this.invHandler.invalidate();
             this.invHandler = null;
@@ -196,8 +196,8 @@ public class PortableSafeTileEntity extends LockableTile implements ITickableTil
     }
 
     @Override
-    public void remove() {
-        super.remove();
+    public void setRemoved() {
+        super.setRemoved();
         if (invHandler != null) {
             invHandler.invalidate();
             this.invHandler = null;
@@ -211,7 +211,7 @@ public class PortableSafeTileEntity extends LockableTile implements ITickableTil
             inv.deserializeNBT(compound);
         }
         if (compound.contains("CustomName", Constants.NBT.TAG_STRING)) {
-            this.customName = ITextComponent.Serializer.getComponentFromJson(compound.getString("CustomName"));
+            this.customName = ITextComponent.Serializer.fromJson(compound.getString("CustomName"));
         }
     }
 
@@ -233,17 +233,17 @@ public class PortableSafeTileEntity extends LockableTile implements ITickableTil
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(pos, 0, getUpdateTag());
+        return new SUpdateTileEntityPacket(worldPosition, 0, getUpdateTag());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(getBlockState(), pkt.getNbtCompound());
+        this.load(getBlockState(), pkt.getTag());
     }
 
     public void setCustomName(ITextComponent name) {
@@ -273,6 +273,6 @@ public class PortableSafeTileEntity extends LockableTile implements ITickableTil
     @Nullable
     @Override
     public Container createMenu(int windowId, PlayerInventory playerInv, PlayerEntity playerEntity) {
-        return new PortableSafeContainer(windowId, playerInv, Util.getOrDummy(world, pos), inv);
+        return new PortableSafeContainer(windowId, playerInv, Util.getOrDummy(level, worldPosition), inv);
     }
 }

@@ -20,15 +20,15 @@ public class PortableSafeContainer extends Container {
     private final IWorldPosCallable worldPos;
 
     public PortableSafeContainer(int windowId, PlayerInventory playerInv) {
-        this(windowId, playerInv, IWorldPosCallable.DUMMY, new ItemStackHandler(18));
+        this(windowId, playerInv, IWorldPosCallable.NULL, new ItemStackHandler(18));
     }
 
     public PortableSafeContainer(int windowId, PlayerInventory playerInv, IWorldPosCallable worldPosIn, IItemHandler inv) {
         super(Containers.PORTABLE_SAFE, windowId);
         this.worldPos = worldPosIn;
         this.inventory = inv;
-        worldPos.consume((world, pos) -> {
-            TileEntity te = world.getTileEntity(pos);
+        worldPos.execute((world, pos) -> {
+            TileEntity te = world.getBlockEntity(pos);
             if (te instanceof PortableSafeTileEntity) {
                 ((PortableSafeTileEntity) te).openInventory(playerInv.player);
             }
@@ -44,29 +44,29 @@ public class PortableSafeContainer extends Container {
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
-        return isWithinUsableDistance(worldPos, playerIn, Reference.Blocks.PORTABLE_SAFE);
+    public boolean stillValid(PlayerEntity playerIn) {
+        return stillValid(worldPos, playerIn, Reference.Blocks.PORTABLE_SAFE);
     }
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
-        if (slot != null && slot.getHasStack()) {
-            ItemStack itemstack1 = slot.getStack();
+        Slot slot = this.slots.get(index);
+        if (slot != null && slot.hasItem()) {
+            ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
             if (index < this.inventory.getSlots()) {
-                if (!this.mergeItemStack(itemstack1, this.inventory.getSlots(), this.inventorySlots.size(), true)) {
+                if (!this.moveItemStackTo(itemstack1, this.inventory.getSlots(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(itemstack1, 0, this.inventory.getSlots(), false)) {
+            } else if (!this.moveItemStackTo(itemstack1, 0, this.inventory.getSlots(), false)) {
                 return ItemStack.EMPTY;
             }
 
             if (itemstack1.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             } else {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
         }
 
@@ -74,10 +74,10 @@ public class PortableSafeContainer extends Container {
     }
 
     @Override
-    public void onContainerClosed(PlayerEntity playerIn) {
-        super.onContainerClosed(playerIn);
-        worldPos.consume((world, pos) -> {
-            TileEntity te = world.getTileEntity(pos);
+    public void removed(PlayerEntity playerIn) {
+        super.removed(playerIn);
+        worldPos.execute((world, pos) -> {
+            TileEntity te = world.getBlockEntity(pos);
             if (te instanceof PortableSafeTileEntity) {
                 ((PortableSafeTileEntity) te).closeInventory(playerIn);
             }

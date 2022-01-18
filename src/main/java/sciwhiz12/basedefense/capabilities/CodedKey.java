@@ -84,20 +84,20 @@ public class CodedKey implements ICodeHolder, IKey, INBTSerializable<LongNBT>, I
 
     @Override
     public void deserializeNBT(LongNBT nbt) {
-        this.storedCode = nbt.getLong() != 0 ? nbt.getLong() : null;
+        this.storedCode = nbt.getAsLong() != 0 ? nbt.getAsLong() : null;
     }
 
     @Override
     public void addInformation(List<ITextComponent> info, boolean verbose) {
         if (verbose && this.storedCode != null) {
-            info.add(new TranslationTextComponent("tooltip.basedefense.codes.header").mergeStyle(GRAY));
+            info.add(new TranslationTextComponent("tooltip.basedefense.codes.header").withStyle(GRAY));
             info.add(new TranslationTextComponent("tooltip.basedefense.codes.line", String.format("%016X", storedCode))
-                    .mergeStyle(DARK_GRAY));
+                    .withStyle(DARK_GRAY));
         } else {
             if (this.storedCode != null) {
-                info.add(new TranslationTextComponent("tooltip.basedefense.codes.count.one", 1).mergeStyle(GRAY));
+                info.add(new TranslationTextComponent("tooltip.basedefense.codes.count.one", 1).withStyle(GRAY));
             } else {
-                info.add(new TranslationTextComponent("tooltip.basedefense.codes.count.zero", 0).mergeStyle(GRAY));
+                info.add(new TranslationTextComponent("tooltip.basedefense.codes.count.zero", 0).withStyle(GRAY));
             }
         }
     }
